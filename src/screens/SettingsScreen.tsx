@@ -5,6 +5,8 @@ import type { NodeWeights } from '@/engine/types';
 import { normalizeWeights } from '@/engine/weights';
 import { colors, radius, spacing } from '@/theme';
 import { useSettings, SimCount } from '@/context/SettingsContext';
+import { useTeams, DATA_URL } from '@/context/TeamsContext';
+import { timeAgo } from '@/utils/format';
 import { Section } from '@/components/Section';
 import { Stepper } from '@/components/Stepper';
 import { Chip } from '@/components/Chip';
@@ -21,6 +23,7 @@ const SIMS: SimCount[] = [2000, 5000, 10000, 25000];
 
 export function SettingsScreen() {
   const s = useSettings();
+  const live = useTeams();
   const norm = normalizeWeights(s.weights);
   const rawTotal = s.weights.scheme + s.weights.personnel + s.weights.environment + s.weights.xfactor;
 
@@ -63,16 +66,26 @@ export function SettingsScreen() {
           <Row k="Interior OL / DT / nickel" v="−5%" />
           <Row k="RB / TE / LB / S" v="−4%" />
           <Text style={styles.small}>Rotational players carry half the hit, depth players a fifth. "Questionable" applies half of the listed amount.</Text>
-          <TouchableOpacity style={styles.danger} onPress={s.clearInjuries}><Text style={styles.dangerText}>Clear all injury flags</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.danger} onPress={s.clearOverrides}><Text style={styles.dangerText}>Reset {Object.keys(s.overrides).length} manual override{Object.keys(s.overrides).length === 1 ? '' : 's'} to reported statuses</Text></TouchableOpacity>
         </Section>
 
-        <Section icon="information-circle" title="About the data" subtitle="Read this before trusting a number">
+        <Section icon="cloud-download" title="Live data" subtitle={`${live.source === 'sample' ? 'Sample fallback' : `Source: ${live.source}`} · generated ${live.generatedAt ? timeAgo(Date.parse(live.generatedAt)) : 'n/a'}`}
+          right={<TouchableOpacity onPress={live.refresh} style={styles.reset}><Text style={styles.resetText}>{live.refreshing ? 'Refreshing…' : 'Refresh'}</Text></TouchableOpacity>}
+        >
+          <Row k="Season / phase" v={`${live.season} · ${live.phase} · week ${live.week}`} />
+          <Row k="Depth charts as of" v={live.meta?.depthChartsAsOf ? new Date(live.meta.depthChartsAsOf).toLocaleDateString() : 'n/a'} />
+          <Row k="Injury report" v={live.meta?.injuryReportWeek ? `week ${live.meta.injuryReportWeek}` : 'none yet this season'} />
+          <Row k="Blend" v={live.meta?.blend ? `${Math.round(live.meta.blend.currentWeightMax * 100)}% ${live.season} / ${Math.round((1 - live.meta.blend.currentWeightMax) * 100)}% ${live.meta.priorSeason}` : 'n/a'} />
+          <Row k="Sources OK" v={live.meta ? `${live.meta.sources.filter((x) => x.ok).length} / ${live.meta.sources.length}` : 'n/a'} />
+          {live.lastError && <Row k="Last refresh" v={`failed: ${live.lastError}`} />}
           <Text style={styles.about}>
-            Team identities, divisions and stadiums are factual. Every rating, tendency and depth chart is a preseason-2026
-            estimate authored to be realistic and internally consistent — it is not a live feed and will drift from reality as the
-            season moves. Edit <Text style={styles.code}>src/data/teams.ts</Text> or wire a data source to replace it.
-            {'\n\n'}Simulations are deterministic: the same matchup, injuries and settings always reproduce the same 10,000 games.
-            "Re-roll" on a result page draws a fresh seed.
+            {'\n'}The dataset is rebuilt automatically by a scheduled GitHub Action (every 3 hours in-season) from nflverse play-by-play,
+            schedule and betting lines, rosters, depth charts, injury reports, snap counts, FTN charting and PFR advanced stats, with
+            ESPN injuries and Open-Meteo kickoff forecasts as best-effort extras. The app fetches the latest build on launch and caches it.
+            {'\n\n'}Team ratings blend the prior season with the current one using w = games played ÷ (games played + 6), so early-season
+            numbers lean on last year and converge on this year by mid-season. Pass-block / pass-rush win rates are pressure-based
+            proxies; the coverage family each defence prefers is the one value still curated by hand.
+            {'\n\n'}Feed: <Text style={styles.code}>{DATA_URL}</Text>
           </Text>
         </Section>
       </ScrollView>

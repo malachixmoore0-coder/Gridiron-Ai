@@ -48,6 +48,12 @@ export interface Player {
   pbwr?: number;
   /** One-line angle used in the sleeper report. */
   note?: string;
+  /** Injury status from the latest official report / roster (live data). */
+  reported?: InjuryStatus;
+  /** Short reason for `reported`, e.g. "Knee · Out" or "Reserve/Injured". */
+  reportNote?: string;
+  /** Headshot URL when the data source provides one. */
+  headshotUrl?: string;
 }
 
 export interface CoachingProfile {
@@ -128,6 +134,10 @@ export interface Team {
   players: Player[];
   /** Team ids of protected rivals outside the division (e.g. historic rivals). */
   rivals?: string[];
+  /** Team logo URL (live data). */
+  logoUrl?: string;
+  /** Current-season record, e.g. "3-1" (live data). */
+  record?: string;
 }
 
 export type Weather = 'dome' | 'clear' | 'wind' | 'rain' | 'snow' | 'cold' | 'heat';

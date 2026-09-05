@@ -1,54 +1,65 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Weather } from '@/engine/types';
-import { getTeam } from '@/data/teams';
 import { colors, radius, shadow, spacing } from '@/theme';
 import { timeAgo } from '@/utils/format';
 import { useSettings } from '@/context/SettingsContext';
+import { useTeams } from '@/context/TeamsContext';
 import { RunRequest, DEFAULT_CTX } from '@/hooks/useAnalysis';
 import { TeamMark } from '@/components/TeamMark';
 import { TeamPickerModal } from '@/components/TeamPickerModal';
 import { Chip } from '@/components/Chip';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { DataBanner } from '@/components/DataBanner';
 
 const WEATHER: { key: Weather | 'auto'; label: string }[] = [
-  { key: 'auto', label: 'Auto' },
-  { key: 'clear', label: 'Clear' },
-  { key: 'wind', label: 'Wind' },
-  { key: 'rain', label: 'Rain' },
-  { key: 'snow', label: 'Snow' },
-  { key: 'cold', label: 'Cold' },
-  { key: 'heat', label: 'Heat' },
+  { key: 'auto', label: 'Auto' }, { key: 'clear', label: 'Clear' }, { key: 'wind', label: 'Wind' }, { key: 'rain', label: 'Rain' },
+  { key: 'snow', label: 'Snow' }, { key: 'cold', label: 'Cold' }, { key: 'heat', label: 'Heat' },
 ];
 
 interface Props { onRun: (req: RunRequest) => void; onOpenTeam: (id: string) => void; }
 
 export function MatchupScreen({ onRun, onOpenTeam }: Props) {
-  const { recent, simulations, injuredOut, questionable } = useSettings();
-  const [awayId, setAwayId] = useState('dal');
-  const [homeId, setHomeId] = useState('phi');
+  const { recent, simulations, statusOf } = useSettings();
+  const { getTeam, weekGames, findGame, teams } = useTeams();
+  const firstGame = weekGames.find((g) => g.status === 'scheduled') ?? weekGames[0];
+  const [awayId, setAwayId] = useState(firstGame?.awayId ?? 'dal');
+  const [homeId, setHomeId] = useState(firstGame?.homeId ?? 'phi');
   const [ctx, setCtx] = useState(DEFAULT_CTX);
   const [picking, setPicking] = useState<'away' | 'home' | null>(null);
+  const [seeded, setSeeded] = useState(false);
+
+  // When live data arrives after mount, seed the default matchup from this week's slate once.
+  useEffect(() => {
+    if (!seeded && firstGame) { setAwayId(firstGame.awayId); setHomeId(firstGame.homeId); setSeeded(true); }
+  }, [firstGame, seeded]);
 
   const away = getTeam(awayId);
   const home = getTeam(homeId);
-  const flagged = [...home.players, ...away.players].filter((p) => injuredOut.includes(p.id) || questionable.includes(p.id));
+  const game = findGame(awayId, homeId);
+  const flagged = useMemo(() => [...home.players, ...away.players].filter((p) => statusOf(p) !== 'healthy'), [home, away, statusOf]);
   const isDivision = home.conference === away.conference && home.division === away.division;
 
+  // Scheduled-game context (neutral site, primetime, forecast) applied automatically unless the user changes it.
+  useEffect(() => {
+    if (game) setCtx((c) => ({ ...c, neutralSite: game.neutralSite, primetime: game.primetime }));
+  }, [game?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+
   const swap = () => { setAwayId(homeId); setHomeId(awayId); };
+  const weatherAuto = game?.weatherHint && game.weatherHint !== 'dome' ? `· forecast: ${game.weatherHint}` : home.stadium.dome ? '· indoors' : '';
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <ScreenHeader title="Gridiron AI" subtitle="NFL bias & predictive analytics engine" />
+        <DataBanner />
 
-        {/* Matchup hero */}
         <View style={styles.hero}>
           <TouchableOpacity style={styles.teamCol} activeOpacity={0.8} onPress={() => setPicking('away')}>
             <TeamMark team={away} size={78} />
-            <Text style={styles.teamCity}>{away.city}</Text>
+            <Text style={styles.teamCity}>{away.city}{away.record ? ` · ${away.record}` : ''}</Text>
             <Text style={styles.teamName}>{away.name}</Text>
             <Text style={[styles.sideTag, { color: colors.away }]}>AWAY</Text>
           </TouchableOpacity>
@@ -60,37 +71,45 @@ export function MatchupScreen({ onRun, onOpenTeam }: Props) {
           </View>
           <TouchableOpacity style={styles.teamCol} activeOpacity={0.8} onPress={() => setPicking('home')}>
             <TeamMark team={home} size={78} />
-            <Text style={styles.teamCity}>{home.city}</Text>
+            <Text style={styles.teamCity}>{home.city}{home.record ? ` · ${home.record}` : ''}</Text>
             <Text style={styles.teamName}>{home.name}</Text>
             <Text style={[styles.sideTag, { color: colors.home }]}>HOME</Text>
           </TouchableOpacity>
         </View>
         <Text style={styles.venue}>
-          {ctx.neutralSite ? 'Neutral site' : `${home.stadium.name} · ${home.stadium.city}`}
+          {ctx.neutralSite ? (game?.stadium ? `Neutral · ${game.stadium}` : 'Neutral site') : `${home.stadium.name} · ${home.stadium.city}`}
           {isDivision ? ' · Division game' : ''}
         </Text>
+        {game && (
+          <View style={styles.market}>
+            <Ionicons name="calendar" size={14} color={colors.gold} />
+            <Text style={styles.marketText}>
+              Week {game.week} · {new Date(game.kickoff).toLocaleString(undefined, { weekday: 'short', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+              {game.homeSpread !== null ? ` · Market ${game.homeSpread <= 0 ? home.abbr : away.abbr} ${game.homeSpread <= 0 ? game.homeSpread : -game.homeSpread}` : ''}
+              {game.totalLine !== null ? ` · O/U ${game.totalLine}` : ''}
+            </Text>
+          </View>
+        )}
 
-        {/* Context */}
         <Text style={styles.label}>Game context</Text>
         <View style={styles.wrapRow}>
           <Chip label="Neutral site" active={ctx.neutralSite} onPress={() => setCtx((c) => ({ ...c, neutralSite: !c.neutralSite }))} />
           <Chip label="Primetime" active={ctx.primetime} onPress={() => setCtx((c) => ({ ...c, primetime: !c.primetime }))} />
         </View>
-        <Text style={styles.label}>Weather {home.stadium.dome && ctx.weather === 'auto' ? '· indoors' : ''}</Text>
+        <Text style={styles.label}>Weather {weatherAuto}</Text>
         <View style={styles.wrapRow}>
           {WEATHER.map((w) => (
             <Chip key={w.key} label={w.label} active={ctx.weather === w.key} onPress={() => setCtx((c) => ({ ...c, weather: w.key }))} small />
           ))}
         </View>
 
-        {/* Injuries */}
         <View style={styles.injuryCard}>
           <View style={{ flex: 1 }}>
             <Text style={styles.injuryTitle}>Injury report</Text>
             <Text style={styles.injuryText}>
               {flagged.length === 0
-                ? 'Both depth charts fully healthy. Tap a team to flag players Out or Questionable.'
-                : flagged.map((p) => `${p.name} (${injuredOut.includes(p.id) ? 'OUT' : 'Q'})`).join(' · ')}
+                ? 'No one flagged on either depth chart. Reported statuses update with each data refresh; tap a team to override.'
+                : flagged.map((p) => `${p.name} (${statusOf(p) === 'out' ? 'OUT' : 'Q'})`).join(' · ')}
             </Text>
           </View>
           <View style={styles.injuryBtns}>
@@ -99,8 +118,11 @@ export function MatchupScreen({ onRun, onOpenTeam }: Props) {
           </View>
         </View>
 
-        {/* Run */}
-        <TouchableOpacity style={styles.run} activeOpacity={0.85} onPress={() => onRun({ awayId, homeId, ctx })}>
+        <TouchableOpacity
+          style={styles.run}
+          activeOpacity={0.85}
+          onPress={() => onRun({ awayId, homeId, ctx: ctx.weather === 'auto' && game?.weatherHint && game.weatherHint !== 'dome' ? { ...ctx, weather: game.weatherHint } : ctx })}
+        >
           <Ionicons name="analytics" size={20} color={colors.bg} />
           <Text style={styles.runText}>Run {simulations.toLocaleString()} simulations</Text>
         </TouchableOpacity>
@@ -109,7 +131,7 @@ export function MatchupScreen({ onRun, onOpenTeam }: Props) {
         {recent.length > 0 && (
           <>
             <Text style={styles.label}>Recent</Text>
-            {recent.map((r) => {
+            {recent.filter((r) => teams.some((t) => t.id === r.awayId) && teams.some((t) => t.id === r.homeId)).map((r) => {
               const a = getTeam(r.awayId);
               const h = getTeam(r.homeId);
               return (
@@ -150,6 +172,8 @@ const styles = StyleSheet.create({
   at: { color: colors.inkFaint, fontSize: 22, fontWeight: '900' },
   swap: { width: 34, height: 34, borderRadius: 17, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border, alignItems: 'center', justifyContent: 'center' },
   venue: { color: colors.inkFaint, fontSize: 12, textAlign: 'center', marginTop: spacing.sm, fontWeight: '600' },
+  market: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, marginTop: 6 },
+  marketText: { color: colors.inkDim, fontSize: 12, fontWeight: '700' },
   label: { color: colors.inkFaint, fontSize: 11, fontWeight: '900', letterSpacing: 1.2, textTransform: 'uppercase', marginTop: spacing.xl, marginBottom: spacing.sm },
   wrapRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
   injuryCard: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginTop: spacing.xl },

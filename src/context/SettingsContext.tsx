@@ -1,17 +1,13 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import type { InjuryStatus, NodeWeights, Weather } from '@/engine/types';
+import type { InjuryStatus, NodeWeights, Player, Weather } from '@/engine/types';
 import { DEFAULT_WEIGHTS, HFA_DEFAULT } from '@/engine/weights';
 
-const KEY = 'gridiron-ai.settings.v1';
+const KEY = 'gridiron-ai.settings.v2';
 
 export type SimCount = 2000 | 5000 | 10000 | 25000;
 
-export interface RecentMatchup {
-  awayId: string;
-  homeId: string;
-  ts: number;
-}
+export interface RecentMatchup { awayId: string; homeId: string; ts: number; }
 
 export interface MatchupContext {
   neutralSite: boolean;
@@ -23,8 +19,8 @@ interface Persisted {
   weights: NodeWeights;
   simulations: SimCount;
   homeFieldBase: number;
-  injuredOut: string[];
-  questionable: string[];
+  /** Manual injury overrides by player id. Absent = follow the reported status. */
+  overrides: Record<string, InjuryStatus>;
   recent: RecentMatchup[];
   onboarded: boolean;
 }
@@ -33,8 +29,7 @@ const DEFAULTS: Persisted = {
   weights: { ...DEFAULT_WEIGHTS },
   simulations: 10000,
   homeFieldBase: HFA_DEFAULT,
-  injuredOut: [],
-  questionable: [],
+  overrides: {},
   recent: [],
   onboarded: false,
 };
@@ -45,15 +40,21 @@ interface SettingsState extends Persisted {
   resetWeights: () => void;
   setSimulations: (n: SimCount) => void;
   setHomeFieldBase: (v: number) => void;
-  statusOf: (playerId: string) => InjuryStatus;
-  setStatus: (playerId: string, status: InjuryStatus) => void;
-  cycleStatus: (playerId: string) => void;
-  clearInjuries: () => void;
+  /** Effective status: manual override if set, otherwise the reported status, otherwise healthy. */
+  statusOf: (player: Player) => InjuryStatus;
+  hasOverride: (playerId: string) => boolean;
+  setOverride: (playerId: string, status: InjuryStatus | null) => void;
+  /** Cycle Active → Questionable → Out → back to reported. */
+  cycleStatus: (player: Player) => void;
+  clearOverrides: () => void;
   pushRecent: (m: Omit<RecentMatchup, 'ts'>) => void;
   setOnboarded: (v: boolean) => void;
 }
 
 const Ctx = createContext<SettingsState | null>(null);
+
+export const effectiveStatus = (player: Player, overrides: Record<string, InjuryStatus>): InjuryStatus =>
+  overrides[player.id] ?? player.reported ?? 'healthy';
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [state, setState] = useState<Persisted>(DEFAULTS);
@@ -65,10 +66,10 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         const raw = await AsyncStorage.getItem(KEY);
         if (raw) {
           const parsed = JSON.parse(raw) as Partial<Persisted>;
-          setState({ ...DEFAULTS, ...parsed, weights: { ...DEFAULT_WEIGHTS, ...(parsed.weights ?? {}) } });
+          setState({ ...DEFAULTS, ...parsed, weights: { ...DEFAULT_WEIGHTS, ...(parsed.weights ?? {}) }, overrides: parsed.overrides ?? {} });
         }
       } catch {
-        // Fall back to defaults on any storage error.
+        // defaults
       } finally {
         setLoaded(true);
       }
@@ -84,16 +85,12 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     setState((s) => ({ ...s, ...(typeof p === 'function' ? p(s) : p) }));
   }, []);
 
-  const statusOf = useCallback(
-    (id: string): InjuryStatus => (state.injuredOut.includes(id) ? 'out' : state.questionable.includes(id) ? 'questionable' : 'healthy'),
-    [state.injuredOut, state.questionable],
-  );
-
-  const setStatus = useCallback((id: string, status: InjuryStatus) => {
-    patch((s) => ({
-      injuredOut: status === 'out' ? [...new Set([...s.injuredOut, id])] : s.injuredOut.filter((x) => x !== id),
-      questionable: status === 'questionable' ? [...new Set([...s.questionable, id])] : s.questionable.filter((x) => x !== id),
-    }));
+  const setOverride = useCallback((id: string, status: InjuryStatus | null) => {
+    patch((s) => {
+      const overrides = { ...s.overrides };
+      if (status === null) delete overrides[id]; else overrides[id] = status;
+      return { overrides };
+    });
   }, [patch]);
 
   const value = useMemo<SettingsState>(() => ({
@@ -103,18 +100,22 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     resetWeights: () => patch({ weights: { ...DEFAULT_WEIGHTS } }),
     setSimulations: (n) => patch({ simulations: n }),
     setHomeFieldBase: (v) => patch({ homeFieldBase: Math.max(2.5, Math.min(4.5, Math.round(v * 10) / 10)) }),
-    statusOf,
-    setStatus,
-    cycleStatus: (id) => {
-      const cur = statusOf(id);
-      setStatus(id, cur === 'healthy' ? 'questionable' : cur === 'questionable' ? 'out' : 'healthy');
+    statusOf: (p) => effectiveStatus(p, state.overrides),
+    hasOverride: (id) => id in state.overrides,
+    setOverride,
+    cycleStatus: (p) => {
+      const order: InjuryStatus[] = ['healthy', 'questionable', 'out'];
+      const cur = effectiveStatus(p, state.overrides);
+      const next = order[(order.indexOf(cur) + 1) % order.length];
+      // Landing on the reported status means "follow the report" — drop the override.
+      setOverride(p.id, next === (p.reported ?? 'healthy') ? null : next);
     },
-    clearInjuries: () => patch({ injuredOut: [], questionable: [] }),
+    clearOverrides: () => patch({ overrides: {} }),
     pushRecent: (m) => patch((s) => ({
       recent: [{ ...m, ts: Date.now() }, ...s.recent.filter((r) => !(r.awayId === m.awayId && r.homeId === m.homeId))].slice(0, 8),
     })),
     setOnboarded: (v) => patch({ onboarded: v }),
-  }), [state, loaded, patch, statusOf, setStatus]);
+  }), [state, loaded, patch, setOverride]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

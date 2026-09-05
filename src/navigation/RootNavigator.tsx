@@ -16,7 +16,7 @@ type Overlay = { kind: 'result'; request: RunRequest } | { kind: 'team'; teamId:
 
 /** Hand-rolled navigation: four tabs plus a small overlay stack (result / team detail). */
 export function RootNavigator() {
-  const { loaded, onboarded, injuredOut, questionable } = useSettings();
+  const { loaded, onboarded, overrides } = useSettings();
   const [tab, setTab] = useState<TabKey>('matchup');
   const [stack, setStack] = useState<Overlay[]>([]);
 
@@ -36,7 +36,7 @@ export function RootNavigator() {
         {tab === 'teams' && <TeamsScreen onOpenTeam={openTeam} />}
         {tab === 'settings' && <SettingsScreen />}
       </View>
-      <BottomTabBar active={tab} onChange={(t) => { setStack([]); setTab(t); }} badge={injuredOut.length + questionable.length} />
+      <BottomTabBar active={tab} onChange={(t) => { setStack([]); setTab(t); }} badge={Object.keys(overrides).length} />
 
       {stack.map((o, i) => (
         <View key={`${o.kind}-${i}`} style={[StyleSheet.absoluteFill, styles.overlay]}>

@@ -9,7 +9,7 @@ export function ScreenHeader({ title, subtitle, onBack, right }: Props) {
   return (
     <View style={styles.wrap}>
       {onBack && (
-        <TouchableOpacity onPress={onBack} style={styles.back} hitSlop={10}>
+        <TouchableOpacity onPress={onBack} style={styles.back} hitSlop={10} accessibilityRole="button" accessibilityLabel="Back">
           <Ionicons name="arrow-back" size={20} color={colors.ink} />
         </TouchableOpacity>
       )}

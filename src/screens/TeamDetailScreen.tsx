@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, ScrollView, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { getTeam } from '@/data/teams';
+import { useTeams } from '@/context/TeamsContext';
 import { colors, radius, ratingColor, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { TeamMark } from '@/components/TeamMark';
@@ -14,15 +14,16 @@ interface Props { teamId: string; onBack: () => void; }
 const pct = (v: number) => `${Math.round(v * 100)}%`;
 
 export function TeamDetailScreen({ teamId, onBack }: Props) {
+  const { getTeam } = useTeams();
   const t = getTeam(teamId);
-  const { statusOf, cycleStatus } = useSettings();
+  const { statusOf, cycleStatus, hasOverride } = useSettings();
   const c = t.coaching;
   const o = t.offense;
   const d = t.defense;
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <ScreenHeader title={`${t.city} ${t.name}`} subtitle={`${t.conference} ${t.division} · ${t.stadium.name}${t.stadium.dome ? ' (indoors)' : ''}`} onBack={onBack} />
+      <ScreenHeader title={`${t.city} ${t.name}${t.record ? ` (${t.record})` : ''}`} subtitle={`${t.conference} ${t.division} · ${t.stadium.name}${t.stadium.dome ? ' (indoors)' : ''}`} onBack={onBack} />
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
         <View style={styles.hero}>
           <TeamMark team={t} size={64} />
@@ -72,11 +73,11 @@ export function TeamDetailScreen({ teamId, onBack }: Props) {
           <Bar label="Blitz rate" value={d.blitzRate} lo={0.15} hi={0.45} fmt={pct} />
         </Section>
 
-        <Section icon="people" title="Depth chart & injury report" subtitle="Tap a status to cycle Active → Questionable → Out">
+        <Section icon="people" title="Depth chart & injury report" subtitle="Reported statuses from the latest data refresh · tap to override (Active → Questionable → Out → reported)">
           {t.players.map((p) => (
-            <PlayerRow key={p.id} player={p} status={statusOf(p.id)} onCycle={() => cycleStatus(p.id)} />
+            <PlayerRow key={p.id} player={p} status={statusOf(p)} overridden={hasOverride(p.id)} onCycle={() => cycleStatus(p)} />
           ))}
-          <Text style={styles.small}>Flags persist on this device and apply to every matchup this team plays.</Text>
+          <Text style={styles.small}>Grades and usage are computed from play-by-play (prior season blended with the current one as games are played). Overrides persist on this device and apply to every matchup this team plays.</Text>
         </Section>
       </ScrollView>
     </SafeAreaView>

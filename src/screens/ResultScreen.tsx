@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, shadow, sideColor, spacing } from '@/theme';
 import { spreadText, oneDp } from '@/utils/format';
 import { useSettings } from '@/context/SettingsContext';
+import { useTeams } from '@/context/TeamsContext';
 import { RunRequest, useAnalysis } from '@/hooks/useAnalysis';
 import { TeamMark } from '@/components/TeamMark';
 import { ProbBar } from '@/components/ProbBar';
@@ -19,8 +20,10 @@ interface Props { request: RunRequest; onBack: () => void; onOpenTeam: (id: stri
 
 export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
   const { pushRecent } = useSettings();
+  const { findGame } = useTeams();
   const [reroll, setReroll] = useState(0);
   const a = useAnalysis(request, reroll);
+  const game = findGame(request.awayId, request.homeId);
   const { home, away, simulation: s, matrix, script, sleepers, injuries, nodes } = a;
 
   useEffect(() => { pushRecent({ awayId: request.awayId, homeId: request.homeId }); }, [request.awayId, request.homeId]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -67,6 +70,17 @@ export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
             <Line label="Total" value={oneDp(s.projectedTotal)} sub={`Over hits ${s.overPct}%`} />
             <Line label="One-score" value={`${s.oneScoreGamePct}%`} sub={`σ margin ${s.volatility}`} />
           </View>
+          {game && game.homeSpread !== null && (
+            <View style={styles.marketRow}>
+              <Ionicons name="pricetag" size={13} color={colors.gold} />
+              <Text style={styles.marketText}>
+                Market: {Math.abs(game.homeSpread) < 0.25 ? 'PK' : `${game.homeSpread <= 0 ? home.abbr : away.abbr} -${Math.abs(game.homeSpread)}`}
+                {game.totalLine !== null ? ` · O/U ${game.totalLine}` : ''}
+                {' · '}model {s.spread - game.homeSpread < 0 ? home.abbr : away.abbr} +{Math.abs(s.spread - game.homeSpread).toFixed(1)} vs the line
+                {game.totalLine !== null ? ` · total ${s.projectedTotal - game.totalLine >= 0 ? '+' : ''}${(s.projectedTotal - game.totalLine).toFixed(1)}` : ''}
+              </Text>
+            </View>
+          )}
         </View>
 
         {/* 2. Advantage matrix */}
@@ -115,7 +129,7 @@ export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
               <View style={[styles.injDot, { backgroundColor: sideColor(i.team) }]} />
               <View style={{ flex: 1 }}>
                 <Text style={styles.injName}>{i.player.name} <Text style={styles.injPos}>{i.player.pos} · {i.team === 'home' ? home.abbr : away.abbr} · {i.status.toUpperCase()}</Text></Text>
-                <Text style={styles.injMetric}>{i.metric}</Text>
+                <Text style={styles.injMetric}>{i.player.reportNote ? `${i.player.reportNote} · ` : ''}{i.metric}</Text>
               </View>
               <Text style={[styles.injPts, { color: colors.negative }]}>−{i.pointsLost.toFixed(1)} pts</Text>
             </View>
@@ -136,8 +150,9 @@ export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
         </Section>
 
         <Text style={styles.disclaimer}>
-          Ratings and depth charts are illustrative preseason-2026 estimates, not live data. Outputs are model
-          projections for analysis and entertainment — not betting advice.
+          Ratings, depth charts and injury statuses come from the live dataset (prior-season play-by-play blended with the
+          current season as games are played; see Model → About the data). Outputs are model projections for analysis and
+          entertainment — not betting advice.
         </Text>
       </ScrollView>
     </SafeAreaView>
@@ -180,6 +195,8 @@ const styles = StyleSheet.create({
   heroPct: { fontSize: 30, fontWeight: '900', letterSpacing: -1 },
   heroPctLabel: { color: colors.inkFaint, fontSize: 11, fontWeight: '700' },
   lines: { flexDirection: 'row', marginTop: spacing.lg, gap: spacing.sm },
+  marketRow: { flexDirection: 'row', alignItems: 'flex-start', gap: 6, marginTop: spacing.md, paddingHorizontal: 4 },
+  marketText: { color: colors.inkDim, fontSize: 12, fontWeight: '700', flex: 1, lineHeight: 17 },
   line: { flex: 1, backgroundColor: colors.cardAlt, borderRadius: radius.md, padding: spacing.md, alignItems: 'center' },
   lineLabel: { color: colors.inkFaint, fontSize: 10, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' },
   lineValue: { color: colors.gold, fontSize: 18, fontWeight: '900', marginTop: 4 },

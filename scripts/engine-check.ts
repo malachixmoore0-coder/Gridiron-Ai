@@ -3,7 +3,10 @@
  * Exits non-zero on any failed assertion.
  */
 import { analyzeMatchup, DEFAULT_WEIGHTS, normalizeWeights } from '../src/engine';
+import fs from 'node:fs';
+import path from 'node:path';
 import { TEAMS, getTeam } from '../src/data/teams';
+import type { Team } from '../src/engine/types';
 
 let failures = 0;
 const check = (cond: boolean, msg: string) => {
@@ -88,6 +91,29 @@ const pairs: [string, string][] = [['kc', 'buf'], ['gb', 'det'], ['sf', 'sea'], 
 for (const [away, home] of pairs) {
   const r = analyzeMatchup({ home: getTeam(home), away: getTeam(away) }, { simulations: 4000 });
   console.log(`    ${away.toUpperCase()} @ ${home.toUpperCase()}: home ${r.simulation.homeWinPct}% · spread ${r.simulation.spread} · total ${r.simulation.projectedTotal} · margin model ${r.modelMargin}`);
+}
+
+console.log('\n— Live dataset (data/live/teams.json)');
+const livePath = path.resolve(__dirname, '../data/live/teams.json');
+if (fs.existsSync(livePath)) {
+  const live = JSON.parse(fs.readFileSync(livePath, 'utf8')) as { generatedAt: string; season: number; teams: Team[] };
+  check(live.teams.length === 32, `live dataset has 32 teams (generated ${live.generatedAt})`);
+  check(live.teams.every((t) => t.players.some((p) => p.pos === 'QB' && p.role === 'starter')), 'every live team has a starting QB');
+  const liveIds = new Set(live.teams.flatMap((t) => t.players.map((p) => p.id)));
+  check(liveIds.size === live.teams.reduce((n, t) => n + t.players.length, 0), 'live player ids are unique');
+  let bad: string[] = [];
+  for (const t of live.teams) {
+    const opp = live.teams.find((o) => o.id !== t.id)!;
+    const r = analyzeMatchup({ home: t, away: opp }, { simulations: 1000 });
+    if (!Number.isFinite(r.simulation.homeWinPct) || r.simulation.projectedTotal < 28 || r.simulation.projectedTotal > 65) bad.push(t.abbr);
+  }
+  check(bad.length === 0, `all live teams simulate within bounds${bad.length ? ' — ' + bad.join(', ') : ''}`);
+  const sample = live.teams.find((t) => t.id === 'kc')!;
+  const vs = live.teams.find((t) => t.id === 'buf')!;
+  const r = analyzeMatchup({ home: vs, away: sample }, { simulations: 4000 });
+  console.log(`    live KC @ BUF: BUF ${r.simulation.homeWinPct}% · spread ${r.simulation.spread} · total ${r.simulation.projectedTotal}`);
+} else {
+  console.log('  (no live dataset built yet — run npm run data:build)');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

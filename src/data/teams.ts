@@ -52,14 +52,30 @@ const SCHEME_BIAS: Record<OffensiveScheme, { front: Record<DefensiveFront, numbe
 const slug = (s: string) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
 const c10 = (v: number) => Math.min(10, Math.max(1, Math.round(v * 10) / 10));
 
-function team(s: TeamSpec): Team {
-  const bias = SCHEME_BIAS[s.coaching.offScheme];
-  const base = s.offense.pass * 0.55 + s.offense.rush * 0.45;
-  const qbLift = (s.offense.qb - 5.5) * 0.3;
+/**
+ * Derive the offense-vs-front and offense-vs-coverage matrices from a scheme
+ * label and headline ratings. Shared with the live-data pipeline, which can
+ * measure production vs fronts directly but not vs coverage families.
+ */
+export function deriveSchemeMatrices(
+  offScheme: OffensiveScheme,
+  pass: number,
+  rush: number,
+  qb: number,
+  overrides?: { vsFront?: Partial<Record<DefensiveFront, number>>; vsCoverage?: Partial<Record<BaseCoverage, number>> },
+): { vsFront: Record<DefensiveFront, number>; vsCoverage: Record<BaseCoverage, number> } {
+  const bias = SCHEME_BIAS[offScheme];
+  const base = pass * 0.55 + rush * 0.45;
+  const qbLift = (qb - 5.5) * 0.3;
   const fronts: DefensiveFront[] = ['4-3', '3-4', 'Multiple'];
   const covs: BaseCoverage[] = ['Cover-1', 'Cover-2', 'Cover-3', 'Quarters', 'Cover-2 Man'];
-  const vsFront = Object.fromEntries(fronts.map((f) => [f, c10(s.offense.vsFront?.[f] ?? base + bias.front[f])])) as Record<DefensiveFront, number>;
-  const vsCoverage = Object.fromEntries(covs.map((k) => [k, c10(s.offense.vsCoverage?.[k] ?? base + bias.cov[k] + qbLift)])) as Record<BaseCoverage, number>;
+  const vsFront = Object.fromEntries(fronts.map((f) => [f, c10(overrides?.vsFront?.[f] ?? base + bias.front[f])])) as Record<DefensiveFront, number>;
+  const vsCoverage = Object.fromEntries(covs.map((k) => [k, c10(overrides?.vsCoverage?.[k] ?? base + bias.cov[k] + qbLift)])) as Record<BaseCoverage, number>;
+  return { vsFront, vsCoverage };
+}
+
+function team(s: TeamSpec): Team {
+  const { vsFront, vsCoverage } = deriveSchemeMatrices(s.coaching.offScheme, s.offense.pass, s.offense.rush, s.offense.qb, { vsFront: s.offense.vsFront, vsCoverage: s.offense.vsCoverage });
 
   return {
     id: s.id,

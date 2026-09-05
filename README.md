@@ -1,18 +1,63 @@
 # Gridiron AI 🏈
 
-**An NFL bias & predictive analytics engine in your pocket.** Pick any two
+**An NFL bias & predictive analytics engine, fed by live data.** Pick any two
 teams and Gridiron AI grades the matchup through four weighted analytical
 nodes, simulates the game 10,000 times, and returns win probability, a
 projected score and total, a 1-10 advantage matrix, a three-act game script and
-a sleeper report — with every factor that moved the number laid out for you.
+a sleeper report — with every factor that moved the number laid out for you,
+and the market line next to the model's.
 
-Gridiron AI is a standalone project: it shares no code, data or deployment
-with anything else, and the whole folder can be moved into its own repository
-as-is.
+The dataset behind it rebuilds itself on a schedule from public NFL data, so
+ratings, depth charts, injuries, schedules, betting lines and kickoff weather
+stay current without anyone touching a file.
 
-## What it does
+## How the data stays live
 
-### The analytical engine (`src/engine/`)
+```
+ nflverse (play-by-play, schedule + lines, rosters, depth charts,
+           injuries, snap counts, FTN charting, PFR advanced stats)
+ ESPN injuries · Open-Meteo forecasts      (best-effort extras)
+        │
+        ▼   GitHub Action, every 3 h in-season (refresh-data.yml)
+ pipeline/build.ts  ──►  data/live/{teams,schedule,meta}.json  ──►  commit
+        │
+        ▼
+ web app rebuilt & published to GitHub Pages
+        │
+        ▼
+ app fetches the newest JSON on launch (raw GitHub URL), caches it on-device,
+ and falls back to the copy bundled at build time.
+```
+
+What gets computed on every refresh:
+
+| Engine input | Source |
+| --- | --- |
+| Passing / rushing efficiency, explosiveness, success rate | EPA and yards per play from play-by-play |
+| Pass-block & pass-rush win rates | Pressure-based proxies: (QB hits + sacks) ÷ dropbacks, per team and per player (PFR pressures) |
+| Slot vs nickel, TE vs linebackers | EPA on short WR targets / on TE-and-RB targets, both sides of the ball |
+| 3rd-down conversion & stop rates, 4th-down go rate, red-zone TD rate | Play-by-play down-and-distance |
+| Play-action, motion, RPO and blitz rates | FTN charting joined to play-by-play |
+| Halftime and secondary adjustments | 2nd-half minus 1st-half EPA margins, shrunk toward average |
+| Offense vs 4-3 / 3-4 fronts | EPA split by the opponent's base front (from depth charts) |
+| Base front, head coach | Depth-chart position group; schedule file |
+| Depth charts, roles, snap shares | Latest team depth chart + snap counts |
+| Player grades, target share, TPRR, PRWR | Position-relative percentiles of production; targets ÷ (dropbacks × snap share); pressures per game |
+| Injury statuses | Official injury report (Out / Doubtful / Questionable) + roster reserve lists, ESPN as a fallback |
+| Schedule, spreads, totals, moneylines, roofs, primetime | nflverse schedule file |
+| Kickoff weather | Open-Meteo forecast for outdoor games inside the forecast window; observed temp/wind for finals |
+
+**Blending.** Team metrics are `w · current season + (1 − w) · prior season`
+with `w = games played ÷ (games played + 6)`, so Week 1 leans on last year and
+the model converges on this year by mid-season. `meta.json` records the
+weights, the sources that succeeded, and every proxy definition.
+
+**Still curated by hand:** each defence's preferred coverage family (Cover-1 /
+2 / 3 / Quarters / 2-Man), stadium noise, team colours and coordinates. They
+live in `src/data/teams.ts`, which also serves as the fallback if the bundle is
+ever missing.
+
+## The analytical engine (`src/engine/`)
 
 Every matchup is processed through four weighted nodes. Each node returns an
 **edge** (−10 to +10, positive favours the home team) plus the list of factors
@@ -20,154 +65,89 @@ that produced it, and its weighted edge becomes points of projected margin.
 
 | Node | Default weight | What it measures |
 | --- | --- | --- |
-| **Scheme & Tactical Bias** | 25% | Offense vs the *specific* front (4-3 / 3-4 / multiple) and base coverage (Cover-1 / 2 / 3 / Quarters / 2-Man) it will see; play-action leverage vs the opponent's linebackers and blitz rate; passing and rushing efficiency against what the defence actually stops; 3rd-down success vs the opponent's stop rate; 4th-down go rate, red-zone TD rate and aggressiveness; halftime and secondary adjustments. |
-| **Personnel & Matchup Edge** | 35% | Quarterback; **pass-block win rate vs pass-rush win rate** in both directions; slot receiver vs nickel corner; TE speed vs linebackers; explosive plays vs takeaways; and the **injury degradation metric** — a backup QB costs −18% win efficiency, a missing LT −12% pass protection, an edge rusher −8%, and so on (full table in the app's Model tab). |
-| **Environmental & Rivalry** | 15% | Home-field advantage of 2.5–4.5 win-probability points scaled by stadium noise, visitor travel distance, altitude and primetime; weather effects (wind / rain / snow / cold / heat / dome) on both the total and the more pass-dependent team; division and rivalry games raise variance and compress the spread. |
-| **Sleeper & X-Factor** | 25% | Target share and targets-per-route-run projections, rotational pass-rusher snap % and PRWR, target-tree concentration, and mismatch sleepers (a slot receiver vs a soft nickel, a TE vs slow LBs, a rusher vs a backup LT). |
+| **Scheme & Tactical Bias** | 25% | Offense vs the *specific* front and base coverage it will see; play-action leverage vs the opponent's linebackers and blitz rate; passing and rushing efficiency against what the defence actually stops; 3rd-down success vs stop rate; 4th-down go rate, red-zone TD rate and aggressiveness; halftime and secondary adjustments. |
+| **Personnel & Matchup Edge** | 35% | Quarterback; pass-block win rate vs pass-rush win rate in both directions; slot receiver vs nickel corner; TE speed vs linebackers; explosive plays vs takeaways; and the **injury degradation metric** — a backup QB costs −18% win efficiency, a missing LT −12% pass protection, an edge rusher −8%, and so on. |
+| **Environmental & Rivalry** | 15% | Home-field advantage of 2.5–4.5 win-probability points scaled by stadium noise, travel distance, altitude and primetime; weather effects on the total and on the more pass-dependent team; division and rivalry variance. |
+| **Sleeper & X-Factor** | 25% | Target share and targets-per-route-run projections, rotational pass-rusher snap % and PRWR, target-tree concentration, and mismatch sleepers. |
 
-The four edges are summed into a **model margin**, an expected total is
-derived from both offences, both defences, pace and weather, and then a
-seeded Monte-Carlo simulation (default **10,000 runs**, first half and second
-half sampled separately, overtime resolved) produces:
+A seeded Monte-Carlo simulation (default **10,000 runs**, halves sampled
+separately, overtime resolved) then produces the win probability & score
+metric, the advantage matrix, the simulation narrative (early script, halftime
+shifts, late-game clutch factor) and the 2-3 player sleeper report. Same
+inputs always reproduce the same games; "Re-roll" draws a fresh seed.
 
-1. **Win probability & score metric** — win %, projected score, total, spread
-   (with cover %), over %, one-score-game %, margin volatility.
-2. **Advantage matrix** — 1-10 ratings for both teams across Passing, Rushing,
-   Trench Play and Coaching, adjusted for the opponent they face.
-3. **Simulation narrative** — an early-game script, halftime scheme shifts and
-   the late-game clutch factor, all generated from the simulation statistics
-   (who leads at half and how often, comeback rates, 4th-quarter one-score
-   frequency, who has the 4th-down nerve, whose QB is the clutch tiebreaker).
-4. **X-factor / sleeper report** — the 2-3 depth or rotational players most
-   likely to move the spread, with a spread impact in points and a hit rate.
+## The app
 
-Simulations are **deterministic**: the same matchup, injury flags and model
-settings always reproduce the same games. "Re-roll" draws a fresh seed.
-
-### The app
-
-- **Matchup** — pick away @ home from a division grid, swap sides, toggle
-  neutral site / primetime, choose weather, see the injury report for both
-  sides, and run the simulation. Recent matchups are one tap away.
-- **Result** — everything above, plus each node's factor list (tap a node to
-  expand), the injury degradation table, a margin histogram and the three most
-  likely final scores.
-- **Slate** — a curated sample board of marquee matchups, each quick-simulated
-  (2,000 runs) with your current model and injury flags. Tap for the full run.
-- **Teams** — all 32 teams with scheme, front, coverage and coach; each team
-  page shows the coaching tendencies, offensive and defensive unit grades that
-  feed the nodes, and a depth chart where you tap a player's status to cycle
-  **Active → Questionable → Out**. Flags persist on-device and apply to every
-  matchup that team plays.
-- **Model** — edit the four node weights (auto-normalised to 100%), choose the
-  simulation count (2k / 5k / 10k / 25k), set the base home-field edge, review
-  the injury degradation metrics, clear all flags.
-
-## It ships on sample data — on purpose
-
-Team identities, divisions, stadiums and coordinates are factual. Every
-rating, coaching tendency and depth chart in `src/data/teams.ts` is a
-**preseason-2026 estimate** written to be realistic and internally consistent.
-It is not a live feed, and it will drift from reality as rosters and results
-change. Head coaches are listed only where the staff was settled when the
-dataset was written.
+- **Matchup** — defaults to this week's first game; pick any away @ home,
+  toggle neutral site / primetime, choose weather (auto-filled from the
+  forecast), see the reported injury report, and run. The market line and
+  kickoff show for scheduled games.
+- **Result** — everything above plus a model-vs-market comparison, each node's
+  factor list, the injury degradation table, a margin histogram and the most
+  likely finals.
+- **Slate** — the real current-week schedule, each game quick-simulated with
+  your model and compared to the market spread and total.
+- **Teams** — all 32 with live scheme, front, coach and record; each team page
+  shows the measured tendencies and unit grades feeding the nodes, and a depth
+  chart with reported statuses you can override (Active → Questionable → Out →
+  back to reported).
+- **Model** — node weights, simulation count, base home-field edge, the injury
+  metric table, and a live-data panel (source, freshness, blend, sources OK,
+  manual refresh).
 
 Nothing here is betting advice.
-
-### Bring your own data
-
-The engine only ever sees plain `Team` objects (see `src/engine/types.ts`), so
-swapping the sample dataset for a real one is a data problem, not a code
-problem:
-
-- **Edit in place.** Each team in `src/data/teams.ts` is a compact spec —
-  scheme labels, 1-10 unit ratings, win rates as 0-1 fractions, and a
-  `players` list of `[name, position, role, rating, snap%, { targetShare,
-  tprr, prwr, pbwr, note }]` rows. Change a number, save, and every screen
-  updates.
-- **Wire a feed.** Build `Team[]` from your source (a stats API, a spreadsheet
-  export, a scraper) and pass it to `analyzeMatchup()` — the app's `getTeam()`
-  helper is the single place the UI looks teams up.
-- **Schedule.** `src/data/slate.ts` is the curated sample board; replace it
-  with the real week.
-
-Run `npm run test:engine` after any data change — it asserts the whole league
-still simulates within sane bounds and that player ids stay unique.
 
 ## Run it
 
 ```bash
-cd Gridiron-AI
 npm install
-npx expo start
+npm run data:build        # pull live data → data/live/*.json (a minute or two)
+npx expo start            # i / a / w for iOS, Android, web
 ```
-
-Press `i` for the iOS simulator, `a` for Android, or `w` for web — or scan the
-QR code with the Expo Go app on your phone.
 
 ```bash
-npm run typecheck     # strict TypeScript over the whole app
-npm run test:engine   # deterministic engine sanity checks (no device needed)
+npm run typecheck         # app + pipeline
+npm run test:engine       # engine assertions, incl. the generated dataset
+npm run data:build:offline   # skip Open-Meteo calls
 ```
 
-## Build & deploy the web app
+Point the app at a different feed with `EXPO_PUBLIC_DATA_URL=https://…/data/live`.
 
-```bash
-npx expo export --platform web      # static bundle in ./dist
-npx serve dist                      # preview locally
-```
+## Deploy
 
-`dist/` is a plain static site with a web manifest and home-screen icons, so
-it can go anywhere: its own GitHub Pages repository, Netlify, Vercel, Cloudflare
-Pages, an S3 bucket. It is built for a domain root by default; to host under a
-sub-path set the base first:
+Two workflows ship with the repo:
 
-```bash
-EXPO_BASE_URL=/gridiron npx expo export --platform web
-```
+- **`refresh-data.yml`** — on a cron (every 3 h Sep–Feb, every 12 h otherwise)
+  and on demand: rebuilds the dataset, runs the engine checks, commits
+  `data/live/` if anything changed, rebuilds the web app and publishes it to
+  GitHub Pages.
+- **`deploy.yml`** — on pushes to `main` that touch app code: typecheck, engine
+  checks, build, publish.
 
-Once it's live, **Add to Home Screen** (Safari share sheet on iPhone, Chrome's
-⋮ menu on Android) installs it full-screen with its own icon. Settings and
-injury flags are stored in that browser's local storage.
+One-time setup in the repository: **Settings → Pages → Build and deployment →
+Source: GitHub Actions** (the workflow also attempts to enable this itself).
+The site then lives at `https://<owner>.github.io/<repo>/`. On a phone, **Add
+to Home Screen** installs it full-screen with its own icon.
 
-To ship a native build instead:
-
-```bash
-npm install -g eas-cli
-eas login
-eas build --platform ios --profile preview
-```
+Native builds: `eas build --platform ios --profile preview`.
 
 ## Structure
 
 ```
-Gridiron-AI/
-├── App.tsx
-├── scripts/
-│   ├── engine-check.ts        # npm run test:engine
-│   └── make-icons.js          # regenerates assets/icon.png + public icons (pure Node)
+├── .github/workflows/     refresh-data.yml · deploy.yml
+├── data/live/             generated: teams.json · schedule.json · meta.json
+├── pipeline/              the data build (Node 20, TypeScript)
+│   ├── build.ts           orchestration, validation, writes data/live
+│   ├── sources/           nflverse.ts (streamed pbp aggregator) · espn.ts · weather.ts
+│   ├── compute/           teams.ts · players.ts · schedule.ts
+│   └── lib/               fetch/cache/CSV streaming · math helpers
+├── scripts/               engine-check.ts · make-icons.js
 ├── src/
-│   ├── engine/                # pure TypeScript, no React — usable anywhere
-│   │   ├── types.ts           # Team, Player, MatchupInput, MatchupAnalysis, ...
-│   │   ├── weights.ts         # 25/35/15/25 defaults, injury table, HFA bounds
-│   │   ├── nodes.ts           # the four weighted nodes
-│   │   ├── injuries.ts        # degradation metric → unit downgrades
-│   │   ├── simulate.ts        # seeded 10,000-run Monte Carlo
-│   │   ├── matrix.ts          # 1-10 advantage matrix
-│   │   ├── narrative.ts       # three-act game script
-│   │   ├── rng.ts / math.ts
-│   │   └── index.ts           # analyzeMatchup()
-│   ├── data/
-│   │   ├── teams.ts           # 32-team sample dataset (editable)
-│   │   └── slate.ts           # sample matchup board
-│   ├── context/SettingsContext.tsx   # weights, sims, HFA, injury flags (persisted)
-│   ├── hooks/useAnalysis.ts   # memoised engine runs for the UI
-│   ├── components/            # TeamMark, ProbBar, MatrixRow, NodeCard, SleeperCard, ...
-│   ├── screens/               # Matchup, Result, Slate, Teams, TeamDetail, Settings, Onboarding
-│   ├── navigation/RootNavigator.tsx
-│   └── theme.ts
-└── public/                    # web manifest + home-screen icons
+│   ├── engine/            pure TypeScript engine (nodes, injuries, simulate, matrix, narrative)
+│   ├── data/              teams.ts (curated baseline + fallback) · liveTypes.ts · slate.ts
+│   ├── context/           TeamsContext (live data) · SettingsContext (weights, overrides)
+│   ├── hooks/ components/ screens/ navigation/ theme.ts
+└── App.tsx
 ```
 
-Built with Expo + React Native + TypeScript. No backend, no accounts, no
-tracking.
+Built with Expo + React Native + TypeScript. No backend, no accounts, no keys.

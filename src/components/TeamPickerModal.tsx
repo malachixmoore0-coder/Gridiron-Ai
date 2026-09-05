@@ -3,7 +3,7 @@ import { Modal, View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'rea
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import type { Team } from '@/engine/types';
-import { DIVISIONS } from '@/data/teams';
+import { useTeams } from '@/context/TeamsContext';
 import { colors, radius, spacing } from '@/theme';
 import { TeamMark } from './TeamMark';
 
@@ -17,6 +17,7 @@ interface Props {
 }
 
 export function TeamPickerModal({ visible, title, selectedId, excludeId, onSelect, onClose }: Props) {
+  const { divisions: DIVISIONS } = useTeams();
   return (
     <Modal visible={visible} animationType="slide" onRequestClose={onClose} presentationStyle="pageSheet">
       <SafeAreaView style={styles.root} edges={['top', 'bottom']}>
