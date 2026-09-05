@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T10:37:06.654Z",
+ "generatedAt": "2026-09-05T15:18:33.937Z",
  "season": 2026,
  "week": 1,
  "phase": "preseason",
@@ -22,8 +22,15 @@
    "awayMoneyline": 150,
    "homeMoneyline": -180,
    "primetime": true,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 76.2,
+    "windMph": 7.4,
+    "precipPct": 0,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -43,8 +50,8 @@
    "roof": "dome",
    "homeSpread": -3.5,
    "totalLine": 48.5,
-   "awayMoneyline": 164,
-   "homeMoneyline": -198,
+   "awayMoneyline": 160,
+   "homeMoneyline": -192,
    "primetime": true,
    "weather": null,
    "weatherHint": "dome",
@@ -70,8 +77,15 @@
    "awayMoneyline": -148,
    "homeMoneyline": 124,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 86.7,
+    "windMph": 4.6,
+    "precipPct": 2,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -94,8 +108,15 @@
    "awayMoneyline": 170,
    "homeMoneyline": -205,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 92.2,
+    "windMph": 8.8,
+    "precipPct": 8,
+    "snowIn": 0,
+    "summary": "heat",
+    "source": "forecast"
+   },
+   "weatherHint": "heat",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -190,8 +211,15 @@
    "awayMoneyline": 320,
    "homeMoneyline": -410,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 91.5,
+    "windMph": 7.2,
+    "precipPct": 7,
+    "snowIn": 0,
+    "summary": "heat",
+    "source": "forecast"
+   },
+   "weatherHint": "heat",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -214,8 +242,15 @@
    "awayMoneyline": 154,
    "homeMoneyline": -185,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 85.7,
+    "windMph": 8.4,
+    "precipPct": 9,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -238,8 +273,15 @@
    "awayMoneyline": 110,
    "homeMoneyline": -130,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 92.4,
+    "windMph": 6.6,
+    "precipPct": 10,
+    "snowIn": 0,
+    "summary": "heat",
+    "source": "forecast"
+   },
+   "weatherHint": "heat",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -334,8 +376,15 @@
    "awayMoneyline": 180,
    "homeMoneyline": -218,
    "primetime": false,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 84.5,
+    "windMph": 7.8,
+    "precipPct": 12,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -358,8 +407,15 @@
    "awayMoneyline": -148,
    "homeMoneyline": 124,
    "primetime": true,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 75.9,
+    "windMph": 5.3,
+    "precipPct": 9,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -382,8 +438,15 @@
    "awayMoneyline": 124,
    "homeMoneyline": -148,
    "primetime": true,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 86,
+    "windMph": 12.8,
+    "precipPct": 15,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -406,8 +469,15 @@
    "awayMoneyline": 136,
    "homeMoneyline": -162,
    "primetime": true,
-   "weather": null,
-   "weatherHint": null,
+   "weather": {
+    "tempF": 66.4,
+    "windMph": 8,
+    "precipPct": 13,
+    "snowIn": 0,
+    "summary": "clear",
+    "source": "forecast"
+   },
+   "weatherHint": "clear",
    "awayScore": null,
    "homeScore": null,
    "status": "scheduled"
@@ -739,8 +809,8 @@
    "roof": "outdoors",
    "homeSpread": -6.5,
    "totalLine": 47.5,
-   "awayMoneyline": 270,
-   "homeMoneyline": -340,
+   "awayMoneyline": 260,
+   "homeMoneyline": -325,
    "primetime": true,
    "weather": null,
    "weatherHint": null,
