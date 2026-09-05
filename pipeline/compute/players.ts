@@ -112,10 +112,17 @@ export function buildPlayers(ctx: BuildCtx, fronts: Map<string, '4-3' | '3-4'>):
       for (const r of ordered) {
         if (kept >= CAP[pos]) break;
         if (r.pos_rank > ranks.length) continue;
+        if (!r.player_name || !r.player_name.trim()) continue; // blank depth-chart slot
         if (seen.has(r.gsis_id || r.player_name)) continue;
+        const roster = rosterByGsis.get(r.gsis_id) ?? rosterByName.get(`${nv}|${r.player_name.toLowerCase()}`);
+        // The roster file is the authority on who is actually on the team: drop players the
+        // depth-chart snapshot still lists after they were cut, retired, or moved elsewhere.
+        if (roster && (roster.status === 'CUT' || roster.status === 'RET' || roster.team !== nv)) {
+          ctx.notes.push(`${b.abbr}: dropped ${r.player_name} from depth chart (roster: ${roster.team} ${roster.status}).`);
+          continue;
+        }
         seen.add(r.gsis_id || r.player_name);
         const role = ranks[r.pos_rank - 1];
-        const roster = rosterByGsis.get(r.gsis_id) ?? rosterByName.get(`${nv}|${r.player_name.toLowerCase()}`);
         const cur = ctx.cur?.players.get(r.gsis_id);
         const prior = ctx.prior?.players.get(r.gsis_id);
         const s = sum(cur, prior, w);
@@ -214,7 +221,9 @@ export function buildPlayers(ctx: BuildCtx, fronts: Map<string, '4-3' | '3-4'>):
       if (st === 'Questionable') return { reported: 'questionable', reportNote: `${inj.report_primary_injury || 'Injury'} · Questionable` };
     }
     const rs = c.roster?.status;
-    if (rs === 'RES' || rs === 'PUP' || rs === 'NON' || rs === 'SUS') return { reported: 'out', reportNote: rs === 'RES' ? 'Reserve list (IR)' : rs === 'SUS' ? 'Suspended' : 'Reserve/PUP' };
+    if (rs === 'RES' || rs === 'PUP' || rs === 'NON' || rs === 'SUS' || rs === 'EXE') {
+      return { reported: 'out', reportNote: rs === 'RES' ? 'Reserve list (IR)' : rs === 'SUS' ? 'Suspended' : rs === 'EXE' ? 'Exempt list' : 'Reserve/PUP' };
+    }
     const e = espnByKey.get(`${c.teamId}|${c.depth.player_name.toLowerCase()}`);
     if (e) {
       const st = e.status.toLowerCase();
