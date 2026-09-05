@@ -1,0 +1,105 @@
+import React from 'react';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import type { NodeWeights } from '@/engine/types';
+import { normalizeWeights } from '@/engine/weights';
+import { colors, radius, spacing } from '@/theme';
+import { useSettings, SimCount } from '@/context/SettingsContext';
+import { Section } from '@/components/Section';
+import { Stepper } from '@/components/Stepper';
+import { Chip } from '@/components/Chip';
+import { ScreenHeader } from '@/components/ScreenHeader';
+
+const NODES: { key: keyof NodeWeights; label: string; hint: string }[] = [
+  { key: 'scheme', label: 'Scheme & Tactical Bias', hint: 'Fronts, coverages, play-action, 3rd/4th down, red zone, adjustments' },
+  { key: 'personnel', label: 'Personnel & Matchup Edge', hint: 'QB, PBWR vs PRWR, slot vs nickel, TE vs LB, injury degradation' },
+  { key: 'environment', label: 'Environmental & Rivalry', hint: 'Home field (noise, travel, altitude), weather, division variance' },
+  { key: 'xfactor', label: 'Sleeper & X-Factor', hint: 'Target share, TPRR, rotational rushers, target-tree concentration' },
+];
+
+const SIMS: SimCount[] = [2000, 5000, 10000, 25000];
+
+export function SettingsScreen() {
+  const s = useSettings();
+  const norm = normalizeWeights(s.weights);
+  const rawTotal = s.weights.scheme + s.weights.personnel + s.weights.environment + s.weights.xfactor;
+
+  return (
+    <SafeAreaView style={styles.root} edges={['top']}>
+      <ScreenHeader title="Model" subtitle="Tune the engine's weighted nodes" />
+      <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+        <Section
+          icon="git-network"
+          title="Node weights"
+          subtitle={rawTotal === 100 ? 'Sums to 100' : `Raw sum ${rawTotal} → normalised to 100`}
+          right={(
+            <TouchableOpacity onPress={s.resetWeights} style={styles.reset}><Text style={styles.resetText}>Reset</Text></TouchableOpacity>
+          )}
+        >
+          {NODES.map((n) => (
+            <View key={n.key}>
+              <Stepper label={n.label} hint={n.hint} value={s.weights[n.key]} step={5} min={0} max={100} format={(v) => `${v}%`} onChange={(v) => s.setWeight(n.key, v)} />
+              <View style={styles.track}><View style={[styles.fill, { width: `${norm[n.key]}%` }]} /></View>
+            </View>
+          ))}
+          <Text style={styles.small}>Effective: Scheme {Math.round(norm.scheme)}% · Personnel {Math.round(norm.personnel)}% · Environment {Math.round(norm.environment)}% · X-Factor {Math.round(norm.xfactor)}%</Text>
+        </Section>
+
+        <Section icon="repeat" title="Simulation runs" subtitle="More runs = smoother probabilities, slower on old phones">
+          <View style={styles.wrapRow}>
+            {SIMS.map((n) => <Chip key={n} label={n.toLocaleString()} active={s.simulations === n} onPress={() => s.setSimulations(n)} />)}
+          </View>
+        </Section>
+
+        <Section icon="home" title="Home-field base" subtitle="Win-probability points before stadium noise, travel & altitude">
+          <Stepper label="Base HFA" hint="Spec range 2.5% – 4.5%" value={s.homeFieldBase} step={0.25} min={2.5} max={4.5} format={(v) => `${v.toFixed(2)}%`} onChange={s.setHomeFieldBase} />
+        </Section>
+
+        <Section icon="medkit" title="Injury degradation metrics" subtitle="Win-efficiency cost of losing a starter">
+          <Row k="Quarterback" v="−18% win efficiency" />
+          <Row k="Left tackle" v="−12% pass protection" />
+          <Row k="Edge rusher" v="−8% pass-rush win rate" />
+          <Row k="WR1 / CB1" v="−7% passing / coverage efficiency" />
+          <Row k="Interior OL / DT / nickel" v="−5%" />
+          <Row k="RB / TE / LB / S" v="−4%" />
+          <Text style={styles.small}>Rotational players carry half the hit, depth players a fifth. "Questionable" applies half of the listed amount.</Text>
+          <TouchableOpacity style={styles.danger} onPress={s.clearInjuries}><Text style={styles.dangerText}>Clear all injury flags</Text></TouchableOpacity>
+        </Section>
+
+        <Section icon="information-circle" title="About the data" subtitle="Read this before trusting a number">
+          <Text style={styles.about}>
+            Team identities, divisions and stadiums are factual. Every rating, tendency and depth chart is a preseason-2026
+            estimate authored to be realistic and internally consistent — it is not a live feed and will drift from reality as the
+            season moves. Edit <Text style={styles.code}>src/data/teams.ts</Text> or wire a data source to replace it.
+            {'\n\n'}Simulations are deterministic: the same matchup, injuries and settings always reproduce the same 10,000 games.
+            "Re-roll" on a result page draws a fresh seed.
+          </Text>
+        </Section>
+      </ScrollView>
+    </SafeAreaView>
+  );
+}
+
+function Row({ k, v }: { k: string; v: string }) {
+  return (
+    <View style={styles.row}><Text style={styles.rowKey}>{k}</Text><Text style={styles.rowVal}>{v}</Text></View>
+  );
+}
+
+const styles = StyleSheet.create({
+  root: { flex: 1, backgroundColor: colors.bg },
+  content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl },
+  reset: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
+  resetText: { color: colors.ink, fontWeight: '800', fontSize: 12 },
+  track: { height: 4, borderRadius: 2, backgroundColor: colors.bg, marginBottom: 6, overflow: 'hidden' },
+  fill: { height: '100%', backgroundColor: colors.gold },
+  small: { color: colors.inkFaint, fontSize: 11, lineHeight: 16, marginTop: spacing.sm },
+  wrapRow: { flexDirection: 'row', flexWrap: 'wrap', gap: spacing.sm },
+  row: { flexDirection: 'row', justifyContent: 'space-between', paddingVertical: 7, borderBottomWidth: 1, borderBottomColor: colors.divider },
+  rowKey: { color: colors.inkDim, fontSize: 13, fontWeight: '700' },
+  rowVal: { color: colors.ink, fontSize: 13, fontWeight: '800' },
+  danger: { marginTop: spacing.md, alignItems: 'center', paddingVertical: 12, borderRadius: radius.md, borderWidth: 1, borderColor: colors.negative },
+  dangerText: { color: colors.negative, fontWeight: '800', fontSize: 13 },
+  about: { color: colors.inkDim, fontSize: 13, lineHeight: 20 },
+  code: { color: colors.gold, fontWeight: '800' },
+});
