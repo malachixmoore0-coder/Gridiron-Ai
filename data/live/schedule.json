@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T20:26:46.589Z",
+ "generatedAt": "2026-09-05T22:57:42.311Z",
  "season": 2026,
  "week": 1,
  "phase": "preseason",
@@ -74,13 +74,13 @@
    "roof": "outdoors",
    "homeSpread": 2.5,
    "totalLine": 47.5,
-   "awayMoneyline": -148,
-   "homeMoneyline": 124,
+   "awayMoneyline": -155,
+   "homeMoneyline": 130,
    "primetime": false,
    "weather": {
     "tempF": 85.8,
     "windMph": 4.9,
-    "precipPct": 2,
+    "precipPct": 4,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
@@ -111,7 +111,7 @@
    "weather": {
     "tempF": 89.5,
     "windMph": 9.7,
-    "precipPct": 8,
+    "precipPct": 14,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -214,7 +214,7 @@
    "weather": {
     "tempF": 96.3,
     "windMph": 2.5,
-    "precipPct": 7,
+    "precipPct": 11,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -245,7 +245,7 @@
    "weather": {
     "tempF": 84.9,
     "windMph": 10.6,
-    "precipPct": 9,
+    "precipPct": 12,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
@@ -270,8 +270,8 @@
    "roof": "outdoors",
    "homeSpread": -1.5,
    "totalLine": 39.5,
-   "awayMoneyline": 110,
-   "homeMoneyline": -130,
+   "awayMoneyline": 114,
+   "homeMoneyline": -135,
    "primetime": false,
    "weather": {
     "tempF": 86,
@@ -379,7 +379,7 @@
    "weather": {
     "tempF": 83.2,
     "windMph": 8.5,
-    "precipPct": 12,
+    "precipPct": 13,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
@@ -441,7 +441,7 @@
    "weather": {
     "tempF": 84.8,
     "windMph": 9.2,
-    "precipPct": 15,
+    "precipPct": 11,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
