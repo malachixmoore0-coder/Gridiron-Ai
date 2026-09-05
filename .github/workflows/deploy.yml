@@ -39,7 +39,6 @@ jobs:
       - name: Prepare Pages artifact
         run: |
           cp dist/index.html dist/404.html
-          cp -r public/. dist/ 2>/dev/null || true
       - uses: actions/configure-pages@v5
         with:
           enablement: true
