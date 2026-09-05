@@ -126,7 +126,7 @@ Two workflows ship with the repo:
 
 One-time setup in the repository: **Settings → Pages → Build and deployment →
 Source: GitHub Actions** (the workflow also attempts to enable this itself).
-The site then lives at `https://<owner>.github.io/<repo>/`. On a phone, **Add
+The site then lives at `https://malachixmoore0-coder.github.io/Gridiron-Ai/`. On a phone, **Add
 to Home Screen** installs it full-screen with its own icon.
 
 Native builds: `eas build --platform ios --profile preview`.

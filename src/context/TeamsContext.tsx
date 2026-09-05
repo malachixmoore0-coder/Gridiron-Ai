@@ -16,7 +16,7 @@ import bundledMeta from '../../data/live/meta.json';
 
 export const DATA_URL: string =
   (process.env.EXPO_PUBLIC_DATA_URL as string | undefined)?.replace(/\/$/, '') ??
-  'https://raw.githubusercontent.com/malachixmoore0-coder/gridiron-ai/main/data/live';
+  'https://raw.githubusercontent.com/malachixmoore0-coder/Gridiron-Ai/main/data/live';
 
 const CACHE_KEY = 'gridiron-ai.live-data.v1';
 const FETCH_TIMEOUT_MS = 15_000;
