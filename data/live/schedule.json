@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T02:15:55.960Z",
+ "generatedAt": "2026-09-06T04:45:51.264Z",
  "season": 2026,
  "week": 1,
  "phase": "preseason",
@@ -80,7 +80,7 @@
    "weather": {
     "tempF": 91.3,
     "windMph": 5.2,
-    "precipPct": 4,
+    "precipPct": 8,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -111,7 +111,7 @@
    "weather": {
     "tempF": 87.3,
     "windMph": 8.4,
-    "precipPct": 14,
+    "precipPct": 11,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
@@ -214,7 +214,7 @@
    "weather": {
     "tempF": 96.5,
     "windMph": 1.1,
-    "precipPct": 11,
+    "precipPct": 10,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -276,7 +276,7 @@
    "weather": {
     "tempF": 94.1,
     "windMph": 6,
-    "precipPct": 10,
+    "precipPct": 9,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -379,7 +379,7 @@
    "weather": {
     "tempF": 93.1,
     "windMph": 8.2,
-    "precipPct": 13,
+    "precipPct": 8,
     "snowIn": 0,
     "summary": "heat",
     "source": "forecast"
@@ -410,7 +410,7 @@
    "weather": {
     "tempF": 79.8,
     "windMph": 7.2,
-    "precipPct": 9,
+    "precipPct": 7,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
@@ -441,7 +441,7 @@
    "weather": {
     "tempF": 59.6,
     "windMph": 7.9,
-    "precipPct": 11,
+    "precipPct": 14,
     "snowIn": 0,
     "summary": "clear",
     "source": "forecast"
