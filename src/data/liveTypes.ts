@@ -26,13 +26,28 @@ export interface LiveGame {
   weatherHint: Weather | null;
   awayScore: number | null;
   homeScore: number | null;
-  status: 'scheduled' | 'final';
+  status: GameStatus;
+  /** Live clock when a game is under way, e.g. "Q3 8:24" or "Halftime". */
+  statusDetail: string | null;
+  /** TV network when the scoreboard has one. */
+  broadcast?: string | null;
 }
 
 export type Phase = 'preseason' | 'regular' | 'postseason' | 'offseason';
+/** A game the feed knows about is either still to come, under way, or done. */
+export type GameStatus = 'scheduled' | 'in_progress' | 'final';
 
 export interface LiveTeamsFile { generatedAt: string; season: number; week: number; phase: Phase; teams: Team[]; }
-export interface LiveScheduleFile { generatedAt: string; season: number; week: number; phase: Phase; games: LiveGame[]; }
+export interface LiveScheduleFile {
+  generatedAt: string;
+  season: number;
+  /** The week the slate opens on. */
+  week: number;
+  phase: Phase;
+  /** Every week the season has games for, in order — drives the Slate's week tabs. */
+  weeks?: { week: number; gameType: string; label: string; games: number; final: number; live: number; start: string }[];
+  games: LiveGame[];
+}
 export interface LiveMetaFile {
   generatedAt: string;
   season: number;

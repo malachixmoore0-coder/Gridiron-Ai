@@ -86,8 +86,10 @@ inputs always reproduce the same games; "Re-roll" draws a fresh seed.
 - **Result** — everything above plus a model-vs-market comparison, each node's
   factor list, the injury degradation table, a margin histogram and the most
   likely finals.
-- **Slate** — the real current-week schedule, each game quick-simulated with
-  your model and compared to the market spread and total.
+- **Slate** — the whole season, one tab per week, opening on the current one.
+  Within a week the games split into **Playing now** (live score and clock),
+  **Upcoming** (model vs the market before kickoff) and **Final** (with whether
+  the model called it), filtered by Division / Primetime / AFC / NFC.
 - **Record** — the model's track record. Every refresh predicts each upcoming
   game with the default model and the market line at that moment; the
   prediction is rewritten until kickoff, then frozen, then graded when the

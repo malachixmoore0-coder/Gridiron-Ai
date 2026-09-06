@@ -20,7 +20,7 @@ import { loadEspnInjuries, loadScoreboard } from './sources/espn';
 import type { BuildCtx } from './compute/context';
 import { buildTeams, detectFront, roundMetrics } from './compute/teams';
 import { buildRosters, depthChartFrom } from './compute/rosters';
-import { buildSchedule, currentWeek, mergeResults, records, weekByDate } from './compute/schedule';
+import { buildSchedule, currentWeek, mergeResults, records, weekByDate, weekIndex } from './compute/schedule';
 import { summarize, updatePredictions } from './compute/predictions';
 import type { LivePredictionsFile } from '../src/data/liveTypes';
 import { blendWeight, gamesPlayed } from './compute/context';
@@ -99,8 +99,9 @@ async function main() {
   console.log(`  ${[...rosterFiles.values()].reduce((n, f) => n + f.roster.length, 0)} rostered players · ${teams.reduce((n, t) => n + t.players.length, 0)} on depth charts · ${[...rosterFiles.values()].reduce((n, f) => n + f.roster.filter((p) => p.games.length).length, 0)} with game logs`);
 
   console.log('\n[6/7] Schedule, lines & weather');
-  const schedule = await buildSchedule(games, season, week, teams, withWeather);
-  console.log(`  ${schedule.length} games for weeks ${week}-${week + 1} · weather on ${schedule.filter((g) => g.weather).length}`);
+  const schedule = await buildSchedule(games, season, week, teams, withWeather, espn, today);
+  const weeks = weekIndex(schedule);
+  console.log(`  ${schedule.length} games across ${weeks.length} weeks · ${schedule.filter((g) => g.status === 'final').length} final · ${schedule.filter((g) => g.status === 'in_progress').length} live · weather on ${schedule.filter((g) => g.weather).length}`);
 
   console.log('\n[7/7] Model track record');
   const predPath = path.join(OUT_DIR, 'predictions.json');
@@ -163,7 +164,7 @@ async function main() {
     teamMetrics: Object.fromEntries(built.map((b) => [b.team.id, { gamesPlayed: b.gp, ...roundMetrics(b.metrics) }])),
   };
   fs.writeFileSync(path.join(OUT_DIR, 'teams.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, teams }, null, 1));
-  fs.writeFileSync(path.join(OUT_DIR, 'schedule.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, games: schedule }, null, 1));
+  fs.writeFileSync(path.join(OUT_DIR, 'schedule.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, weeks, games: schedule }));
   fs.writeFileSync(path.join(OUT_DIR, 'meta.json'), JSON.stringify(meta, null, 1));
   fs.writeFileSync(predPath, JSON.stringify(predictions, null, 1));
   const rosterDir = path.join(OUT_DIR, 'rosters');

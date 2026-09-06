@@ -37,6 +37,12 @@ export interface EspnGame {
   homeAbbr: string; awayAbbr: string;
   /** Scores once the game has started; `final` when ESPN marks it complete. */
   homeScore: number | null; awayScore: number | null; final: boolean;
+  /** Under way right now (kicked off, not yet final). */
+  live: boolean;
+  /** Live clock, e.g. "Q3 8:24" or "Halftime". */
+  detail: string | null;
+  /** TV network when the scoreboard lists one. */
+  broadcast: string | null;
   homeSpread: number | null; total: number | null; provider: string | null;
 }
 
@@ -73,6 +79,9 @@ export async function loadScoreboard(season: number, week: number, seasonType = 
         id: String(ev.id), kickoff: String(comp.date ?? ev.date ?? ''), status: st,
         homeAbbr: teamId(home.team.abbreviation), awayAbbr: teamId(away.team.abbreviation),
         homeScore: sc(home), awayScore: sc(away), final: st === 'STATUS_FINAL' || !!comp.status?.type?.completed,
+        live: started && !(st === 'STATUS_FINAL' || !!comp.status?.type?.completed) && st !== 'STATUS_POSTPONED' && st !== 'STATUS_CANCELED',
+        detail: (comp.status?.type?.shortDetail ?? comp.status?.type?.detail ?? null) || null,
+        broadcast: comp.broadcasts?.[0]?.names?.[0] ?? comp.geoBroadcasts?.[0]?.media?.shortName ?? null,
         homeSpread, total: typeof odds?.overUnder === 'number' ? odds.overUnder : null, provider: odds?.provider?.name ?? null,
       });
     }

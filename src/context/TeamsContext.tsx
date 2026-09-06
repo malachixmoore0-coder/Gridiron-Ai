@@ -24,7 +24,30 @@ const FETCH_TIMEOUT_MS = 15_000;
 
 export type DataSource = 'remote' | 'cache' | 'bundled' | 'sample';
 
-interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; predictions: LivePredictionsFile | null; generatedAt: string; season: number; week: number; phase: Phase; }
+interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; predictions: LivePredictionsFile | null; weeks: NonNullable<LiveScheduleFile['weeks']>; generatedAt: string; season: number; week: number; phase: Phase; }
+
+/** Older feeds shipped only two weeks and no index — derive one so the app still works. */
+function weeksOf(file: Partial<LiveScheduleFile> | null | undefined, games: LiveGame[]): NonNullable<LiveScheduleFile['weeks']> {
+  if (file?.weeks?.length) return file.weeks;
+  const label = (gameType: string, week: number) =>
+    gameType === 'REG' ? `Week ${week}` : gameType === 'WC' ? 'Wild Card' : gameType === 'DIV' ? 'Divisional' : gameType === 'CON' ? 'Conf. Champ' : gameType === 'SB' ? 'Super Bowl' : gameType;
+  const byKey = new Map<string, LiveGame[]>();
+  for (const g of games) {
+    const key = `${g.gameType}|${g.week}`;
+    (byKey.get(key) ?? byKey.set(key, []).get(key)!).push(g);
+  }
+  return [...byKey.entries()]
+    .map(([key, list]) => ({
+      week: Number(key.split('|')[1]),
+      gameType: key.split('|')[0],
+      label: label(key.split('|')[0], Number(key.split('|')[1])),
+      games: list.length,
+      final: list.filter((g) => g.status === 'final').length,
+      live: list.filter((g) => g.status === 'in_progress').length,
+      start: list.map((g) => g.kickoff).sort()[0] ?? '',
+    }))
+    .sort((a, b) => a.start.localeCompare(b.start) || a.week - b.week);
+}
 
 interface TeamsState extends Dataset {
   source: DataSource;
@@ -34,8 +57,12 @@ interface TeamsState extends Dataset {
   getTeam: (id: string) => Team;
   hasTeam: (id: string) => boolean;
   divisions: { conference: Team['conference']; division: Team['division']; teams: Team[] }[];
-  /** Upcoming (or most recent) scheduled games for the current week. */
+  /** Games for the current week (the slate's default tab). */
   weekGames: LiveGame[];
+  /** Every week the published slate covers, in order. */
+  weeks: NonNullable<LiveScheduleFile['weeks']>;
+  /** Games for one week of a given type. */
+  gamesForWeek: (week: number, gameType: string) => LiveGame[];
   /** Find the scheduled game for a matchup, if it is on the slate. */
   findGame: (awayId: string, homeId: string) => LiveGame | undefined;
   /** Model track record: every pre-kickoff prediction the feed has made this season. */
@@ -52,9 +79,9 @@ function bundled(): { data: Dataset; source: DataSource } {
   const m = bundledMeta as unknown as LiveMetaFile;
   const p = bundledPredictions as unknown as LivePredictionsFile;
   if (Array.isArray(t?.teams) && t.teams.length === 32) {
-    return { data: { teams: t.teams, games: s?.games ?? [], meta: m ?? null, predictions: Array.isArray(p?.records) ? p : null, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase }, source: 'bundled' };
+    return { data: { teams: t.teams, games: s?.games ?? [], meta: m ?? null, predictions: Array.isArray(p?.records) ? p : null, weeks: weeksOf(s, s?.games ?? []), generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase }, source: 'bundled' };
   }
-  return { data: { teams: SAMPLE_TEAMS, games: [], meta: null, predictions: null, generatedAt: '', season: 2026, week: 1, phase: 'preseason' }, source: 'sample' };
+  return { data: { teams: SAMPLE_TEAMS, games: [], meta: null, predictions: null, weeks: [], generatedAt: '', season: 2026, week: 1, phase: 'preseason' }, source: 'sample' };
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -91,7 +118,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
         fetchJson<LiveMetaFile>(`${DATA_URL}/meta.json`).catch(() => null),
         fetchJson<LivePredictionsFile>(`${DATA_URL}/predictions.json`).catch(() => null),
       ]);
-      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, predictions: p && Array.isArray(p.records) ? p : null, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
+      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, predictions: p && Array.isArray(p.records) ? p : null, weeks: weeksOf(s, s.games ?? []), generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
       if (!validDataset(next)) throw new Error('Unexpected dataset shape');
       if (!mounted.current) return;
       setData((cur) => (next.generatedAt >= cur.generatedAt ? next : cur));
@@ -130,10 +157,13 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
     const divisions = (['AFC', 'NFC'] as const).flatMap((conference) =>
       (['East', 'North', 'South', 'West'] as const).map((division) => ({ conference, division, teams: data.teams.filter((t) => t.conference === conference && t.division === division) })),
     );
-    const weekGames = data.games.filter((g) => g.week === data.week && byId.has(g.awayId) && byId.has(g.homeId));
+    const known = (g: LiveGame) => byId.has(g.awayId) && byId.has(g.homeId);
+    const weekGames = data.games.filter((g) => g.week === data.week && known(g));
     return {
       ...data, source, refreshing, lastError, lastChecked, getTeam, hasTeam: (id) => byId.has(id), divisions, weekGames,
       findGame: (awayId, homeId) => data.games.find((g) => g.awayId === awayId && g.homeId === homeId),
+      weeks: data.weeks,
+      gamesForWeek: (week, gameType) => data.games.filter((g) => g.week === week && g.gameType === gameType && known(g)),
       records: data.predictions?.records.filter((r) => byId.has(r.awayId) && byId.has(r.homeId)) ?? [],
       findRecord: (gameId) => data.predictions?.records.find((r) => r.id === gameId),
       refresh,
