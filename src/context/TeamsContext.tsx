@@ -9,10 +9,11 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Team } from '@/engine/types';
 import { TEAMS as SAMPLE_TEAMS } from '@/data/teams';
-import type { LiveGame, LiveMetaFile, LiveScheduleFile, LiveTeamsFile, Phase } from '@/data/liveTypes';
+import type { LiveGame, LiveMetaFile, LivePredictionsFile, LiveScheduleFile, LiveTeamsFile, Phase, PredictionRecord } from '@/data/liveTypes';
 import bundledTeams from '../../data/live/teams.json';
 import bundledSchedule from '../../data/live/schedule.json';
 import bundledMeta from '../../data/live/meta.json';
+import bundledPredictions from '../../data/live/predictions.json';
 
 export const DATA_URL: string =
   (process.env.EXPO_PUBLIC_DATA_URL as string | undefined)?.replace(/\/$/, '') ??
@@ -23,7 +24,7 @@ const FETCH_TIMEOUT_MS = 15_000;
 
 export type DataSource = 'remote' | 'cache' | 'bundled' | 'sample';
 
-interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; generatedAt: string; season: number; week: number; phase: Phase; }
+interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; predictions: LivePredictionsFile | null; generatedAt: string; season: number; week: number; phase: Phase; }
 
 interface TeamsState extends Dataset {
   source: DataSource;
@@ -36,6 +37,9 @@ interface TeamsState extends Dataset {
   weekGames: LiveGame[];
   /** Find the scheduled game for a matchup, if it is on the slate. */
   findGame: (awayId: string, homeId: string) => LiveGame | undefined;
+  /** Model track record: every pre-kickoff prediction the feed has made this season. */
+  records: PredictionRecord[];
+  findRecord: (gameId: string) => PredictionRecord | undefined;
   refresh: () => Promise<void>;
 }
 
@@ -45,10 +49,11 @@ function bundled(): { data: Dataset; source: DataSource } {
   const t = bundledTeams as unknown as LiveTeamsFile;
   const s = bundledSchedule as unknown as LiveScheduleFile;
   const m = bundledMeta as unknown as LiveMetaFile;
+  const p = bundledPredictions as unknown as LivePredictionsFile;
   if (Array.isArray(t?.teams) && t.teams.length === 32) {
-    return { data: { teams: t.teams, games: s?.games ?? [], meta: m ?? null, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase }, source: 'bundled' };
+    return { data: { teams: t.teams, games: s?.games ?? [], meta: m ?? null, predictions: Array.isArray(p?.records) ? p : null, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase }, source: 'bundled' };
   }
-  return { data: { teams: SAMPLE_TEAMS, games: [], meta: null, generatedAt: '', season: 2026, week: 1, phase: 'preseason' }, source: 'sample' };
+  return { data: { teams: SAMPLE_TEAMS, games: [], meta: null, predictions: null, generatedAt: '', season: 2026, week: 1, phase: 'preseason' }, source: 'sample' };
 }
 
 async function fetchJson<T>(url: string): Promise<T> {
@@ -79,12 +84,13 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [t, s, m] = await Promise.all([
+      const [t, s, m, p] = await Promise.all([
         fetchJson<LiveTeamsFile>(`${DATA_URL}/teams.json`),
         fetchJson<LiveScheduleFile>(`${DATA_URL}/schedule.json`),
         fetchJson<LiveMetaFile>(`${DATA_URL}/meta.json`).catch(() => null),
+        fetchJson<LivePredictionsFile>(`${DATA_URL}/predictions.json`).catch(() => null),
       ]);
-      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
+      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, predictions: p && Array.isArray(p.records) ? p : null, generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
       if (!validDataset(next)) throw new Error('Unexpected dataset shape');
       if (!mounted.current) return;
       setData((cur) => (next.generatedAt >= cur.generatedAt ? next : cur));
@@ -127,6 +133,8 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
     return {
       ...data, source, refreshing, lastError, lastChecked, getTeam, divisions, weekGames,
       findGame: (awayId, homeId) => data.games.find((g) => g.awayId === awayId && g.homeId === homeId),
+      records: data.predictions?.records.filter((r) => byId.has(r.awayId) && byId.has(r.homeId)) ?? [],
+      findRecord: (gameId) => data.predictions?.records.find((r) => r.id === gameId),
       refresh,
     };
   }, [data, source, refreshing, lastError, lastChecked, refresh]);

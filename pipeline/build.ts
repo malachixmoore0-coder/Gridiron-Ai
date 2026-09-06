@@ -21,6 +21,8 @@ import type { BuildCtx } from './compute/context';
 import { buildTeams, detectFront, roundMetrics } from './compute/teams';
 import { buildPlayers } from './compute/players';
 import { buildSchedule, currentWeek, records } from './compute/schedule';
+import { summarize, updatePredictions } from './compute/predictions';
+import type { LivePredictionsFile } from '../src/data/liveTypes';
 import { blendWeight, gamesPlayed } from './compute/context';
 
 const OUT_DIR = path.resolve(__dirname, '../data/live');
@@ -31,14 +33,14 @@ async function main() {
   const today = new Date();
   console.log(`\nGridiron AI data build — ${today.toISOString()}`);
 
-  console.log('\n[1/6] Schedule & results');
+  console.log('\n[1/7] Schedule & results');
   const games = await loadGames();
   const season = Math.max(...games.map((g) => g.season));
   const priorSeason = season - 1;
   const { week, phase } = currentWeek(games, season, today);
   console.log(`  season ${season} · ${phase} · current week ${week} · ${games.filter((g) => g.season === season).length} games on file`);
 
-  console.log('\n[2/6] Rosters, depth charts, injuries, snap counts');
+  console.log('\n[2/7] Rosters, depth charts, injuries, snap counts');
   const [rosters, depthCur, depthPrior, inj, snaps, snapsPrior] = await Promise.all([
     loadRosters(season), loadDepthCharts(season), loadDepthCharts(priorSeason), loadInjuries(season), loadSnapCounts(season), loadSnapCounts(priorSeason),
   ]);
@@ -52,7 +54,7 @@ async function main() {
   const frontsPrior = depthPrior.byTeam.size ? frontFor(depthPrior.byTeam) : frontsCur;
   const posMap = new Map(rosters.filter((r) => r.gsis_id).map((r) => [r.gsis_id, r.position]));
 
-  console.log('\n[3/6] Play-by-play (streamed)');
+  console.log('\n[3/7] Play-by-play (streamed)');
   const cur = await aggregatePbp(season, posMap, frontsCur);
   console.log(`  ${season}: ${cur ? `${cur.plays} plays` : 'not published yet'}`);
   const prior = await aggregatePbp(priorSeason, posMap, frontsPrior);
@@ -60,7 +62,7 @@ async function main() {
   if (cur) console.log(`  FTN charting ${season}: ${(await applyFtn(season, cur)) ? 'joined' : 'not available'}`);
   if (prior) console.log(`  FTN charting ${priorSeason}: ${(await applyFtn(priorSeason, prior)) ? 'joined' : 'not available'}`);
 
-  console.log('\n[4/6] Advanced stats & ESPN enrichment');
+  console.log('\n[4/7] Advanced stats & ESPN enrichment');
   const [advPass, advDef, espnInjuries] = await Promise.all([loadAdvPass(), loadAdvDef(), loadEspnInjuries()]);
   console.log(`  PFR adv pass ${advPass.length} rows · adv def ${advDef.length} rows · ESPN injuries ${espnInjuries.length}`);
 
@@ -69,7 +71,7 @@ async function main() {
     snaps, snapsPrior, advPass, advDef, espnInjuries, baseline: TEAMS, notes: [],
   };
 
-  console.log('\n[5/6] Building team profiles & depth charts');
+  console.log('\n[5/7] Building team profiles & depth charts');
   const players = buildPlayers(ctx, frontsCur);
   const built = buildTeams(ctx, (id) => players.qbRating.get(id) ?? 5.0, (id) => players.teSpeed.get(id) ?? 5.0);
   const recs = records(games, season);
@@ -79,9 +81,18 @@ async function main() {
     record: recs.get(team.id) ?? '0-0',
   }));
 
-  console.log('\n[6/6] Schedule, lines & weather');
+  console.log('\n[6/7] Schedule, lines & weather');
   const schedule = await buildSchedule(games, season, week, teams, withWeather);
   console.log(`  ${schedule.length} games for weeks ${week}-${week + 1} · weather on ${schedule.filter((g) => g.weather).length}`);
+
+  console.log('\n[7/7] Model track record');
+  const predPath = path.join(OUT_DIR, 'predictions.json');
+  let existing: LivePredictionsFile | null = null;
+  try { existing = JSON.parse(fs.readFileSync(predPath, 'utf8')) as LivePredictionsFile; } catch { existing = null; }
+  const finalsById = new Map(games.filter((g) => g.season === season && Number.isFinite(g.home_score) && Number.isFinite(g.away_score)).map((g) => [g.game_id, { homeScore: g.home_score, awayScore: g.away_score }]));
+  const predictions = updatePredictions({ existing, season, now: today, schedule, teams, resolve: (id) => finalsById.get(id) ?? null });
+  const sum = summarize(predictions.records);
+  console.log(`  ${predictions.records.length} records · ${predictions.records.filter((r) => r.status === 'open').length} open · ${predictions.records.filter((r) => r.status === 'locked').length} locked · ${sum.finals} graded${sum.finals ? ` · SU ${sum.su}/${sum.finals} · ATS ${sum.ats}-${sum.atsL} · O/U ${sum.ou}-${sum.ouL} · Brier ${sum.brier?.toFixed(3)}` : ''}`);
 
   // ---- validation ----
   const problems: string[] = [];
@@ -137,9 +148,10 @@ async function main() {
   fs.writeFileSync(path.join(OUT_DIR, 'teams.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, teams }, null, 1));
   fs.writeFileSync(path.join(OUT_DIR, 'schedule.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, games: schedule }, null, 1));
   fs.writeFileSync(path.join(OUT_DIR, 'meta.json'), JSON.stringify(meta, null, 1));
+  fs.writeFileSync(predPath, JSON.stringify(predictions, null, 1));
 
   const ok = sourceLog.filter((s) => s.ok).length;
-  console.log(`\nWrote data/live/{teams,schedule,meta}.json · ${ok}/${sourceLog.length} sources OK · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
+  console.log(`\nWrote data/live/{teams,schedule,meta,predictions}.json · ${ok}/${sourceLog.length} sources OK · ${((Date.now() - t0) / 1000).toFixed(1)}s`);
   for (const s of sourceLog.filter((s) => !s.ok)) console.log(`  ✗ ${s.name}: ${s.note}`);
   const kc = teams.find((t) => t.id === 'kc')!;
   console.log(`\nSample — ${kc.city} ${kc.name} (${kc.record}) · ${kc.coaching.headCoach} · ${kc.coaching.offScheme} / ${kc.coaching.defFront}`);
