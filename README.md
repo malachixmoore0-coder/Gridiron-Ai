@@ -19,7 +19,8 @@ stay current without anyone touching a file.
  ESPN injuries · Open-Meteo forecasts      (best-effort extras)
         │
         ▼   GitHub Action, every 3 h in-season (refresh-data.yml)
- pipeline/build.ts  ──►  data/live/{teams,schedule,meta,predictions}.json  ──►  commit
+ pipeline/build.ts  ──►  data/live/{teams,schedule,meta,predictions}.json
+                          + data/live/rosters/*.json                  ──►  commit
         │
         ▼
  web app rebuilt & published to GitHub Pages
@@ -94,10 +95,16 @@ inputs always reproduce the same games; "Re-roll" draws a fresh seed.
   margin and total error, and a calibration table. Graded, locked and open
   predictions are all listed. Nothing is back-filled — a game first seen after
   kickoff is never scored.
-- **Teams** — all 32 with live scheme, front, coach and record; each team page
-  shows the measured tendencies and unit grades feeding the nodes, and a depth
-  chart with reported statuses you can override (Active → Questionable → Out →
-  back to reported).
+- **Teams** — all 32 with live scheme, front, coach and record. Each team gets
+  its own scrolling page: identity and tendencies, the season schedule with
+  results, the depth chart split into 1st / 2nd / 3rd string, the full roster by
+  position group, and the ratings feeding the engine.
+- **Player profiles** — tap any player for his headshot (initials when the feed
+  has no photo), jersey, experience, height and weight, college, depth and
+  starting status, availability you can override, a grade with its basis,
+  strengths and weaknesses as percentiles against every NFL player at his
+  position, how he projects against the next opponent, season totals and a
+  game-by-game log.
 - **Model** — node weights, simulation count, base home-field edge, the injury
   metric table, and a live-data panel (source, freshness, blend, sources OK,
   manual refresh).
@@ -128,6 +135,10 @@ Two workflows ship with the repo:
   and on demand: rebuilds the dataset, runs the engine checks, commits
   `data/live/` if anything changed, rebuilds the web app and publishes it to
   GitHub Pages.
+- **`refresh-scores.yml`** — every 20 minutes on game days: pulls the ESPN
+  scoreboard and updates team records, finalises games on the slate and grades
+  any prediction whose game just ended. It skips the rebuild entirely, so a
+  final score lands in the app within minutes (`npm run data:scores`).
 - **`deploy.yml`** — on pushes to `main` that touch app code: typecheck, engine
   checks, build, publish.
 
@@ -143,12 +154,13 @@ Native builds: `eas build --platform ios --profile preview`.
 ```
 ├── .github/workflows/     refresh-data.yml · deploy.yml
 ├── data/live/             generated: teams.json · schedule.json · meta.json · predictions.json (season track record)
+│   └── rosters/           generated: one file per team (full roster, game logs, schedule)
 ├── pipeline/              the data build (Node 20, TypeScript)
 │   ├── build.ts           orchestration, validation, writes data/live
 │   ├── sources/           nflverse.ts (streamed pbp aggregator) · espn.ts · weather.ts
-│   ├── compute/           teams.ts · players.ts · schedule.ts · predictions.ts (track record)
+│   ├── compute/           teams.ts · rosters.ts · schedule.ts · predictions.ts (track record)
 │   └── lib/               fetch/cache/CSV streaming · math helpers
-├── scripts/               engine-check.ts · make-icons.js
+├── scripts/               engine-check.ts · refresh-scores.ts · make-icons.js
 ├── src/
 │   ├── engine/            pure TypeScript engine (nodes, injuries, simulate, matrix, narrative)
 │   ├── data/              teams.ts (curated baseline + fallback) · liveTypes.ts · slate.ts

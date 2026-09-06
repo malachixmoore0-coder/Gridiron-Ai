@@ -32,6 +32,7 @@ interface TeamsState extends Dataset {
   lastError: string | null;
   lastChecked: number | null;
   getTeam: (id: string) => Team;
+  hasTeam: (id: string) => boolean;
   divisions: { conference: Team['conference']; division: Team['division']; teams: Team[] }[];
   /** Upcoming (or most recent) scheduled games for the current week. */
   weekGames: LiveGame[];
@@ -131,7 +132,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
     );
     const weekGames = data.games.filter((g) => g.week === data.week && byId.has(g.awayId) && byId.has(g.homeId));
     return {
-      ...data, source, refreshing, lastError, lastChecked, getTeam, divisions, weekGames,
+      ...data, source, refreshing, lastError, lastChecked, getTeam, hasTeam: (id) => byId.has(id), divisions, weekGames,
       findGame: (awayId, homeId) => data.games.find((g) => g.awayId === awayId && g.homeId === homeId),
       records: data.predictions?.records.filter((r) => byId.has(r.awayId) && byId.has(r.homeId)) ?? [],
       findRecord: (gameId) => data.predictions?.records.find((r) => r.id === gameId),

@@ -54,6 +54,8 @@ export interface Player {
   reportNote?: string;
   /** Headshot URL when the data source provides one. */
   headshotUrl?: string;
+  /** Jersey number as listed on the roster. */
+  jersey?: string;
 }
 
 export interface CoachingProfile {

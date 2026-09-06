@@ -6,6 +6,7 @@ import type { Team, Weather } from '../../src/engine/types';
 import type { GameRow } from '../sources/nflverse';
 import { forecastAt } from '../sources/weather';
 import { idFromNv } from '../lib/util';
+import type { EspnGame } from '../sources/espn';
 
 export type { LiveGame } from '../../src/data/liveTypes';
 import type { LiveGame } from '../../src/data/liveTypes';
@@ -34,6 +35,37 @@ export function currentWeek(games: GameRow[], season: number, today: Date): { we
   const week = Math.min(...unplayed.map((g) => g.week));
   const firstKick = new Date(kickoffIso(reg.slice().sort((a, b) => a.gameday.localeCompare(b.gameday))[0].gameday, '13:00'));
   return { week, phase: played.length === 0 && today < firstKick ? 'preseason' : 'regular' };
+}
+
+/**
+ * Fill in scores the schedule mirror has not published yet from ESPN's
+ * scoreboard, which posts a final within minutes. This is what lets team
+ * records and prediction grading move right after a game ends.
+ */
+export function mergeResults(games: GameRow[], espn: Map<string, EspnGame> | undefined): GameRow[] {
+  if (!espn?.size) return games;
+  const byTeams = new Map<string, EspnGame>();
+  for (const e of espn.values()) if (e.final) byTeams.set(`${e.awayAbbr}@${e.homeAbbr}`, e);
+  return games.map((g) => {
+    if (Number.isFinite(g.home_score) && Number.isFinite(g.away_score)) return g;
+    // nflverse game ids differ from ESPN's, so match on the team pairing within the fetched weeks.
+    const e = byTeams.get(`${idFromNv(g.away_team)}@${idFromNv(g.home_team)}`);
+    if (!e || e.homeScore === null || e.awayScore === null) return g;
+    return { ...g, home_score: e.homeScore, away_score: e.awayScore };
+  });
+}
+
+/**
+ * Week to fetch scoreboards for, from kickoff dates alone (no results needed),
+ * so the ESPN fetch can happen early enough to supply those results.
+ */
+export function weekByDate(games: GameRow[], season: number, today: Date): { week: number; postseason: boolean } {
+  const reg = games.filter((g) => g.season === season && g.game_type === 'REG');
+  const upcoming = reg.filter((g) => Date.parse(kickoffIso(g.gameday, g.gametime)) > today.getTime() - 6 * 3_600_000);
+  if (upcoming.length) return { week: Math.min(...upcoming.map((g) => g.week)), postseason: false };
+  const post = games.filter((g) => g.season === season && g.game_type !== 'REG' && Date.parse(kickoffIso(g.gameday, g.gametime)) > today.getTime() - 6 * 3_600_000);
+  if (post.length) return { week: Math.min(...post.map((g) => g.week)), postseason: true };
+  return { week: reg.length ? Math.max(...reg.map((g) => g.week)) : 1, postseason: false };
 }
 
 export function records(games: GameRow[], season: number): Map<string, string> {

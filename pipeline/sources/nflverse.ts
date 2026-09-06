@@ -49,6 +49,7 @@ export async function loadGames(): Promise<GameRow[]> {
 export interface RosterRow {
   team: string; position: string; depth_chart_position: string; status: string; full_name: string; gsis_id: string; espn_id: string; pfr_id: string;
   years_exp: number; headshot_url: string; draft_number: number; entry_year: number; jersey_number: string;
+  height: number; weight: number; college: string; birth_date: string;
 }
 export async function loadRosters(season: number): Promise<RosterRow[]> {
   const file = await download(URLS.rosters(season), `nflverse rosters ${season}`, { ttlMinutes: 60, optional: true });
@@ -57,6 +58,7 @@ export async function loadRosters(season: number): Promise<RosterRow[]> {
     team: r.team, position: r.position, depth_chart_position: r.depth_chart_position, status: r.status, full_name: r.full_name,
     gsis_id: r.gsis_id, espn_id: r.espn_id, pfr_id: r.pfr_id, years_exp: num(r.years_exp), headshot_url: r.headshot_url,
     draft_number: num(r.draft_number), entry_year: num(r.entry_year), jersey_number: r.jersey_number,
+    height: num(r.height), weight: num(r.weight), college: r.college === 'NA' ? '' : (r.college ?? ''), birth_date: r.birth_date === 'NA' ? '' : (r.birth_date ?? ''),
   }));
 }
 
@@ -161,9 +163,20 @@ export interface TeamAcc {
   // offense EPA split by the opponent's base front
   vs43: { n: number; epa: number }; vs34: { n: number; epa: number };
 }
+/** Box-score style line for one player in one game. */
+export interface GameStat {
+  passAtt: number; passCmp: number; passYds: number; passTd: number; passInt: number;
+  rushAtt: number; rushYds: number; rushTd: number;
+  tgt: number; rec: number; recYds: number; recTd: number;
+  sacks: number; int: number; pbu: number; ff: number; fgm: number; fga: number; epa: number;
+}
+export const emptyGameStat = (): GameStat => ({ passAtt: 0, passCmp: 0, passYds: 0, passTd: 0, passInt: 0, rushAtt: 0, rushYds: 0, rushTd: 0, tgt: 0, rec: 0, recYds: 0, recTd: 0, sacks: 0, int: 0, pbu: 0, ff: 0, fgm: 0, fga: 0, epa: 0 });
 export interface PlayerAcc {
   name: string; team: string; targets: number; rec: number; recYds: number; recEpa: number; rushAtt: number; rushYds: number; rushEpa: number;
   dropbacks: number; passEpa: number; cpoe: number; cpoeN: number; sacks: number; qbHits: number; ints: number; passTd: number; passInt: number;
+  games: Set<string>;
+  /** Per-game lines keyed by game id, with the team the player was on that day. */
+  log: Map<string, GameStat & { team: string }>;
 }
 export interface PbpAgg {
   season: number;
@@ -185,6 +198,7 @@ const newTeam = (): TeamAcc => ({
 });
 const newPlayer = (name: string, team: string): PlayerAcc => ({
   name, team, targets: 0, rec: 0, recYds: 0, recEpa: 0, rushAtt: 0, rushYds: 0, rushEpa: 0, dropbacks: 0, passEpa: 0, cpoe: 0, cpoeN: 0, sacks: 0, qbHits: 0, ints: 0, passTd: 0, passInt: 0,
+  games: new Set(), log: new Map(),
 });
 
 /** Stream one season of play-by-play into team + player accumulators. Returns null if the file doesn't exist yet. */
@@ -194,6 +208,7 @@ export async function aggregatePbp(season: number, posMap: Map<string, string>, 
   const agg: PbpAgg = { season, teams: new Map(), players: new Map(), playIndex: new Map(), plays: 0 };
   const team = (abbr: string) => { if (!agg.teams.has(abbr)) agg.teams.set(abbr, newTeam()); return agg.teams.get(abbr)!; };
   const player = (id: string, name: string, tm: string) => { if (!agg.players.has(id)) agg.players.set(id, newPlayer(name, tm)); return agg.players.get(id)!; };
+  const line = (p: PlayerAcc, gameId: string, tm: string) => { let l = p.log.get(gameId); if (!l) { l = { ...emptyGameStat(), team: tm }; p.log.set(gameId, l); } p.games.add(gameId); return l; };
   const half = (m: Map<string, HalfSplit>, game: string) => { if (!m.has(game)) m.set(game, { h1: 0, h2: 0, n1: 0, n2: 0 }); return m.get(game)!; };
 
   await forEachRow(file, (get) => {
@@ -220,6 +235,11 @@ export async function aggregatePbp(season: number, posMap: Map<string, string>, 
     if (down === 4 && ydstogo <= 2 && yl <= 60 && yl >= 3 && halfSecs > 120 && !(qtr >= 4 && diff < -8) && !(qtr >= 4 && diff > 8)) {
       if (isPass || isRush) { o.fourthOpp++; o.fourthGo++; }
       else if (playType === 'punt' || playType === 'field_goal') o.fourthOpp++;
+    }
+
+    if (playType === 'field_goal') {
+      const k = get('kicker_player_id');
+      if (k) { const l = line(player(k, get('kicker_player_name'), pos), gameId, pos); l.fga++; if (get('field_goal_result') === 'made') l.fgm++; }
     }
 
     if (!(isPass || isRush)) return;
@@ -271,10 +291,14 @@ export async function aggregatePbp(season: number, posMap: Map<string, string>, 
       if (pid) {
         const p = player(pid, get('passer_player_name'), pos);
         p.dropbacks++; p.passEpa += epa;
+        const l = line(p, gameId, pos);
+        l.epa += epa;
+        const sacked = get('sack') === '1';
+        if (!sacked) { l.passAtt++; if (get('complete_pass') === '1') { l.passCmp++; l.passYds += yards; } }
         const cpoe = num(get('cpoe'));
         if (Number.isFinite(cpoe)) { p.cpoe += cpoe; p.cpoeN++; }
-        if (get('pass_touchdown') === '1') p.passTd++;
-        if (get('interception') === '1') p.passInt++;
+        if (get('pass_touchdown') === '1') { p.passTd++; l.passTd++; }
+        if (get('interception') === '1') { p.passInt++; l.passInt++; }
       }
       const air = num(get('air_yards'));
       if (Number.isFinite(air)) { o.airYards += air; o.airN++; }
@@ -286,7 +310,9 @@ export async function aggregatePbp(season: number, posMap: Map<string, string>, 
     if (isPass && rid) {
       const p = player(rid, get('receiver_player_name'), pos);
       p.targets++; p.recEpa += epa;
-      if (get('complete_pass') === '1') { p.rec++; p.recYds += yards; }
+      const l = line(p, gameId, pos);
+      l.tgt++; l.epa += epa;
+      if (get('complete_pass') === '1') { p.rec++; p.recYds += yards; l.rec++; l.recYds += yards; if (get('pass_touchdown') === '1') l.recTd++; }
       const air = num(get('air_yards'));
       const rpos = posMap.get(rid) ?? '';
       if (Number.isFinite(air) && air <= 10) { o.shortTgtN++; o.shortTgtEpa += epa; }
@@ -297,18 +323,27 @@ export async function aggregatePbp(season: number, posMap: Map<string, string>, 
     if (isRush && rusher) {
       const p = player(rusher, get('rusher_player_name'), pos);
       p.rushAtt++; p.rushYds += yards; p.rushEpa += epa;
+      const l = line(p, gameId, pos);
+      l.rushAtt++; l.rushYds += yards; l.epa += epa;
+      if (get('rush_touchdown') === '1') l.rushTd++;
     }
     // Defender credit.
     for (const col of ['sack_player_id', 'half_sack_1_player_id', 'half_sack_2_player_id']) {
       const id = get(col);
-      if (id) player(id, get(col.replace('_id', '_name')), def).sacks += col === 'sack_player_id' ? 1 : 0.5;
+      if (id) { const p = player(id, get(col.replace('_id', '_name')), def); const share = col === 'sack_player_id' ? 1 : 0.5; p.sacks += share; line(p, gameId, def).sacks += share; }
     }
     for (const col of ['qb_hit_1_player_id', 'qb_hit_2_player_id']) {
       const id = get(col);
-      if (id) player(id, get(col.replace('_id', '_name')), def).qbHits++;
+      if (id) { const p = player(id, get(col.replace('_id', '_name')), def); p.qbHits++; line(p, gameId, def); }
     }
     const intId = get('interception_player_id');
-    if (intId) player(intId, get('interception_player_name'), def).ints++;
+    if (intId) { const p = player(intId, get('interception_player_name'), def); p.ints++; line(p, gameId, def).int++; }
+    for (const col of ['pass_defense_1_player_id', 'pass_defense_2_player_id']) {
+      const id = get(col);
+      if (id) line(player(id, get(col.replace('_id', '_name')), def), gameId, def).pbu++;
+    }
+    const ffId = get('forced_fumble_player_1_player_id');
+    if (ffId) line(player(ffId, get('forced_fumble_player_1_player_name'), def), gameId, def).ff++;
   });
   return agg;
 }

@@ -32,6 +32,56 @@ export async function loadEspnInjuries(): Promise<EspnInjury[]> {
   return out;
 }
 
+export interface EspnGame {
+  id: string; kickoff: string; status: string;
+  homeAbbr: string; awayAbbr: string;
+  /** Scores once the game has started; `final` when ESPN marks it complete. */
+  homeScore: number | null; awayScore: number | null; final: boolean;
+  homeSpread: number | null; total: number | null; provider: string | null;
+}
+
+const ABBR_TO_ID: Record<string, string> = { wsh: 'was', la: 'lar' };
+const teamId = (abbr: string) => { const a = abbr.toLowerCase(); return ABBR_TO_ID[a] ?? a; };
+
+/**
+ * One week's scoreboard. ESPN posts a final within minutes of the whistle,
+ * hours before the schedule mirror catches up, so this is what lets records
+ * and prediction grading move right after a game.
+ */
+export async function loadScoreboard(season: number, week: number, seasonType = 2): Promise<Map<string, EspnGame>> {
+  const url = `https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=${season}&seasontype=${seasonType}&week=${week}`;
+  const data = await fetchJson<any>(url, `ESPN scoreboard week ${week} (best-effort)`);
+  const out = new Map<string, EspnGame>();
+  try {
+    for (const ev of Array.isArray(data?.events) ? data.events : []) {
+      const comp = ev?.competitions?.[0];
+      if (!ev?.id || !comp) continue;
+      const home = (comp.competitors ?? []).find((c: any) => c?.homeAway === 'home');
+      const away = (comp.competitors ?? []).find((c: any) => c?.homeAway === 'away');
+      if (!home?.team?.abbreviation || !away?.team?.abbreviation) continue;
+      const st = String(comp.status?.type?.name ?? '');
+      const started = st !== 'STATUS_SCHEDULED' && st !== '';
+      const sc = (c: any) => { const v = Number(c?.score); return started && Number.isFinite(v) ? v : null; };
+      const odds = comp.odds?.[0];
+      let homeSpread: number | null = typeof odds?.spread === 'number' ? odds.spread : null;
+      if (homeSpread === null && typeof odds?.details === 'string') {
+        const m = odds.details.match(/^([A-Z]+)\s+(-?\d+(?:\.\d+)?)$/);
+        if (m) homeSpread = m[1] === home.team.abbreviation ? Number(m[2]) : -Number(m[2]);
+        else if (/EVEN/i.test(odds.details)) homeSpread = 0;
+      }
+      out.set(String(ev.id), {
+        id: String(ev.id), kickoff: String(comp.date ?? ev.date ?? ''), status: st,
+        homeAbbr: teamId(home.team.abbreviation), awayAbbr: teamId(away.team.abbreviation),
+        homeScore: sc(home), awayScore: sc(away), final: st === 'STATUS_FINAL' || !!comp.status?.type?.completed,
+        homeSpread, total: typeof odds?.overUnder === 'number' ? odds.overUnder : null, provider: odds?.provider?.name ?? null,
+      });
+    }
+  } catch {
+    return new Map();
+  }
+  return out;
+}
+
 export interface EspnOdds { espnEventId: string; spread?: string; overUnder?: number; provider?: string; }
 
 /** Consensus odds for the current scoreboard, keyed by ESPN event id. */

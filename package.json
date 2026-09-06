@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit && tsc --noEmit -p pipeline",
     "test:engine": "tsx scripts/engine-check.ts",
     "data:build": "tsx pipeline/build.ts",
-    "data:build:offline": "tsx pipeline/build.ts --no-weather"
+    "data:build:offline": "tsx pipeline/build.ts --no-weather",
+    "data:scores": "tsx scripts/refresh-scores.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

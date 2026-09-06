@@ -45,3 +45,7 @@ export function shrink(value: number, leagueMean: number, n: number, k: number):
 export const NV_TO_ID: Record<string, string> = { LA: 'lar' };
 export const idFromNv = (abbr: string) => NV_TO_ID[abbr] ?? abbr.toLowerCase();
 export const nvFromId = (id: string) => (id === 'lar' ? 'LA' : id.toUpperCase());
+
+/** Loose name key for matching players across feeds ("De'Von Achane Jr." → "devon achane"). */
+export const nameKey = (s: string) =>
+  s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/\b(jr|sr|ii|iii|iv)\b\.?/g, '').replace(/[^a-z ]/g, '').replace(/\s+/g, ' ').trim();
