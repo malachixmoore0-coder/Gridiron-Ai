@@ -25,6 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { sourceLog } from '../lib/fetch';
+import { renderPages } from './render';
 
 export interface SchoolSite {
   /** ESPN's school id — the number in its logo URL, and the same in every sport. */
@@ -331,22 +332,73 @@ export function rosterUrls(site: SchoolSite, leagueKey: string): string[] {
 /** A page listing this many players is a roster; anything less is a staff list. */
 const A_SQUAD = 12;
 
-/** Read a school's roster page, trying each shape its vendor might use. */
+/**
+ * Ask the site where its own roster is.
+ *
+ * Arkansas answered 404 to all six shapes because it does not use any of them,
+ * and guessing a seventh is a game with no end. Its front page links to the
+ * page we want, though — every athletics site does, because that is how its own
+ * readers get there — so read the link rather than invent the URL.
+ */
+async function discoverRosterUrls(site: SchoolSite, leagueKey: string): Promise<string[]> {
+  const home = await fetchText(`https://${site.domain}/`, `${site.school} home`);
+  if (!home.body) return [];
+  const words = ROSTER_PATHS[leagueKey] ?? [];
+  const urls = new Set<string>();
+  for (const m of home.body.matchAll(/href=["']([^"']*roster[^"']*)["']/gi)) {
+    const href = m[1].toLowerCase();
+    if (!words.some((w) => href.includes(w))) continue;
+    try { urls.add(new URL(m[1], home.url).toString()); } catch { /* not a URL */ }
+  }
+  return [...urls].slice(0, 3);
+}
+
+/**
+ * Read a school's roster page: the cheap way first, then the two expensive ones.
+ *
+ * Plain requests get the thirty-six schools whose pages are built on the server.
+ * The rest either put the roster somewhere else — which their own navigation
+ * will say — or build it in the browser, which is what the browser is for.
+ */
 export async function scrapeTeam(site: SchoolSite, leagueKey: string, idPrefix: string): Promise<TeamScrape> {
   const tried: TeamScrape['tried'] = [];
   let best: { url: string; players: SchoolPlayer[] } | null = null;
+  /** URLs that answered at all, in the order they answered — what to render. */
+  const alive: string[] = [];
 
-  for (const shape of rosterUrls(site, leagueKey)) {
+  const read = async (shape: string) => {
     const page = await fetchText(shape, `${site.school} ${leagueKey} roster`);
     const players = page.body ? rosterFromHtml(page.body, page.url, idPrefix) : [];
     tried.push({ url: shape, status: page.status, players: players.length, note: page.note });
+    if (page.status === 200 && page.body && !alive.includes(page.url)) alive.push(page.url);
     if (!best || players.length > best.players.length) best = { url: page.url, players };
-    // A full squad is as good as it gets; stop paying for the other shapes.
-    if (players.length >= A_SQUAD) break;
+    return players.length;
+  };
+
+  for (const shape of rosterUrls(site, leagueKey)) {
+    if (await read(shape) >= A_SQUAD) return { url: best!.url, players: best!.players, tried };
   }
 
-  return best && best.players.length >= A_SQUAD
-    ? { url: best.url, players: best.players, tried }
+  // Nothing at the shapes we guessed: follow the site's own link instead.
+  for (const found of await discoverRosterUrls(site, leagueKey)) {
+    if (tried.some((t) => t.url === found)) continue;
+    if (await read(found) >= A_SQUAD) return { url: best!.url, players: best!.players, tried };
+  }
+
+  // A page that answers with almost nothing on it is a page that builds itself
+  // in the browser. Open it in one.
+  const rendered = await renderPages(alive.slice(0, 2), {
+    settle: { selector: 'a[href*="/roster/"]', count: A_SQUAD },
+  });
+  for (const [url, html] of rendered) {
+    const players = rosterFromHtml(html, url, idPrefix);
+    tried.push({ url: `${url} (rendered)`, status: 200, players: players.length });
+    if (!best || players.length > best.players.length) best = { url, players };
+  }
+
+  const found: { url: string; players: SchoolPlayer[] } | null = best;
+  return found && found.players.length >= A_SQUAD
+    ? { url: found.url, players: found.players, tried }
     : { url: null, players: [], tried };
 }
 

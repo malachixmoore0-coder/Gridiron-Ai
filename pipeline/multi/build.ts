@@ -26,6 +26,7 @@ import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, unitOf, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
 import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
+import { closeBrowser } from './render';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -433,6 +434,7 @@ async function main() {
     try { await buildLeague(l); }
     catch (e) { console.error(`  ${l.short} failed: ${(e as Error).message}`); }
   }
+  await closeBrowser();
   const ok = sourceLog.filter((s) => s.ok).length;
   console.log(`\n${ok}/${sourceLog.length} sources OK`);
 }

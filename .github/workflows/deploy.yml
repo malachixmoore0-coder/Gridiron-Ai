@@ -29,7 +29,11 @@ jobs:
         with:
           node-version: 20
           cache: npm
+      # The web build never opens a browser — only the data pipeline does — so
+      # there is no reason for this job to download one.
       - run: npm ci
+        env:
+          PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       - run: npm run typecheck
       - run: npm run test:engine
       - name: Export web app

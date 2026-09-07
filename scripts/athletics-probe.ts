@@ -13,6 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { SCHOOL_SITES, scrapeTeam, siteFor, supportsAthletics } from '../pipeline/multi/athletics';
+import { closeBrowser } from '../pipeline/multi/render';
 
 const DATA = path.resolve(__dirname, '../data/live/sports');
 
@@ -27,9 +28,17 @@ async function main() {
   if (!supportsAthletics(league)) throw new Error(`no roster path for ${league}`);
 
   const teams = teamsOf(league);
+  // "silent" re-reads only the schools that gave nothing last time, which is
+  // the set worth watching once the easy ones are done.
+  let silent: Set<string> | null = null;
+  if (process.argv.includes('--silent')) {
+    const cache = JSON.parse(fs.readFileSync(path.join(DATA, league, 'athletics.json'), 'utf8')) as
+      { teams: Record<string, { players: unknown[] }> };
+    silent = new Set(Object.entries(cache.teams).filter(([, v]) => !v.players.length).map(([id]) => id));
+  }
   const mapped = teams
     .map((t) => ({ team: t, site: siteFor(t.logoUrl) }))
-    .filter((r) => r.site)
+    .filter((r) => r.site && (!silent || silent.has(r.team.id)))
     .slice(0, limit);
 
   console.log(`${league}: ${mapped.length} of ${teams.length} teams have a school site in the map\n`);
@@ -53,6 +62,7 @@ async function main() {
     }
   }
 
+  await closeBrowser();
   console.log(`\n${answered}/${mapped.length} schools published a squad · ${players} players · ${photos} with a photograph`);
 }
 

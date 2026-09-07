@@ -55,6 +55,21 @@ jobs:
 
       - run: npm ci
 
+      # Half the athletics sites and every official league site build their
+      # squad page in the browser, so the pipeline needs one. Cached, because
+      # downloading Chromium three times a day is a hundred megabytes of
+      # nothing.
+      - name: Cache Chromium
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ hashFiles('package-lock.json') }}
+
+      - name: Install Chromium
+        if: steps.pw-cache.outputs.cache-hit != 'true'
+        run: npx playwright install --with-deps chromium
+
       - name: Probe candidate leagues
         if: ${{ github.event.inputs.probe != '' }}
         run: |
