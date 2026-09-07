@@ -1,6 +1,12 @@
 /**
  * Gridiron AI subscription ladder.
  *
+ * One subscription, both leagues. That is deliberate and it is the offer: the
+ * NFL runs September to February and college August to January, so a single
+ * price that covers both is worth more to the buyer than two that each go dead
+ * for half the year — and it removes the churn cliff that kills seasonal
+ * products.
+ *
  * Four rungs, priced on the one thing a bettor actually buys: conviction per
  * minute. Free proves the model is real, Starter removes the meter, All-Pro
  * sells the tools that turn a number into a bet, Franchise sells the model
@@ -83,9 +89,10 @@ export const TIERS: Tier[] = [
     annual: 0,
     hook: 'See the model work before you pay a cent.',
     bullets: [
+      'NFL and college in one app',
       '3 simulations a day at 2,000 runs',
       'Top 3 of the Edge Board',
-      'Full slate, scores and box scores',
+      'Full slate, live scores and box scores',
       'Last 7 days of the track record',
     ],
     entitlements: FREE,
@@ -94,16 +101,16 @@ export const TIERS: Tier[] = [
   {
     id: 'starter',
     name: 'Starter',
-    tagline: 'For the Sunday bettor',
+    tagline: 'For Sundays and Saturdays',
     monthly: 1299,
     annual: 9900,
-    hook: 'Unlimited 10,000-run simulations. No meter, no waiting.',
+    hook: 'Unlimited 10,000-run simulations across both leagues. No meter.',
     bullets: [
-      'Unlimited sims at 10,000 runs',
-      'The whole Edge Board, every game',
+      'Unlimited sims at 10,000 runs, both leagues',
+      'The whole Edge Board — Sunday and Saturday',
       'Lock of the Day with the reasoning',
       'Full season track record + calibration',
-      'Follow 5 teams for a personal feed',
+      'Follow 5 teams and post your picks',
     ],
     entitlements: {
       ...FREE,
@@ -124,12 +131,13 @@ export const TIERS: Tier[] = [
     tagline: 'For the bettor with a bankroll',
     monthly: 2999,
     annual: 24900,
-    hook: 'The tools that turn a number into a bet.',
+    hook: 'Line shopping, props and the tools that turn a number into a bet.',
     bullets: [
       'Everything in Starter, at 25,000 runs',
+      'Line shopping: every book on every game',
       'Correlated parlay builder (up to 4 legs)',
       'Player prop projections on every starter',
-      'Line-move history and steam alerts',
+      'Upset Radar across all 134 college programs',
       'What-if lab: pull a starter, re-run instantly',
       'Branded share cards for your group chat',
     ],

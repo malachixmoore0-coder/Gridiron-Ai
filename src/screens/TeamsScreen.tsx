@@ -8,6 +8,7 @@ import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { TeamMark } from '@/components/TeamMark';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { TabHeader } from '@/components/TabHeader';
 import { useEngagement } from '@/context/EngagementContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 
@@ -21,9 +22,9 @@ export function TeamsScreen({ onOpenTeam, onUpgrade }: Props) {
   const flaggedCount = Object.keys(overrides).length;
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <ScreenHeader
+      <TabHeader
         title="Teams"
-        subtitle="Live scheme profiles, unit grades & injury reports"
+        subtitle="Scheme profiles, unit grades and injury reports"
         right={flaggedCount > 0 ? (
           <TouchableOpacity style={styles.clear} onPress={clearOverrides}>
             <Text style={styles.clearText}>Reset {flaggedCount} override{flaggedCount === 1 ? '' : 's'}</Text>

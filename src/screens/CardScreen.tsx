@@ -22,11 +22,18 @@ import { Section } from '@/components/Section';
 import { Locked, TierPill } from '@/components/Pro';
 import { cardText, shareCard } from '@/utils/share';
 
-interface Props { onUpgrade: () => void; onOpenGame: (teamId: string, gameId: string) => void; }
+interface Props {
+  onUpgrade: () => void;
+  onOpenGame: (teamId: string, gameId: string) => void;
+  /** Hand a saved pick to the composer so it can be posted with its numbers. */
+  onShare?: (pickId: string) => void;
+  /** Rendered inside the Record tab, which already draws the header. */
+  embedded?: boolean;
+}
 
 const STATUS_TONE = { won: colors.green, lost: colors.negative, push: colors.inkDim, open: colors.gold } as const;
 
-export function CardScreen({ onUpgrade, onOpenGame }: Props) {
+export function CardScreen({ onUpgrade, onOpenGame, onShare, embedded }: Props) {
   const eng = useEngagement();
   const ent = useEntitlements();
   const { hasTeam, getTeam } = useTeams();
@@ -57,13 +64,15 @@ export function CardScreen({ onUpgrade, onOpenGame }: Props) {
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
-      <View style={styles.head}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.title}>Your Card</Text>
-          <Text style={styles.sub}>{eng.streak}-day streak · best {eng.best}</Text>
+      {!embedded && (
+        <View style={styles.head}>
+          <View style={{ flex: 1 }}>
+            <Text style={styles.title}>Your Card</Text>
+            <Text style={styles.sub}>{eng.streak}-day streak · best {eng.best}</Text>
+          </View>
+          <TierPill tier={ent.tier} onPress={onUpgrade} />
         </View>
-        <TierPill tier={ent.tier} onPress={onUpgrade} />
-      </View>
+      )}
 
       <ScrollView contentContainerStyle={styles.body}>
         <View style={styles.summary}>
@@ -116,8 +125,14 @@ export function CardScreen({ onUpgrade, onOpenGame }: Props) {
         </View>
 
         {list.map((p) => (
-          <PickRow key={p.id} pick={p} onOpen={() => onOpenGame(p.homeId, p.gameId)} onRemove={() => eng.removePick(p.id)}
-            abbr={(id) => (hasTeam(id) ? getTeam(id).abbr : id.toUpperCase())} />
+          <PickRow
+            key={p.id}
+            pick={p}
+            onOpen={() => onOpenGame(p.homeId, p.gameId)}
+            onRemove={() => eng.removePick(p.id)}
+            onShare={onShare ? () => onShare(p.id) : undefined}
+            abbr={(id) => (hasTeam(id) ? getTeam(id).abbr : id.toUpperCase())}
+          />
         ))}
 
         {!list.length && (
@@ -150,7 +165,7 @@ function Cell({ label, value, tone }: { label: string; value: string; tone?: str
   );
 }
 
-function PickRow({ pick, onOpen, onRemove, abbr }: { pick: SavedPick; onOpen: () => void; onRemove: () => void; abbr: (id: string) => string }) {
+function PickRow({ pick, onOpen, onRemove, onShare, abbr }: { pick: SavedPick; onOpen: () => void; onRemove: () => void; onShare?: () => void; abbr: (id: string) => string }) {
   const tone = STATUS_TONE[pick.status];
   return (
     <TouchableOpacity style={styles.pick} activeOpacity={0.85} onPress={onOpen}>
@@ -162,9 +177,16 @@ function PickRow({ pick, onOpen, onRemove, abbr }: { pick: SavedPick; onOpen: ()
         </Text>
       </View>
       {pick.status === 'open' ? (
-        <TouchableOpacity onPress={onRemove} hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}>
-          <Ionicons name="close" size={16} color={colors.inkGhost} />
-        </TouchableOpacity>
+        <View style={styles.pickTools}>
+          {!!onShare && (
+            <TouchableOpacity onPress={onShare} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Share this pick">
+              <Ionicons name="share-social-outline" size={16} color={colors.green} />
+            </TouchableOpacity>
+          )}
+          <TouchableOpacity onPress={onRemove} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Remove pick">
+            <Ionicons name="close" size={16} color={colors.inkGhost} />
+          </TouchableOpacity>
+        </View>
       ) : (
         <Text style={[styles.pickStatus, { color: tone }]}>{pick.status.toUpperCase()}</Text>
       )}
@@ -205,6 +227,7 @@ const styles = StyleSheet.create({
   pickDot: { width: 8, height: 8, borderRadius: 4 },
   pickLabel: { color: colors.ink, fontSize: 14, fontWeight: '900' },
   pickMeta: { color: colors.inkFaint, fontSize: 11, marginTop: 2 },
+  pickTools: { flexDirection: 'row', alignItems: 'center', gap: 14 },
   pickStatus: { fontSize: 11, fontWeight: '900', letterSpacing: 0.6 },
 
   empty: { alignItems: 'center', gap: 8, padding: spacing.xl, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border },

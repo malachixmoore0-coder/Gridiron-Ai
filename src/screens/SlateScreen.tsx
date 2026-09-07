@@ -9,10 +9,12 @@ import { colors, radius, shadow, spacing } from '@/theme';
 import { spreadText, oneDp } from '@/utils/format';
 import { useSettings } from '@/context/SettingsContext';
 import { useTeams } from '@/context/TeamsContext';
+import { useLive } from '@/live/LiveContext';
 import { buildInput, RunRequest } from '@/hooks/useAnalysis';
 import { TeamMark } from '@/components/TeamMark';
 import { ProbBar } from '@/components/ProbBar';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { TabHeader } from '@/components/TabHeader';
 import { DataBanner } from '@/components/DataBanner';
 import { Chip } from '@/components/Chip';
 import { SAMPLE_SLATE } from '@/data/slate';
@@ -42,7 +44,15 @@ const SECTIONS: { key: GameStatus; title: string; icon: keyof typeof Ionicons.gl
 /** The season's slate, one tab per week, split into games playing now, still to come, and done. */
 export function SlateScreen({ onRun }: Props) {
   const s = useSettings();
-  const { getTeam, hasTeam, weeks, gamesForWeek, week, season, phase, generatedAt, records } = useTeams();
+  const { getTeam, hasTeam, weeks, gamesForWeek: feedForWeek, week, season, phase, generatedAt, records } = useTeams();
+  const live = useLive();
+  const gamesForWeek = React.useCallback(
+    (w: number, t: string) => feedForWeek(w, t).map((g) => {
+      const s = live.scores.get(g.id);
+      return !s || g.status === 'final' ? g : { ...g, awayScore: s.awayScore ?? g.awayScore, homeScore: s.homeScore ?? g.homeScore, status: s.status, statusDetail: s.statusDetail ?? g.statusDetail };
+    }),
+    [feedForWeek, live.scores],
+  );
   const [filter, setFilter] = useState<Filter>('all');
   const [now, setNow] = useState(() => Date.now());
   const weekBar = useRef<ScrollView>(null);
@@ -118,9 +128,9 @@ export function SlateScreen({ onRun }: Props) {
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
-      <ScreenHeader
-        title={usingSample ? 'Slate' : selected?.gameType === 'REG' ? `Week ${selected.week} slate` : `${selected?.label ?? ''} slate`}
-        subtitle={usingSample ? `Sample marquee matchups · ${QUICK_RUNS.toLocaleString()} quick sims each` : `${season} ${phase} · model vs market · ${QUICK_RUNS.toLocaleString()} quick sims each`}
+      <TabHeader
+        title="Slate"
+        subtitle={usingSample ? 'Sample marquee matchups' : `${season} ${phase} · model vs market`}
       />
       {weeks.length > 1 && (
         <ScrollView ref={weekBar} horizontal showsHorizontalScrollIndicator={false} style={styles.weekBar} contentContainerStyle={styles.weekTabs}>

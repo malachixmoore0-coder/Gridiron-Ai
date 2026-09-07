@@ -44,8 +44,10 @@ export const colors = {
 
   /* value */
   gold: '#FFC64D',
+  goldBright: '#FFD98A',
   goldDim: '#D9A032',
   goldSoft: 'rgba(255, 198, 77, 0.14)',
+  goldGlow: 'rgba(255, 198, 77, 0.30)',
 
   /* sides */
   home: '#12D992',
@@ -75,6 +77,9 @@ export const grad = {
   edge: ['rgba(18,217,146,0.22)', 'rgba(18,217,146,0.02)'] as const,
   fade: ['rgba(5,8,12,0)', '#05080C'] as const,
   tier: ['#132030', '#0B1420'] as const,
+  /* Aliases kept so the college screens speak the same token language. */
+  night: ['#0B1720', '#071018', '#05080C'] as const,
+  lights: ['#FFD37A', '#FFC64D', '#D9A032'] as const,
 };
 
 /**

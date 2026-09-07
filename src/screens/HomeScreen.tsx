@@ -13,12 +13,14 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, grad, numeric, radius, shadow, spacing, type as T } from '@/theme';
 import { useTeams } from '@/context/TeamsContext';
+import { useLiveGames } from '@/live/LiveContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { buildEdges, lockOfDay, fmtOdds, type EdgeRow } from '@/utils/edge';
 import { TeamMark } from '@/components/TeamMark';
 import { Ticker, type TickerItem } from '@/components/Ticker';
 import { ConvictionBar, Locked, MeterPill, StreakPill, TierPill } from '@/components/Pro';
+import { TabHeader } from '@/components/TabHeader';
 import type { RunRequest } from '@/hooks/useAnalysis';
 import { DEFAULT_CTX } from '@/hooks/useAnalysis';
 
@@ -35,7 +37,9 @@ interface Props {
 const clock = () => new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
 
 export function HomeScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay, onOpenModel }: Props) {
-  const { getTeam, hasTeam, weekGames, records, refresh, refreshing, week, phase } = useTeams();
+  const { getTeam, hasTeam, weekGames: feedGames, records, refresh, refreshing, week, phase } = useTeams();
+  // Scores from the live poller sit on top of the published feed.
+  const weekGames = useLiveGames(feedGames);
   const ent = useEntitlements();
   const eng = useEngagement();
   const [now, setNow] = useState(Date.now());
@@ -86,19 +90,13 @@ export function HomeScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCar
 
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
-      <View style={styles.head}>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.wordmark}>GRIDIRON <Text style={{ color: colors.green }}>AI</Text></Text>
-          <Text style={styles.date}>{clock()} · {phase === 'postseason' ? 'Postseason' : phase === 'offseason' ? 'Offseason' : `Week ${week}`}</Text>
-        </View>
-        <View style={styles.headRight}>
-          <StreakPill days={eng.streak} onPress={onOpenCard} />
-          <TierPill tier={ent.tier} trial={ent.trial.active ? ent.trial.daysLeft : undefined} onPress={onUpgrade} />
-          <TouchableOpacity style={styles.gear} activeOpacity={0.8} onPress={onOpenModel} accessibilityRole="button" accessibilityLabel="Model settings">
-            <Ionicons name="options" size={16} color={colors.inkDim} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      <TabHeader
+        title="The Floor"
+        subtitle={`${clock()} · ${phase === 'postseason' ? 'Postseason' : phase === 'offseason' ? 'Offseason' : `Week ${week}`}`}
+        streak
+        onUpgrade={onUpgrade}
+        onSettings={onOpenModel}
+      />
 
       <Ticker items={tick} />
 

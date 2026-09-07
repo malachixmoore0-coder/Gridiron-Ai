@@ -1,11 +1,18 @@
-# Gridiron AI × CFB Gridiron AI — the plan to $10k a month
+# Gridiron AI — the plan to $10k a month
 
-Two apps, one engine, two seasons that barely overlap. This document is the
-commercial half of the build: what is being sold, to whom, at what price, how
-they find it, and what has to be true for the number at the top to happen.
+One app, one engine, two leagues whose seasons barely overlap, and a social
+layer that turns every subscriber into a distribution channel. This document is
+the commercial half of the build: what is being sold, to whom, at what price,
+how they find it, and what has to be true for the number at the top to happen.
 
 Everything here is written to be argued with. Where a number is a guess it says
 so, and where the product has a real weakness it says that too.
+
+**What changed in this version.** The two apps are now one. That was a product
+decision with three commercial consequences, and they are the spine of
+everything below: the offseason churn cliff largely disappears, the bundle stops
+being an upsell and becomes the base offer, and the social graph finally has
+enough people in one place to be worth building.
 
 ---
 
@@ -13,27 +20,33 @@ so, and where the product has a real weakness it says that too.
 
 Not picks. Picks are a commodity and the people selling them are mostly lying.
 
-What is being sold is **a model that grades itself in public**. Every projection
-is locked at kickoff, scored against the final, and shown — wins, losses and
-the weeks it was wrong. That is the whole moat. A tout can fake a record; an
-app that publishes a locked prediction before kickoff and a graded result after
-cannot, and the Record tab is the proof.
+What is being sold is **a model that grades itself in public, and a place to be
+right in front of other people**. Every projection is locked at kickoff, scored
+against the final, and shown — wins, losses and the weeks it was wrong. That is
+the moat. A tout can fake a record; an app that publishes a locked prediction
+before kickoff and a graded result after cannot, and the Record tab is the proof.
+
+The social layer is the second half of that. A pick posted from this app carries
+the model's own probability and edge with it, and anyone can tail it into their
+own card, where it grades on the same finals. Nobody can post a screenshot of a
+winner they never had.
 
 The three things a bettor pays for, in the order they will pay for them:
 
 | They want | The feature | Tier |
 |---|---|---|
-| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board | Starter / Scholarship |
-| To turn a number into a bet | Parlay Lab, props, line moves, what-if lab | All-Pro / Blue Chip |
-| To run it themselves | Raw feed, backtests, editable weights | Franchise / Dynasty |
+| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, both leagues | Starter |
+| To turn a number into a bet | Line shopping across books, Parlay Lab, props, Upset Radar | All-Pro |
+| To be seen being right | A profile, a public record, followers and tails | Free, and it sells the tiers |
+| To run it themselves | Raw feed, backtests, editable weights | Franchise |
 
 ---
 
 ## 2. The maths to $10,000 a month
 
-**Prices.** Monthly $12.99 / $29.99 / $99. Annual $99 / $249 / $899 (CFB sells
-annual as a Season Pass at $89 / $199 / $799 — a season is an easier yes than a
-year).
+**Prices.** Monthly $12.99 / $29.99 / $99. Annual $99 / $249 / $899. One
+subscription covers both leagues — there is no separate college SKU any more,
+because a price that goes dead for six months is a price people cancel.
 
 **Blended ARPU.** Assume paying users split 60 / 33 / 7 across the three rungs:
 
@@ -49,9 +62,14 @@ Assume 35% choose annual, which is roughly two months free, so multiply by 0.83:
 
 **Effective ARPU ≈ $20.40 per paying user per month.**
 
-**Subscribers needed:** `10,000 / 20.40` ≈ **490 paying subscribers** across both
-apps. Not 50,000 users. Four hundred and ninety people who bet on football and
-think $13 a month is cheaper than one bad Sunday.
+**Subscribers needed:** `10,000 / 20.40` ≈ **490 paying subscribers**. Not 50,000
+users. Four hundred and ninety people who bet on football and think $13 a month
+is cheaper than one bad Sunday.
+
+Merging the apps moves this number in two directions at once and both are good:
+one funnel instead of two halves the marketing surface, and a subscriber who
+uses the product from August to February churns later than one whose league went
+away in January.
 
 **Free users needed:** at a 4% free→paid conversion (achievable with a no-card
 trial and a metered free tier; 2% is the pessimistic case):
@@ -139,10 +157,22 @@ creative if paid ever makes sense.
 results, not promotion. Post the graded record with no link in the body; the
 profile carries the link. One thread a month, not one a week.
 
-**4. Share cards (viral, built).** The Card screen draws a 1080×1350 image of a
-user's own record. A group chat is the cheapest acquisition channel that exists
-and it costs nothing per impression. Watch the share→install rate; if it clears
-5%, this becomes channel one.
+**4. The social graph (viral, built).** This is the change that matters most in
+this version. Every pick posted in the app carries the model's numbers, and every
+tail puts that pick on someone else's card. Three loops come out of it, in
+increasing order of value:
+
+  - **Share cards.** The Card screen still draws a 1080×1350 image of a user's
+    record for the group chat.
+  - **Tails.** A tailed pick is a position, not a like. It gives the tailer a
+    reason to come back for the result and the poster a reason to post again.
+  - **Public records.** A profile with a 61-49 line and a public card is the most
+    persuasive advertisement this product can have, and it is written by users
+    rather than by us.
+
+Watch two numbers: posts per weekly active user, and the share→install rate. If
+either clears 5%, this becomes channel one and the paid section below stays
+permanently unnecessary.
 
 **5. Podcasts and beat writers (paid in access, not cash).** `BEATWRITER` codes
 give a year of All-Pro. A regional podcast with 4,000 listeners converts better
@@ -175,8 +205,8 @@ built:
 - **The weekly grade.** The single highest-value unbuilt retention feature is a
   Tuesday push: "your card went 3-1, the model went 9-7." Build it next.
 
-**The offseason cliff is the real risk.** February to August is dead for the NFL
-app and January to August for college. Three mitigations, in order of value:
+**The offseason cliff is smaller than it was, and still real.** One app across
+both leagues covers August through February. Mitigations, in order of value:
 the bundle (staggered seasons), the Season Pass (paid through the gap), and
 offseason content that is genuinely useful — draft, schedule release, and
 preseason ratings are all real products the engine can already produce.
@@ -193,9 +223,12 @@ checkout opened. Nothing else matters until money can change hands.
 predictions file. Start the video clip habit. Get the first fifty free users
 from people you can name.
 
-**Weeks 5–8 — make it shareable.** Ship the weekly-grade notification and the
-referral code (`give a week, get a week`). Measure share→install. Take the
-first three podcast partnerships with BEATWRITER codes.
+**Weeks 5–8 — make it shareable.** Connect Supabase so sign-in, follows and
+posts are real across devices rather than device-local (schema and policies are
+already written — `docs/social-schema.sql`). Ship the weekly-grade notification
+and the referral code (`give a week, get a week`). Measure posts per weekly
+active user and share→install. Take the first three podcast partnerships with
+BEATWRITER codes.
 
 **Weeks 9–12 — make it defensible.** Move premium computation behind a licence
 check (see Risks). Pre-render team and record pages for search. Ship the
@@ -210,6 +243,15 @@ two-app bundle. Review the funnel and put money into whichever step is leaking.
   can read past the paywall. That is acceptable at launch and unacceptable at
   scale. The fix is a licence check on the premium feed and moving props,
   parlay pricing and the deep board server-side — planned, not done.
+- **The social layer is device-local until Supabase is connected.** Everything
+  works — posting, following, tailing, privacy — but on one phone, and the app
+  says so on the screen rather than implying an audience that is not there. The
+  schema, the row-level security policies and the client are all written; it is
+  two environment variables and one SQL file away from being real.
+- **Moderation is unbuilt.** The moment posts are shared between real accounts,
+  somebody will post something that has to come down. Report, block and a delete
+  path for an admin are the first three things to build after Supabase is live —
+  before, not after, the first thousand users.
 - **The model can be wrong for a month.** Variance is real, and the wall shows
   the record honestly, so a cold October will cost conversions. This is priced
   in deliberately: the alternative is hiding the record, which destroys the only
@@ -239,5 +281,7 @@ Six numbers, reviewed weekly:
 3. Trial → paid (target 25%)
 4. Monthly churn (target under 8%)
 5. Effective ARPU (target $20)
-6. The model's own ATS record — because it is the product, and it is the
-   leading indicator of all five above.
+6. Posts per weekly active user, and tails per post — the social layer either
+   compounds or it is decoration, and this is the number that says which
+7. The model's own ATS record — because it is the product, and it is the
+   leading indicator of all six above.

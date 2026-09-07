@@ -17,6 +17,8 @@ import type { Team } from '../src/engine/types';
 import type { LivePredictionsFile, LiveScheduleFile, LiveTeamsFile, TeamRosterFile } from '../src/data/liveTypes';
 import { loadGames } from '../pipeline/sources/nflverse';
 import { loadScoreboard, type EspnGame } from '../pipeline/sources/espn';
+import { loadBooks } from '../pipeline/sources/books';
+import { loadEspnTeamIds, loadTeamNews } from '../pipeline/sources/news';
 import { mergeResults, weekByDate } from '../pipeline/compute/schedule';
 import { grade } from '../pipeline/compute/predictions';
 import { sourceLog } from '../pipeline/lib/fetch';
@@ -142,8 +144,61 @@ async function main() {
     }
   }
 
+  /* ---- per-book lines ---------------------------------------------------
+     One consensus number is not enough to bet off: the Parlay Lab prices every
+     leg at a specific book, so every game inside the window gets its provider
+     list. Games already final are skipped — nobody shops a closed market. */
+  let bookedGames = 0;
+  const upcoming = schedule
+    .filter((g) => g.status !== 'final' && Date.parse(g.kickoff) > Date.now() - 6 * 3_600_000)
+    .sort((a, b) => a.kickoff.localeCompare(b.kickoff))
+    .slice(0, 24);
+  if (upcoming.length) {
+    const eventFor = new Map<string, string>();
+    for (const e of espn.values()) eventFor.set(`${e.awayAbbr}@${e.homeAbbr}`, e.id);
+    const wanted = upcoming
+      .map((g) => ({ g, eventId: eventFor.get(`${g.awayId}@${g.homeId}`) }))
+      .filter((x): x is { g: typeof upcoming[number]; eventId: string } => !!x.eventId);
+    const books = await loadBooks('nfl', wanted.map((w) => w.eventId));
+    for (const { g, eventId } of wanted) {
+      const list = books.get(eventId);
+      if (!list?.length) continue;
+      (g as unknown as { books: unknown }).books = list;
+      bookedGames += 1;
+    }
+    console.log(`  ${bookedGames}/${wanted.length} games with per-book lines`);
+  }
+
+  /* ---- team headlines ---------------------------------------------------
+     Pulled once here rather than from every device on every team page. */
+  let newsFiles = 0;
+  try {
+    const espnIds = await loadEspnTeamIds('nfl');
+    if (espnIds.size) {
+      const newsDir = path.join(OUT_DIR, 'news');
+      fs.mkdirSync(newsDir, { recursive: true });
+      const queue = teams.map((t) => t.id);
+      const run = async () => {
+        for (;;) {
+          const id = queue.shift();
+          if (!id) return;
+          const espnId = espnIds.get(id.toLowerCase()) ?? espnIds.get((id === 'was' ? 'wsh' : id === 'lar' ? 'la' : id).toLowerCase());
+          if (!espnId) continue;
+          const items = await loadTeamNews('nfl', espnId).catch(() => []);
+          if (!items.length) continue;
+          fs.writeFileSync(path.join(newsDir, `${id}.json`), JSON.stringify({ teamId: id, generatedAt: today.toISOString(), items }));
+          newsFiles += 1;
+        }
+      };
+      await Promise.all([run(), run(), run(), run()]);
+      console.log(`  ${newsFiles} team news files`);
+    }
+  } catch {
+    console.log('  team news unavailable this run');
+  }
+
   const stamp = today.toISOString();
-  if (recordChanges || scoreChanges || liveChanges) {
+  if (recordChanges || scoreChanges || liveChanges || bookedGames) {
     if (recordChanges || scoreChanges) write('teams.json', { ...teamsFile, generatedAt: stamp, teams });
     writeCompact('schedule.json', { ...scheduleFile, generatedAt: stamp, weeks, games: schedule });
   }
@@ -151,7 +206,7 @@ async function main() {
 
   const ok = sourceLog.filter((s) => s.ok).length;
   console.log(`  ${recordChanges} records changed · ${scoreChanges} games finalised · ${liveChanges} live updates · ${locked} predictions locked · ${graded} graded · ${rosterChanges} roster files touched · ${ok}/${sourceLog.length} sources OK`);
-  if (!recordChanges && !scoreChanges && !liveChanges && !graded && !locked && !rosterChanges) console.log('  Nothing to update.');
+  if (!recordChanges && !scoreChanges && !liveChanges && !graded && !locked && !rosterChanges && !bookedGames && !newsFiles) console.log('  Nothing to update.');
 }
 
 main().catch((e) => { console.error(e); process.exitCode = 1; });

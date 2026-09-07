@@ -234,23 +234,96 @@ export function overProb(projectedTotal: number, line: number, sigma = TOTAL_SIG
   return 1 - normalCdf((line - projectedTotal) / sigma);
 }
 
-/** Every leg the model is willing to price on one game. */
-export function legsFor(row: EdgeRow, awayAbbr: string, homeAbbr: string): ParlayLeg[] {
+/* ---------- sportsbooks ---------- */
+
+/**
+ * Books do not agree, and the disagreement is the whole game: a half point on a
+ * spread and ten cents on the juice is the difference between a bet worth
+ * making and one that is not. So every leg is priced against a *specific* book,
+ * and the Lab lets you pick which — including "best available", which shops each
+ * leg to whichever book is paying most for the side the model likes.
+ */
+export interface BookQuote {
+  book: string;
+  name: string;
+  homeSpread: number | null;
+  spreadHomeOdds: number | null;
+  spreadAwayOdds: number | null;
+  totalLine: number | null;
+  overOdds: number | null;
+  underOdds: number | null;
+  homeMoneyline: number | null;
+  awayMoneyline: number | null;
+}
+
+/** The line the game carries when no per-book data has landed yet. */
+export function consensusQuote(game: LiveGame): BookQuote {
+  return {
+    book: 'consensus',
+    name: (game as { lineSource?: string | null }).lineSource || 'Consensus',
+    homeSpread: game.homeSpread,
+    spreadHomeOdds: -110,
+    spreadAwayOdds: -110,
+    totalLine: game.totalLine,
+    overOdds: -110,
+    underOdds: -110,
+    homeMoneyline: game.homeMoneyline,
+    awayMoneyline: game.awayMoneyline,
+  };
+}
+
+/** Every book on file for a game, consensus first when nothing else exists. */
+export function quotesFor(game: LiveGame): BookQuote[] {
+  const books = (game as { books?: BookQuote[] | null }).books;
+  if (books && books.length) return books;
+  return [consensusQuote(game)];
+}
+
+/**
+ * Line shopping, done properly: take each leg from whichever book prices it
+ * best for the bettor — the longest odds, and on a spread the friendliest
+ * number as the tie-break.
+ */
+export function bestQuote(quotes: BookQuote[]): BookQuote {
+  const best = <K extends keyof BookQuote>(key: K, better: (a: number, b: number) => boolean) =>
+    quotes.reduce<number | null>((acc, q) => {
+      const v = q[key] as number | null;
+      if (v == null) return acc;
+      return acc == null || better(v, acc) ? v : acc;
+    }, null);
+  const longer = (a: number, b: number) => a > b; // +150 beats +130, -105 beats -120
+  return {
+    book: 'best',
+    name: 'Best available',
+    homeSpread: best('homeSpread', (a, b) => a > b),
+    spreadHomeOdds: best('spreadHomeOdds', longer),
+    spreadAwayOdds: best('spreadAwayOdds', longer),
+    totalLine: best('totalLine', (a, b) => a < b),
+    overOdds: best('overOdds', longer),
+    underOdds: best('underOdds', longer),
+    homeMoneyline: best('homeMoneyline', longer),
+    awayMoneyline: best('awayMoneyline', longer),
+  };
+}
+
+/** Every leg the model is willing to price on one game, at one book's numbers. */
+export function legsFor(row: EdgeRow, awayAbbr: string, homeAbbr: string, quote?: BookQuote): ParlayLeg[] {
+  const q = quote ?? consensusQuote(row.game);
   const margin = row.rec.projectedHome - row.rec.projectedAway;
   const legs: ParlayLeg[] = [];
-  const line = row.game.homeSpread ?? row.rec.marketHomeSpread;
+  const line = q.homeSpread ?? row.rec.marketHomeSpread;
   if (line != null) {
     const home = coverProb(margin, line);
-    legs.push({ key: `${row.gameId}:spread:home`, gameId: row.gameId, label: `${homeAbbr} ${line > 0 ? `+${line}` : line}`, prob: home, american: -110 });
-    legs.push({ key: `${row.gameId}:spread:away`, gameId: row.gameId, label: `${awayAbbr} ${-line > 0 ? `+${-line}` : -line}`, prob: 1 - home, american: -110 });
+    legs.push({ key: `${row.gameId}:spread:home`, gameId: row.gameId, label: `${homeAbbr} ${line > 0 ? `+${line}` : line}`, prob: home, american: q.spreadHomeOdds ?? -110 });
+    legs.push({ key: `${row.gameId}:spread:away`, gameId: row.gameId, label: `${awayAbbr} ${-line > 0 ? `+${-line}` : -line}`, prob: 1 - home, american: q.spreadAwayOdds ?? -110 });
   }
-  legs.push({ key: `${row.gameId}:ml:home`, gameId: row.gameId, label: `${homeAbbr} ML`, prob: row.rec.homeWinPct / 100, american: row.game.homeMoneyline });
-  legs.push({ key: `${row.gameId}:ml:away`, gameId: row.gameId, label: `${awayAbbr} ML`, prob: row.rec.awayWinPct / 100, american: row.game.awayMoneyline });
-  const total = row.game.totalLine ?? row.rec.marketTotal;
+  legs.push({ key: `${row.gameId}:ml:home`, gameId: row.gameId, label: `${homeAbbr} ML`, prob: row.rec.homeWinPct / 100, american: q.homeMoneyline });
+  legs.push({ key: `${row.gameId}:ml:away`, gameId: row.gameId, label: `${awayAbbr} ML`, prob: row.rec.awayWinPct / 100, american: q.awayMoneyline });
+  const total = q.totalLine ?? row.rec.marketTotal;
   if (total != null) {
     const over = overProb(row.rec.total, total);
-    legs.push({ key: `${row.gameId}:total:over`, gameId: row.gameId, label: `${awayAbbr}/${homeAbbr} o${total}`, prob: over, american: -110 });
-    legs.push({ key: `${row.gameId}:total:under`, gameId: row.gameId, label: `${awayAbbr}/${homeAbbr} u${total}`, prob: 1 - over, american: -110 });
+    legs.push({ key: `${row.gameId}:total:over`, gameId: row.gameId, label: `${awayAbbr}/${homeAbbr} o${total}`, prob: over, american: q.overOdds ?? -110 });
+    legs.push({ key: `${row.gameId}:total:under`, gameId: row.gameId, label: `${awayAbbr}/${homeAbbr} u${total}`, prob: 1 - over, american: q.underOdds ?? -110 });
   }
   return legs;
 }

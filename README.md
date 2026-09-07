@@ -1,15 +1,46 @@
 # Gridiron AI 🏈
 
-**An NFL bias & predictive analytics engine, fed by live data.** Pick any two
-teams and Gridiron AI grades the matchup through four weighted analytical
-nodes, simulates the game 10,000 times, and returns win probability, a
-projected score and total, a 1-10 advantage matrix, a three-act game script and
-a sleeper report — with every factor that moved the number laid out for you,
-and the market line next to the model's.
+**One football model, two leagues, graded in public.** The NFL on Sunday and all
+134 FBS programs on Saturday, in one app with one subscription. Pick any two
+teams and Gridiron AI grades the matchup through four weighted analytical nodes,
+simulates the game 10,000 times, and returns win probability, a projected score
+and total, a 1-10 advantage matrix, a three-act game script and a sleeper report
+— with every factor that moved the number laid out, and every sportsbook's line
+next to the model's.
 
-The dataset behind it rebuilds itself on a schedule from public NFL data, so
+The datasets behind it rebuild themselves on a schedule from public data, so
 ratings, depth charts, injuries, schedules, betting lines and kickoff weather
-stay current without anyone touching a file.
+stay current without anyone touching a file. Live scores come straight from the
+scoreboard, every twenty seconds, on top of that feed.
+
+## How the app is put together
+
+```
+src/            the NFL league: engine, data, screens
+src/cfb/        the college league: its own engine, data and screens
+src/league/     the adapter both of them present to shared surfaces
+src/live/       live-score polling that overlays the published feed
+src/social/     profiles, follows, posts and tails
+src/monetize/   one subscription ladder covering both leagues
+```
+
+Each league keeps its own engine and dataset — college football is not the NFL
+with different logos, and pretending otherwise would ruin both models. What they
+share is everything above the data: one theme, one tab bar, one card, one Parlay
+Lab, one social graph, one price.
+
+The college dataset is published by a companion repository
+([CFB-Gridiron-AI](https://github.com/malachixmoore0-coder/CFB-Gridiron-AI)),
+which still runs the college pipeline on its own schedule. This app reads both
+feeds.
+
+### Getting around
+
+Five tabs — Floor, Slate, Record, Teams, Social — with an NFL/NCAA switch in
+every header and Simulate as a floating action rather than a destination. Every
+screen pushed on top of a tab carries a full-width **Back bar at the bottom** of
+the screen, where a thumb actually reaches, and on the web the browser and phone
+back gestures pop the stack too.
 
 ## How the data stays live
 
@@ -118,9 +149,48 @@ inputs always reproduce the same games; "Re-roll" draws a fresh seed.
 
 Nothing here is betting advice.
 
+## Social, sign-in and privacy
+
+Profiles, follows, posts with hashtags and GIFs, and **tails** — a tailed pick
+lands on your own card and grades on the same finals as one you found yourself.
+A shared pick always carries the model's probability and edge with it, so nobody
+can post a screenshot of a winner they never had.
+
+Privacy is two switches rather than one, because they answer different
+questions: *show my record* is about the number, *show my picks* is about the
+positions. A private account hides the picks from everyone but accepted
+followers while the win/loss line can stay public.
+
+**It runs device-local until a backend is connected**, and the app says so on
+screen rather than implying an audience that is not there. To make it real:
+
+1. Create a Supabase project, then run `docs/social-schema.sql` in its SQL
+   editor — that file carries the tables, the counters and every row-level
+   security policy the privacy switches promise.
+2. Enable Google and Apple under Authentication → Providers.
+3. Set the build-time variables:
+
+```
+EXPO_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
+EXPO_PUBLIC_SUPABASE_ANON_KEY=<anon key>
+EXPO_PUBLIC_GIPHY_KEY=<optional, enables GIF search>
+```
+
+The anon key is meant to be public; everything that matters is enforced by the
+policies, not by the client. Without a GIPHY key the picker still accepts a
+pasted GIF link rather than showing a dead button.
+
+## Sportsbooks
+
+The refresh job pulls each game's provider list from ESPN's core API and
+publishes it with the schedule, so the Parlay Lab can price a leg at a named
+book — DraftKings, FanDuel, BetMGM, Caesars, ESPN BET — or shop every leg to
+whichever book pays most under "best available". Where a book has not posted, the
+field is left null rather than guessed: an invented half point is invented edge.
+
 ## Tiers, and turning payments on
 
-Four tiers — Walk-On (free), Starter, All-Pro, Franchise — defined in one place,
+Four tiers — Walk-On (free), Starter, All-Pro, Franchise — covering **both leagues**, defined in one place,
 `src/monetize/tiers.ts`. Each is a set of entitlements (simulation depth, how far
 down the Edge Board you can see, history, props, parlay legs, share cards), and
 every gate in the app reads from that file, so changing the offer is a one-file

@@ -15,21 +15,35 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-nati
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing, type as T } from '@/theme';
-import { useTeams } from '@/context/TeamsContext';
+import { useActiveLeague } from '@/league/LeagueContext';
+import { LeagueSwitch } from '@/components/LeagueSwitch';
 import { useEntitlements } from '@/context/EntitlementsContext';
-import { buildEdges, fmtOdds, legsFor, parlay, SAME_GAME_RHO, type ParlayLeg } from '@/utils/edge';
+import { bestQuote, buildEdges, fmtOdds, legsFor, parlay, quotesFor, SAME_GAME_RHO, type BookQuote, type ParlayLeg } from '@/utils/edge';
 import { Locked, TierPill } from '@/components/Pro';
 
 interface Props { onUpgrade: () => void; onBack: () => void; }
 
 export function ParlayScreen({ onUpgrade, onBack }: Props) {
-  const { weekGames, records, getTeam, hasTeam } = useTeams();
+  const view = useActiveLeague();
   const ent = useEntitlements();
   const [picked, setPicked] = useState<ParlayLeg[]>([]);
   const [openGame, setOpenGame] = useState<string | null>(null);
+  /** Chosen sportsbook per game; 'best' shops every leg. */
+  const [books, setBooks] = useState<Record<string, string>>({});
 
-  const abbr = (id: string) => (hasTeam(id) ? getTeam(id).abbr : id.toUpperCase());
-  const rows = useMemo(() => buildEdges(weekGames, records, abbr).filter((r) => !r.played), [weekGames, records, getTeam, hasTeam]);
+  const abbr = (id: string) => view.abbrOf(id);
+  const rows = useMemo(
+    () => buildEdges(view.weekGames as never, view.records, abbr).filter((r) => !r.played),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [view.weekGames, view.records],
+  );
+
+  /** The book a game is currently priced at, defaulting to best available. */
+  const quoteFor = (gameId: string, quotes: BookQuote[]): BookQuote => {
+    const chosen = books[gameId] ?? 'best';
+    if (chosen === 'best') return quotes.length > 1 ? bestQuote(quotes) : quotes[0];
+    return quotes.find((q) => q.book === chosen) ?? quotes[0];
+  };
   const maxLegs = ent.ent.parlayLegs;
   const priced = useMemo(() => parlay(picked), [picked]);
 
@@ -116,7 +130,9 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
       <ScrollView contentContainerStyle={styles.body}>
         {rows.map((r) => {
           const open = openGame === r.gameId;
-          const legs = legsFor(r, abbr(r.game.awayId), abbr(r.game.homeId));
+          const quotes = quotesFor(r.game);
+          const quote = quoteFor(r.gameId, quotes);
+          const legs = legsFor(r, abbr(r.game.awayId), abbr(r.game.homeId), quote);
           return (
             <View key={r.gameId} style={styles.game}>
               <TouchableOpacity style={styles.gameHead} activeOpacity={0.85} onPress={() => setOpenGame(open ? null : r.gameId)}>
@@ -125,10 +141,39 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
                   <Text style={styles.gameMeta}>
                     {new Date(r.game.kickoff).toLocaleDateString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' })}
                     {' · '}model edge +{r.spreadEdge.toFixed(1)}
+                    {' · '}{quote.name}
                   </Text>
                 </View>
                 <Ionicons name={open ? 'chevron-up' : 'chevron-down'} size={15} color={colors.inkFaint} />
               </TouchableOpacity>
+              {open && quotes.length > 1 && (
+                <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.bookRow}>
+                  {[{ book: 'best', name: 'Best available' }, ...quotes].map((q) => {
+                    const on = (books[r.gameId] ?? 'best') === q.book;
+                    return (
+                      <TouchableOpacity
+                        key={q.book}
+                        style={[styles.book, on && styles.bookOn]}
+                        activeOpacity={0.85}
+                        onPress={() => {
+                          setBooks((b) => ({ ...b, [r.gameId]: q.book }));
+                          // Legs already on the slip were priced at the old book.
+                          setPicked((cur) => cur.filter((l) => l.gameId !== r.gameId));
+                        }}
+                        accessibilityRole="radio"
+                        accessibilityState={{ selected: on }}
+                      >
+                        <Text style={[styles.bookText, on && styles.bookTextOn]}>{q.name}</Text>
+                      </TouchableOpacity>
+                    );
+                  })}
+                </ScrollView>
+              )}
+              {open && quotes.length === 1 && (
+                <Text style={styles.oneBook}>
+                  One book on file ({quotes[0].name}). Per-book prices land with the next data refresh.
+                </Text>
+              )}
               {open && (
                 <View style={styles.legs}>
                   {legs.map((l) => {
@@ -155,8 +200,9 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
         })}
         {!rows.length && <Text style={styles.slipEmpty}>No open games to price right now.</Text>}
         <Text style={styles.legal}>
-          Probabilities come from the same projections the Record tab grades. Correlation on same-game legs is a flat,
-          documented haircut, not a fitted copula — it is deliberately conservative.
+          Probabilities come from the same projections the Record tab grades, and prices from the book you selected —
+          "best available" shops each leg to whichever book is paying most. Correlation on same-game legs is a flat,
+          documented haircut, not a fitted copula: deliberately conservative, and never better than the independent price.
         </Text>
       </ScrollView>
     </View>
@@ -172,8 +218,9 @@ function Header({ onBack, onUpgrade, tier }: { onBack: () => void; onUpgrade: ()
         </TouchableOpacity>
         <View style={{ flex: 1 }}>
           <Text style={styles.title}>Parlay Lab</Text>
-          <Text style={styles.sub}>Fair price vs the book</Text>
+          <Text style={styles.sub}>Fair price vs the book you actually use</Text>
         </View>
+        <LeagueSwitch compact />
         <TierPill tier={tier} onPress={onUpgrade} />
       </View>
     </SafeAreaView>
@@ -219,6 +266,12 @@ const styles = StyleSheet.create({
   gameTeams: { color: colors.ink, fontSize: 13, fontWeight: '900' },
   gameMeta: { color: colors.inkFaint, fontSize: 10, marginTop: 2 },
   legs: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, padding: spacing.md, paddingTop: 0 },
+  bookRow: { gap: 6, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
+  book: { paddingHorizontal: 11, paddingVertical: 6, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
+  bookOn: { borderColor: colors.gold, backgroundColor: colors.goldSoft },
+  bookText: { color: colors.inkDim, fontSize: 11, fontWeight: '800' },
+  bookTextOn: { color: colors.gold },
+  oneBook: { color: colors.inkGhost, fontSize: 11, lineHeight: 16, paddingHorizontal: spacing.md, paddingBottom: spacing.sm },
   leg: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 10, paddingVertical: 7, borderRadius: radius.sm, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
   legOn: { backgroundColor: colors.green, borderColor: colors.green },
   legFull: { opacity: 0.35 },

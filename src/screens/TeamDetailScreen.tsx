@@ -2,6 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
+import { teamTheme } from '@/utils/teamTheme';
 import { useTeams } from '@/context/TeamsContext';
 import { useSettings } from '@/context/SettingsContext';
 import { useRoster } from '@/hooks/useRoster';
@@ -23,6 +25,8 @@ type Tab = 'depth' | 'roster' | 'profile';
 export function TeamDetailScreen({ teamId, onBack, onOpenPlayer, onOpenTeam, onOpenGame }: Props) {
   const { getTeam, hasTeam } = useTeams();
   const t = getTeam(teamId);
+  // The page takes the team's colours: ground, stripe and accent.
+  const tt = useMemo(() => teamTheme(t?.colors?.primary, t?.colors?.secondary), [t?.colors?.primary, t?.colors?.secondary]);
   const { statusOf, hasOverride } = useSettings();
   const { roster: file, loading, error } = useRoster(teamId);
   const [tab, setTab] = useState<Tab>('depth');
@@ -46,7 +50,9 @@ export function TeamDetailScreen({ teamId, onBack, onOpenPlayer, onOpenTeam, onO
   const openPlayer = (p: RosterPlayer) => onOpenPlayer(teamId, p.id);
 
   return (
-    <SafeAreaView style={styles.root} edges={['top']}>
+    <SafeAreaView style={[styles.root, { backgroundColor: tt.ground }]} edges={['top']}>
+      <LinearGradient colors={tt.gradient} style={StyleSheet.absoluteFill as never} pointerEvents="none" />
+      <View style={[styles.teamStripe, { backgroundColor: tt.accent }]} pointerEvents="none" />
       <ScreenHeader
         title={`${t.city} ${t.name}`}
         subtitle={`${t.conference} ${t.division}${file?.record ? ` · ${file.record}` : t.record ? ` · ${t.record}` : ''} · ${t.stadium.name}`}
@@ -222,6 +228,7 @@ function Bar({ label, value, lo, hi, fmt }: { label: string; value: number; lo: 
 }
 
 const styles = StyleSheet.create({
+  teamStripe: { height: 3 },
   root: { flex: 1, backgroundColor: colors.bg },
   content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl },
   hero: { flexDirection: 'row', alignItems: 'center', gap: spacing.lg, backgroundColor: colors.card, borderRadius: radius.xl, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginBottom: spacing.md, ...shadow.card },

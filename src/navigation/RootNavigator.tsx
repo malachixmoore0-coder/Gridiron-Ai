@@ -1,104 +1,254 @@
-import React, { useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { colors } from '@/theme';
+/**
+ * One app, two leagues, five tabs and an overlay stack.
+ *
+ * Two things are load-bearing here.
+ *
+ * Back. The old build put a single back arrow under the status bar in the top
+ * left — unreachable one-handed, and exactly where iOS wants its own edge
+ * gesture. Every overlay now sits in an OverlayShell with a full-width back bar
+ * at the bottom, and on the web the browser and phone back gestures pop the
+ * stack too, because a PWA that swallows the back button feels broken.
+ *
+ * Leagues. The NFL and college screen trees both mount against their own data,
+ * and the league switch decides which one renders. Shared surfaces — the card,
+ * the parlay lab, the social feed — read the active league through an adapter
+ * so they never care which is which.
+ */
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
+import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
+import { useEngagement } from '@/context/EngagementContext';
+import { useLeague } from '@/league/LeagueContext';
+import type { LeagueId } from '@/league/types';
 import type { RunRequest } from '@/hooks/useAnalysis';
 import { BottomTabBar, TabKey } from '@/components/BottomTabBar';
+import { OverlayShell } from '@/components/OverlayShell';
+import { ErrorBoundary } from '@/components/ErrorBoundary';
+import { OnboardingScreen } from '@/screens/OnboardingScreen';
+
+/* NFL */
+import { HomeScreen } from '@/screens/HomeScreen';
 import { MatchupScreen } from '@/screens/MatchupScreen';
 import { ResultScreen } from '@/screens/ResultScreen';
 import { SlateScreen } from '@/screens/SlateScreen';
-import { RecordScreen } from '@/screens/RecordScreen';
 import { TeamsScreen } from '@/screens/TeamsScreen';
 import { TeamDetailScreen } from '@/screens/TeamDetailScreen';
 import { PlayerProfileScreen } from '@/screens/PlayerProfileScreen';
 import { GameStatsScreen } from '@/screens/GameStatsScreen';
-import { HomeScreen } from '@/screens/HomeScreen';
-import { CardScreen } from '@/screens/CardScreen';
+import { SettingsScreen } from '@/screens/SettingsScreen';
+
+/* College */
+import { HomeScreen as CfbHome } from '@/cfb/screens/HomeScreen';
+import { MatchupScreen as CfbMatchup } from '@/cfb/screens/MatchupScreen';
+import { ResultScreen as CfbResult } from '@/cfb/screens/ResultScreen';
+import { SlateScreen as CfbSlate } from '@/cfb/screens/SlateScreen';
+import { TeamsScreen as CfbTeams } from '@/cfb/screens/TeamsScreen';
+import { TeamDetailScreen as CfbTeamDetail } from '@/cfb/screens/TeamDetailScreen';
+import { PlayerProfileScreen as CfbPlayer } from '@/cfb/screens/PlayerProfileScreen';
+import { GameStatsScreen as CfbGameStats } from '@/cfb/screens/GameStatsScreen';
+import { SettingsScreen as CfbSettings } from '@/cfb/screens/SettingsScreen';
+
+/* Shared */
+import { RecordHubScreen } from '@/screens/RecordHubScreen';
+import { SocialScreen } from '@/screens/SocialScreen';
+import { ComposeScreen } from '@/screens/ComposeScreen';
+import { ProfileScreen } from '@/screens/ProfileScreen';
 import { ParlayScreen } from '@/screens/ParlayScreen';
 import { UpgradeScreen } from '@/screens/UpgradeScreen';
-import { ErrorBoundary } from '@/components/ErrorBoundary';
-import { SettingsScreen } from '@/screens/SettingsScreen';
-import { OnboardingScreen } from '@/screens/OnboardingScreen';
+import type { PostPick } from '@/social/types';
+
+type AnyRun = { awayId: string; homeId: string; ctx: unknown };
 
 type Overlay =
-  | { kind: 'result'; request: RunRequest }
-  | { kind: 'team'; teamId: string }
-  | { kind: 'player'; teamId: string; playerId: string }
-  | { kind: 'game'; teamId: string; gameId: string }
-  | { kind: 'card' }
+  | { kind: 'result'; league: LeagueId; request: AnyRun }
+  | { kind: 'team'; league: LeagueId; teamId: string }
+  | { kind: 'player'; league: LeagueId; teamId: string; playerId: string }
+  | { kind: 'game'; league: LeagueId; teamId: string; gameId: string }
+  | { kind: 'simulate'; league: LeagueId }
   | { kind: 'parlay' }
   | { kind: 'upgrade' }
-  | { kind: 'model' };
+  | { kind: 'model'; league: LeagueId }
+  | { kind: 'compose'; pick?: PostPick | null }
+  | { kind: 'profile'; userId: string };
 
-/**
- * Hand-rolled navigation: four tabs, one raised action, and an overlay stack.
- * The paid surfaces (Card, Parlay Lab, Upgrade) are overlays rather than tabs
- * so the dock stays about football and the upsell stays contextual.
- */
+const TITLES: Record<Overlay['kind'], string> = {
+  result: 'Back', team: 'Back', player: 'Back', game: 'Back', simulate: 'Close',
+  parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back',
+};
+
+const isWeb = Platform.OS === 'web';
+
 export function RootNavigator() {
   const { loaded, onboarded, overrides } = useSettings();
   const ent = useEntitlements();
+  const eng = useEngagement();
+  const { league, active } = useLeague();
   const [tab, setTab] = useState<TabKey>('home');
   const [stack, setStack] = useState<Overlay[]>([]);
+  const depth = useRef(0);
+
+  /* Web: mirror the overlay stack into history so the browser and the phone's
+     back gesture close a screen instead of leaving the app. */
+  useEffect(() => {
+    if (!isWeb || typeof window === 'undefined') return;
+    const onPop = () => { depth.current = Math.max(0, depth.current - 1); setStack((s) => s.slice(0, -1)); };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, []);
+
+  const push = useCallback((o: Overlay) => {
+    setStack((s) => [...s, o]);
+    if (isWeb && typeof window !== 'undefined') { depth.current += 1; window.history.pushState({ gi: depth.current }, ''); }
+  }, []);
+
+  const pop = useCallback(() => {
+    if (isWeb && typeof window !== 'undefined' && depth.current > 0) { window.history.back(); return; }
+    setStack((s) => s.slice(0, -1));
+  }, []);
+
+  const clearStack = useCallback(() => {
+    const n = depth.current;
+    setStack([]);
+    if (isWeb && typeof window !== 'undefined' && n > 0) { depth.current = 0; window.history.go(-n); }
+  }, []);
 
   if (!loaded || !ent.loaded) return <View style={styles.root} />;
   if (!onboarded) return <OnboardingScreen onDone={() => {}} />;
 
-  const push = (o: Overlay) => setStack((s) => [...s, o]);
-  const pop = () => setStack((s) => s.slice(0, -1));
-  const openTeam = (teamId: string) => push({ kind: 'team', teamId });
-  const openPlayer = (teamId: string, playerId: string) => push({ kind: 'player', teamId, playerId });
-  const openGame = (teamId: string, gameId: string) => push({ kind: 'game', teamId, gameId });
+  const openTeam = (teamId: string, l: LeagueId = league) => push({ kind: 'team', league: l, teamId });
+  const openPlayer = (teamId: string, playerId: string, l: LeagueId = league) => push({ kind: 'player', league: l, teamId, playerId });
+  const openGame = (teamId: string, gameId: string, l: LeagueId = league) => push({ kind: 'game', league: l, teamId, gameId });
   const openUpgrade = () => push({ kind: 'upgrade' });
-  const run = (request: RunRequest) => {
-    // The free meter is spent here, at the one door every simulation goes through.
+  const openCompose = (pick?: PostPick | null) => push({ kind: 'compose', pick });
+  const openProfile = (userId: string) => push({ kind: 'profile', userId });
+
+  /** Every simulation goes through here, which is where the free meter is spent. */
+  const run = (request: AnyRun, l: LeagueId = league) => {
     if (!ent.spendSim()) { openUpgrade(); return; }
-    push({ kind: 'result', request });
+    push({ kind: 'result', league: l, request });
   };
+
+  /** Share a saved pick: hand the composer the pick with its numbers attached. */
+  const sharePick = (pickId: string) => {
+    const p = eng.picks.find((x) => x.id === pickId);
+    if (!p) return;
+    openCompose({
+      league, gameId: p.gameId, awayId: p.awayId, homeId: p.homeId,
+      market: p.market, side: p.side, number: p.number,
+      label: p.label, modelPct: p.modelPct, edge: p.edge,
+    });
+  };
+
+  const cfb = league === 'cfb';
 
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        {tab === 'home' && (
-          <HomeScreen
-            onRun={run}
-            onOpenGame={openGame}
-            onOpenTeam={openTeam}
+        {tab === 'home' && (cfb ? (
+          <CfbHome
+            onRun={(r) => run(r as AnyRun, 'cfb')}
+            onOpenGame={(t, g) => openGame(t, g, 'cfb')}
+            onOpenTeam={(t) => openTeam(t, 'cfb')}
             onUpgrade={openUpgrade}
-            onOpenCard={() => push({ kind: 'card' })}
+            onOpenCard={() => setTab('record')}
             onOpenParlay={() => push({ kind: 'parlay' })}
-            onOpenModel={() => push({ kind: 'model' })}
+            onOpenModel={() => push({ kind: 'model', league: 'cfb' })}
+          />
+        ) : (
+          <HomeScreen
+            onRun={(r) => run(r, 'nfl')}
+            onOpenGame={(t, g) => openGame(t, g, 'nfl')}
+            onOpenTeam={(t) => openTeam(t, 'nfl')}
+            onUpgrade={openUpgrade}
+            onOpenCard={() => setTab('record')}
+            onOpenParlay={() => push({ kind: 'parlay' })}
+            onOpenModel={() => push({ kind: 'model', league: 'nfl' })}
+          />
+        ))}
+
+        {tab === 'slate' && (cfb
+          ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
+          : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
+
+        {tab === 'record' && (
+          <RecordHubScreen
+            onRun={(r) => run(r, league)}
+            onUpgrade={openUpgrade}
+            onOpenGame={(t, g) => openGame(t, g, league)}
+            onShare={sharePick}
           />
         )}
-        {tab === 'matchup' && <MatchupScreen onRun={run} onOpenTeam={openTeam} />}
-        {tab === 'slate' && <SlateScreen onRun={run} />}
-        {tab === 'record' && <RecordScreen onRun={run} onUpgrade={openUpgrade} />}
-        {tab === 'teams' && <TeamsScreen onOpenTeam={openTeam} onUpgrade={openUpgrade} />}
+
+        {tab === 'teams' && (cfb
+          ? <CfbTeams onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+          : <TeamsScreen onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />)}
+
+        {tab === 'social' && (
+          <SocialScreen
+            onCompose={() => openCompose(null)}
+            onOpenProfile={openProfile}
+            onOpenGame={(l, t, g) => openGame(t, g, l)}
+          />
+        )}
       </View>
 
-      <BottomTabBar active={tab} onChange={(t) => { setStack([]); setTab(t); }} badge={Object.keys(overrides).length} />
+      {/* Simulate is an action, not a destination, so it floats above the dock. */}
+      {tab !== 'social' && (
+        <TouchableOpacity
+          style={styles.fab}
+          activeOpacity={0.88}
+          onPress={() => push({ kind: 'simulate', league })}
+          accessibilityRole="button"
+          accessibilityLabel="Simulate a matchup"
+        >
+          <Ionicons name="flash" size={18} color={colors.bg} />
+          <Text style={styles.fabText}>Simulate</Text>
+        </TouchableOpacity>
+      )}
+
+      <BottomTabBar active={tab} onChange={(t) => { clearStack(); setTab(t); }} badge={Object.keys(overrides).length} />
 
       {stack.map((o, i) => (
         <View key={`${o.kind}-${i}`} style={[StyleSheet.absoluteFill, styles.overlay]}>
           <ErrorBoundary onBack={pop}>
-            {o.kind === 'result' ? (
-              <ResultScreen request={o.request} onBack={pop} onOpenTeam={openTeam} />
-            ) : o.kind === 'team' ? (
-              <TeamDetailScreen teamId={o.teamId} onBack={pop} onOpenPlayer={openPlayer} onOpenTeam={openTeam} onOpenGame={openGame} />
-            ) : o.kind === 'game' ? (
-              <GameStatsScreen teamId={o.teamId} gameId={o.gameId} onBack={pop} onOpenPlayer={openPlayer} onOpenTeam={openTeam} onRun={run} />
-            ) : o.kind === 'card' ? (
-              <CardScreen onUpgrade={openUpgrade} onOpenGame={openGame} />
-            ) : o.kind === 'parlay' ? (
-              <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
-            ) : o.kind === 'upgrade' ? (
-              <UpgradeScreen onBack={pop} />
-            ) : o.kind === 'model' ? (
-              <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => push({ kind: 'card' })} />
-            ) : (
-              <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={openTeam} onUpgrade={openUpgrade} />
-            )}
+            <OverlayShell onBack={pop} backLabel={TITLES[o.kind]}>
+              {o.kind === 'result' ? (
+                o.league === 'cfb'
+                  ? <CfbResult request={o.request as never} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} />
+                  : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} />
+              ) : o.kind === 'team' ? (
+                o.league === 'cfb'
+                  ? <CfbTeamDetail teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onOpenGame={(t, g) => openGame(t, g, 'cfb')} />
+                  : <TeamDetailScreen teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onOpenGame={(t, g) => openGame(t, g, 'nfl')} />
+              ) : o.kind === 'player' ? (
+                o.league === 'cfb'
+                  ? <CfbPlayer teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+                  : <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
+              ) : o.kind === 'game' ? (
+                o.league === 'cfb'
+                  ? <CfbGameStats teamId={o.teamId} gameId={o.gameId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onRun={(r) => run(r as AnyRun, 'cfb')} />
+                  : <GameStatsScreen teamId={o.teamId} gameId={o.gameId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onRun={(r) => run(r, 'nfl')} />
+              ) : o.kind === 'simulate' ? (
+                o.league === 'cfb'
+                  ? <CfbMatchup onRun={(r) => run(r as AnyRun, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} />
+                  : <MatchupScreen onRun={(r) => run(r, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} />
+              ) : o.kind === 'model' ? (
+                o.league === 'cfb'
+                  ? <CfbSettings onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
+                  : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
+              ) : o.kind === 'parlay' ? (
+                <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
+              ) : o.kind === 'upgrade' ? (
+                <UpgradeScreen onBack={pop} />
+              ) : o.kind === 'compose' ? (
+                <ComposeScreen onDone={pop} initialPick={o.pick ?? null} />
+              ) : (
+                <ProfileScreen userId={o.userId} onOpenProfile={openProfile} onCompose={() => openCompose(null)} />
+              )}
+            </OverlayShell>
           </ErrorBoundary>
         </View>
       ))}
@@ -110,4 +260,10 @@ const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   content: { flex: 1 },
   overlay: { backgroundColor: colors.bg },
+  fab: {
+    position: 'absolute', right: spacing.lg, bottom: 78, flexDirection: 'row', alignItems: 'center', gap: 7,
+    paddingHorizontal: 16, paddingVertical: 11, borderRadius: radius.pill, backgroundColor: colors.green,
+    shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.4, shadowRadius: 14, elevation: 8,
+  },
+  fabText: { color: colors.bg, fontSize: 13, fontWeight: '900' },
 });

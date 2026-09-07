@@ -14,6 +14,9 @@ import { Section } from '@/components/Section';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Chip } from '@/components/Chip';
 import type { RunRequest } from '@/hooks/useAnalysis';
+import { gameMatchups, biggestEdge } from '@/utils/gameMatchups';
+import { useTeamNews } from '@/hooks/useTeamNews';
+import { Linking } from 'react-native';
 
 interface Props {
   teamId: string;
@@ -37,6 +40,17 @@ export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTe
   // Always call the hook; an empty id simply never resolves.
   const { roster: oppFile, loading: oppLoading } = useRoster(oppId ?? teamId);
   const opp = oppId ? getTeam(oppId) : null;
+
+  // Unit-versus-unit for the header, and the two teams' headlines below it.
+  const home = game?.home ? team : opp;
+  const away = game?.home ? opp : team;
+  const units = useMemo(
+    () => (home && away ? gameMatchups(home, away, home.abbr, away.abbr) : []),
+    [home, away],
+  );
+  const headline = useMemo(() => biggestEdge(units), [units]);
+  const ownNews = useTeamNews(teamId);
+  const oppNews = useTeamNews(oppId);
   const [side, setSide] = useState<'own' | 'opp'>('own');
 
   const own = useMemo(() => (file ? boxScore(file.roster, gameId) : null), [file, gameId]);
@@ -113,6 +127,62 @@ export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTe
               {prediction.result.ats ? ` · against the spread ${prediction.result.ats}` : ''} · projected {prediction.total.toFixed(1)}, actual {(game.teamScore ?? 0) + (game.oppScore ?? 0)}
             </Text>
           </View>
+        )}
+
+        {units.length > 0 && (
+          <Section
+            icon="git-compare"
+            title="Matchups"
+            subtitle={headline ? `Biggest gap: ${headline.label} ${headline.edge > 0 ? '+' : ''}${headline.edge.toFixed(1)}` : 'Unit against unit, on the engine\u2019s own grades'}
+          >
+            {units.map((u) => {
+              const pct = Math.max(6, Math.min(94, 50 + u.edge * 9));
+              return (
+                <View key={u.label} style={styles.unitRow}>
+                  <View style={styles.unitHead}>
+                    <Text style={styles.unitLabel}>{u.label}</Text>
+                    <Text style={[styles.unitEdge, { color: u.edge >= 1 ? colors.positive : u.edge <= -1 ? colors.negative : colors.inkDim }]}>
+                      {u.edge > 0 ? '+' : ''}{u.edge.toFixed(1)}
+                    </Text>
+                  </View>
+                  <Text style={styles.unitAgainst}>{u.against} · {u.attack.toFixed(1)} vs {u.defend.toFixed(1)}</Text>
+                  <View style={styles.unitTrack}>
+                    <View style={[styles.unitFill, { width: `${pct}%`, backgroundColor: u.edge >= 0 ? colors.positive : colors.negative }]} />
+                  </View>
+                </View>
+              );
+            })}
+            <Text style={styles.unitFoot}>
+              Grades are the same 1-10 unit ratings the simulation compares. Positive favours the side named first.
+            </Text>
+          </Section>
+        )}
+
+        {(ownNews.items.length > 0 || oppNews.items.length > 0) && (
+          <Section icon="newspaper" title="Team news" subtitle="Headlines from ESPN, refreshed with the data feed">
+            {[{ team, list: ownNews.items }, { team: opp, list: oppNews.items }]
+              .filter((g) => g.team && g.list.length)
+              .map((group) => (
+                <View key={group.team!.id} style={styles.newsGroup}>
+                  <Text style={styles.newsTeam}>{group.team!.abbr}</Text>
+                  {group.list.slice(0, 4).map((n) => (
+                    <TouchableOpacity
+                      key={n.id}
+                      style={styles.newsItem}
+                      activeOpacity={0.8}
+                      onPress={() => { if (n.link) Linking.openURL(n.link).catch(() => {}); }}
+                      disabled={!n.link}
+                    >
+                      <Text style={styles.newsHead} numberOfLines={2}>{n.headline}</Text>
+                      {!!n.description && <Text style={styles.newsBody} numberOfLines={2}>{n.description}</Text>}
+                      <Text style={styles.newsMeta}>
+                        {n.source}{n.byline ? ` · ${n.byline}` : ''}{n.published ? ` · ${new Date(n.published).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}` : ''}
+                      </Text>
+                    </TouchableOpacity>
+                  ))}
+                </View>
+              ))}
+          </Section>
         )}
 
         {played && own && other && (
@@ -196,6 +266,21 @@ function TotalRow({ label, a, b, invert }: { label: string; a: number; b: number
 }
 
 const styles = StyleSheet.create({
+  unitRow: { paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: colors.divider },
+  unitHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
+  unitLabel: { color: colors.ink, fontSize: 13, fontWeight: '800' },
+  unitEdge: { fontSize: 13, fontWeight: '900' },
+  unitAgainst: { color: colors.inkFaint, fontSize: 11, marginTop: 2 },
+  unitTrack: { height: 5, borderRadius: 3, backgroundColor: colors.cardAlt, marginTop: 7, overflow: 'hidden' },
+  unitFill: { height: 5, borderRadius: 3 },
+  unitFoot: { color: colors.inkGhost, fontSize: 10, lineHeight: 15, marginTop: 10 },
+
+  newsGroup: { marginBottom: spacing.md },
+  newsTeam: { color: colors.gold, fontSize: 10, fontWeight: '900', letterSpacing: 1, marginBottom: 6 },
+  newsItem: { paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: colors.divider },
+  newsHead: { color: colors.ink, fontSize: 13.5, fontWeight: '800', lineHeight: 18 },
+  newsBody: { color: colors.inkDim, fontSize: 12, lineHeight: 17, marginTop: 3 },
+  newsMeta: { color: colors.inkGhost, fontSize: 10, marginTop: 4 },
   root: { flex: 1, backgroundColor: colors.bg },
   content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl },
   center: { alignItems: 'center', gap: 8, paddingVertical: spacing.xl },

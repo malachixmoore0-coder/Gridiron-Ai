@@ -1,7 +1,7 @@
 {
   "name": "Gridiron AI",
   "short_name": "Gridiron AI",
-  "description": "The NFL model that grades itself in the open: 10,000-run simulations, an Edge Board against the market, and a track record you can audit.",
+  "description": "NFL and college football in one model: 10,000-run simulations, an Edge Board against every sportsbook, and a track record locked at kickoff and graded in the open.",
   "start_url": ".",
   "display": "standalone",
   "orientation": "portrait",
