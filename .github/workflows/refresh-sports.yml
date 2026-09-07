@@ -26,6 +26,10 @@ on:
         description: 'Set to 1 to dump the raw shape of the league stats response'
         required: false
         default: ''
+      probe:
+        description: 'Set to 1 to probe candidate ESPN leagues instead of building'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -47,7 +51,12 @@ jobs:
 
       - run: npm ci
 
+      - name: Probe candidate leagues
+        if: ${{ github.event.inputs.probe != '' }}
+        run: npm run data:probe
+
       - name: Build sport datasets
+        if: ${{ github.event.inputs.probe == '' }}
         env:
           # Set the workflow input "debug" to anything to have the roster step
           # print what ESPN's league statistics endpoint actually returned.
