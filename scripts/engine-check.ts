@@ -7,6 +7,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { TEAMS, getTeam } from '../src/data/teams';
 import type { Team } from '../src/engine/types';
+import { coverProbability, project, seedFor, simulate } from '../src/sports/engine';
+import { GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
 
 let failures = 0;
 const check = (cond: boolean, msg: string) => {
@@ -145,6 +147,68 @@ console.log('\n— Track record (predictions lock at kickoff, grade on the final
   check(!g.suCorrect && g.atsPick === 'home' && g.ats === 'loss' && g.ouPick === 'over' && g.ou === 'loss' && Math.abs(g.brier - 0.49) < 1e-9, 'grading arithmetic: upset ⇒ SU ✗, ATS ✗, O/U ✗, Brier 0.49');
   const push = grade({ ...open, homeWinPct: 60, awayWinPct: 40, spread: -7, total: 50, marketHomeSpread: -3, marketTotal: 44 }, 24, 21);
   check(push.ats === 'push' && push.ou === 'win', 'push on the number is a push, not a loss');
+}
+
+/* ---------------------------------------------------------------------------
+   The generic multi-sport engine. Football keeps its own checks above; this
+   block is about the properties that have to hold for basketball, baseball and
+   soccer, which the football tests cannot speak to at all.
+--------------------------------------------------------------------------- */
+console.log('\n— Multi-sport engine');
+{
+  const strong = { id: 'strong', rating: 1650, attack: 1.1, defence: 0.92 };
+  const weak = { id: 'weak', rating: 1430, attack: 0.94, defence: 1.08 };
+  const even = { id: 'even', rating: 1500 };
+
+  for (const key of GENERIC_LEAGUES.map((l) => l.key)) {
+    const prof = profileFor(key);
+    const r = simulate({ home: strong, away: weak }, prof, 4000, seedFor('strong', 'weak'));
+    const total = r.homeWinPct + r.awayWinPct + r.drawPct;
+    check(Math.abs(total - 100) < 0.001, `${key}: outcome probabilities sum to 100 (${total.toFixed(3)})`);
+    check(r.homeWinPct > r.awayWinPct, `${key}: the stronger home side is favoured (${r.homeWinPct.toFixed(1)}%)`);
+    check(r.drawPct === 0 || prof.draws, `${key}: draws only where the sport has them`);
+    if (prof.draws) check(r.drawPct > 1, `${key}: draws happen often enough to price (${r.drawPct.toFixed(1)}%)`);
+    check(r.total > prof.baseTotal * 0.4 && r.total < prof.baseTotal * 2, `${key}: total is a plausible ${prof.unit} count (${r.total.toFixed(1)} vs a ${prof.baseTotal} league average)`);
+    check(r.p10 <= r.p50 && r.p50 <= r.p90, `${key}: margin percentiles are ordered`);
+    check(Math.abs(r.bins.reduce((t, b) => t + b.pct, 0) - 100) < 0.001, `${key}: histogram covers the distribution`);
+    check(r.projectedHome >= 0 && r.projectedAway >= 0, `${key}: nobody scores a negative ${prof.unit}`);
+  }
+
+  const nba = profileFor('nba');
+  const seed = seedFor('strong', 'weak');
+  const one = simulate({ home: strong, away: weak }, nba, 4000, seed);
+  const two = simulate({ home: strong, away: weak }, nba, 4000, seed);
+  check(JSON.stringify(one) === JSON.stringify(two), 'same seed ⇒ identical result');
+  const other = simulate({ home: strong, away: weak }, nba, 4000, seed + 1);
+  check(other.homeWinPct !== one.homeWinPct, 'different seed ⇒ different draw');
+  check(Math.abs(other.homeWinPct - one.homeWinPct) < 4, 'different seeds agree within Monte-Carlo noise');
+
+  const neutral = simulate({ home: strong, away: weak, neutral: true }, nba, 4000, seed);
+  check(neutral.homeWinPct < one.homeWinPct, 'a neutral court costs the home side');
+  const flat = simulate({ home: even, away: even }, nba, 4000, seed);
+  check(Math.abs(flat.homeWinPct - flat.awayWinPct) > 1, 'two equal sides still split by the home edge');
+
+  // The market blend has to actually move the number, and toward the market.
+  const pure = project({ home: strong, away: weak }, nba);
+  const blended = project({ home: strong, away: weak, marketHomeSpread: -1, marketTotal: 200, marketWeight: 0.8 }, nba);
+  check(blended.margin < pure.margin && blended.total < pure.total, 'a market weight pulls the projection toward the market');
+  check(project({ home: strong, away: weak, marketHomeSpread: -1, marketWeight: 0 }, nba).margin === pure.margin, 'zero weight ignores the market entirely');
+
+  // A cover probability has to agree with the win probability at a pick-em line.
+  const cov = coverProbability(one, 0, nba) * 100;
+  check(Math.abs(cov - one.homeWinPct) < 6, `cover at pick-em ≈ win probability (${cov.toFixed(1)}% vs ${one.homeWinPct.toFixed(1)}%)`);
+  check(coverProbability(one, -20, nba) < coverProbability(one, 20, nba), 'laying more points lowers the cover probability');
+
+  // Baseball must never publish a tie: it goes to extras.
+  const mlb = simulate({ home: even, away: even }, profileFor('mlb'), 4000, seed);
+  check(mlb.drawPct === 0, 'baseball settles every game');
+
+  // Every league in the registry has to be internally consistent.
+  for (const l of LEAGUES) {
+    check(!!l.slug && !!l.short && !!l.accent, `${l.key}: registry row is complete`);
+    check(l.bespoke ? !l.espn : !!l.espn, `${l.key}: generic leagues carry an ESPN path, bespoke ones do not`);
+  }
+  check(new Set(LEAGUES.map((l) => l.slug)).size === LEAGUES.length, 'league slugs are unique');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

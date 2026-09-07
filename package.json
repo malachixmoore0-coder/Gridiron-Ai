@@ -11,7 +11,8 @@
     "test:engine": "tsx scripts/engine-check.ts",
     "data:build": "tsx pipeline/build.ts",
     "data:build:offline": "tsx pipeline/build.ts --no-weather",
-    "data:scores": "tsx scripts/refresh-scores.ts"
+    "data:scores": "tsx scripts/refresh-scores.ts",
+    "data:sports": "tsx pipeline/multi/build.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

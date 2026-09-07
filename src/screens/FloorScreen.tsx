@@ -1,9 +1,10 @@
 /**
- * The Floor — one layout, both leagues.
+ * The Floor — one layout, every league.
  *
  * The college side used to have its own home screen built around kickoff
- * windows, which read as a second slate rather than a home. Now both leagues
- * open on the same spine, in the same order, answering the same question:
+ * windows, which read as a second slate rather than a home. Now all nine
+ * leagues open on the same spine, in the same order, answering the same
+ * questions:
  *
  *   the tape        → is anything happening right now?
  *   Lock of the Day → is there one play worth taking?
@@ -72,10 +73,13 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
   );
   const board = useMemo(() => rows.filter((r) => !r.played), [rows]);
   const lock = useMemo(() => lockOfDay(board), [board]);
-  const radar = useMemo(() => (view.id === 'cfb' ? upsets(board).slice(0, 5) : []), [board, view.id]);
+  // Upsets and a poll rail are not a college-football thing, they are a
+  // "this sport has an underdog / this league has a poll" thing. Both surfaces
+  // now appear wherever the data supports them and stay hidden where it does not.
+  const radar = useMemo(() => upsets(board).slice(0, 5), [board]);
   const ranked = useMemo(
-    () => (view.id === 'cfb' ? view.teams.filter((t) => t.rank && t.rank <= 25).sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99)) : []),
-    [view.teams, view.id],
+    () => view.teams.filter((t) => t.rank && t.rank <= 25).sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99)),
+    [view.teams],
   );
 
   const depth = ent.ent.edgeBoardDepth;
@@ -101,6 +105,16 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [games, board, now]);
 
+  // Football is followed a week at a time; every other sport is followed a day
+  // at a time, so "Week 14" is the wrong word for an MLB Tuesday.
+  const period = view.phase === 'postseason'
+    ? 'Postseason'
+    : view.phase === 'offseason'
+      ? 'Offseason'
+      : view.sport === 'football'
+        ? `Week ${view.week}`
+        : view.weeks.find((w) => w.week === view.week)?.label ?? 'Today';
+
   const s = eng.summary;
   const ctxFor = (g: LeagueGame) => ({ neutralSite: g.neutralSite, primetime: !!g.primetime, weather: 'auto' as const });
 
@@ -108,7 +122,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     <SafeAreaView edges={['top']} style={styles.safe}>
       <TabHeader
         title={view.id === 'cfb' ? 'Saturday' : 'The Floor'}
-        subtitle={`${clock()} · ${view.phase === 'postseason' ? 'Postseason' : view.phase === 'offseason' ? 'Offseason' : `Week ${view.week}`} · ${board.length} on the board`}
+        subtitle={`${clock()} · ${period} · ${board.length} on the board`}
         streak
         onUpgrade={onUpgrade}
         onSettings={onOpenModel}
@@ -192,7 +206,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
                 return (
                   <TouchableOpacity key={id} style={styles.followCard} activeOpacity={0.85}
                     onPress={() => (next ? onOpenGame(id, next.gameId) : onOpenTeam(id))}>
-                    <RefMark team={t} size={28} disc={view.id === 'cfb'} />
+                    <RefMark team={t} size={28} disc={view.id !== 'nfl'} />
                     <Text style={styles.followAbbr}>{t?.abbr ?? id.toUpperCase()}</Text>
                     <Text style={styles.followMeta} numberOfLines={1}>
                       {next && oppId ? `${next.game.homeId === id ? 'vs' : '@'} ${view.abbrOf(oppId)}` : t?.record ?? '—'}
@@ -229,7 +243,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
         {hidden > 0 && (
           <Locked
             title={`${hidden} more edges on the board`}
-            blurb="Free shows the top three. Starter opens the whole board, both leagues, every week — plus the Lock of the Day and the full track record."
+            blurb="Free shows the top three. Starter opens the whole board, every league, every day — plus the Lock of the Day and the full track record."
             cta="See the whole board"
             onPress={onUpgrade}
             preview={<View>{board.slice(visible.length, visible.length + 3).map((r, i) => (
@@ -246,8 +260,8 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
           </View>
         )}
 
-        {/* ---- upset radar, college only ---- */}
-        {view.id === 'cfb' && (
+        {/* ---- upset radar, wherever there are dogs the model likes ---- */}
+        {radar.length > 0 && (
           <>
             <View style={[styles.sectionHead, { marginTop: spacing.md }]}>
               <View style={styles.sectionTitleWrap}>
@@ -346,7 +360,7 @@ function LockCard({ row, onOpen, onRun, onAdd }: {
       </View>
 
       <TouchableOpacity style={styles.lockMain} activeOpacity={0.85} onPress={() => onOpen(row.game.homeId, row.gameId)}>
-        <RefMark team={side} size={46} disc={view.id === 'cfb'} />
+        <RefMark team={side} size={46} disc={view.id !== 'nfl'} />
         <View style={{ flex: 1 }}>
           <Text style={styles.lockPick}>{label}</Text>
           <Text style={styles.lockReason} numberOfLines={2}>{row.reason}</Text>

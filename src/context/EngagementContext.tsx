@@ -12,6 +12,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import type { LeagueId } from '@/league/types';
 
 const KEY = 'gridiron-ai.engagement.v1';
 
@@ -22,7 +23,7 @@ export type PickStatus = 'open' | 'won' | 'lost' | 'push';
 export interface SavedPick {
   id: string;
   /** Which league the game belongs to. Older picks predate this and default to the NFL. */
-  league?: 'nfl' | 'cfb';
+  league?: LeagueId;
   gameId: string;
   awayId: string;
   homeId: string;

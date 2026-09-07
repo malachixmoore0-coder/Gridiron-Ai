@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Gridiron AI — one model, two leagues, graded in public</title>
+<title>Gridiron AI — nine leagues, one model, graded in public</title>
 <meta name="description" content="NFL and college football in one app. 10,000-run simulations, line shopping across every sportsbook, and a track record locked at kickoff and graded in the open." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Gridiron AI" />
-<meta property="og:description" content="One model, two leagues, graded in public. 10,000-run simulations, line shopping and a public track record." />
+<meta property="og:description" content="Nine leagues, four sports, one model that grades itself in public. 10,000-run simulations, line shopping and a track record you can audit." />
 <meta property="og:image" content="https://malachixmoore0-coder.github.io/Gridiron-Ai/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <style>
@@ -104,12 +104,13 @@
 
 <div class="wrap hero">
   <div class="kicker">Locked at kickoff · graded against the final</div>
-  <h1>One model. Both leagues. It shows you when it was wrong.</h1>
+  <h1>One model. Nine leagues. It shows you when it was wrong.</h1>
   <p class="sub">
-    NFL on Sunday, all 134 FBS programs on Saturday, one subscription. Every projection is published before kickoff,
-    frozen the second the ball is in the air, and scored against the final — nothing back-filled, nothing quietly
-    deleted after a bad week. Ten thousand simulations a game, every sportsbook's number side by side, and a record
-    you can audit line by line.
+    NFL on Sunday, all 134 FBS programs on Saturday, and the NBA, WNBA, men&rsquo;s and women&rsquo;s college
+    basketball, MLB, college baseball and MLS the rest of the week &mdash; one subscription, no dead months. Every
+    projection is published before the game, frozen the second it starts, and scored against the final: nothing
+    back-filled, nothing quietly deleted after a bad week. Ten thousand simulations a game, every sportsbook&rsquo;s
+    number side by side, and a record you can audit line by line.
   </p>
   <div class="cta-row">
     <a class="btn btn-primary" href="./">Start free — 3 sims a day</a>
@@ -185,7 +186,7 @@
       <li>Editable node weights</li><li>8-leg parlay engine</li></ul></div>
   </div>
   <p class="cta-note" style="margin-top:22px">
-    One subscription covers both leagues — there is no separate college plan. Annual is roughly two months free on every tier. Prices in USD.
+    One subscription covers all nine leagues — there is no per-sport plan. Annual is roughly two months free on every tier. Prices in USD.
   </p>
 </div></section>
 
@@ -205,9 +206,20 @@
   <details><summary>Do I need an account?</summary>
     <p>No. It runs in the browser and remembers your settings on your device. Add it to your home screen and it
     behaves like an app.</p></details>
-  <details><summary>Do I need two subscriptions for college and the NFL?</summary>
-    <p>No. One app, one price, both leagues, at every tier including free. The seasons barely overlap, which is the
-    whole reason they belong together rather than in two apps you pay for twice.</p></details>
+  <details><summary>Do I need a separate subscription per sport?</summary>
+    <p>No. One app, one price, all nine leagues, at every tier including free. The seasons barely overlap, which is
+    the whole reason they belong together rather than in nine apps you pay for nine times.</p></details>
+  <details><summary>Is the model the same for basketball and baseball as for football?</summary>
+    <p>The framework is; the model is not, and it would be dishonest to pretend otherwise. Football and basketball
+    margins are simulated as a distribution around a projection. Baseball and soccer scores are small counts of
+    rare events, so each side&rsquo;s runs or goals are drawn from their own rate &mdash; which is also where soccer
+    draws come from honestly, rather than as a rule bolted onto a margin. Football additionally carries depth
+    charts, snap counts and play-by-play the other sports have no equivalent for, and gets a deeper read as a
+    result.</p></details>
+  <details><summary>What happens early in a season, before there is much data?</summary>
+    <p>The app tells you. A rating built on four games is mostly a prior, so the result screen names how many games
+    sit behind the matchup and leans harder on the market until the sample fills in. A model that prints a
+    confident number over nothing is the failure mode this product exists to avoid.</p></details>
   <details><summary>Can other people see my picks?</summary>
     <p>Only what you choose. Two separate switches: show your record, and show your picks. A private account hides
     the picks from everyone but your followers while your win/loss line can stay public — the proof without the

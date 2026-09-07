@@ -6,6 +6,7 @@ import { SettingsProvider as CfbSettingsProvider } from '@/cfb/context/SettingsC
 import { TeamsProvider } from '@/context/TeamsContext';
 import { TeamsProvider as CfbTeamsProvider } from '@/cfb/context/TeamsContext';
 import { LeagueProvider } from '@/league/LeagueContext';
+import { SportsProvider } from '@/sports/SportsContext';
 import { EntitlementsProvider } from '@/context/EntitlementsContext';
 import { EngagementProvider } from '@/context/EngagementContext';
 import { SocialProvider } from '@/social/SocialContext';
@@ -28,6 +29,7 @@ export default function App() {
         <CfbSettingsProvider>
           <TeamsProvider>
             <CfbTeamsProvider>
+             <SportsProvider>
               <LeagueProvider>
                 <LiveProvider>
                   <EntitlementsProvider>
@@ -42,6 +44,7 @@ export default function App() {
                   </EntitlementsProvider>
                 </LiveProvider>
               </LeagueProvider>
+             </SportsProvider>
             </CfbTeamsProvider>
           </TeamsProvider>
         </CfbSettingsProvider>

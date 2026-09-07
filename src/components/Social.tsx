@@ -8,6 +8,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
+import { LEAGUE_BY_KEY } from '@/sports/types';
 
 export function Avatar({ profile, size = 40, onPress }: { profile?: Profile | null; size?: number; onPress?: () => void }) {
   const initials = (profile?.displayName || profile?.handle || '?')
@@ -72,7 +73,7 @@ export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDe
       {!!post.pick && (
         <TouchableOpacity style={styles.pick} activeOpacity={0.85} onPress={onOpenPick} disabled={!onOpenPick}>
           <View style={styles.pickTag}>
-            <Text style={styles.pickTagText}>{post.pick.league === 'cfb' ? 'NCAA' : 'NFL'}</Text>
+            <Text style={styles.pickTagText}>{LEAGUE_BY_KEY[post.pick.league]?.short ?? 'NFL'}</Text>
           </View>
           <View style={{ flex: 1 }}>
             <Text style={styles.pickLabel}>{post.pick.label}</Text>

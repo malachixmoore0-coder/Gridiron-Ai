@@ -1,18 +1,36 @@
 # Gridiron AI — the plan to $10k a month
 
-One app, one engine, two leagues whose seasons barely overlap, and a social
-layer that turns every subscriber into a distribution channel. This document is
+One app, nine leagues across four sports, a calendar with no dead months, and a
+social layer that turns every subscriber into a distribution channel. This document is
 the commercial half of the build: what is being sold, to whom, at what price,
 how they find it, and what has to be true for the number at the top to happen.
 
 Everything here is written to be argued with. Where a number is a guess it says
 so, and where the product has a real weakness it says that too.
 
-**What changed in this version.** The two apps are now one. That was a product
-decision with three commercial consequences, and they are the spine of
-everything below: the offseason churn cliff largely disappears, the bundle stops
-being an upsell and becomes the base offer, and the social graph finally has
-enough people in one place to be worth building.
+**What changed in this version.** The app went from two football leagues to
+nine leagues across four sports: the NFL and college football, the NBA, WNBA,
+men's and women's college basketball, MLB, college baseball and MLS. Three
+commercial consequences follow, and they are the spine of everything below.
+
+1. **The offseason cliff is gone, not shrunk.** Two football leagues covered
+   August through February. Nine leagues cover every week of the year — MLB and
+   MLS through the summer, basketball November to June, college baseball into
+   the College World Series. The single largest cause of churn in the previous
+   plan was a price that went dead for six months. It no longer does.
+2. **The bundle became the product.** Nobody is being sold "an NFL app plus a
+   college add-on". They are being sold a model that grades itself in public,
+   pointed at whatever is playing tonight. That is a materially easier thing to
+   subscribe to in April.
+3. **Acquisition got cheaper per subscriber.** Nine leagues is nine sets of
+   communities, subreddits, Discords and creators to reach, against one
+   engineering surface. The marginal cost of the tenth league is a row in a
+   table; the marginal audience is not.
+
+**What it does not change.** Football is still the anchor. It carries the
+richest model — depth charts, snap counts, play-by-play — and the highest
+willingness to pay. The seven new leagues are retention and reach, not a
+replacement for the thing people arrive for.
 
 ---
 
@@ -35,7 +53,7 @@ The three things a bettor pays for, in the order they will pay for them:
 
 | They want | The feature | Tier |
 |---|---|---|
-| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, both leagues | Starter |
+| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, all nine leagues | Starter |
 | To turn a number into a bet | Line shopping across books, Parlay Lab, props, Upset Radar | All-Pro |
 | To be seen being right | A profile, a public record, followers and tails | Free, and it sells the tiers |
 | To run it themselves | Raw feed, backtests, editable weights | Franchise |
@@ -45,8 +63,16 @@ The three things a bettor pays for, in the order they will pay for them:
 ## 2. The maths to $10,000 a month
 
 **Prices.** Monthly $12.99 / $29.99 / $99. Annual $99 / $249 / $899. One
-subscription covers both leagues — there is no separate college SKU any more,
-because a price that goes dead for six months is a price people cancel.
+subscription covers every league — there is no per-sport SKU, because a price
+that goes dead for six months is a price people cancel, and because nine
+separate SKUs would triple the support load to capture the same wallet.
+
+**What the expansion does to the annual plan.** The annual tier was previously a
+hard sell against a six-month season: paying in September for a product that
+goes quiet in March is a bad deal and buyers know it. With a year-round board
+the annual price is now defensible on its own terms, and annual is where
+retention actually lives. Expect the annual mix to be the single biggest
+lever on the number below — push it and the churn assumption stops mattering.
 
 **Blended ARPU.** Assume paying users split 60 / 33 / 7 across the three rungs:
 
@@ -205,11 +231,26 @@ built:
 - **The weekly grade.** The single highest-value unbuilt retention feature is a
   Tuesday push: "your card went 3-1, the model went 9-7." Build it next.
 
-**The offseason cliff is smaller than it was, and still real.** One app across
-both leagues covers August through February. Mitigations, in order of value:
-the bundle (staggered seasons), the Season Pass (paid through the gap), and
-offseason content that is genuinely useful — draft, schedule release, and
-preseason ratings are all real products the engine can already produce.
+**The offseason cliff is closed.** There is no month without a live board:
+
+| Months | What is playing |
+|---|---|
+| Sep–Jan | NFL, college football, NBA, both college basketball leagues, MLS |
+| Feb–Mar | NBA, March Madness on both sides, MLS opens, college baseball opens |
+| Apr–Jun | NBA and NCAA postseasons, MLB, college baseball to Omaha, MLS, WNBA |
+| Jul–Aug | MLB, WNBA, MLS, then football camp |
+
+March is now the strongest month in the calendar rather than a hole: two
+sixty-eight team brackets, both of which are exactly the situation a
+simulation-and-market product is built for, and the one time of year casual
+bettors actively look for a model. Plan the acquisition spend around it.
+
+The remaining risk is not seasonality, it is **thin ratings early in a season**.
+A league four games in has a rating that is mostly prior, and the app says so
+rather than printing a confident number over nothing — the result screen names
+how many games sit behind the pairing and leans harder on the market until the
+sample fills in. That honesty costs some conversions in October and is the
+reason anyone will still be here in March.
 
 ---
 

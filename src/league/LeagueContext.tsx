@@ -1,19 +1,22 @@
 /**
- * One app, two leagues.
+ * One app, nine leagues.
  *
- * Both feeds are mounted at once — the NFL dataset ships in the bundle and the
- * college dataset streams in behind it — so switching leagues is instant and
- * anything that spans both (the track record on the paywall, a pick card with
- * a Saturday and a Sunday leg on it) can read them together.
+ * Two of them — the NFL and college football — run bespoke engines with depth
+ * charts, snap counts and play-by-play behind them. The other seven share a
+ * generic engine and a generic feed. This is the seam where that stops
+ * mattering: every league, however it is produced, presents the same LeagueView,
+ * and every shared surface reads that.
  *
- * Screens never touch a league's own context. They ask for the active view and
- * get the same shape either way.
+ * The football feeds are mounted eagerly because the NFL dataset ships in the
+ * bundle; the rest load the first time someone looks at them.
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useTeams as useNflTeams } from '@/context/TeamsContext';
 import { useTeams as useCfbTeams } from '@/cfb/context/TeamsContext';
-import type { LeagueId, LeagueView, LeagueTeamRef } from '@/league/types';
+import { useSports } from '@/sports/SportsContext';
+import { LEAGUES, LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
+import type { LeagueGame, LeagueId, LeagueTeamRef, LeagueView, WeekRef } from '@/league/types';
 
 const KEY = 'gridiron-ai.league.v1';
 
@@ -21,33 +24,51 @@ interface State {
   league: LeagueId;
   setLeague: (l: LeagueId) => void;
   active: LeagueView;
-  nfl: LeagueView;
-  cfb: LeagueView;
-  /** Both leagues in switcher order. */
+  /** Every league, in picker order. */
   all: LeagueView[];
-  /** Look a game up in whichever league owns it — used by the pick card. */
   viewFor: (league: LeagueId) => LeagueView;
 }
 
 const Ctx = createContext<State | null>(null);
 
+/** An empty view, so a league that has not loaded still renders a screen. */
+function placeholder(key: LeagueKey, loading: boolean, error: string | null, refresh: () => Promise<void>): LeagueView {
+  const meta = LEAGUE_BY_KEY[key];
+  return {
+    id: key, sport: meta.sport, bespoke: false, short: meta.short, label: meta.name,
+    season: 0, week: 1, phase: 'offseason', generatedAt: '',
+    refreshing: loading, refresh, loading, error,
+    games: [], weekGames: [], weeks: [], gamesForWeek: () => [],
+    records: [], findRecord: () => undefined,
+    teams: [], hasTeam: () => false, teamRef: () => null,
+    abbrOf: (id) => id.toUpperCase(), nameOf: (id) => id,
+  };
+}
+
 export function LeagueProvider({ children }: { children: React.ReactNode }) {
   const nflRaw = useNflTeams();
   const cfbRaw = useCfbTeams();
+  const sports = useSports();
   const [league, setLeagueState] = useState<LeagueId>('nfl');
 
   useEffect(() => {
     AsyncStorage.getItem(KEY)
-      .then((v) => { if (v === 'nfl' || v === 'cfb') setLeagueState(v); })
+      .then((v) => { if (v && LEAGUE_BY_KEY[v as LeagueKey]) setLeagueState(v as LeagueId); })
       .catch(() => {});
   }, []);
+
+  // The active league is the one worth having on hand.
+  useEffect(() => {
+    if (!LEAGUE_BY_KEY[league as LeagueKey]?.bespoke) sports.ensure(league as LeagueKey);
+  }, [league, sports]);
 
   const setLeague = useCallback((l: LeagueId) => {
     setLeagueState(l);
     AsyncStorage.setItem(KEY, l).catch(() => {});
-    // The college feed loads lazily, so switching to it is the cue to fetch.
+    const meta = LEAGUE_BY_KEY[l as LeagueKey];
+    if (meta && !meta.bespoke) sports.ensure(l as LeagueKey);
     if (l === 'cfb' && cfbRaw.source === 'sample' && !cfbRaw.refreshing) cfbRaw.refresh();
-  }, [cfbRaw]);
+  }, [cfbRaw, sports]);
 
   const nfl: LeagueView = useMemo(() => {
     const teams: LeagueTeamRef[] = nflRaw.teams.map((t) => ({
@@ -56,14 +77,12 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
     }));
     const byId = new Map(teams.map((t) => [t.id, t]));
     return {
-      id: 'nfl', short: 'NFL', label: 'Pro football',
+      id: 'nfl', sport: 'football', bespoke: true, short: 'NFL', label: 'NFL',
       season: nflRaw.season, week: nflRaw.week, phase: nflRaw.phase, generatedAt: nflRaw.generatedAt,
       refreshing: nflRaw.refreshing, refresh: nflRaw.refresh,
       games: nflRaw.games, weekGames: nflRaw.weekGames, weeks: nflRaw.weeks, gamesForWeek: nflRaw.gamesForWeek,
       records: nflRaw.records, findRecord: nflRaw.findRecord,
-      teams,
-      hasTeam: nflRaw.hasTeam,
-      teamRef: (id) => byId.get(id) ?? null,
+      teams, hasTeam: nflRaw.hasTeam, teamRef: (id) => byId.get(id) ?? null,
       abbrOf: (id) => byId.get(id)?.abbr ?? id.toUpperCase(),
       nameOf: (id) => byId.get(id)?.name ?? id,
     };
@@ -76,28 +95,67 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
     }));
     const byId = new Map(teams.map((t) => [t.id, t]));
     return {
-      id: 'cfb', short: 'NCAA', label: 'College football',
+      id: 'cfb', sport: 'football', bespoke: true, short: 'NCAAF', label: 'College football',
       season: cfbRaw.season, week: cfbRaw.week, phase: cfbRaw.phase, generatedAt: cfbRaw.generatedAt,
       refreshing: cfbRaw.refreshing, refresh: cfbRaw.refresh,
       games: cfbRaw.games, weekGames: cfbRaw.weekGames, weeks: cfbRaw.weeks, gamesForWeek: cfbRaw.gamesForWeek,
       records: cfbRaw.records, findRecord: cfbRaw.findRecord,
-      teams,
-      hasTeam: cfbRaw.hasTeam,
-      teamRef: (id) => byId.get(id) ?? null,
+      teams, hasTeam: cfbRaw.hasTeam, teamRef: (id) => byId.get(id) ?? null,
       abbrOf: (id) => byId.get(id)?.abbr ?? id.toUpperCase(),
       nameOf: (id) => byId.get(id)?.name ?? id,
     };
   }, [cfbRaw]);
 
+  /** Turn a generic feed into the same view the football leagues present. */
+  const genericView = useCallback((key: LeagueKey): LeagueView => {
+    const meta = LEAGUE_BY_KEY[key];
+    const feed = sports.feeds[key];
+    const refresh = () => sports.refresh(key);
+    if (!feed?.teams || !feed.schedule) return placeholder(key, !!feed?.loading, feed?.error ?? null, refresh);
+
+    const teams: LeagueTeamRef[] = feed.teams.teams.map((t) => ({
+      id: t.id, abbr: t.abbr, name: t.name, group: t.group,
+      colors: t.colors, logoUrl: t.logoUrl ?? undefined, record: t.record ?? undefined,
+      rank: t.rank ?? undefined,
+    }));
+    const byId = new Map(teams.map((t) => [t.id, t]));
+    const games = feed.schedule.games as unknown as LeagueGame[];
+    const weeks = feed.schedule.weeks as WeekRef[];
+    const week = feed.schedule.week;
+    const records = (feed.predictions?.records ?? []) as never[];
+    const recById = new Map(records.map((r) => [(r as { id: string }).id, r]));
+
+    return {
+      id: key, sport: meta.sport, bespoke: false, short: meta.short, label: meta.name,
+      season: feed.teams.season, week, phase: feed.schedule.phase, generatedAt: feed.teams.generatedAt,
+      refreshing: !!feed.loading, refresh, loading: !!feed.loading, error: feed.error,
+      games,
+      weekGames: games.filter((g) => g.week === week),
+      weeks,
+      gamesForWeek: (w) => games.filter((g) => g.week === w),
+      records,
+      findRecord: (id) => recById.get(id),
+      teams,
+      hasTeam: (id) => byId.has(id),
+      teamRef: (id) => byId.get(id) ?? null,
+      abbrOf: (id) => byId.get(id)?.abbr ?? id.toUpperCase(),
+      nameOf: (id) => byId.get(id)?.name ?? id,
+    };
+  }, [sports]);
+
+  const viewFor = useCallback((l: LeagueId): LeagueView => {
+    if (l === 'nfl') return nfl;
+    if (l === 'cfb') return cfb;
+    return genericView(l as LeagueKey);
+  }, [nfl, cfb, genericView]);
+
   const value = useMemo<State>(() => ({
     league,
     setLeague,
-    active: league === 'cfb' ? cfb : nfl,
-    nfl,
-    cfb,
-    all: [nfl, cfb],
-    viewFor: (l) => (l === 'cfb' ? cfb : nfl),
-  }), [league, setLeague, nfl, cfb]);
+    active: viewFor(league),
+    all: LEAGUES.map((l) => viewFor(l.key)),
+    viewFor,
+  }), [league, setLeague, viewFor]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
@@ -108,5 +166,4 @@ export function useLeague(): State {
   return v;
 }
 
-/** The league on screen right now. */
 export const useActiveLeague = (): LeagueView => useLeague().active;

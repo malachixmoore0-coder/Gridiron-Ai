@@ -1,5 +1,5 @@
 /**
- * One app, two leagues, five tabs and an overlay stack.
+ * One app, nine leagues, five tabs and an overlay stack.
  *
  * Two things are load-bearing here.
  *
@@ -9,10 +9,13 @@
  * at the bottom, and on the web the browser and phone back gestures pop the
  * stack too, because a PWA that swallows the back button feels broken.
  *
- * Leagues. The NFL and college screen trees both mount against their own data,
- * and the league switch decides which one renders. Shared surfaces — the card,
- * the parlay lab, the social feed — read the active league through an adapter
- * so they never care which is which.
+ * Leagues. Football is bespoke: the NFL and college screen trees mount against
+ * their own engines, with depth charts and box scores the other sports have no
+ * equivalent for. Everything else — basketball, baseball, soccer — shares one
+ * generic screen tree over one parameterised engine, so a tenth league costs a
+ * row in a table rather than a new app. `view.bespoke` is the only place that
+ * distinction is allowed to matter; shared surfaces (the card, the parlay lab,
+ * the social feed) read the active league through an adapter and never ask.
  */
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { View, StyleSheet, TouchableOpacity, Text, Platform } from 'react-native';
@@ -23,6 +26,7 @@ import { useEntitlements } from '@/context/EntitlementsContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLeague } from '@/league/LeagueContext';
 import type { LeagueId } from '@/league/types';
+import { LEAGUE_BY_KEY } from '@/sports/types';
 import type { RunRequest } from '@/hooks/useAnalysis';
 import { BottomTabBar, TabKey } from '@/components/BottomTabBar';
 import { OverlayShell } from '@/components/OverlayShell';
@@ -52,6 +56,15 @@ import { TeamDetailScreen as CfbTeamDetail } from '@/cfb/screens/TeamDetailScree
 import { PlayerProfileScreen as CfbPlayer } from '@/cfb/screens/PlayerProfileScreen';
 import { GameStatsScreen as CfbGameStats } from '@/cfb/screens/GameStatsScreen';
 import { SettingsScreen as CfbSettings } from '@/cfb/screens/SettingsScreen';
+
+/* Every other league: one generic engine, one set of screens */
+import { SportSlateScreen } from '@/screens/SportSlateScreen';
+import { SportTeamsScreen } from '@/screens/SportTeamsScreen';
+import { SportTeamScreen } from '@/screens/SportTeamScreen';
+import { SportGameScreen } from '@/screens/SportGameScreen';
+import { SportMatchupScreen, type SportRun } from '@/screens/SportMatchupScreen';
+import { SportResultScreen } from '@/screens/SportResultScreen';
+import { SportRecordScreen } from '@/screens/SportRecordScreen';
 
 /* Shared */
 import { RecordHubScreen } from '@/screens/RecordHubScreen';
@@ -83,6 +96,9 @@ const TITLES: Record<Overlay['kind'], string> = {
 };
 
 const isWeb = Platform.OS === 'web';
+
+/** Every league but the two football ones runs the generic screens. */
+const isGeneric = (l: LeagueId) => !LEAGUE_BY_KEY[l]?.bespoke;
 
 export function RootNavigator() {
   const { loaded, onboarded, overrides } = useSettings();
@@ -154,6 +170,8 @@ export function RootNavigator() {
   };
 
   const cfb = league === 'cfb';
+  /** Football runs its own screens; every other sport shares the generic ones. */
+  const generic = !active.bespoke;
 
   return (
     <NavProvider value={nav}>
@@ -171,9 +189,11 @@ export function RootNavigator() {
           />
         )}
 
-        {tab === 'slate' && (cfb
-          ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
-          : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
+        {tab === 'slate' && (generic
+          ? <SportSlateScreen onRun={(r) => run(r as AnyRun, league)} onOpenGame={(t, g) => openGame(t, g, league)} />
+          : cfb
+            ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
+            : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
 
         {tab === 'record' && (
           <RecordHubScreen
@@ -184,9 +204,11 @@ export function RootNavigator() {
           />
         )}
 
-        {tab === 'teams' && (cfb
-          ? <CfbTeams onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
-          : <TeamsScreen onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />)}
+        {tab === 'teams' && (generic
+          ? <SportTeamsScreen onOpenTeam={(t) => openTeam(t, league)} onUpgrade={openUpgrade} />
+          : cfb
+            ? <CfbTeams onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+            : <TeamsScreen onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />)}
 
         {tab === 'social' && (
           <SocialScreen
@@ -223,29 +245,41 @@ export function RootNavigator() {
           <ErrorBoundary onBack={pop}>
             <OverlayShell onBack={pop} backLabel={TITLES[o.kind]}>
               {o.kind === 'result' ? (
-                o.league === 'cfb'
-                  ? <CfbResult request={o.request as never} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} />
-                  : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} />
+                isGeneric(o.league)
+                  ? <SportResultScreen request={o.request as SportRun} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} />
+                  : o.league === 'cfb'
+                    ? <CfbResult request={o.request as never} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} />
+                    : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} />
               ) : o.kind === 'team' ? (
-                o.league === 'cfb'
-                  ? <CfbTeamDetail teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onOpenGame={(t, g) => openGame(t, g, 'cfb')} />
-                  : <TeamDetailScreen teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onOpenGame={(t, g) => openGame(t, g, 'nfl')} />
+                isGeneric(o.league)
+                  ? <SportTeamScreen teamId={o.teamId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onOpenGame={(t, g) => openGame(t, g, o.league)} onUpgrade={openUpgrade} />
+                  : o.league === 'cfb'
+                    ? <CfbTeamDetail teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onOpenGame={(t, g) => openGame(t, g, 'cfb')} />
+                    : <TeamDetailScreen teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onOpenGame={(t, g) => openGame(t, g, 'nfl')} />
               ) : o.kind === 'player' ? (
                 o.league === 'cfb'
                   ? <CfbPlayer teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
                   : <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
               ) : o.kind === 'game' ? (
-                o.league === 'cfb'
-                  ? <CfbGameStats teamId={o.teamId} gameId={o.gameId} league="cfb" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onRun={(r) => run(r as AnyRun, 'cfb')} />
-                  : <GameStatsScreen teamId={o.teamId} gameId={o.gameId} league="nfl" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onRun={(r) => run(r, 'nfl')} />
+                isGeneric(o.league)
+                  ? <SportGameScreen gameId={o.gameId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onRun={(r) => run(r as AnyRun, o.league)} />
+                  : o.league === 'cfb'
+                    ? <CfbGameStats teamId={o.teamId} gameId={o.gameId} league="cfb" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onRun={(r) => run(r as AnyRun, 'cfb')} />
+                    : <GameStatsScreen teamId={o.teamId} gameId={o.gameId} league="nfl" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onRun={(r) => run(r, 'nfl')} />
               ) : o.kind === 'simulate' ? (
-                o.league === 'cfb'
-                  ? <CfbMatchup onRun={(r) => run(r as AnyRun, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} />
-                  : <MatchupScreen onRun={(r) => run(r, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} />
+                isGeneric(o.league)
+                  ? <SportMatchupScreen onRun={(r) => run(r as AnyRun, o.league)} onOpenTeam={(t) => openTeam(t, o.league)} />
+                  : o.league === 'cfb'
+                    ? <CfbMatchup onRun={(r) => run(r as AnyRun, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} />
+                    : <MatchupScreen onRun={(r) => run(r, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} />
               ) : o.kind === 'model' ? (
-                o.league === 'cfb'
-                  ? <CfbSettings onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
-                  : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
+                /* The football engines expose tunable weights; the generic ones do
+                   not, so their "model" screen is the track record it has earned. */
+                isGeneric(o.league)
+                  ? <SportRecordScreen onOpenGame={(t, g) => openGame(t, g, o.league)} onUpgrade={openUpgrade} />
+                  : o.league === 'cfb'
+                    ? <CfbSettings onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
+                    : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
               ) : o.kind === 'settings' ? (
                 <AppSettingsScreen
                   onProfile={() => openProfile('')}

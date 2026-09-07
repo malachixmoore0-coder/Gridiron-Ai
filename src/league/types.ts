@@ -10,7 +10,9 @@
 import type { GameStatus, GameWeather, PredictionRecord } from '@/data/liveTypes';
 import type { Weather } from '@/engine/types';
 
-export type LeagueId = 'nfl' | 'cfb';
+import type { LeagueKey } from '@/sports/types';
+
+export type LeagueId = LeagueKey;
 
 /** One sportsbook's numbers on one game. */
 export interface BookLine {
@@ -87,6 +89,14 @@ export interface WeekRef { week: number; gameType: string; label: string; games:
 /** Everything a shared screen needs from whichever league is on screen. */
 export interface LeagueView {
   id: LeagueId;
+  /** Which sport's rules apply — decides draws, units and how a slate groups. */
+  sport: 'football' | 'basketball' | 'baseball' | 'soccer';
+  /** True for the two football leagues, which run their own engine and screens. */
+  bespoke: boolean;
+  /** Still fetching this league's feed for the first time. */
+  loading?: boolean;
+  /** Why the feed is missing, when it is. */
+  error?: string | null;
   /** "NFL" / "NCAA" — what the switcher shows. */
   short: string;
   /** "Pro football" / "College football". */

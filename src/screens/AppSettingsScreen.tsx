@@ -37,7 +37,7 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard }: Pro
   const social = useSocial();
   const ent = useEntitlements();
   const eng = useEngagement();
-  const { active, nfl, cfb } = useLeague();
+  const { active, all } = useLeague();
   const live = useLive();
   const prefs = usePrefs();
   const [note, setNote] = useState<string | null>(null);
@@ -103,18 +103,15 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard }: Pro
 
         {/* ---- data ---- */}
         <Group title="Data">
-          <Row
-            icon="american-football"
-            label="NFL dataset"
-            value={nfl.generatedAt ? timeAgo(Date.parse(nfl.generatedAt)) : 'not loaded'}
-            onPress={() => { nfl.refresh(); setNote('Refreshing the NFL dataset…'); }}
-          />
-          <Row
-            icon="school"
-            label="College dataset"
-            value={cfb.generatedAt ? timeAgo(Date.parse(cfb.generatedAt)) : 'not loaded'}
-            onPress={() => { cfb.refresh(); setNote('Refreshing the college dataset…'); }}
-          />
+          {all.filter((v) => v.generatedAt || v.id === active.id).map((v) => (
+            <Row
+              key={v.id}
+              icon={v.sport === 'basketball' ? 'basketball' : v.sport === 'baseball' ? 'baseball' : v.sport === 'soccer' ? 'football' : 'american-football'}
+              label={`${v.short} dataset`}
+              value={v.generatedAt ? timeAgo(Date.parse(v.generatedAt)) : v.loading ? 'loading…' : 'not loaded'}
+              onPress={() => { v.refresh(); setNote(`Refreshing ${v.short}…`); }}
+            />
+          ))}
           <Row
             icon="radio"
             label="Live scores"

@@ -1,12 +1,15 @@
 # Gridiron AI 🏈
 
-**One football model, two leagues, graded in public.** The NFL on Sunday and all
-134 FBS programs on Saturday, in one app with one subscription. Pick any two
-teams and Gridiron AI grades the matchup through four weighted analytical nodes,
-simulates the game 10,000 times, and returns win probability, a projected score
-and total, a 1-10 advantage matrix, a three-act game script and a sleeper report
-— with every factor that moved the number laid out, and every sportsbook's line
-next to the model's.
+**Nine leagues, four sports, graded in public.** The NFL on Sunday, all 134 FBS
+programs on Saturday, and the NBA, WNBA, men's and women's college basketball,
+MLB, college baseball and MLS the rest of the week — one app, one subscription.
+Pick any two teams and Gridiron AI simulates the game 10,000 times and returns
+win probability, a projected score and total, a margin distribution and the
+market's number beside its own, with every sportsbook's line laid out next to it.
+
+Football gets more than that: four weighted analytical nodes, a 1-10 advantage
+matrix, a three-act game script and a sleeper report, off depth charts and
+play-by-play the other sports have no equivalent for.
 
 The datasets behind it rebuild themselves on a schedule from public data, so
 ratings, depth charts, injuries, schedules, betting lines and kickoff weather
@@ -18,16 +21,36 @@ scoreboard, every twenty seconds, on top of that feed.
 ```
 src/            the NFL league: engine, data, screens
 src/cfb/        the college league: its own engine, data and screens
-src/league/     the adapter both of them present to shared surfaces
+src/sports/     the generic engine, league registry and feed for the other seven
+src/league/     the adapter all nine present to shared surfaces
 src/live/       live-score polling that overlays the published feed
 src/social/     profiles, follows, posts and tails
-src/monetize/   one subscription ladder covering both leagues
+src/monetize/   one subscription ladder covering every league
+pipeline/multi/ the multi-sport build: ESPN → ratings → projections
 ```
 
-Each league keeps its own engine and dataset — college football is not the NFL
-with different logos, and pretending otherwise would ruin both models. What they
-share is everything above the data: one theme, one tab bar, one card, one Parlay
-Lab, one social graph, one price.
+The two football leagues keep their own engines and datasets — college football
+is not the NFL with different logos, and pretending otherwise would ruin both
+models. Everything else shares one engine, because an NBA game and an MLS match
+differ in ways a table can describe: how scoring is distributed, how big the
+home edge is, whether a draw is a real outcome. `src/sports/types.ts` is that
+table; adding a tenth league is a row in it.
+
+What all nine share is everything above the data: one theme, one tab bar, one
+card, one Parlay Lab, one social graph, one price.
+
+### The four sport models
+
+| Sport | Scoring model | Draws | Why |
+| --- | --- | --- | --- |
+| Football | normal margin + total | no | margin is the sum of many possessions |
+| Basketball | normal margin + total | no | same shape, different variance |
+| Baseball | independent Poisson | no (extras) | runs are small counts of rare events |
+| Soccer | independent Poisson | yes | a level score is an outcome, not a tie-break |
+
+Leagues override their sport where they differ from its average — a WNBA total
+is 164, not the NBA's 224, and college baseball scores half again what MLB does.
+Those overrides live next to the league in the registry, not in the engine.
 
 The college dataset is published by a companion repository
 ([CFB-Gridiron-AI](https://github.com/malachixmoore0-coder/CFB-Gridiron-AI)),
@@ -36,7 +59,7 @@ feeds.
 
 ### Getting around
 
-Five tabs — Floor, Slate, Record, Teams, Social — with an NFL/NCAA switch in
+Five tabs — Floor, Slate, Record, Teams, Social — with a league switch in
 every header and Simulate as a floating action rather than a destination. Every
 screen pushed on top of a tab carries a full-width **Back bar at the bottom** of
 the screen, where a thumb actually reaches, and on the web the browser and phone
@@ -190,7 +213,7 @@ field is left null rather than guessed: an invented half point is invented edge.
 
 ## Tiers, and turning payments on
 
-Four tiers — Walk-On (free), Starter, All-Pro, Franchise — covering **both leagues**, defined in one place,
+Four tiers — Walk-On (free), Starter, All-Pro, Franchise — covering **every league**, defined in one place,
 `src/monetize/tiers.ts`. Each is a set of entitlements (simulation depth, how far
 down the Edge Board you can see, history, props, parlay legs, share cards), and
 every gate in the app reads from that file, so changing the offer is a one-file
@@ -238,21 +261,32 @@ including the ones that are unflattering.
 
 ```bash
 npm install
-npm run data:build        # pull live data → data/live/*.json (a minute or two)
+npm run data:build        # NFL: pull live data → data/live/*.json (a minute or two)
+npm run data:sports       # the other seven leagues → data/live/sports/<league>/
 npx expo start            # i / a / w for iOS, Android, web
 ```
+
+`data:sports` takes optional league keys — `npm run data:sports -- nba mls` —
+and skips any league whose season has not started rather than publishing an
+empty board over a good one.
 
 ```bash
 npm run typecheck         # app + pipeline
 npm run test:engine       # engine assertions, incl. the generated dataset
 npm run data:build:offline   # skip Open-Meteo calls
+
+# Fixture datasets for the seven generic leagues, for working without ESPN.
+# It refuses to write into data/live, so fixture numbers can never be mistaken
+# for published ones.
+npx tsx scripts/sports-fixture.ts .fixtures/sports
 ```
 
-Point the app at a different feed with `EXPO_PUBLIC_DATA_URL=https://…/data/live`.
+Point the app at a different feed with `EXPO_PUBLIC_DATA_URL=https://…/data/live`,
+and the multi-sport feed with `EXPO_PUBLIC_MULTI_DATA_URL=https://…/data/live/sports`.
 
 ## Deploy
 
-Two workflows ship with the repo:
+Four workflows ship with the repo:
 
 - **`refresh-data.yml`** — on a cron (every 3 h Sep–Feb, every 12 h otherwise)
   and on demand: rebuilds the dataset, runs the engine checks, commits
@@ -262,6 +296,11 @@ Two workflows ship with the repo:
   scoreboard and updates team records, finalises games on the slate and grades
   any prediction whose game just ended. It skips the rebuild entirely, so a
   final score lands in the app within minutes (`npm run data:scores`).
+- **`refresh-sports.yml`** — three times a day: rebuilds ratings and
+  projections for the NBA, WNBA, both college basketball leagues, MLB, college
+  baseball and MLS (`npm run data:sports`). Leagues out of season return no
+  events and are skipped without touching what is already published, so one
+  schedule covers the whole calendar.
 - **`deploy.yml`** — on pushes to `main` that touch app code: typecheck, engine
   checks, build, publish.
 

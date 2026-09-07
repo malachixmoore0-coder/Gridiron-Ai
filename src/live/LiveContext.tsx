@@ -17,12 +17,23 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import { AppState, Platform } from 'react-native';
 import { useLeague } from '@/league/LeagueContext';
 import { usePrefs } from '@/context/PrefsContext';
+import { LEAGUE_BY_KEY } from '@/sports/types';
 import type { GameStatus } from '@/data/liveTypes';
 import type { LeagueGame, LeagueId } from '@/league/types';
 
-const ENDPOINTS: Record<LeagueId, string> = {
+/**
+ * The scoreboard path per league. The generic leagues carry theirs in the
+ * registry, so this only has to name the two football feeds that predate it.
+ */
+const ENDPOINTS: Partial<Record<LeagueId, string>> = {
   nfl: 'https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard',
   cfb: 'https://site.api.espn.com/apis/site/v2/sports/football/college-football/scoreboard?groups=80&limit=200',
+};
+
+const endpointFor = (id: LeagueId): string | null => {
+  if (ENDPOINTS[id]) return ENDPOINTS[id] as string;
+  const meta = LEAGUE_BY_KEY[id];
+  return meta?.espn ? `https://site.api.espn.com/apis/site/v2/sports/${meta.espn}/scoreboard?limit=200` : null;
 };
 
 /** ESPN's abbreviation is not always ours. */
@@ -91,7 +102,7 @@ function matchGame(
 }
 
 export function LiveProvider({ children }: { children: React.ReactNode }) {
-  const { nfl, cfb } = useLeague();
+  const { all } = useLeague();
   const prefs = usePrefs();
   const [scores, setScores] = useState<Map<string, LiveScore>>(new Map());
   const [connected, setConnected] = useState(false);
@@ -101,7 +112,8 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const active = useRef(true);
 
-  const views = useMemo(() => [nfl, cfb], [nfl, cfb]);
+  // Only leagues with games loaded are worth polling.
+  const views = useMemo(() => all.filter((v) => v.games.length > 0), [all]);
 
   const poll = useCallback(async () => {
     if (disabled.current || !prefs.livePolling) return;
@@ -109,9 +121,11 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
     let ok = false;
     for (const view of views) {
       if (!view.games.length) continue;
-      const byAbbr = new Map(view.teams.map((t) => [t.abbr.toUpperCase(), t.id]));
+      const byAbbr = new Map<string, string>(view.teams.map((t) => [t.abbr.toUpperCase(), t.id]));
       try {
-        const json = (await fetchJson(ENDPOINTS[view.id])) as {
+        const endpoint = endpointFor(view.id);
+        if (!endpoint) continue;
+        const json = (await fetchJson(endpoint)) as {
           events?: { date: string; status?: { type?: { state?: string; completed?: boolean; shortDetail?: string } };
             competitions?: { competitors?: { homeAway?: string; score?: string; team?: { abbreviation?: string } }[] }[] }[];
         };

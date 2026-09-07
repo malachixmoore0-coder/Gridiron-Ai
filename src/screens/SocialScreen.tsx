@@ -16,11 +16,12 @@ import { useLeague } from '@/league/LeagueContext';
 import { Avatar, PostCard, SignInRow } from '@/components/Social';
 import { LeagueSwitch } from '@/components/LeagueSwitch';
 import type { FeedScope, Profile } from '@/social/types';
+import type { LeagueId } from '@/league/types';
 
 interface Props {
   onCompose: () => void;
   onOpenProfile: (userId: string) => void;
-  onOpenGame: (league: 'nfl' | 'cfb', teamId: string, gameId: string) => void;
+  onOpenGame: (league: LeagueId, teamId: string, gameId: string) => void;
 }
 
 const SCOPES: { key: FeedScope; label: string }[] = [

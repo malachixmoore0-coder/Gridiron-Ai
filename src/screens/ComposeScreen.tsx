@@ -16,6 +16,7 @@ import { useLeague } from '@/league/LeagueContext';
 import { hashtagsIn, type PostPick } from '@/social/types';
 import { giphyReady, looksLikeGif, searchGifs, type Gif } from '@/social/giphy';
 import { Avatar, SignInRow } from '@/components/Social';
+import { LEAGUE_BY_KEY } from '@/sports/types';
 
 interface Props { onDone: () => void; initialPick?: PostPick | null; }
 
@@ -106,7 +107,7 @@ export function ComposeScreen({ onDone, initialPick }: Props) {
 
         {!!pick && (
           <View style={styles.pick}>
-            <View style={styles.pickTag}><Text style={styles.pickTagText}>{pick.league === 'cfb' ? 'NCAA' : 'NFL'}</Text></View>
+            <View style={styles.pickTag}><Text style={styles.pickTagText}>{LEAGUE_BY_KEY[pick.league]?.short ?? 'NFL'}</Text></View>
             <View style={{ flex: 1 }}>
               <Text style={styles.pickLabel}>{pick.label}</Text>
               <Text style={styles.pickMeta}>model {pick.modelPct.toFixed(0)}% · edge +{pick.edge.toFixed(1)}</Text>

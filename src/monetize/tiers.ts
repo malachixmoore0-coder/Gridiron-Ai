@@ -1,7 +1,7 @@
 /**
  * Gridiron AI subscription ladder.
  *
- * One subscription, both leagues. That is deliberate and it is the offer: the
+ * One subscription, every league. That is deliberate and it is the offer: the
  * NFL runs September to February and college August to January, so a single
  * price that covers both is worth more to the buyer than two that each go dead
  * for half the year — and it removes the churn cliff that kills seasonal
@@ -89,7 +89,7 @@ export const TIERS: Tier[] = [
     annual: 0,
     hook: 'See the model work before you pay a cent.',
     bullets: [
-      'NFL and college in one app',
+      'Nine leagues in one app',
       '3 simulations a day at 2,000 runs',
       'Top 3 of the Edge Board',
       'Full slate, live scores and box scores',
@@ -104,9 +104,9 @@ export const TIERS: Tier[] = [
     tagline: 'For Sundays and Saturdays',
     monthly: 1299,
     annual: 9900,
-    hook: 'Unlimited 10,000-run simulations across both leagues. No meter.',
+    hook: 'Unlimited 10,000-run simulations across every league. No meter.',
     bullets: [
-      'Unlimited sims at 10,000 runs, both leagues',
+      'Unlimited sims at 10,000 runs, every league',
       'The whole Edge Board — Sunday and Saturday',
       'Lock of the Day with the reasoning',
       'Full season track record + calibration',

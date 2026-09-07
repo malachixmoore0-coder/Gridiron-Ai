@@ -1,0 +1,66 @@
+name: Refresh multi-sport data
+
+# Basketball, baseball and soccer. One job reads ESPN for every generic league,
+# rebuilds its ratings, opens projections for the next twelve days and grades
+# anything that finished since the last run.
+#
+# It runs three times a day rather than every twenty minutes because these
+# leagues play most days of the week: a rating does not move between innings,
+# and the live scores on screen come straight from the client's own polling,
+# not from this file. Leagues out of season return no events and are skipped
+# without touching what is already published, so the whole calendar is covered
+# by one schedule.
+
+on:
+  schedule:
+    # 06:20, 14:20 and 22:20 UTC — before the US day starts, mid-afternoon,
+    # and after the late slate has finished.
+    - cron: '20 6,14,22 * * *'
+  workflow_dispatch:
+    inputs:
+      leagues:
+        description: 'Space-separated league keys (blank = all)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: live-data
+  cancel-in-progress: false
+
+jobs:
+  sports:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      - name: Build sport datasets
+        run: npm run data:sports -- ${{ github.event.inputs.leagues }}
+
+      - name: Commit
+        run: |
+          git config user.name "gridiron-data-bot"
+          git config user.email "gridiron-data-bot@users.noreply.github.com"
+          git add data/live/sports
+          if git diff --cached --quiet; then
+            echo "No dataset changes."
+          else
+            git commit -m "data: refresh multi-sport datasets"
+            for attempt in 1 2 3; do
+              git push && break
+              echo "Push rejected (attempt $attempt) — replaying our update on top of origin/main."
+              git fetch origin main
+              git reset --soft origin/main
+              git add data/live/sports
+              git commit -m "data: refresh multi-sport datasets" || true
+            done
+          fi

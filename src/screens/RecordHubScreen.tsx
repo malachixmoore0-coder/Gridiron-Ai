@@ -15,6 +15,7 @@ import { useLeague } from '@/league/LeagueContext';
 import { CardScreen } from '@/screens/CardScreen';
 import { RecordScreen as NflRecord } from '@/screens/RecordScreen';
 import { RecordScreen as CfbRecord } from '@/cfb/screens/RecordScreen';
+import { SportRecordScreen } from '@/screens/SportRecordScreen';
 import type { RunRequest } from '@/hooks/useAnalysis';
 
 interface Props {
@@ -27,7 +28,7 @@ interface Props {
 type Tab = 'model' | 'card';
 
 export function RecordHubScreen({ onRun, onUpgrade, onOpenGame, onShare }: Props) {
-  const { league } = useLeague();
+  const { league, active } = useLeague();
   const [tab, setTab] = useState<Tab>('model');
 
   return (
@@ -53,9 +54,11 @@ export function RecordHubScreen({ onRun, onUpgrade, onOpenGame, onShare }: Props
       <View style={{ flex: 1 }}>
         {tab === 'card'
           ? <CardScreen onUpgrade={onUpgrade} onOpenGame={onOpenGame} onShare={onShare} embedded />
-          : league === 'cfb'
-            ? <CfbRecord onRun={onRun as never} onUpgrade={onUpgrade} />
-            : <NflRecord onRun={onRun} onUpgrade={onUpgrade} />}
+          : !active.bespoke
+            ? <SportRecordScreen onOpenGame={onOpenGame} onUpgrade={onUpgrade} />
+            : league === 'cfb'
+              ? <CfbRecord onRun={onRun as never} onUpgrade={onUpgrade} />
+              : <NflRecord onRun={onRun} onUpgrade={onUpgrade} />}
       </View>
     </SafeAreaView>
   );
