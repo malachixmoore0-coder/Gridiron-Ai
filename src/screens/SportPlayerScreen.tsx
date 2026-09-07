@@ -31,7 +31,7 @@ interface Props {
 export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Props) {
   const view = useActiveLeague();
   const meta = LEAGUE_BY_KEY[view.id];
-  const { players, loading } = useRoster(view.id as LeagueKey, teamId);
+  const { players, statsSource, loading } = useRoster(view.id as LeagueKey, teamId);
   const team = view.teamRef(teamId);
 
   const player = useMemo(() => players.find((p) => p.id === playerId) ?? null, [players, playerId]);
@@ -129,8 +129,9 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
         <View style={styles.card}>
           <Text style={styles.cardTitle}>This season</Text>
           <Text style={styles.muted}>
-            No published statistics yet. That usually means a player has not appeared this season, or has not reached the
-            threshold the league qualifies on — either way there is nothing to grade, so nothing is graded.
+            {statsSource === 'none'
+              ? `No per-player statistics are published for ${meta.name} anywhere this app can reach, so nobody on this roster carries a line. That is a gap in the feed, not a comment on the player.`
+              : 'No published statistics yet. That usually means a player has not appeared this season, or has not reached the threshold the league qualifies on — either way there is nothing to grade, so nothing is graded.'}
           </Text>
         </View>
       )}

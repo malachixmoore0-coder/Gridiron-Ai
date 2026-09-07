@@ -162,7 +162,8 @@ export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onOpen
             <Text style={styles.cardTitle}>Roster</Text>
             {roster.players.length > 0 && (
               <Text style={styles.rosterCount}>
-                {roster.players.length} listed · {roster.players.filter((pl) => pl.rating != null).length} graded
+                {roster.players.length} listed
+                {roster.statsSource === 'none' ? ' · no league stats published' : ` · ${roster.players.filter((pl) => pl.rating != null).length} graded`}
               </Text>
             )}
           </View>

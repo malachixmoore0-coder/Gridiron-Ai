@@ -282,7 +282,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   // only where the league is small enough for them to be worth having.
   if (sportTeams.length <= ROSTER_TEAM_CAP) {
     const rosterDir = path.join(dir, 'rosters');
-    const leagueStats = await loadLeagueStats(meta.espn!, meta.sport, season);
+    const { stats: leagueStats, source: statsSource } = await loadLeagueStats(meta.espn!, meta.sport, season);
     const depth = rankDepth(leagueStats);
     const everyone: SportPlayer[] = [];
     const perTeam = new Map<string, SportPlayer[]>();
@@ -298,12 +298,12 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     gradeLeague(everyone, meta.sport);
     for (const [teamId, players] of perTeam) {
       const file: SportRosterFile = {
-        teamId, league: meta.key, generatedAt: now.toISOString(), season, players,
+        teamId, league: meta.key, generatedAt: now.toISOString(), season, statsSource, players,
       };
       writeJson(rosterDir, `${teamId}.json`, file);
     }
     const withStats = everyone.filter((pl) => pl.stats.length).length;
-    console.log(`  ${perTeam.size} rosters · ${everyone.length} players · ${withStats} with a stat line`);
+    console.log(`  ${perTeam.size} rosters · ${everyone.length} players · ${withStats} with a stat line (${statsSource})`);
   } else {
     console.log(`  ${sportTeams.length} teams — too many to publish rosters for`);
   }

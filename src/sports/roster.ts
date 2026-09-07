@@ -46,6 +46,8 @@ export interface SportRosterFile {
   league: string;
   generatedAt: string;
   season: number;
+  /** Where the season lines came from; 'none' means the league publishes none. */
+  statsSource?: 'league' | 'leaders' | 'none';
   players: SportPlayer[];
 }
 
@@ -124,7 +126,7 @@ export function useRoster(league: LeagueKey | null, teamId: string | null) {
 
   useEffect(() => { setFile(key ? memory.get(key) ?? null : null); load(); }, [key, load]);
 
-  return { file, players: file?.players ?? [], loading, missing, reload: load };
+  return { file, players: file?.players ?? [], statsSource: file?.statsSource ?? 'league', loading, missing, reload: load };
 }
 
 /** Group a roster the way its sport is read, dropping units nobody is in. */

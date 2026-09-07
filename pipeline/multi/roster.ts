@@ -69,6 +69,13 @@ export interface SportRosterFile {
   league: string;
   generatedAt: string;
   season: number;
+  /**
+   * Where the season lines came from, so the app can tell "this player has not
+   * played" apart from "this league publishes no per-player statistics at all".
+   * ESPN serves no such feed for soccer, and a page that blamed the player for
+   * that would be wrong about him.
+   */
+  statsSource: 'league' | 'leaders' | 'none';
   players: SportPlayer[];
 }
 
@@ -218,7 +225,11 @@ function rowStats(row: any, columns: Map<string, string[]>): StatLine {
  * room to spare. A league that does not publish it returns an empty map and
  * the rosters simply carry no stat lines, which is the honest outcome.
  */
-export async function loadLeagueStats(path: string, sport: SportId, season: number): Promise<Map<string, StatLine>> {
+export async function loadLeagueStats(
+  path: string,
+  sport: SportId,
+  season: number,
+): Promise<{ stats: Map<string, StatLine>; source: 'league' | 'leaders' | 'none' }> {
   const out = new Map<string, StatLine>();
   const columns = new Map<string, string[]>();
   const LIMIT = 500;
@@ -278,8 +289,11 @@ export async function loadLeagueStats(path: string, sport: SportId, season: numb
   }
 
   if (process.env.ROSTER_DEBUG) console.log(`    [debug] collected ${out.size} athlete stat lines over ${fetched} page(s)`);
-  if (out.size === 0) return loadLeaders(path);
-  return out;
+  if (out.size === 0) {
+    const leaders = await loadLeaders(path);
+    return { stats: leaders, source: leaders.size ? 'leaders' as const : 'none' as const };
+  }
+  return { stats: out, source: 'league' as const };
 }
 
 /**
@@ -306,7 +320,7 @@ async function loadLeaders(path: string): Promise<Map<string, StatLine>> {
   if (process.env.ROSTER_DEBUG) {
     console.log('    [debug] leaders keys:', json ? Object.keys(json).join(',') : 'null',
       '· categories:', Array.isArray(categories) ? categories.length : 'not a list',
-      '· first:', JSON.stringify(Array.isArray(categories) ? categories[0] : null).slice(0, 500));
+      '· first:', String(JSON.stringify(Array.isArray(categories) ? categories[0] : null)).slice(0, 500));
   }
   for (const cat of Array.isArray(categories) ? categories : []) {
     const name = String(cat?.name ?? cat?.abbreviation ?? '');
