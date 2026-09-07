@@ -24,6 +24,7 @@ import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
+import { backfillHeadshots, readCache, writeCache } from './headshots';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -36,6 +37,8 @@ const HORIZON_DAYS = 12;
 const LOOKBACK_DAYS = 240;
 /** How many team rosters to fetch at once. Polite, and still fast enough. */
 const ROSTER_CONCURRENCY = 6;
+/** How many unknown headshots one run is allowed to chase, per league. */
+const HEADSHOT_BUDGET = Number(process.env.HEADSHOT_BUDGET ?? 1200);
 
 const readJson = <T>(p: string): T | null => { try { return JSON.parse(fs.readFileSync(p, 'utf8')) as T; } catch { return null; } };
 const writeJson = (dir: string, name: string, data: unknown) => {
@@ -320,6 +323,24 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
         const perDepth = rankDepth(perAthlete);
         applyStats(everyone, meta.sport, perAthlete, perDepth);
       }
+    }
+
+    // Players the roster list has no photograph for get looked up one at a
+    // time against their own athlete record, which sometimes has the photo the
+    // roster does not. Cached, misses included, and rationed per run so a cold
+    // seventeen-thousand-player league fills in over days rather than blowing
+    // the build budget in one go.
+    const cache = readCache(dir);
+    const missing = everyone.filter((pl) => !pl.headshotUrl).map((pl) => pl.id);
+    if (missing.length) {
+      const { asked, found } = await backfillHeadshots(meta.espn!, missing, cache, HEADSHOT_BUDGET);
+      for (const pl of everyone) {
+        const hit = cache.found[pl.id];
+        if (!pl.headshotUrl && hit) pl.headshotUrl = hit;
+      }
+      const still = everyone.filter((pl) => !pl.headshotUrl).length;
+      console.log(`  headshots: ${missing.length} missing · asked ${asked} · found ${found} · ${still} still without one`);
+      if (asked) writeCache(dir, cache);
     }
 
     // Grades are percentiles within the league, so they are computed once

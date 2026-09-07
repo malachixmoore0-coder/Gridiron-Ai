@@ -159,11 +159,15 @@ export interface LeagueMeta {
 }
 
 /** Every league the app knows about, in the order the picker shows them. */
+/**
+ * Crest URLs were checked against ESPN's CDN before being written down; the
+ * NCAA leagues and the PGA Tour have none there, so they keep the drawn mark.
+ */
 export const LEAGUES: LeagueMeta[] = [
-  { key: 'nfl',   sport: 'football',   short: 'NFL',   name: 'NFL',                     group: 'Football',   slug: 'nfl',   bespoke: true, months: [9, 2],  accent: '#12D992' },
+  { key: 'nfl',   sport: 'football',   short: 'NFL',   name: 'NFL',                     group: 'Football',   slug: 'nfl',   bespoke: true, months: [9, 2],  accent: '#12D992', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/nfl.png' },
   { key: 'cfb',   sport: 'football',   short: 'CFB',   name: 'College football',        group: 'Football',   slug: 'cfb',   bespoke: true, months: [8, 1],  accent: '#FFB020' },
-  { key: 'nba',   sport: 'basketball', short: 'NBA',   name: 'NBA',                     group: 'Basketball', slug: 'nba',   espn: 'basketball/nba',                      months: [10, 6], accent: '#F26B36' },
-  { key: 'wnba',  sport: 'basketball', short: 'WNBA',  name: 'WNBA',                    group: 'Basketball', slug: 'wnba',  espn: 'basketball/wnba',                     months: [5, 10], accent: '#FF6FA5',
+  { key: 'nba',   sport: 'basketball', short: 'NBA',   name: 'NBA',                     group: 'Basketball', slug: 'nba',   espn: 'basketball/nba',                      months: [10, 6], accent: '#F26B36', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/nba.png' },
+  { key: 'wnba',  sport: 'basketball', short: 'WNBA',  name: 'WNBA',                    group: 'Basketball', slug: 'wnba',  espn: 'basketball/wnba',                     months: [5, 10], accent: '#FF6FA5', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/wnba.png',
     tune: { baseTotal: 164, marginSigma: 10.5, totalSigma: 13.0, eloScale: 0.024 } },
   { key: 'mbb',   sport: 'basketball', short: 'MCBB',  name: "Men's college basketball", group: 'Basketball', slug: 'mbb',  espn: 'basketball/mens-college-basketball',  months: [11, 4], accent: '#4DA3FF',
     // A 350-team field is far wider than any pro league, and college home court
@@ -171,12 +175,12 @@ export const LEAGUES: LeagueMeta[] = [
     tune: { baseTotal: 145, marginSigma: 10.5, totalSigma: 12.5, homeEdge: 3.2, eloScale: 0.026 } },
   { key: 'wbb',   sport: 'basketball', short: 'WCBB',  name: "Women's college basketball", group: 'Basketball', slug: 'wbb', espn: 'basketball/womens-college-basketball', months: [11, 4], accent: '#B073FF',
     tune: { baseTotal: 135, marginSigma: 11.5, totalSigma: 12.0, homeEdge: 3.2, eloScale: 0.028 } },
-  { key: 'mlb',   sport: 'baseball',   short: 'MLB',   name: 'MLB',                     group: 'Baseball',   slug: 'mlb',   espn: 'baseball/mlb',                        months: [3, 11], accent: '#E8B341' },
+  { key: 'mlb',   sport: 'baseball',   short: 'MLB',   name: 'MLB',                     group: 'Baseball',   slug: 'mlb',   espn: 'baseball/mlb',                        months: [3, 11], accent: '#E8B341', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/mlb.png' },
   { key: 'cbase', sport: 'baseball',   short: 'CBASE', name: 'College baseball',        group: 'Baseball',   slug: 'cbase', espn: 'baseball/college-baseball',           months: [2, 6],  accent: '#8FD14F',
     // Aluminium bats and a much wider field: college games score half again what
     // an MLB game does, and blowouts are ordinary rather than notable.
     tune: { baseTotal: 12.4, marginSigma: 5.6, totalSigma: 4.2, homeEdge: 0.32, eloScale: 0.0038, spreadStep: 0.5 } },
-  { key: 'nhl',   sport: 'hockey',     short: 'NHL',   name: 'NHL',                     group: 'Hockey',     slug: 'nhl',   espn: 'hockey/nhl',                          months: [10, 6], accent: '#67C7F2' },
+  { key: 'nhl',   sport: 'hockey',     short: 'NHL',   name: 'NHL',                     group: 'Hockey',     slug: 'nhl',   espn: 'hockey/nhl',                          months: [10, 6], accent: '#67C7F2', logo: 'https://a.espncdn.com/i/teamlogos/leagues/500/nhl.png' },
 
   /* ---- Soccer -----------------------------------------------------------
      Eight leagues rather than one. Every one of them publishes teams,
@@ -185,24 +189,24 @@ export const LEAGUES: LeagueMeta[] = [
      pages say so rather than pretending. Goal environments differ enough to
      be worth tuning — a Bundesliga match is half a goal livelier than a
      LaLiga one, and a model that ignores that is wrong on every total. */
-  { key: 'epl',        sport: 'soccer', short: 'EPL',    name: 'Premier League',   group: 'Soccer', slug: 'epl',        espn: 'soccer/eng.1',           months: [8, 5],  accent: '#8B5CF6',
+  { key: 'epl',        sport: 'soccer', short: 'EPL',    name: 'Premier League',   group: 'Soccer', slug: 'epl',        espn: 'soccer/eng.1',           months: [8, 5],  accent: '#8B5CF6', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/23.png',
     tune: { baseTotal: 2.85, homeEdge: 0.24 } },
-  { key: 'laliga',     sport: 'soccer', short: 'LALIGA', name: 'LaLiga',           group: 'Soccer', slug: 'laliga',     espn: 'soccer/esp.1',           months: [8, 5],  accent: '#FF6B4A',
+  { key: 'laliga',     sport: 'soccer', short: 'LALIGA', name: 'LaLiga',           group: 'Soccer', slug: 'laliga',     espn: 'soccer/esp.1',           months: [8, 5],  accent: '#FF6B4A', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/15.png',
     tune: { baseTotal: 2.55, homeEdge: 0.28 } },
-  { key: 'seriea',     sport: 'soccer', short: 'SERIEA', name: 'Serie A',          group: 'Soccer', slug: 'seriea',     espn: 'soccer/ita.1',           months: [8, 5],  accent: '#4D8BFF',
+  { key: 'seriea',     sport: 'soccer', short: 'SERIEA', name: 'Serie A',          group: 'Soccer', slug: 'seriea',     espn: 'soccer/ita.1',           months: [8, 5],  accent: '#4D8BFF', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/12.png',
     tune: { baseTotal: 2.70, homeEdge: 0.26 } },
-  { key: 'bundesliga', sport: 'soccer', short: 'BUND',   name: 'Bundesliga',       group: 'Soccer', slug: 'bundesliga', espn: 'soccer/ger.1',           months: [8, 5],  accent: '#E23D3D',
+  { key: 'bundesliga', sport: 'soccer', short: 'BUND',   name: 'Bundesliga',       group: 'Soccer', slug: 'bundesliga', espn: 'soccer/ger.1',           months: [8, 5],  accent: '#E23D3D', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/10.png',
     tune: { baseTotal: 3.15, homeEdge: 0.26 } },
-  { key: 'ligue1',     sport: 'soccer', short: 'LIGUE1', name: 'Ligue 1',          group: 'Soccer', slug: 'ligue1',     espn: 'soccer/fra.1',           months: [8, 5],  accent: '#F2C14E',
+  { key: 'ligue1',     sport: 'soccer', short: 'LIGUE1', name: 'Ligue 1',          group: 'Soccer', slug: 'ligue1',     espn: 'soccer/fra.1',           months: [8, 5],  accent: '#F2C14E', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/9.png',
     tune: { baseTotal: 2.75, homeEdge: 0.27 } },
-  { key: 'ucl',        sport: 'soccer', short: 'UCL',    name: 'Champions League', group: 'Soccer', slug: 'ucl',        espn: 'soccer/uefa.champions',  months: [9, 5],  accent: '#5B7FFF',
+  { key: 'ucl',        sport: 'soccer', short: 'UCL',    name: 'Champions League', group: 'Soccer', slug: 'ucl',        espn: 'soccer/uefa.champions',  months: [9, 5],  accent: '#5B7FFF', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/2.png',
     // A group stage pairing a champion with a qualifier is far more lopsided
     // than any domestic league, so the rating gap counts for more.
     tune: { baseTotal: 3.05, homeEdge: 0.22, eloScale: 0.0028 } },
-  { key: 'ligamx',     sport: 'soccer', short: 'LIGAMX', name: 'Liga MX',          group: 'Soccer', slug: 'ligamx',     espn: 'soccer/mex.1',           months: [1, 12], accent: '#2FA36B',
+  { key: 'ligamx',     sport: 'soccer', short: 'LIGAMX', name: 'Liga MX',          group: 'Soccer', slug: 'ligamx',     espn: 'soccer/mex.1',           months: [1, 12], accent: '#2FA36B', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/22.png',
     // Altitude and travel make Liga MX the strongest home field in the group.
     tune: { baseTotal: 2.65, homeEdge: 0.38 } },
-  { key: 'mls',        sport: 'soccer', short: 'MLS',    name: 'MLS',              group: 'Soccer', slug: 'mls',        espn: 'soccer/usa.1',           months: [2, 12], accent: '#35D0C8',
+  { key: 'mls',        sport: 'soccer', short: 'MLS',    name: 'MLS',              group: 'Soccer', slug: 'mls',        espn: 'soccer/usa.1',           months: [2, 12], accent: '#35D0C8', logo: 'https://a.espncdn.com/i/leaguelogos/soccer/500/19.png',
     tune: { baseTotal: 2.90, homeEdge: 0.32 } },
 
   { key: 'pga',   sport: 'golf',       short: 'PGA',   name: 'PGA Tour',                group: 'Golf',       slug: 'pga',   espn: 'golf/pga',   kind: 'field',   months: [1, 11], accent: '#7FD177' },
