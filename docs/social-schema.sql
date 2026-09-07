@@ -11,7 +11,13 @@ create table if not exists profiles (
   display_name text not null default '',
   bio          text not null default '' check (char_length(bio) <= 240),
   avatar_color text not null default '#12D992',
-  avatar_url   text,
+  -- Avatar and banner are stored as data: URLs rather than in a storage bucket.
+  -- They are hard-capped client-side (90 KB and 260 KB before base64) so a row
+  -- stays a row; anything bigger is rejected before it gets here. If you would
+  -- rather use Supabase Storage, swap these for object paths — nothing else in
+  -- the app cares which one a URL is.
+  avatar_url   text check (avatar_url is null or char_length(avatar_url) <= 200000),
+  banner_url   text check (banner_url is null or char_length(banner_url) <= 400000),
   provider     text not null default 'google',
   is_private   boolean not null default false,
   show_record  boolean not null default true,
@@ -137,3 +143,16 @@ create or replace view feed_following as
   select f.* from feed_public f
   where f.author_id = auth.uid()
      or exists (select 1 from follows fo where fo.followee_id = f.author_id and fo.follower_id = auth.uid());
+
+
+-- ---------------------------------------------------------------------------
+-- Migration for a database created before profile pictures and banners.
+-- Safe to run repeatedly.
+-- ---------------------------------------------------------------------------
+alter table profiles add column if not exists banner_url text;
+alter table profiles drop constraint if exists profiles_avatar_url_check;
+alter table profiles add constraint profiles_avatar_url_check
+  check (avatar_url is null or char_length(avatar_url) <= 200000);
+alter table profiles drop constraint if exists profiles_banner_url_check;
+alter table profiles add constraint profiles_banner_url_check
+  check (banner_url is null or char_length(banner_url) <= 400000);

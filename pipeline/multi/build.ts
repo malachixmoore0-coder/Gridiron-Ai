@@ -23,7 +23,7 @@ import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
-import { gradeLeague, loadLeagueStats, loadRoster, type SportPlayer, type SportRosterFile } from './roster';
+import { gradeLeague, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -283,10 +283,11 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   if (sportTeams.length <= ROSTER_TEAM_CAP) {
     const rosterDir = path.join(dir, 'rosters');
     const leagueStats = await loadLeagueStats(meta.espn!, season);
+    const depth = rankDepth(leagueStats);
     const everyone: SportPlayer[] = [];
     const perTeam = new Map<string, SportPlayer[]>();
     for (const t of sportTeams) {
-      const players = await loadRoster(meta.espn!, meta.sport, t.espnId, leagueStats).catch(() => []);
+      const players = await loadRoster(meta.espn!, meta.sport, t.espnId, leagueStats, depth).catch(() => []);
       if (!players.length) continue;
       perTeam.set(t.id, players);
       everyone.push(...players);

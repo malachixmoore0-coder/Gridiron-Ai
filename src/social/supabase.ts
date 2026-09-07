@@ -40,6 +40,7 @@ const rowToProfile = (r: Record<string, unknown>): Profile => ({
   bio: String(r.bio ?? ''),
   avatarColor: String(r.avatar_color ?? colorFor(String(r.handle ?? 'x'))),
   avatarUrl: (r.avatar_url as string | null) ?? null,
+  bannerUrl: (r.banner_url as string | null) ?? null,
   provider: (r.provider as Profile['provider']) ?? 'google',
   createdAt: Date.parse(String(r.created_at ?? '')) || Date.now(),
   isPrivate: !!r.is_private,
@@ -115,6 +116,7 @@ export class SupabaseBackend implements Backend {
   async upsertProfile(p: Profile): Promise<Profile> {
     const { data, error } = await db().from('profiles').update({
       handle: p.handle, display_name: p.displayName, bio: p.bio,
+      avatar_url: p.avatarUrl ?? null, banner_url: p.bannerUrl ?? null,
       is_private: p.isPrivate, show_record: p.showRecord, show_picks: p.showPicks,
       record: p.record ?? null,
     }).eq('id', p.id).select().single();

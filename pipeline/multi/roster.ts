@@ -26,7 +26,11 @@ export interface RosterStat {
   /** "PTS", "AVG", "G" — short enough for a chip. */
   label: string;
   value: string;
-  /** Where this sits in the league, 0-100, when the sample supports one. */
+  /** The league's own rank at this stat, 1 = best. Null where unranked. */
+  rank?: number | null;
+  /** How many players that rank is out of. */
+  rankOf?: number | null;
+  /** Where this sits in the league, 0-100, derived from the rank. */
   percentile?: number | null;
 }
 
@@ -170,21 +174,36 @@ const numOf = (v: unknown): number | null => {
   return Number.isFinite(n) ? n : null;
 };
 
-/** Flatten ESPN's category → stats tree into one lookup by stat name. */
-function flattenStats(node: any): Map<string, { display: string; value: number | null }> {
-  const out = new Map<string, { display: string; value: number | null }>();
-  const visit = (n: any, depth = 0) => {
-    if (!n || depth > 5) return;
-    for (const s of n.stats ?? []) {
-      const name = str(s?.name) ?? str(s?.abbreviation);
-      if (!name || out.has(name)) continue;
-      out.set(name, { display: str(s?.displayValue) ?? String(s?.value ?? ''), value: numOf(s?.value) });
-    }
-    for (const c of n.categories ?? n.splits ?? n.children ?? []) visit(c, depth + 1);
-    if (n.categories == null && Array.isArray(n)) for (const c of n) visit(c, depth + 1);
-  };
-  visit(node);
-  if (Array.isArray(node)) for (const n of node) visit(n);
+/** One athlete's numbers, keyed by ESPN's own stat name. */
+export interface StatCell { display: string; value: number | null; rank: number | null }
+type StatLine = Map<string, StatCell>;
+
+/**
+ * ESPN returns this endpoint columnar: the top-level categories carry the stat
+ * *names*, and each athlete's matching category carries `totals`, `values` and
+ * `ranks` as arrays in the same order. Joining them by index is the whole
+ * parse — and `ranks` is a gift, because it is the league's own ordering
+ * rather than one derived here.
+ */
+function rowStats(row: any, columns: Map<string, string[]>): StatLine {
+  const out: StatLine = new Map();
+  for (const cat of row?.categories ?? []) {
+    const names = columns.get(String(cat?.name ?? ''));
+    if (!names) continue;
+    const totals: unknown[] = cat?.totals ?? [];
+    const values: unknown[] = cat?.values ?? [];
+    const ranks: unknown[] = cat?.ranks ?? [];
+    names.forEach((name, i) => {
+      const display = typeof totals[i] === 'string' ? (totals[i] as string) : null;
+      // "-" is ESPN for "this category does not apply to this player".
+      if (!display || display === '-' || out.has(name)) return;
+      out.set(name, {
+        display,
+        value: numOf(values[i]),
+        rank: numOf(ranks[i]),
+      });
+    });
+  }
   return out;
 }
 
@@ -195,27 +214,53 @@ function flattenStats(node: any): Map<string, { display: string; value: number |
  * room to spare. A league that does not publish it returns an empty map and
  * the rosters simply carry no stat lines, which is the honest outcome.
  */
-export async function loadLeagueStats(path: string, season: number): Promise<Map<string, Map<string, { display: string; value: number | null }>>> {
-  const out = new Map<string, Map<string, { display: string; value: number | null }>>();
-  for (let page = 1; page <= 3; page += 1) {
+export async function loadLeagueStats(path: string, season: number): Promise<Map<string, StatLine>> {
+  const out = new Map<string, StatLine>();
+  const columns = new Map<string, string[]>();
+
+  for (let page = 1; page <= 4; page += 1) {
     const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=500&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
+
     if (process.env.ROSTER_DEBUG && page === 1) {
       const row = json?.athletes?.[0];
       const { athlete: _drop, ...rest } = row ?? {};
-      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names, abbr: c?.abbreviations }))).slice(0, 1200));
+      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names }))).slice(0, 1200));
       console.log('    [debug] row without athlete:', JSON.stringify(rest).slice(0, 1600));
     }
+
+    // The column names come with the first page and hold for the rest.
+    for (const cat of json?.categories ?? []) {
+      const name = String(cat?.name ?? '');
+      if (name && Array.isArray(cat?.names) && !columns.has(name)) columns.set(name, cat.names.map(String));
+    }
+
     const rows = json?.athletes ?? [];
     if (!rows.length) break;
     for (const row of rows) {
       const id = row?.athlete?.id != null ? String(row.athlete.id) : null;
       if (!id || out.has(id)) continue;
-      out.set(id, flattenStats(row));
+      out.set(id, rowStats(row, columns));
     }
     if (rows.length < 500) break;
   }
   return out;
+}
+
+/**
+ * The worst rank seen at each stat, which is the closest thing this endpoint
+ * gives to "how many players are ranked here" — and the denominator a
+ * percentile needs.
+ */
+export function rankDepth(stats: Map<string, StatLine>): Map<string, number> {
+  const depth = new Map<string, number>();
+  for (const line of stats.values()) {
+    for (const [name, cell] of line) {
+      if (cell.rank == null) continue;
+      if (cell.rank > (depth.get(name) ?? 0)) depth.set(name, cell.rank);
+    }
+  }
+  return depth;
 }
 
 /** One team's roster, joined to the league stat lines already in hand. */
@@ -223,7 +268,8 @@ export async function loadRoster(
   path: string,
   sport: SportId,
   teamId: string,
-  stats: Map<string, Map<string, { display: string; value: number | null }>>,
+  stats: Map<string, StatLine>,
+  depth: Map<string, number>,
 ): Promise<SportPlayer[]> {
   const json = await fetchJson<any>(`${SITE}/${path}/teams/${teamId}/roster`, `${path} roster ${teamId}`, 20000).catch(() => null);
   if (!json) return [];
@@ -248,8 +294,23 @@ export async function loadRoster(
     const picked: RosterStat[] = [];
     for (const spec of specs) {
       if (!line) break;
-      const hit = spec.keys.map((k) => line.get(k)).find((v) => v && v.display && v.display !== '0' && v.display !== '-');
-      if (hit) picked.push({ label: spec.label, value: hit.display, percentile: null });
+      let hit: StatCell | undefined;
+      let hitKey = '';
+      for (const k of spec.keys) {
+        const v = line.get(k);
+        if (v && v.display && v.display !== '-') { hit = v; hitKey = k; break; }
+      }
+      if (!hit) continue;
+      const of = depth.get(hitKey) ?? null;
+      picked.push({
+        label: spec.label,
+        value: hit.display,
+        rank: hit.rank,
+        rankOf: of,
+        // ESPN ranks 1 = best, so the percentile is the share of the field
+        // this player is ahead of.
+        percentile: hit.rank != null && of && of > 1 ? Math.round((1 - (hit.rank - 1) / (of - 1)) * 100) : null,
+      });
     }
 
     const injury = (a?.injuries ?? [])[0];
@@ -289,6 +350,18 @@ export async function loadRoster(
  * rookie who has not debuted are not the same thing as an average player.
  */
 export function gradeLeague(players: SportPlayer[], sport: SportId): void {
+  // Where ESPN published a rank, that is the league's own ordering across every
+  // player it qualifies — far better than anything re-derived from a subset,
+  // so it is used directly and only the fallback path sorts anything.
+  const ranked = players.filter((p) => p.stats[0]?.percentile != null);
+  for (const p of ranked) {
+    p.rating = Math.round(40 + (p.stats[0].percentile as number) * 0.59);
+    p.ratingBasis = 'production';
+  }
+
+  const rest = players.filter((p) => p.stats.length && p.stats[0].percentile == null);
+  if (!rest.length) return;
+
   const primary = (p: SportPlayer): number | null => {
     const s = p.stats[0];
     if (!s) return null;
@@ -299,7 +372,7 @@ export function gradeLeague(players: SportPlayer[], sport: SportId): void {
   };
 
   const byUnit = new Map<string, SportPlayer[]>();
-  for (const p of players) {
+  for (const p of rest) {
     if (primary(p) == null) continue;
     const key = isSpecialist(sport, p.pos) ? `${p.unit}:s` : p.unit;
     (byUnit.get(key) ?? byUnit.set(key, []).get(key)!).push(p);
@@ -308,11 +381,11 @@ export function gradeLeague(players: SportPlayer[], sport: SportId): void {
   for (const group of byUnit.values()) {
     const sorted = [...group].sort((a, b) => (primary(a) ?? 0) - (primary(b) ?? 0));
     const n = sorted.length;
+    // A group of three tells us nothing; leave those ungraded rather than 99.
+    if (n < 4) continue;
     sorted.forEach((p, i) => {
-      // A group of one tells us nothing; leave it ungraded rather than 99.
-      if (n < 4) return;
       const pct = i / (n - 1);
-      p.rating = Math.round(45 + pct * 50);
+      p.rating = Math.round(40 + pct * 59);
       p.stats = p.stats.map((s, j) => (j === 0 ? { ...s, percentile: Math.round(pct * 100) } : s));
       p.ratingBasis = 'production';
     });

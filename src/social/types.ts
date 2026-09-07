@@ -18,7 +18,10 @@ export interface Profile {
   bio: string;
   /** Hex used for the initials avatar when there is no photo. */
   avatarColor: string;
+  /** A data: URL for a picture the user chose, or a provider's hosted one. */
   avatarUrl?: string | null;
+  /** The wide image across the top of their profile. Data URL, same as above. */
+  bannerUrl?: string | null;
   provider: AuthProvider;
   createdAt: number;
   /** Private accounts only show picks to accepted followers. */

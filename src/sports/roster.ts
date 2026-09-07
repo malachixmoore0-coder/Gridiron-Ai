@@ -13,6 +13,9 @@ import { MULTI_DATA_URL } from '@/sports/feed';
 export interface RosterStat {
   label: string;
   value: string;
+  /** The league's own rank at this stat, 1 = best. */
+  rank?: number | null;
+  rankOf?: number | null;
   percentile?: number | null;
 }
 
