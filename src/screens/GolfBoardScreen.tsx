@@ -234,7 +234,11 @@ function Face({ url }: { url: string | null | undefined }) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   bar: { flexGrow: 0, marginBottom: spacing.sm },
-  barInner: { paddingHorizontal: spacing.lg, gap: spacing.sm },
+  // alignItems matters here: a horizontal ScrollView lays its children out in a
+  // row, and the default stretch makes each tab take the row's height — which
+  // was itself derived from nothing, so the whole strip collapsed to the
+  // padding and the labels inside it were clipped away to nothing.
+  barInner: { paddingHorizontal: spacing.lg, gap: spacing.sm, alignItems: 'flex-start' },
   tab: { width: 132, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.md, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   tabName: { color: colors.ink, fontSize: 12, fontWeight: '800' },
   tabMeta: { color: colors.inkFaint, fontSize: 10, marginTop: 2 },

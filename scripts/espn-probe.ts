@@ -15,11 +15,14 @@ const SITE = 'https://site.api.espn.com/apis/site/v2/sports';
 const WEB = 'https://site.web.api.espn.com/apis/common/v3/sports';
 
 const CANDIDATES = [
+  'football/nfl', 'football/college-football',
+  'basketball/nba', 'basketball/wnba', 'basketball/mens-college-basketball',
+  'basketball/womens-college-basketball', 'baseball/mlb', 'baseball/college-baseball',
   'hockey/nhl',
   'soccer/eng.1', 'soccer/esp.1', 'soccer/ita.1', 'soccer/ger.1', 'soccer/fra.1',
   'soccer/usa.1', 'soccer/mex.1', 'soccer/ned.1', 'soccer/por.1', 'soccer/eng.2',
   'soccer/uefa.champions', 'soccer/uefa.europa', 'soccer/sco.1', 'soccer/bra.1',
-  'golf/pga',
+  'soccer/mex.1', 'golf/pga',
 ];
 
 async function json(url: string, timeoutMs = 20000): Promise<any | null> {
@@ -45,7 +48,10 @@ async function probe(path: string) {
     json(`${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=50&season=${season}&seasontype=2`),
   ]);
 
-  const teamRows = teams?.sports?.[0]?.leagues?.[0]?.teams ?? [];
+  const leagueNode = teams?.sports?.[0]?.leagues?.[0];
+  const teamRows = leagueNode?.teams ?? [];
+  const logo = leagueNode?.logos?.find((l: any) => /dark/i.test(l?.rel?.join?.(',') ?? ''))?.href
+    ?? leagueNode?.logos?.[0]?.href ?? null;
   const events = board?.events ?? [];
   const athletes = stats?.athletes ?? [];
   const categories = (stats?.categories ?? []).map((c: any) => c?.name).filter(Boolean);
@@ -66,6 +72,7 @@ async function probe(path: string) {
 
   return {
     path,
+    logo,
     teams: teamRows.length,
     events: events.length,
     statAthletes: stats?.pagination?.count ?? athletes.length,
@@ -89,7 +96,8 @@ async function main() {
         String(r.statAthletes).padStart(8),
         String(r.roster).padStart(7),
         String(r.headshots).padStart(6),
-        '  ' + r.categories.slice(0, 60),
+        '  ' + r.categories.slice(0, 40),
+        '  ' + (r.logo ?? '—'),
       );
     } catch (e) {
       console.log(p.padEnd(24), '  failed:', (e as Error).message);

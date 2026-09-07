@@ -111,7 +111,12 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
 export interface LeagueMeta {
   key: LeagueKey;
   sport: SportId;
-  /** What the switcher shows. */
+  /**
+   * The short form the picker and the model copy use. Deliberately the name
+   * people say out loud — CFB, MCBB — rather than the governing body's
+   * initialism. Soccer keeps full names in the picker, because eight leagues
+   * whose short forms are all four letters would be a guessing game.
+   */
   short: string;
   /** Full name for headers and copy. */
   name: string;
@@ -135,6 +140,13 @@ export interface LeagueMeta {
   /** A sport-specific accent used sparingly — chips, empty states, the picker. */
   accent: string;
   /**
+   * The league's own crest, where one exists. Baked in rather than read from a
+   * feed because the picker has to draw every league before any of their feeds
+   * have loaded — a grid of blanks that fills in later is worse than one that
+   * is right immediately.
+   */
+  logo?: string;
+  /**
    * Where a league does not behave like its sport's average.
    *
    * A WNBA game and an NBA game are the same sport with the same shape, but a
@@ -149,18 +161,18 @@ export interface LeagueMeta {
 /** Every league the app knows about, in the order the picker shows them. */
 export const LEAGUES: LeagueMeta[] = [
   { key: 'nfl',   sport: 'football',   short: 'NFL',   name: 'NFL',                     group: 'Football',   slug: 'nfl',   bespoke: true, months: [9, 2],  accent: '#12D992' },
-  { key: 'cfb',   sport: 'football',   short: 'NCAAF', name: 'College football',        group: 'Football',   slug: 'cfb',   bespoke: true, months: [8, 1],  accent: '#FFB020' },
+  { key: 'cfb',   sport: 'football',   short: 'CFB',   name: 'College football',        group: 'Football',   slug: 'cfb',   bespoke: true, months: [8, 1],  accent: '#FFB020' },
   { key: 'nba',   sport: 'basketball', short: 'NBA',   name: 'NBA',                     group: 'Basketball', slug: 'nba',   espn: 'basketball/nba',                      months: [10, 6], accent: '#F26B36' },
   { key: 'wnba',  sport: 'basketball', short: 'WNBA',  name: 'WNBA',                    group: 'Basketball', slug: 'wnba',  espn: 'basketball/wnba',                     months: [5, 10], accent: '#FF6FA5',
     tune: { baseTotal: 164, marginSigma: 10.5, totalSigma: 13.0, eloScale: 0.024 } },
-  { key: 'mbb',   sport: 'basketball', short: 'NCAAM', name: "Men's college basketball", group: 'Basketball', slug: 'mbb',  espn: 'basketball/mens-college-basketball',  months: [11, 4], accent: '#4DA3FF',
+  { key: 'mbb',   sport: 'basketball', short: 'MCBB',  name: "Men's college basketball", group: 'Basketball', slug: 'mbb',  espn: 'basketball/mens-college-basketball',  months: [11, 4], accent: '#4DA3FF',
     // A 350-team field is far wider than any pro league, and college home court
     // is the largest in American sport.
     tune: { baseTotal: 145, marginSigma: 10.5, totalSigma: 12.5, homeEdge: 3.2, eloScale: 0.026 } },
-  { key: 'wbb',   sport: 'basketball', short: 'NCAAW', name: "Women's college basketball", group: 'Basketball', slug: 'wbb', espn: 'basketball/womens-college-basketball', months: [11, 4], accent: '#B073FF',
+  { key: 'wbb',   sport: 'basketball', short: 'WCBB',  name: "Women's college basketball", group: 'Basketball', slug: 'wbb', espn: 'basketball/womens-college-basketball', months: [11, 4], accent: '#B073FF',
     tune: { baseTotal: 135, marginSigma: 11.5, totalSigma: 12.0, homeEdge: 3.2, eloScale: 0.028 } },
   { key: 'mlb',   sport: 'baseball',   short: 'MLB',   name: 'MLB',                     group: 'Baseball',   slug: 'mlb',   espn: 'baseball/mlb',                        months: [3, 11], accent: '#E8B341' },
-  { key: 'cbase', sport: 'baseball',   short: 'NCAAB', name: 'College baseball',        group: 'Baseball',   slug: 'cbase', espn: 'baseball/college-baseball',           months: [2, 6],  accent: '#8FD14F',
+  { key: 'cbase', sport: 'baseball',   short: 'CBASE', name: 'College baseball',        group: 'Baseball',   slug: 'cbase', espn: 'baseball/college-baseball',           months: [2, 6],  accent: '#8FD14F',
     // Aluminium bats and a much wider field: college games score half again what
     // an MLB game does, and blowouts are ordinary rather than notable.
     tune: { baseTotal: 12.4, marginSigma: 5.6, totalSigma: 4.2, homeEdge: 0.32, eloScale: 0.0038, spreadStep: 0.5 } },
