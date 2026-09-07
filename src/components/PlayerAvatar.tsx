@@ -4,18 +4,26 @@ import type { Team } from '@/engine/types';
 import { colors } from '@/theme';
 import { initialsOf } from '@/utils/roster';
 
-interface Props { uri: string | null; name: string; team?: Team; size?: number; }
+interface Props {
+  uri: string | null;
+  name: string;
+  team?: Team;
+  size?: number;
+  /** League-neutral colours, for the sports that have no NFL Team object. */
+  tint?: { primary: string; secondary: string };
+}
 
 /**
  * Player headshot. Many college athletes have no photo on file, so a missing
  * or broken image falls back to initials on the team's colour rather than a
  * placeholder face.
  */
-export function PlayerAvatar({ uri, name, team, size = 44 }: Props) {
+export function PlayerAvatar({ uri, name, team, size = 44, tint }: Props) {
   const [failed, setFailed] = useState(false);
-  const bg = team?.colors.primary ?? colors.cardAlt;
+  const palette = team?.colors ?? tint;
+  const bg = palette?.primary ?? colors.cardAlt;
   return (
-    <View style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg, borderColor: team?.colors.secondary ?? colors.border }]}>
+    <View style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg, borderColor: palette?.secondary ?? colors.border }]}>
       {uri && !failed ? (
         <Image source={{ uri }} style={{ width: size, height: size }} resizeMode="cover" onError={() => setFailed(true)} />
       ) : (

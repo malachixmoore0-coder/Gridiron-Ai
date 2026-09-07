@@ -65,6 +65,7 @@ import { SportGameScreen } from '@/screens/SportGameScreen';
 import { SportMatchupScreen, type SportRun } from '@/screens/SportMatchupScreen';
 import { SportResultScreen } from '@/screens/SportResultScreen';
 import { SportRecordScreen } from '@/screens/SportRecordScreen';
+import { SportPlayerScreen } from '@/screens/SportPlayerScreen';
 
 /* Shared */
 import { RecordHubScreen } from '@/screens/RecordHubScreen';
@@ -252,14 +253,16 @@ export function RootNavigator() {
                     : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} />
               ) : o.kind === 'team' ? (
                 isGeneric(o.league)
-                  ? <SportTeamScreen teamId={o.teamId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onOpenGame={(t, g) => openGame(t, g, o.league)} onUpgrade={openUpgrade} />
+                  ? <SportTeamScreen teamId={o.teamId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onOpenGame={(t, g) => openGame(t, g, o.league)} onOpenPlayer={(t, pl) => openPlayer(t, pl, o.league)} onUpgrade={openUpgrade} />
                   : o.league === 'cfb'
                     ? <CfbTeamDetail teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onOpenGame={(t, g) => openGame(t, g, 'cfb')} />
                     : <TeamDetailScreen teamId={o.teamId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onOpenGame={(t, g) => openGame(t, g, 'nfl')} />
               ) : o.kind === 'player' ? (
-                o.league === 'cfb'
-                  ? <CfbPlayer teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
-                  : <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
+                isGeneric(o.league)
+                  ? <SportPlayerScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} />
+                  : o.league === 'cfb'
+                    ? <CfbPlayer teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+                    : <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
               ) : o.kind === 'game' ? (
                 isGeneric(o.league)
                   ? <SportGameScreen gameId={o.gameId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onRun={(r) => run(r as AnyRun, o.league)} />

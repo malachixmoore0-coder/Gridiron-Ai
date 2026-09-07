@@ -7,7 +7,7 @@
  * what the model makes of what is left.
  */
 import React, { useMemo } from 'react';
-import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
@@ -19,6 +19,9 @@ import { useLive } from '@/live/LiveContext';
 import { useSports } from '@/sports/SportsContext';
 import { LEAGUE_BY_KEY, profileFor, type LeagueKey } from '@/sports/types';
 import { gradeOf } from '@/screens/SportTeamsScreen';
+import { SportRosterRow } from '@/components/SportRosterRow';
+import { byUnit, useRoster } from '@/sports/roster';
+import { tintOver } from '@/utils/tint';
 import { haptic } from '@/utils/haptics';
 
 interface Props {
@@ -26,21 +29,13 @@ interface Props {
   onBack: () => void;
   onOpenTeam: (id: string) => void;
   onOpenGame: (teamId: string, gameId: string) => void;
+  onOpenPlayer: (teamId: string, playerId: string) => void;
   onUpgrade?: () => void;
-}
-
-/** Team colour over the app ground, so the page is theirs without going unreadable. */
-function tint(hex: string, amount: number): string {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex || '');
-  if (!m) return colors.card;
-  const n = parseInt(m[1], 16);
-  const mix = (c: number, base: number) => Math.round(c * amount + base * (1 - amount));
-  return `rgb(${mix((n >> 16) & 255, 11)}, ${mix((n >> 8) & 255, 23)}, ${mix(n & 255, 32)})`;
 }
 
 const dayOf = (iso: string) => new Date(iso).toLocaleDateString(undefined, { month: 'short', day: 'numeric' });
 
-export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onUpgrade }: Props) {
+export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onOpenPlayer, onUpgrade }: Props) {
   const view = useActiveLeague();
   const eng = useEngagement();
   const ent = useEntitlements();
@@ -54,6 +49,9 @@ export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onUpgr
     const feed = feeds[view.id as LeagueKey];
     return (feed?.teams?.teams ?? []).find((t) => t.id === teamId) ?? null;
   }, [feeds, view.id, teamId]);
+
+  const roster = useRoster(view.id as LeagueKey, teamId);
+  const units = useMemo(() => byUnit(roster.players, profile.sport), [roster.players, profile.sport]);
 
   const games = useMemo(
     () => view.games
@@ -102,7 +100,7 @@ export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onUpgr
 
   return (
     <ScrollView style={styles.root} contentContainerStyle={styles.body}>
-      <LinearGradient colors={[tint(team.colors.primary, 0.55), tint(team.colors.secondary || team.colors.primary, 0.22), colors.bg]} style={styles.hero}>
+      <LinearGradient colors={[tintOver(team.colors.primary, 0.55), tintOver(team.colors.secondary || team.colors.primary, 0.22), colors.bg]} style={styles.hero}>
         <View style={styles.heroTop}>
           <RefMark team={team} size={58} disc />
           <View style={{ flex: 1 }}>
@@ -155,6 +153,40 @@ export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onUpgr
             <Stat label={`${profile.unit}s allowed`} value={`${rating.defence <= 1 ? '' : '+'}${Math.round((rating.defence - 1) * 100)}%`} good={rating.defence <= 1} />
             <Stat label="Per game" value={tally.n ? `${(tally.scored / tally.n).toFixed(1)} – ${(tally.allowed / tally.n).toFixed(1)}` : '—'} good={tally.scored >= tally.allowed} />
           </View>
+        </View>
+      )}
+
+      {(roster.players.length > 0 || roster.loading || roster.missing) && (
+        <View style={styles.card}>
+          <View style={styles.rosterHead}>
+            <Text style={styles.cardTitle}>Roster</Text>
+            {roster.players.length > 0 && (
+              <Text style={styles.rosterCount}>
+                {roster.players.length} listed · {roster.players.filter((pl) => pl.rating != null).length} graded
+              </Text>
+            )}
+          </View>
+          {roster.loading && !roster.players.length && <ActivityIndicator color={colors.green} style={{ marginVertical: 16 }} />}
+          {roster.missing && (
+            <Text style={styles.muted}>
+              No roster is published for {meta.name}. Leagues with hundreds of teams are skipped — the whole set would be
+              tens of megabytes for a page almost nobody opens.
+            </Text>
+          )}
+          {units.map(([unit, list]) => (
+            <View key={unit} style={styles.unit}>
+              <Text style={styles.unitTitle}>{unit}</Text>
+              {list.map((pl) => (
+                <SportRosterRow
+                  key={pl.id}
+                  player={pl}
+                  team={team}
+                  showPos={profile.sport !== 'baseball'}
+                  onPress={() => { haptic('light'); onOpenPlayer(teamId, pl.id); }}
+                />
+              ))}
+            </View>
+          ))}
         </View>
       )}
 
@@ -268,6 +300,10 @@ const styles = StyleSheet.create({
 
   card: { marginHorizontal: spacing.lg, marginTop: spacing.md, padding: spacing.md, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border },
   cardTitle: { color: colors.ink, fontSize: 13, fontWeight: '900', marginBottom: spacing.sm },
+  rosterHead: { flexDirection: 'row', alignItems: 'baseline', justifyContent: 'space-between', gap: spacing.sm },
+  rosterCount: { color: colors.inkGhost, fontSize: 10, marginBottom: spacing.sm },
+  unit: { marginTop: spacing.sm },
+  unitTitle: { color: colors.inkFaint, fontSize: 9.5, fontWeight: '900', letterSpacing: 1.1, textTransform: 'uppercase', marginBottom: 4 },
   muted: { color: colors.inkFaint, fontSize: 11, lineHeight: 16 },
 
   rowStats: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md },

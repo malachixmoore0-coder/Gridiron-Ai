@@ -201,8 +201,10 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
     const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=500&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
     if (process.env.ROSTER_DEBUG && page === 1) {
-      console.log('    [debug] byathlete keys:', json ? Object.keys(json).join(',') : 'null');
-      console.log('    [debug] sample:', JSON.stringify(json?.athletes?.[0] ?? json?.categories?.[0] ?? null).slice(0, 1500));
+      const row = json?.athletes?.[0];
+      const { athlete: _drop, ...rest } = row ?? {};
+      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names, abbr: c?.abbreviations }))).slice(0, 1200));
+      console.log('    [debug] row without athlete:', JSON.stringify(rest).slice(0, 1600));
     }
     const rows = json?.athletes ?? [];
     if (!rows.length) break;
