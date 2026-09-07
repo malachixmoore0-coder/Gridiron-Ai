@@ -111,6 +111,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
   const [lastError, setLastError] = useState<string | null>(null);
   const [lastChecked, setLastChecked] = useState<number | null>(null);
   const mounted = useRef(true);
+  const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const refresh = useCallback(async () => {
     setRefreshing(true);
@@ -145,9 +146,12 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
           if (validDataset(cached) && cached.generatedAt > initial.data.generatedAt && mounted.current) { setData(cached); setSource('cache'); }
         }
       } catch { /* ignore cache errors */ }
-      await refresh();
+      // The college dataset is ~2 MB. Both leagues mount at startup, so this
+      // waits for the NFL fetch and the first paint to finish rather than
+      // racing them — switching to NCAA kicks it off immediately anyway.
+      timer.current = setTimeout(() => { if (mounted.current) refresh(); }, 2500);
     })();
-    return () => { mounted.current = false; };
+    return () => { mounted.current = false; if (timer.current) clearTimeout(timer.current); };
   }, [refresh, initial.data.generatedAt]);
 
   const value = useMemo<TeamsState>(() => {

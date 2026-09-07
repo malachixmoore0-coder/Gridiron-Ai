@@ -45,7 +45,9 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
   const setLeague = useCallback((l: LeagueId) => {
     setLeagueState(l);
     AsyncStorage.setItem(KEY, l).catch(() => {});
-  }, []);
+    // The college feed loads lazily, so switching to it is the cue to fetch.
+    if (l === 'cfb' && cfbRaw.source === 'sample' && !cfbRaw.refreshing) cfbRaw.refresh();
+  }, [cfbRaw]);
 
   const nfl: LeagueView = useMemo(() => {
     const teams: LeagueTeamRef[] = nflRaw.teams.map((t) => ({
