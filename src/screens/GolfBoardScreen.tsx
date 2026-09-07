@@ -62,8 +62,17 @@ export function GolfBoardScreen({ onOpenPlayer }: Props) {
     return [...live, ...next, ...done];
   }, [file]);
 
+  // Open on something with content. The next tournament matters most, but its
+  // field is not published until a few days out, and landing on an empty page
+  // is a worse first impression than landing on last week's leaderboard.
   useEffect(() => {
-    if (!open && tournaments.length) setOpen(tournaments[0].id);
+    if (open || !tournaments.length) return;
+    const best =
+      tournaments.find((t) => t.status === 'in_progress')
+      ?? tournaments.find((t) => t.status === 'scheduled' && t.field.length)
+      ?? tournaments.find((t) => t.status === 'final' && t.field.length)
+      ?? tournaments[0];
+    setOpen(best.id);
   }, [open, tournaments]);
 
   const current = tournaments.find((t) => t.id === open) ?? tournaments[0] ?? null;
