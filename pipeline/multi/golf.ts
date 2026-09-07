@@ -123,6 +123,42 @@ async function loadPlayers(season: number): Promise<GolfPlayer[]> {
   return out;
 }
 
+/** Pull one tournament's field, which the date-range scoreboard never carries. */
+async function loadField(eventId: string): Promise<GolfEntry[]> {
+  const json = await fetchJson<any>(`${SITE}/leaderboard?event=${eventId}`, `pga field ${eventId}`, 25000).catch(() => null);
+  const ev = json?.events?.[0] ?? json?.event ?? json;
+  const comp = ev?.competitions?.[0] ?? ev?.competition;
+  const competitors = comp?.competitors ?? ev?.competitors ?? [];
+
+  if (process.env.ROSTER_DEBUG) {
+    console.log(`    [debug] field ${eventId}: keys ${json ? Object.keys(json).join(',') : 'null'} · competitors ${competitors.length}`);
+    if (competitors[0]) console.log('    [debug] competitor:', String(JSON.stringify(competitors[0])).slice(0, 700));
+  }
+
+  const out: GolfEntry[] = [];
+  for (const c of competitors) {
+    const a = c?.athlete;
+    const pid = a?.id != null ? String(a.id) : null;
+    if (!pid) continue;
+    const linescores = c?.linescores ?? [];
+    out.push({
+      playerId: pid,
+      name: str(a?.displayName) ?? str(a?.fullName) ?? pid,
+      headshotUrl: str(a?.headshot?.href) ?? str(a?.headshot),
+      flagUrl: str(a?.flag?.href),
+      position: str(c?.status?.position?.displayName) ?? str(c?.status?.position?.id) ?? null,
+      score: numOf(c?.score?.displayValue) ?? numOf(c?.score) ?? numOf(c?.statistics?.find((x: any) => x?.name === 'scoreToPar')?.displayValue),
+      scoreText: str(c?.score?.displayValue) ?? (c?.score != null ? String(c.score) : null),
+      today: str(linescores[linescores.length - 1]?.displayValue) ?? null,
+      thru: c?.status?.thru != null ? String(c.status.thru) : null,
+      rounds: linescores.map((l: any) => numOf(l?.value)).filter((v: number | null): v is number => v != null),
+      status: str(c?.status?.type?.description) ?? null,
+    });
+  }
+  out.sort((a, b) => (a.score ?? 999) - (b.score ?? 999));
+  return out;
+}
+
 /** Everything on the calendar in the window, with a field where one exists. */
 async function loadTournaments(): Promise<GolfTournament[]> {
   const from = new Date(); from.setUTCDate(from.getUTCDate() - BACK_DAYS);
@@ -177,6 +213,22 @@ async function loadTournaments(): Promise<GolfTournament[]> {
     });
   }
   out.sort((a, b) => a.start.localeCompare(b.start));
+
+  // The date-range scoreboard lists tournaments but never their fields, so the
+  // ones worth showing get a second request each: whatever is being played, the
+  // next two up, and the last three finished. Sixteen events is not worth
+  // sixteen requests for pages nobody scrolls to.
+  const live = out.filter((t) => t.status === 'in_progress');
+  const next = out.filter((t) => t.status === 'scheduled').slice(0, 2);
+  const past = out.filter((t) => t.status === 'final').slice(-3);
+  for (const t of [...live, ...next, ...past]) {
+    const field = await loadField(t.id).catch(() => [] as GolfEntry[]);
+    if (!field.length) continue;
+    t.field = field;
+    const played = Math.max(0, ...field.map((f) => f.rounds.length));
+    t.roundsLeft = t.status === 'final' ? 0 : Math.max(0, 4 - played);
+  }
+
   return out;
 }
 
