@@ -120,8 +120,8 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
           {player.rating != null && (
             <Text style={styles.muted}>
               Grade {player.rating} — where {player.stats[0]?.label ?? 'this'} sits against every ranked player in {meta.short}
-              {rank >= 0 ? `, ${ordinal(rank + 1)} of ${peers.length} on this roster` : ''}. It is a comparison, not a projection: it
-              says where this season has ranked, not what happens next.
+              {rank >= 0 && peers.length >= 3 ? `, ${ordinal(rank + 1)} of ${peers.length} on this roster` : ''}. It is a comparison, not a
+              projection: it says where this season has ranked, not what happens next.
             </Text>
           )}
         </View>
@@ -151,7 +151,7 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
         )}
       </View>
 
-      {peers.length > 1 && (
+      {peers.length >= 3 && (
         <View style={styles.card}>
           <Text style={styles.cardTitle}>{player.unit} on this roster</Text>
           {peers.slice(0, 6).map((p, i) => (

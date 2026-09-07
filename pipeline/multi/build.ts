@@ -282,7 +282,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   // only where the league is small enough for them to be worth having.
   if (sportTeams.length <= ROSTER_TEAM_CAP) {
     const rosterDir = path.join(dir, 'rosters');
-    const leagueStats = await loadLeagueStats(meta.espn!, season);
+    const leagueStats = await loadLeagueStats(meta.espn!, meta.sport, season);
     const depth = rankDepth(leagueStats);
     const everyone: SportPlayer[] = [];
     const perTeam = new Map<string, SportPlayer[]>();

@@ -218,55 +218,66 @@ function rowStats(row: any, columns: Map<string, string[]>): StatLine {
  * room to spare. A league that does not publish it returns an empty map and
  * the rosters simply carry no stat lines, which is the honest outcome.
  */
-export async function loadLeagueStats(path: string, season: number): Promise<Map<string, StatLine>> {
+export async function loadLeagueStats(path: string, sport: SportId, season: number): Promise<Map<string, StatLine>> {
   const out = new Map<string, StatLine>();
   const columns = new Map<string, string[]>();
-
-  // ESPN pages this as a leaderboard, so stopping at the first short page
-  // would keep only the top of it — the reason a first pass had six of a
-  // twenty-eight man roster and no pitchers at all. Page until its own
-  // pagination says there is nothing left.
   const LIMIT = 500;
-  let pages = 1;
-  for (let page = 1; page <= Math.min(pages, MAX_STAT_PAGES); page += 1) {
-    // qualified=false is what turns a leaderboard into a census. Left at its
-    // default, MLB returns the 141 batters who clear the plate-appearance
-    // threshold, which is a hundred and thirty stat lines across eight hundred
-    // rostered players — a page of dashes for everyone else.
-    const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&qualified=false&limit=${LIMIT}&page=${page}&season=${season}&seasontype=2`;
-    const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
 
-    if (process.env.ROSTER_DEBUG && page === 1) {
-      const row = json?.athletes?.[0];
-      const { athlete: _drop, ...rest } = row ?? {};
-      console.log('    [debug] pagination:', JSON.stringify(json?.pagination ?? null));
-      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names }))).slice(0, 1400));
-      console.log('    [debug] row without athlete:', JSON.stringify(rest).slice(0, 1200));
-    }
+  // Baseball has to be asked twice. Left to itself the endpoint answers with
+  // the batting leaderboard and nothing else — 141 rows, no pitchers — however
+  // the qualified flag is set, because the category is what decides which
+  // leaderboard it is.
+  const groups: (string | undefined)[] = sport === 'baseball' ? ['batting', 'pitching'] : [undefined];
+  let fetched = 0;
 
-    // The column names come with the first page and hold for the rest.
-    for (const cat of json?.categories ?? []) {
-      const name = String(cat?.name ?? '');
-      if (name && Array.isArray(cat?.names) && !columns.has(name)) columns.set(name, cat.names.map(String));
-    }
+  for (const category of groups) {
+    // ESPN pages this as a leaderboard, so stopping at the first short page
+    // would keep only the top of it. Page until its own pagination says there
+    // is nothing left.
+    let pages = 1;
+    for (let page = 1; page <= Math.min(pages, MAX_STAT_PAGES); page += 1) {
+      // qualified=false asks for everyone with a line rather than only those
+      // who clear the league's own threshold.
+      const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&qualified=false`
+        + `&limit=${LIMIT}&page=${page}&season=${season}&seasontype=2${category ? `&category=${category}` : ''}`;
+      const json = await fetchJson<any>(url, `${path} ${category ?? 'athlete'} stats p${page}`, 25000).catch(() => null);
 
-    // ESPN does not always report a page count, so derive one from the total
-    // where it does, and otherwise keep going for as long as pages come back
-    // full — a short page is the only reliable end-of-list signal.
-    const reported = numOf(json?.pagination?.pages)
-      ?? (numOf(json?.pagination?.count) != null ? Math.ceil((numOf(json?.pagination?.count) as number) / LIMIT) : null);
-    if (reported != null && reported > pages) pages = reported;
+      if (process.env.ROSTER_DEBUG && page === 1) {
+        console.log(`    [debug] ${category ?? 'all'} pagination:`, JSON.stringify(json?.pagination ?? null).slice(0, 260));
+        console.log(`    [debug] ${category ?? 'all'} categories:`, JSON.stringify((json?.categories ?? []).map((c: any) => c?.name)));
+      }
 
-    const rows = json?.athletes ?? [];
-    if (!rows.length) break;
-    if (reported == null && rows.length >= LIMIT) pages = page + 1;
-    for (const row of rows) {
-      const id = row?.athlete?.id != null ? String(row.athlete.id) : null;
-      if (!id || out.has(id)) continue;
-      out.set(id, rowStats(row, columns));
+      // The column names come with the first page and hold for the rest.
+      for (const cat of json?.categories ?? []) {
+        const name = String(cat?.name ?? '');
+        if (name && Array.isArray(cat?.names) && !columns.has(name)) columns.set(name, cat.names.map(String));
+      }
+
+      // ESPN does not always report a page count, so derive one from the total
+      // where it does, and otherwise keep going for as long as pages arrive
+      // full — a short page is the only reliable end-of-list signal.
+      const count = numOf(json?.pagination?.count);
+      const reported = numOf(json?.pagination?.pages) ?? (count != null ? Math.ceil(count / LIMIT) : null);
+      if (reported != null && reported > pages) pages = reported;
+
+      const rows = json?.athletes ?? [];
+      if (!rows.length) break;
+      if (reported == null && rows.length >= LIMIT) pages = page + 1;
+      fetched += 1;
+
+      for (const row of rows) {
+        const id = row?.athlete?.id != null ? String(row.athlete.id) : null;
+        if (!id) continue;
+        // A player can appear under more than one category — a two-way player,
+        // or a pitcher who bats — so lines merge rather than replace.
+        const line = out.get(id) ?? new Map<string, StatCell>();
+        for (const [k, v] of rowStats(row, columns)) if (!line.has(k)) line.set(k, v);
+        out.set(id, line);
+      }
     }
   }
-  if (process.env.ROSTER_DEBUG) console.log(`    [debug] collected ${out.size} athlete stat lines over ${Math.min(pages, MAX_STAT_PAGES)} page(s)`);
+
+  if (process.env.ROSTER_DEBUG) console.log(`    [debug] collected ${out.size} athlete stat lines over ${fetched} page(s)`);
   if (out.size === 0) return loadLeaders(path);
   return out;
 }
@@ -283,8 +294,21 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
 async function loadLeaders(path: string): Promise<Map<string, StatLine>> {
   const out = new Map<string, StatLine>();
   const json = await fetchJson<any>(`${SITE}/${path}/leaders`, `${path} leaders`, 20000).catch(() => null);
-  const categories = json?.leaders?.categories ?? json?.categories ?? [];
-  for (const cat of categories) {
+  // The site API wraps leaders differently per sport; take whichever nest
+  // actually holds a list of categories.
+  const categories =
+    json?.leaders?.categories
+    ?? json?.categories
+    ?? json?.sports?.[0]?.leagues?.[0]?.leaders?.categories
+    ?? json?.sports?.[0]?.leagues?.[0]?.leaders
+    ?? json?.leaders
+    ?? [];
+  if (process.env.ROSTER_DEBUG) {
+    console.log('    [debug] leaders keys:', json ? Object.keys(json).join(',') : 'null',
+      '· categories:', Array.isArray(categories) ? categories.length : 'not a list',
+      '· first:', JSON.stringify(Array.isArray(categories) ? categories[0] : null).slice(0, 500));
+  }
+  for (const cat of Array.isArray(categories) ? categories : []) {
     const name = String(cat?.name ?? cat?.abbreviation ?? '');
     if (!name) continue;
     (cat?.leaders ?? []).forEach((entry: any, i: number) => {

@@ -25,12 +25,14 @@ interface Props {
 
 export function SportRosterRow({ player, team, onPress, showPos = true }: Props) {
   const hurt = !!player.injury;
-  const meta = [
-    showPos ? player.pos : null,
-    player.age ? `${player.age}` : null,
-    player.height,
-    player.experience != null ? (player.experience <= 1 ? 'rookie' : `${player.experience} yrs`) : null,
-  ].filter(Boolean).join(' · ');
+  // Two facts at most. The unit header above already says the position group,
+  // the stat line is the thing worth reading, and everything else — height,
+  // weight, college, where they are from — is one tap away on the player page.
+  // Cramming it all in here only produced a truncated ellipsis.
+  const meta = (player.line
+    ? [showPos ? player.pos : null, player.age ? `${player.age}` : null]
+    : [showPos ? player.pos : null, player.height, player.age ? `${player.age}` : null]
+  ).filter(Boolean).join(' · ');
 
   return (
     <TouchableOpacity style={[styles.row, hurt && styles.dim]} activeOpacity={0.78} onPress={onPress} accessibilityRole="button">
