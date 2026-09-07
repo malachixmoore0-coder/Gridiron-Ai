@@ -15,6 +15,7 @@ import path from 'node:path';
 import { SCHOOL_SITES, nameKey, photosFromHtml, rosterUrls, scrapeTeam, siteFor, supportsAthletics } from '../pipeline/multi/athletics';
 
 const DATA = path.resolve(__dirname, '../data/live/sports');
+const UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36';
 
 interface Team { id: string; name: string; logoUrl?: string | null }
 
@@ -29,17 +30,40 @@ function rosterNames(league: string, teamId: string): string[] {
 async function dump(school: string, league: string) {
   const site = SCHOOL_SITES.find((s) => s.school.toLowerCase() === school.toLowerCase());
   if (!site) throw new Error(`no site for ${school}`);
+  const teams = (JSON.parse(fs.readFileSync(path.join(DATA, league, 'teams.json'), 'utf8')) as { teams: Team[] }).teams;
+  const team = teams.find((t) => siteFor(t.logoUrl)?.domain === site.domain);
+  const names = team ? rosterNames(league, team.id) : [];
+
   for (const url of rosterUrls(site, league)) {
-    const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36', accept: 'text/html' } }).catch((e) => ({ ok: false, status: 0, url, text: async () => String(e) } as any));
-    const body = res.ok ? await res.text() : '';
-    console.log(`\n--- ${url} → ${res.status} ${res.url ?? ''} ${body.length} bytes`);
+    const res = await fetch(url, { redirect: 'follow', headers: { 'user-agent': UA, accept: 'text/html' } }).catch(() => null);
+    const body = res?.ok ? await res.text() : '';
+    console.log(`\n--- ${url} → ${res?.status ?? 0} ${res?.url ?? ''} ${body.length} bytes`);
     if (!body) continue;
-    const imgs = [...body.matchAll(/<img\b[^>]*>/gi)].slice(0, 12).map((m) => m[0].slice(0, 200));
-    console.log(`images: ${(body.match(/<img\b/gi) ?? []).length}`);
-    imgs.forEach((t) => console.log('  ' + t));
-    const links = [...body.matchAll(/href\s*=\s*"([^"]*roster[^"]*)"/gi)].slice(0, 10).map((m) => m[1]);
-    console.log('roster links: ' + JSON.stringify(links));
-    console.log('head:\n' + body.slice(0, 600).replace(/\s+/g, ' '));
+    console.log(`images: ${(body.match(/<img\b/gi) ?? []).length} · known roster names: ${names.length}`);
+
+    // Where a name we know actually appears, and what is around it. This is
+    // the only question that matters: can a photo be tied to a player at all?
+    for (const name of names.slice(0, 3)) {
+      const parts = name.split(' ');
+      const last = parts[parts.length - 1];
+      const at = body.indexOf(last);
+      console.log(`\n"${name}" → ${at < 0 ? 'not in the html at all' : `at ${at}`}`);
+      if (at >= 0) console.log(body.slice(Math.max(0, at - 900), at + 500).replace(/\s+/g, ' '));
+    }
+
+    // Nuxt sites ship the page's data as JSON beside the page itself.
+    const payload = /href="(\/[^"]*_payload\.json[^"]*)"/.exec(body)?.[1];
+    if (payload) {
+      const abs = new URL(payload, res!.url).toString();
+      const p = await fetch(abs, { headers: { 'user-agent': UA } }).catch(() => null);
+      const text = p?.ok ? await p.text() : '';
+      console.log(`\npayload ${abs} → ${p?.status ?? 0} ${text.length} bytes`);
+      if (text) {
+        const first = names[0]?.split(' ').pop() ?? '';
+        const at = text.indexOf(first);
+        console.log(at < 0 ? 'first player not in the payload' : text.slice(Math.max(0, at - 700), at + 700));
+      }
+    }
     break;
   }
 }
