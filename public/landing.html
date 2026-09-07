@@ -3,12 +3,12 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>Gridiron AI — nine leagues, one model, graded in public</title>
+<title>Gridiron AI — eighteen leagues, one model, graded in public</title>
 <meta name="description" content="NFL and college football in one app. 10,000-run simulations, line shopping across every sportsbook, and a track record locked at kickoff and graded in the open." />
 <link rel="icon" type="image/svg+xml" href="favicon.svg" />
 <meta property="og:type" content="website" />
 <meta property="og:title" content="Gridiron AI" />
-<meta property="og:description" content="Nine leagues, four sports, one model that grades itself in public. 10,000-run simulations, line shopping and a track record you can audit." />
+<meta property="og:description" content="Eighteen leagues, six sports, one model that grades itself in public. 10,000-run simulations, line shopping and a track record you can audit." />
 <meta property="og:image" content="https://malachixmoore0-coder.github.io/Gridiron-Ai/og.png" />
 <meta name="twitter:card" content="summary_large_image" />
 <style>
@@ -104,10 +104,11 @@
 
 <div class="wrap hero">
   <div class="kicker">Locked at kickoff · graded against the final</div>
-  <h1>One model. Nine leagues. It shows you when it was wrong.</h1>
+  <h1>One model. Eighteen leagues. It shows you when it was wrong.</h1>
   <p class="sub">
     NFL on Sunday, all 134 FBS programs on Saturday, and the NBA, WNBA, men&rsquo;s and women&rsquo;s college
-    basketball, MLB, college baseball and MLS the rest of the week &mdash; one subscription, no dead months. Every
+    basketball, MLB, college baseball, the NHL, eight soccer leagues and the PGA Tour the rest of the week &mdash;
+    one subscription, no dead months. Every
     projection is published before the game, frozen the second it starts, and scored against the final: nothing
     back-filled, nothing quietly deleted after a bad week. Ten thousand simulations a game, every sportsbook&rsquo;s
     number side by side, and a record you can audit line by line.
@@ -186,7 +187,7 @@
       <li>Editable node weights</li><li>8-leg parlay engine</li></ul></div>
   </div>
   <p class="cta-note" style="margin-top:22px">
-    One subscription covers all nine leagues — there is no per-sport plan. Annual is roughly two months free on every tier. Prices in USD.
+    One subscription covers all eighteen leagues — there is no per-sport plan. Annual is roughly two months free on every tier. Prices in USD.
   </p>
 </div></section>
 
@@ -207,8 +208,13 @@
     <p>No. It runs in the browser and remembers your settings on your device. Add it to your home screen and it
     behaves like an app.</p></details>
   <details><summary>Do I need a separate subscription per sport?</summary>
-    <p>No. One app, one price, all nine leagues, at every tier including free. The seasons barely overlap, which is
+    <p>No. One app, one price, all eighteen leagues, at every tier including free. The seasons barely overlap, which is
     the whole reason they belong together rather than in nine apps you pay for nine times.</p></details>
+  <details><summary>How does golf work without a spread?</summary>
+    <p>It doesn&rsquo;t have one, so we don&rsquo;t print one. A tournament is simulated as a field: each player&rsquo;s
+    round is drawn around their season scoring average, four rounds are added up, and the lowest total wins &mdash;
+    which gives a win, top-five and top-ten percentage to compare against an outright price. It knows nothing about
+    the course, the weather or form, and the screen says so. Golf is the hardest sport there is to forecast.</p></details>
   <details><summary>Is the model the same for basketball and baseball as for football?</summary>
     <p>The framework is; the model is not, and it would be dishonest to pretend otherwise. Football and basketball
     margins are simulated as a distribution around a projection. Baseball and soccer scores are small counts of

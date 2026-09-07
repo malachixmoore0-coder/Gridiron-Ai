@@ -1,7 +1,7 @@
 # Gridiron AI — the plan to $10k a month
 
-One app, nine leagues across four sports, a calendar with no dead months, and a
-social layer that turns every subscriber into a distribution channel. This document is
+One app, eighteen leagues across six sports, a calendar with no dead months,
+and a social layer that turns every subscriber into a distribution channel. This document is
 the commercial half of the build: what is being sold, to whom, at what price,
 how they find it, and what has to be true for the number at the top to happen.
 
@@ -9,12 +9,14 @@ Everything here is written to be argued with. Where a number is a guess it says
 so, and where the product has a real weakness it says that too.
 
 **What changed in this version.** The app went from two football leagues to
-nine leagues across four sports: the NFL and college football, the NBA, WNBA,
-men's and women's college basketball, MLB, college baseball and MLS. Three
+eighteen leagues across six sports: the NFL and college football, the NBA,
+WNBA, men's and women's college basketball, MLB, college baseball, the NHL,
+eight soccer leagues — the Premier League, LaLiga, Serie A, Bundesliga, Ligue 1,
+the Champions League, Liga MX and MLS — and the PGA Tour. Three
 commercial consequences follow, and they are the spine of everything below.
 
 1. **The offseason cliff is gone, not shrunk.** Two football leagues covered
-   August through February. Nine leagues cover every week of the year — MLB and
+   August through February. Eighteen leagues cover every week of the year — MLB and
    MLS through the summer, basketball November to June, college baseball into
    the College World Series. The single largest cause of churn in the previous
    plan was a price that went dead for six months. It no longer does.
@@ -22,10 +24,12 @@ commercial consequences follow, and they are the spine of everything below.
    college add-on". They are being sold a model that grades itself in public,
    pointed at whatever is playing tonight. That is a materially easier thing to
    subscribe to in April.
-3. **Acquisition got cheaper per subscriber.** Nine leagues is nine sets of
-   communities, subreddits, Discords and creators to reach, against one
-   engineering surface. The marginal cost of the tenth league is a row in a
-   table; the marginal audience is not.
+3. **Acquisition got cheaper per subscriber.** Eighteen leagues is eighteen
+   sets of communities, subreddits, Discords and creators to reach, against one
+   engineering surface. The marginal cost of the nineteenth league is a row in a
+   table; the marginal audience is not. Soccer alone roughly doubles the
+   addressable audience, and it is the one sport in the list where the
+   competition is not already saturated with American-market products.
 
 **What it does not change.** Football is still the anchor. It carries the
 richest model — depth charts, snap counts, play-by-play — and the highest
@@ -53,7 +57,7 @@ The three things a bettor pays for, in the order they will pay for them:
 
 | They want | The feature | Tier |
 |---|---|---|
-| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, all nine leagues | Starter |
+| To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, every league | Starter |
 | To turn a number into a bet | Line shopping across books, Parlay Lab, props, Upset Radar | All-Pro |
 | To be seen being right | A profile, a public record, followers and tails | Free, and it sells the tiers |
 | To run it themselves | Raw feed, backtests, editable weights | Franchise |
@@ -235,10 +239,15 @@ built:
 
 | Months | What is playing |
 |---|---|
-| Sep–Jan | NFL, college football, NBA, both college basketball leagues, MLS |
-| Feb–Mar | NBA, March Madness on both sides, MLS opens, college baseball opens |
-| Apr–Jun | NBA and NCAA postseasons, MLB, college baseball to Omaha, MLS, WNBA |
-| Jul–Aug | MLB, WNBA, MLS, then football camp |
+| Sep–Jan | NFL, college football, NBA, NHL, both college basketball leagues, six soccer leagues, MLS, PGA |
+| Feb–Mar | NBA, NHL, March Madness on both sides, European soccer run-in, MLS opens, college baseball opens |
+| Apr–Jun | NBA/NHL/NCAA postseasons, MLB, college baseball to Omaha, the Champions League final, WNBA, three majors |
+| Jul–Aug | MLB, WNBA, MLS, Liga MX, European leagues restart, the Open, then football camp |
+
+Soccer is the quiet win here. Eight leagues playing from August to May, most of
+them on Saturday and Sunday mornings US time, fills the exact hours American
+sport does not — and the Champions League midweek fills the exact evenings a
+Tuesday retention problem lives in.
 
 March is now the strongest month in the calendar rather than a hole: two
 sixty-eight team brackets, both of which are exactly the situation a

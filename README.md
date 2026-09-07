@@ -1,11 +1,12 @@
 # Gridiron AI 🏈
 
-**Nine leagues, four sports, graded in public.** The NFL on Sunday, all 134 FBS
-programs on Saturday, and the NBA, WNBA, men's and women's college basketball,
-MLB, college baseball and MLS the rest of the week — one app, one subscription.
-Pick any two teams and Gridiron AI simulates the game 10,000 times and returns
-win probability, a projected score and total, a margin distribution and the
-market's number beside its own, with every sportsbook's line laid out next to it.
+**Eighteen leagues, six sports, graded in public.** The NFL on Sunday, all 134
+FBS programs on Saturday, and the NBA, WNBA, men's and women's college
+basketball, MLB, college baseball, the NHL, eight soccer leagues and the PGA
+Tour the rest of the week — one app, one subscription. Pick any two teams and
+Gridiron AI simulates the game 10,000 times and returns win probability, a
+projected score and total, a margin distribution and the market's number beside
+its own, with every sportsbook's line laid out next to it.
 
 Football gets more than that: four weighted analytical nodes, a 1-10 advantage
 matrix, a three-act game script and a sleeper report, off depth charts and
@@ -46,7 +47,20 @@ card, one Parlay Lab, one social graph, one price.
 | Football | normal margin + total | no | margin is the sum of many possessions |
 | Basketball | normal margin + total | no | same shape, different variance |
 | Baseball | independent Poisson | no (extras) | runs are small counts of rare events |
+| Hockey | independent Poisson | no (OT/SO) | goals are rare events, but nobody ties |
 | Soccer | independent Poisson | yes | a level score is an outcome, not a tie-break |
+| Golf | field simulation | — | no opponent, so no spread — see below |
+
+### Golf is not a matchup
+
+The PGA Tour is one event and a hundred and fifty entrants, which breaks every
+assumption the head-to-head engine makes, so it has its own. Each player's
+round is drawn from a normal around their season scoring average, four rounds
+are added up, the lowest total wins, and ties for first are split rather than
+played out — enough to price an outright market and nothing more. It does not
+know the course, the weather, form, or who is putting well, and the screens say
+so. A league marked `kind: 'field'` in the registry stays out of the
+head-to-head build entirely; the engine checks assert it.
 
 Leagues override their sport where they differ from its average — a WNBA total
 is 164, not the NBA's 224, and college baseball scores half again what MLB does.
@@ -54,11 +68,18 @@ Those overrides live next to the league in the registry, not in the engine.
 
 ### Rosters
 
-Every league under sixty teams publishes a roster per team: headshot, jersey,
-position, height, weight, age, experience, college, birthplace, injury status
-and a season stat line. Two requests per team plus a handful per league — the
-league-wide `statistics/byathlete` leaderboard is what makes it affordable,
-since asking for one athlete's line at a time would be hundreds of requests.
+Every league publishes a roster per team — including the 362-team college
+basketball leagues — with headshot, jersey, position, height, weight, age,
+experience, college, birthplace, injury status and a season stat line. Six
+teams are fetched at a time, and an unchanged roster is not rewritten, which
+keeps four hundred files a run from becoming four hundred diffs.
+
+Where the numbers come from varies by sport, and the roster records which:
+`league` for the sports with a league-wide statistics feed, `athlete` for
+soccer, whose numbers come one player at a time from the core API, and `none`
+where a league publishes nothing. Soccer headshots are also mostly missing on
+ESPN — three photographs in a squad of twenty-eight — so a player's national
+flag stands in before initials do.
 
 Player grades are percentiles of ESPN's own league ranks, so a grade means
 "ahead of this share of every ranked player in the league" and nothing more. A
@@ -286,7 +307,9 @@ including the ones that are unflattering.
 ```bash
 npm install
 npm run data:build        # NFL: pull live data → data/live/*.json (a minute or two)
-npm run data:sports       # the other seven leagues → data/live/sports/<league>/
+npm run data:sports       # the fifteen generic leagues → data/live/sports/<league>/
+npm run data:golf         # the PGA Tour → data/live/sports/pga/golf.json
+npm run data:probe        # what does ESPN actually serve for a league?
 npx expo start            # i / a / w for iOS, Android, web
 ```
 
@@ -320,11 +343,14 @@ Four workflows ship with the repo:
   scoreboard and updates team records, finalises games on the slate and grades
   any prediction whose game just ended. It skips the rebuild entirely, so a
   final score lands in the app within minutes (`npm run data:scores`).
-- **`refresh-sports.yml`** — three times a day: rebuilds ratings and
-  projections for the NBA, WNBA, both college basketball leagues, MLB, college
-  baseball and MLS (`npm run data:sports`). Leagues out of season return no
-  events and are skipped without touching what is already published, so one
-  schedule covers the whole calendar.
+- **`refresh-sports.yml`** — three times a day: rebuilds ratings, rosters and
+  projections for the fifteen generic leagues (`npm run data:sports`) and the
+  PGA Tour (`npm run data:golf`). A league out of season publishes its teams
+  and rosters and leaves the old board untouched, so one schedule covers the
+  whole calendar. It also takes a `probe` input, which runs
+  `scripts/espn-probe.ts` instead: teams, fixtures, statistics and headshots
+  for a list of candidate leagues, so a league is only added once its data is
+  known to exist.
 - **`deploy.yml`** — on pushes to `main` that touch app code: typecheck, engine
   checks, build, publish.
 
