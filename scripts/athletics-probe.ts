@@ -38,9 +38,14 @@ async function shapes(schools: string[], league: string) {
     if (!site) { log(`${want}: not in the map`); continue; }
     const url = rosterUrls(site, league)[0];
 
-    const plain = await fetch(url, { redirect: 'follow', headers: { 'user-agent': UA, accept: 'text/html' } })
+    // With a timeout: a site that accepts the connection and then says nothing
+    // will otherwise hold the whole probe open until the runner gives up.
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), 20_000);
+    const plain = await fetch(url, { redirect: 'follow', signal: ctrl.signal, headers: { 'user-agent': UA, accept: 'text/html' } })
       .then(async (r) => (r.ok ? { status: r.status, html: await r.text(), url: r.url } : { status: r.status, html: '', url }))
-      .catch(() => ({ status: 0, html: '', url }));
+      .catch(() => ({ status: 0, html: '', url }))
+      .finally(() => clearTimeout(timer));
     const drawn = (await renderPages([url], { settle: { selector: 'img', count: 20 } })).get(url) ?? '';
 
     for (const [how, html] of [['fetched', plain.html], ['rendered', drawn]] as const) {

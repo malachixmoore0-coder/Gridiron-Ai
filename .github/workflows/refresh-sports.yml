@@ -49,6 +49,10 @@ concurrency:
 jobs:
   sports:
     runs-on: ubuntu-latest
+    # Every step here talks to somebody else's server, and some of them accept
+    # a connection and then say nothing at all. Nothing in this job is worth
+    # holding a runner for half an hour.
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
 
