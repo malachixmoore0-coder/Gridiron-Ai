@@ -216,60 +216,68 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
   }
 }
 
+/** The first real image URL in a slice of markup, wherever the vendor put it. */
+function firstImage(chunk: string): string | null {
+  const hits: { at: number; url: string }[] = [];
+  for (const m of chunk.matchAll(/(?:data-src|data-lazy-src|src|srcset|data-srcset)\s*=\s*["']([^"']+)["']/gi)) {
+    const raw = m[1].includes(',') || /\s\d+[wx]\s*$/.test(m[1]) ? (m[1].split(',')[0] ?? '').trim().split(/\s+/)[0] : m[1].trim();
+    if (raw && !JUNK.test(raw)) hits.push({ at: m.index ?? 0, url: raw });
+  }
+  hits.sort((a, b) => a.at - b.at);
+  return hits[0]?.url ?? null;
+}
+
 /**
  * Read one roster page and return the photographs it has for the names given.
  *
- * Every image is a candidate; a candidate is kept only when the page ties it to
- * a name we were asked about — through its alt text, the player-bio link
- * wrapped around it, or the words immediately beside it. Wanting the name first
- * is what makes this safe to point at a page nobody has looked at.
+ * The reliable tie between a picture and a person is the bio link the picture
+ * sits inside — /sports/baseball/roster/zane-adams/17285 — which every vendor
+ * builds the same way because it is the page's own navigation. So the anchors
+ * are what this walks, each one bounded by the next so a player without a photo
+ * cannot borrow the one below him. Captions are read too, for the older sites
+ * that put the name in an alt attribute and nothing else.
+ *
+ * A candidate is kept only when the name it is tied to is one we asked for.
+ * Wanting the name first is what makes this safe to point at a page nobody has
+ * looked at.
  */
 export function photosFromHtml(html: string, pageUrl: string, wanted: Set<string>): Map<string, string> {
   const out = new Map<string, string>();
-  const tags = [...html.matchAll(/<img\b[^>]*>/gi)];
 
   const take = (key: string | null, raw: string | null) => {
     if (!key || !raw || out.has(key) || !wanted.has(key)) return;
     if (JUNK.test(raw)) return;
     let abs: string;
     try { abs = new URL(raw, pageUrl).toString(); } catch { return; }
-    if (!/^https?:/i.test(abs)) return;
-    out.set(key, abs);
+    if (/^https?:/i.test(abs)) out.set(key, abs);
   };
 
-  for (const m of tags) {
-    const tag = m[0];
-    const src = ATTR(tag, 'data-src') ?? ATTR(tag, 'data-lazy-src') ?? ATTR(tag, 'src')
-      ?? (ATTR(tag, 'srcset') ? fromSrcset(ATTR(tag, 'srcset')!) : null)
-      ?? (ATTR(tag, 'data-srcset') ? fromSrcset(ATTR(tag, 'data-srcset')!) : null);
-    if (!src) continue;
-
-    // 1. The caption. Vendors that fill alt in fill it with the player's name.
-    const alt = ATTR(tag, 'alt');
-    if (alt) take(nameKey(alt), src);
-
-    const at = m.index ?? 0;
-    const before = html.slice(Math.max(0, at - 700), at);
-    const after = html.slice(at + tag.length, at + tag.length + 700);
-
-    // 2. The bio link the photo sits inside: .../roster/john-smith/1234.
-    for (const href of [...before.matchAll(/href\s*=\s*"([^"]*roster\/[^"]*)"/gi)].slice(-2)) {
-      for (const part of href[1].split('/').reverse()) {
-        const key = nameKey(part.replace(/-/g, ' '));
-        if (key.length > 4) take(key, src);
-      }
+  // 1. The bio links, each window ending where the next link begins.
+  const anchors = [...html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)];
+  anchors.forEach((a, i) => {
+    const at = a.index ?? 0;
+    const keys: string[] = [];
+    // .../roster/zane-adams/17285 — the slug is the name, the number is not.
+    for (const seg of a[1].split('/').filter(Boolean).slice(-2)) {
+      const key = nameKey(seg.replace(/-/g, ' '));
+      if (key.length > 4) keys.push(key);
     }
+    // "Zane Adams jersey number 20 full bio" — the label, minus the furniture.
+    const aria = ATTR(a[0], 'aria-label') ?? ATTR(a[0], 'title');
+    if (aria) keys.push(nameKey(aria.replace(/\b(jersey|number|full bio|bio|profile|player)\b.*$/i, '')));
 
-    // 3. Failing both, the words next to it — a name in the cell is still a
-    //    name, even when the markup around it says nothing useful.
-    if (![...wanted].some((k) => out.get(k) === src)) {
-      const text = `${before} ${after}`.replace(/<[^>]*>/g, ' ');
-      for (const key of wanted) {
-        if (out.has(key)) continue;
-        if (nameKey(text).includes(key) && key.length > 6) { take(key, src); break; }
-      }
-    }
+    const hit = keys.find((k) => wanted.has(k) && !out.has(k));
+    if (!hit) return;
+    const stop = Math.min(anchors[i + 1]?.index ?? html.length, at + 2500);
+    take(hit, firstImage(html.slice(at, stop)));
+  });
+
+  // 2. Vendors that caption the photograph and leave the markup silent.
+  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
+    const alt = ATTR(m[0], 'alt');
+    if (alt) take(nameKey(alt), firstImage(m[0]));
   }
+
   return out;
 }
 
