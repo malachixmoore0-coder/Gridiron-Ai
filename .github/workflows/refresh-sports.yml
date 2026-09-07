@@ -84,11 +84,17 @@ jobs:
 
       - name: Probe school roster pages
         if: ${{ github.event.inputs.schools != '' }}
-        run: npm run data:schools -- ${{ github.event.inputs.schools }}
+        # Through the environment rather than into the command line: a school
+        # called "Texas A&M" is a valid input and not a shell operator.
+        env:
+          ARGS: ${{ github.event.inputs.schools }}
+        run: npm run data:schools -- $ARGS
 
       - name: Probe the league sites
         if: ${{ github.event.inputs.soccer != '' }}
-        run: npm run data:soccer -- ${{ github.event.inputs.soccer }}
+        env:
+          ARGS: ${{ github.event.inputs.soccer }}
+        run: npm run data:soccer -- $ARGS
 
       - name: Build sport datasets
         if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' }}
@@ -96,7 +102,8 @@ jobs:
           # Set the workflow input "debug" to anything to have the roster step
           # print what ESPN's league statistics endpoint actually returned.
           ROSTER_DEBUG: ${{ github.event.inputs.debug }}
-        run: npm run data:sports -- ${{ github.event.inputs.leagues }}
+          LEAGUES: ${{ github.event.inputs.leagues }}
+        run: npm run data:sports -- $LEAGUES
 
       - name: Build the golf dataset
         if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
