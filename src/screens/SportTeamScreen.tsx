@@ -164,6 +164,7 @@ export function SportTeamScreen({ teamId, onBack, onOpenTeam, onOpenGame, onOpen
               <Text style={styles.rosterCount}>
                 {roster.players.length} listed
                 {roster.statsSource === 'none' ? ' · no league stats published' : ` · ${roster.players.filter((pl) => pl.rating != null).length} graded`}
+                {roster.players.length > 4 && !roster.players.some((pl) => pl.headshotUrl) ? ' · no photos published' : ''}
               </Text>
             )}
           </View>

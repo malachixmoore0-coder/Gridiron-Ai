@@ -333,13 +333,15 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     const cache = readCache(dir);
     const missing = everyone.filter((pl) => !pl.headshotUrl).map((pl) => pl.id);
     if (missing.length) {
-      const { asked, found } = await backfillHeadshots(meta.espn!, missing, cache, HEADSHOT_BUDGET);
+      const { asked, found, exhausted } = await backfillHeadshots(meta.espn!, missing, cache, HEADSHOT_BUDGET);
       for (const pl of everyone) {
         const hit = cache.found[pl.id];
         if (!pl.headshotUrl && hit) pl.headshotUrl = hit;
       }
       const still = everyone.filter((pl) => !pl.headshotUrl).length;
-      console.log(`  headshots: ${missing.length} missing · asked ${asked} · found ${found} · ${still} still without one`);
+      console.log(exhausted && !asked
+        ? `  headshots: ${missing.length} missing · this league publishes none, not asking again`
+        : `  headshots: ${missing.length} missing · asked ${asked} · found ${found} · ${still} still without one${exhausted ? ' · giving up on this league' : ''}`);
       if (asked) writeCache(dir, cache);
     }
 

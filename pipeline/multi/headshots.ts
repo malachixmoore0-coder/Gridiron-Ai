@@ -19,11 +19,19 @@ import path from 'node:path';
 import { fetchJson } from '../lib/fetch';
 
 const CORE = 'https://sports.core.api.espn.com/v2/sports';
+/** Asked this many times with nothing to show, a league is written off. */
+const GIVE_UP_AFTER = 400;
 
 export interface HeadshotCache {
   generatedAt: string;
   /** athlete id → url, or null for "asked, ESPN has none". */
   found: Record<string, string | null>;
+  /**
+   * Set once a league has been asked enough to conclude it has no photographs
+   * at all. College baseball answered a thousand times with nothing, and a
+   * thousand requests a run to be told the same is worse than useless.
+   */
+  exhausted?: boolean;
 }
 
 const empty = (): HeadshotCache => ({ generatedAt: new Date().toISOString(), found: {} });
@@ -54,7 +62,9 @@ export async function backfillHeadshots(
   cache: HeadshotCache,
   budget: number,
   concurrency = 8,
-): Promise<{ asked: number; found: number }> {
+): Promise<{ asked: number; found: number; exhausted: boolean }> {
+  if (cache.exhausted) return { asked: 0, found: 0, exhausted: true };
+
   const [sport, league] = espnPath.split('/');
   const unknown = ids.filter((id) => !(id in cache.found)).slice(0, budget);
   let found = 0;
@@ -71,5 +81,12 @@ export async function backfillHeadshots(
     });
   }
 
-  return { asked: unknown.length, found };
+  // A league that has been asked this many times and produced nothing is not
+  // holding out on us. Stop asking.
+  const asked = Object.keys(cache.found).length;
+  if (found === 0 && asked >= GIVE_UP_AFTER && !Object.values(cache.found).some(Boolean)) {
+    cache.exhausted = true;
+  }
+
+  return { asked: unknown.length, found, exhausted: !!cache.exhausted };
 }
