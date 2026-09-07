@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T12:41:22.366Z",
+ "generatedAt": "2026-09-07T19:13:08.431Z",
  "season": 2026,
  "week": 1,
  "phase": "preseason",
@@ -374,7 +374,7 @@
     "rushDefense": 4.9,
     "prwr": 0.389,
     "nickelCorner": 3.6,
-    "lbCoverage": 3.7,
+    "lbCoverage": 3.6,
     "secondaryAdjust": 3.9,
     "blitzRate": 0.33,
     "takeaways": 5.3
