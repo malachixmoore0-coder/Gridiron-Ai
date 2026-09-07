@@ -34,6 +34,10 @@ on:
         description: 'Probe school athletics roster pages instead of building, e.g. "cbase 12"'
         required: false
         default: ''
+      soccer:
+        description: 'Probe the official league sites instead of building, e.g. "clubs"'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -82,8 +86,12 @@ jobs:
         if: ${{ github.event.inputs.schools != '' }}
         run: npm run data:schools -- ${{ github.event.inputs.schools }}
 
+      - name: Probe the league sites
+        if: ${{ github.event.inputs.soccer != '' }}
+        run: npm run data:soccer -- ${{ github.event.inputs.soccer }}
+
       - name: Build sport datasets
-        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' }}
+        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' }}
         env:
           # Set the workflow input "debug" to anything to have the roster step
           # print what ESPN's league statistics endpoint actually returned.
@@ -91,7 +99,7 @@ jobs:
         run: npm run data:sports -- ${{ github.event.inputs.leagues }}
 
       - name: Build the golf dataset
-        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
+        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
         run: npm run data:golf
 
       - name: Commit

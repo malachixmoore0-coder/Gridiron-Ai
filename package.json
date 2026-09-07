@@ -17,6 +17,7 @@
     "data:probe2": "tsx scripts/espn-probe2.ts",
     "data:probe3": "tsx scripts/espn-probe3.ts",
     "data:schools": "tsx scripts/athletics-probe.ts",
+    "data:soccer": "tsx scripts/soccer-probe.ts",
     "data:golf": "tsx pipeline/multi/golf.ts"
   },
   "dependencies": {
