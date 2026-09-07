@@ -53,7 +53,10 @@ jobs:
 
       - name: Probe candidate leagues
         if: ${{ github.event.inputs.probe != '' }}
-        run: npm run data:probe${{ github.event.inputs.probe == '2' && '2' || '' }}
+        run: |
+          if [ "${{ github.event.inputs.probe }}" = "2" ]; then npm run data:probe2;
+          elif [ "${{ github.event.inputs.probe }}" = "logos" ]; then npm run data:probe -- --logos;
+          else npm run data:probe; fi
 
       - name: Build sport datasets
         if: ${{ github.event.inputs.probe == '' }}

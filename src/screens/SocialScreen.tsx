@@ -71,11 +71,11 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
           <Text style={styles.title}>Social</Text>
           <Text style={styles.sub}>{s.live ? 'Picks from people you follow' : 'On this device until sign-in is switched on'}</Text>
         </View>
-        <LeagueSwitch compact />
         <TouchableOpacity style={styles.me} activeOpacity={0.85} onPress={() => onOpenProfile(s.me?.id ?? 'me')} accessibilityLabel="Your profile">
           <Avatar profile={s.me} size={32} />
         </TouchableOpacity>
       </View>
+      <View style={styles.switchRow}><LeagueSwitch /></View>
 
       <View style={styles.searchRow}>
         <Ionicons name="search" size={15} color={colors.inkFaint} />
@@ -182,6 +182,7 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   head: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
+  switchRow: { paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
   title: { ...T.title, color: colors.ink, fontSize: 24 },
   sub: { color: colors.inkFaint, fontSize: 11, fontWeight: '700', marginTop: 1 },
   me: { marginLeft: 2 },

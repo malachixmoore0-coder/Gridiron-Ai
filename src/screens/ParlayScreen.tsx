@@ -220,9 +220,9 @@ function Header({ onBack, onUpgrade, tier }: { onBack: () => void; onUpgrade: ()
           <Text style={styles.title}>Parlay Lab</Text>
           <Text style={styles.sub}>Fair price vs the book you actually use</Text>
         </View>
-        <LeagueSwitch compact />
         <TierPill tier={tier} onPress={onUpgrade} />
       </View>
+      <View style={styles.switchRow}><LeagueSwitch /></View>
     </SafeAreaView>
   );
 }
@@ -239,7 +239,8 @@ function Price({ label, value, tone }: { label: string; value: string; tone?: st
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   headSafe: { backgroundColor: colors.bg },
-  head: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.md },
+  head: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
+  switchRow: { paddingHorizontal: spacing.lg, paddingBottom: spacing.md },
   title: { ...T.title, color: colors.ink, fontSize: 22 },
   sub: { color: colors.inkFaint, fontSize: 11, fontWeight: '700' },
 

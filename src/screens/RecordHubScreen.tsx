@@ -35,8 +35,8 @@ export function RecordHubScreen({ onRun, onUpgrade, onOpenGame, onShare }: Props
     <SafeAreaView edges={['top']} style={styles.safe}>
       <View style={styles.head}>
         <Text style={styles.title}>Record</Text>
-        <LeagueSwitch compact />
       </View>
+      <View style={styles.switchRow}><LeagueSwitch /></View>
       <View style={styles.tabs}>
         {(['model', 'card'] as Tab[]).map((t) => (
           <TouchableOpacity
@@ -67,6 +67,7 @@ export function RecordHubScreen({ onRun, onUpgrade, onOpenGame, onShare }: Props
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   head: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', paddingHorizontal: spacing.lg, paddingBottom: spacing.sm, gap: spacing.md },
+  switchRow: { paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
   title: { ...T.title, color: colors.ink, fontSize: 24 },
   tabs: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg, paddingBottom: spacing.sm },
   tab: { flex: 1, alignItems: 'center', paddingVertical: 9, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
