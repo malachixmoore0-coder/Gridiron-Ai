@@ -14,11 +14,17 @@ import { Section } from '@/components/Section';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { Chip } from '@/components/Chip';
 import type { RunRequest } from '@/cfb/hooks/useAnalysis';
+import { Modal } from 'react-native';
+import { AddToCard } from '@/components/AddToCard';
+import { useEngagement } from '@/context/EngagementContext';
+import type { LeagueId } from '@/league/types';
 import { gameMatchups, biggestEdge } from '@/cfb/utils/gameMatchups';
 import { useTeamNews } from '@/cfb/hooks/useTeamNews';
 import { Linking } from 'react-native';
 
 interface Props {
+  /** Which league owns this game — the card needs it to grade against the right slate. */
+  league?: LeagueId;
   teamId: string;
   gameId: string;
   onBack: () => void;
@@ -31,8 +37,10 @@ interface Props {
  * Box score for one game, built from the per-game lines in each team's roster
  * file — so it shows the same numbers that produced the player grades.
  */
-export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTeam, onRun }: Props) {
-  const { getTeam, hasTeam, records } = useTeams();
+export function GameStatsScreen({ teamId, gameId, league = 'cfb', onBack, onOpenPlayer, onOpenTeam, onRun }: Props) {
+  const { getTeam, hasTeam, records, games } = useTeams();
+  const eng = useEngagement();
+  const [adding, setAdding] = useState(false);
   const team = getTeam(teamId);
   const { roster: file, loading } = useRoster(teamId);
   const game = file?.schedule.find((g) => g.id === gameId) ?? null;
@@ -49,6 +57,8 @@ export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTe
     [home, away],
   );
   const headline = useMemo(() => biggestEdge(units), [units]);
+  const feedGame = useMemo(() => games.find((g) => g.id === gameId) ?? null, [games, gameId]);
+  const onCard = eng.picks.some((p) => p.gameId === gameId && p.status === 'open');
   const ownNews = useTeamNews(teamId);
   const oppNews = useTeamNews(oppId);
   const [side, setSide] = useState<'own' | 'opp'>('own');
@@ -111,6 +121,21 @@ export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTe
             <View style={styles.heroTeam}><View style={styles.oppBlank}><Text style={styles.oppBlankText}>{game.oppName.slice(0, 3).toUpperCase()}</Text></View><Text style={styles.heroAbbr} numberOfLines={1}>{game.oppName}</Text></View>
           )}
         </View>
+
+        {!played && (
+          <View style={styles.actions}>
+            <TouchableOpacity
+              style={[styles.addBtn, onCard && styles.addBtnOn]}
+              activeOpacity={0.85}
+              onPress={() => setAdding(true)}
+              accessibilityRole="button"
+              accessibilityLabel="Add this game to your card"
+            >
+              <Ionicons name={onCard ? 'bookmark' : 'bookmark-outline'} size={17} color={onCard ? colors.bg : colors.ink} />
+              <Text style={[styles.addText, onCard && { color: colors.bg }]}>{onCard ? 'On your card' : 'Add to card'}</Text>
+            </TouchableOpacity>
+          </View>
+        )}
 
         {!played && (
           <TouchableOpacity style={styles.run} activeOpacity={0.85} onPress={() => onRun({ awayId: game.home ? (oppId ?? team.id) : team.id, homeId: game.home ? team.id : (oppId ?? team.id), ctx: { neutralSite: game.neutral, primetime: false, weather: 'auto' } })}>
@@ -241,6 +266,31 @@ export function GameStatsScreen({ teamId, gameId, onBack, onOpenPlayer, onOpenTe
           </Section>
         ))}
       </ScrollView>
+
+      <Modal visible={adding} transparent animationType="fade" onRequestClose={() => setAdding(false)}>
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={() => setAdding(false)}>
+          <TouchableOpacity activeOpacity={1} style={styles.sheetWrap}>
+            {!!feedGame && (
+              <AddToCard
+                league={league}
+                game={feedGame as never}
+                rec={records.find((r) => r.id === gameId)}
+                awayAbbr={feedGame.awayId === teamId ? team.abbr : opp?.abbr ?? feedGame.awayId.toUpperCase()}
+                homeAbbr={feedGame.homeId === teamId ? team.abbr : opp?.abbr ?? feedGame.homeId.toUpperCase()}
+                onClose={() => setAdding(false)}
+              />
+            )}
+            {!feedGame && (
+              <View style={styles.noGame}>
+                <Text style={styles.noGameText}>
+                  This game is not on the published slate yet, so there is no line to price against. It appears once
+                  the schedule refresh picks it up.
+                </Text>
+              </View>
+            )}
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
@@ -266,6 +316,14 @@ function TotalRow({ label, a, b, invert }: { label: string; a: number; b: number
 }
 
 const styles = StyleSheet.create({
+  actions: { marginBottom: 12 },
+  addBtn: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 13, borderRadius: 999, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.green },
+  addBtnOn: { backgroundColor: colors.green, borderColor: colors.green },
+  addText: { color: colors.ink, fontSize: 14, fontWeight: '900' },
+  backdrop: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end', padding: 12 },
+  sheetWrap: { marginBottom: 24 },
+  noGame: { backgroundColor: colors.card, borderRadius: 16, borderWidth: 1, borderColor: colors.border, padding: 16 },
+  noGameText: { color: colors.inkDim, fontSize: 12, lineHeight: 18 },
   unitRow: { paddingVertical: 9, borderBottomWidth: 1, borderBottomColor: colors.divider },
   unitHead: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   unitLabel: { color: colors.ink, fontSize: 13, fontWeight: '800' },

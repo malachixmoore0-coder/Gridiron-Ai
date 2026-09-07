@@ -30,7 +30,7 @@ import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OnboardingScreen } from '@/screens/OnboardingScreen';
 
 /* NFL */
-import { HomeScreen } from '@/screens/HomeScreen';
+import { FloorScreen } from '@/screens/FloorScreen';
 import { MatchupScreen } from '@/screens/MatchupScreen';
 import { ResultScreen } from '@/screens/ResultScreen';
 import { SlateScreen } from '@/screens/SlateScreen';
@@ -41,7 +41,6 @@ import { GameStatsScreen } from '@/screens/GameStatsScreen';
 import { SettingsScreen } from '@/screens/SettingsScreen';
 
 /* College */
-import { HomeScreen as CfbHome } from '@/cfb/screens/HomeScreen';
 import { MatchupScreen as CfbMatchup } from '@/cfb/screens/MatchupScreen';
 import { ResultScreen as CfbResult } from '@/cfb/screens/ResultScreen';
 import { SlateScreen as CfbSlate } from '@/cfb/screens/SlateScreen';
@@ -147,27 +146,17 @@ export function RootNavigator() {
   return (
     <View style={styles.root}>
       <View style={styles.content}>
-        {tab === 'home' && (cfb ? (
-          <CfbHome
-            onRun={(r) => run(r as AnyRun, 'cfb')}
-            onOpenGame={(t, g) => openGame(t, g, 'cfb')}
-            onOpenTeam={(t) => openTeam(t, 'cfb')}
+        {tab === 'home' && (
+          <FloorScreen
+            onRun={(r) => run(r as AnyRun, league)}
+            onOpenGame={(t, g) => openGame(t, g, league)}
+            onOpenTeam={(t) => openTeam(t, league)}
             onUpgrade={openUpgrade}
             onOpenCard={() => setTab('record')}
             onOpenParlay={() => push({ kind: 'parlay' })}
-            onOpenModel={() => push({ kind: 'model', league: 'cfb' })}
+            onOpenModel={() => push({ kind: 'model', league })}
           />
-        ) : (
-          <HomeScreen
-            onRun={(r) => run(r, 'nfl')}
-            onOpenGame={(t, g) => openGame(t, g, 'nfl')}
-            onOpenTeam={(t) => openTeam(t, 'nfl')}
-            onUpgrade={openUpgrade}
-            onOpenCard={() => setTab('record')}
-            onOpenParlay={() => push({ kind: 'parlay' })}
-            onOpenModel={() => push({ kind: 'model', league: 'nfl' })}
-          />
-        ))}
+        )}
 
         {tab === 'slate' && (cfb
           ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
@@ -229,8 +218,8 @@ export function RootNavigator() {
                   : <PlayerProfileScreen teamId={o.teamId} playerId={o.playerId} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
               ) : o.kind === 'game' ? (
                 o.league === 'cfb'
-                  ? <CfbGameStats teamId={o.teamId} gameId={o.gameId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onRun={(r) => run(r as AnyRun, 'cfb')} />
-                  : <GameStatsScreen teamId={o.teamId} gameId={o.gameId} onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onRun={(r) => run(r, 'nfl')} />
+                  ? <CfbGameStats teamId={o.teamId} gameId={o.gameId} league="cfb" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} onRun={(r) => run(r as AnyRun, 'cfb')} />
+                  : <GameStatsScreen teamId={o.teamId} gameId={o.gameId} league="nfl" onBack={pop} onOpenPlayer={(t, p) => openPlayer(t, p, 'nfl')} onOpenTeam={(t) => openTeam(t, 'nfl')} onRun={(r) => run(r, 'nfl')} />
               ) : o.kind === 'simulate' ? (
                 o.league === 'cfb'
                   ? <CfbMatchup onRun={(r) => run(r as AnyRun, 'cfb')} onOpenTeam={(t) => openTeam(t, 'cfb')} />

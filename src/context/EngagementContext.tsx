@@ -21,6 +21,8 @@ export type PickStatus = 'open' | 'won' | 'lost' | 'push';
 
 export interface SavedPick {
   id: string;
+  /** Which league the game belongs to. Older picks predate this and default to the NFL. */
+  league?: 'nfl' | 'cfb';
   gameId: string;
   awayId: string;
   homeId: string;
@@ -33,6 +35,10 @@ export interface SavedPick {
   /** Model minus market, in points, at the moment it was saved. */
   edge: number;
   label: string;
+  /** The sportsbook the price came from, when one was chosen. */
+  book?: string | null;
+  /** American odds taken, so the card can price the position rather than guess. */
+  odds?: number | null;
   addedAt: number;
   status: PickStatus;
   settledAt?: number;
@@ -99,9 +105,17 @@ export function gradePick(p: SavedPick, away: number, home: number): PickStatus 
   return (adjusted > 0) === (p.side === 'home') ? 'won' : 'lost';
 }
 
-/** Flat 1-unit staking at -110, which is how a bettor reads a record. */
+/**
+ * Flat 1-unit staking at the price actually taken, which is how a bettor reads
+ * a record. Picks saved without a price fall back to -110, the number every
+ * spread and total is quoted at by default.
+ */
+const payoutOf = (american: number | null | undefined) => {
+  const odds = american ?? -110;
+  return odds > 0 ? odds / 100 : 100 / -odds;
+};
 const unitsOf = (picks: SavedPick[]) =>
-  picks.reduce((u, p) => (p.status === 'won' ? u + 0.909 : p.status === 'lost' ? u - 1 : u), 0);
+  picks.reduce((u, p) => (p.status === 'won' ? u + payoutOf(p.odds) : p.status === 'lost' ? u - 1 : u), 0);
 
 export function EngagementProvider({ children }: { children: React.ReactNode }) {
   const [s, setS] = useState<Persisted>(DEFAULTS);

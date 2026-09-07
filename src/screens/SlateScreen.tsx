@@ -10,6 +10,9 @@ import { spreadText, oneDp } from '@/utils/format';
 import { useSettings } from '@/context/SettingsContext';
 import { useTeams } from '@/context/TeamsContext';
 import { useLive } from '@/live/LiveContext';
+import { Modal } from 'react-native';
+import { AddToCard } from '@/components/AddToCard';
+import { useEngagement } from '@/context/EngagementContext';
 import { buildInput, RunRequest } from '@/hooks/useAnalysis';
 import { TeamMark } from '@/components/TeamMark';
 import { ProbBar } from '@/components/ProbBar';
@@ -46,6 +49,8 @@ export function SlateScreen({ onRun }: Props) {
   const s = useSettings();
   const { getTeam, hasTeam, weeks, gamesForWeek: feedForWeek, week, season, phase, generatedAt, records } = useTeams();
   const live = useLive();
+  const eng = useEngagement();
+  const [adding, setAdding] = useState<{ game: never; abbrs: [string, string] } | null>(null);
   const gamesForWeek = React.useCallback(
     (w: number, t: string) => feedForWeek(w, t).map((g) => {
       const s = live.scores.get(g.id);
@@ -215,6 +220,22 @@ export function SlateScreen({ onRun }: Props) {
                       {st === 'scheduled' && edge !== null && Math.abs(edge) >= 2 && (
                         <Text style={[styles.edge, { color: colors.gold }]}>{edge < 0 ? home.abbr : away.abbr} +{Math.abs(edge).toFixed(1)} vs mkt</Text>
                       )}
+                      {st !== 'final' && (
+                        <TouchableOpacity
+                          style={[styles.slateAdd, eng.picks.some((p) => p.gameId === g.id && p.status === 'open') && styles.slateAddOn]}
+                          activeOpacity={0.8}
+                          onPress={() => setAdding({ game: g as never, abbrs: [away.abbr, home.abbr] })}
+                          hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                          accessibilityRole="button"
+                          accessibilityLabel="Add to your card"
+                        >
+                          <Ionicons
+                            name={eng.picks.some((p) => p.gameId === g.id && p.status === 'open') ? 'bookmark' : 'bookmark-outline'}
+                            size={13}
+                            color={eng.picks.some((p) => p.gameId === g.id && p.status === 'open') ? colors.bg : colors.green}
+                          />
+                        </TouchableOpacity>
+                      )}
                       <Ionicons name="chevron-forward" size={16} color={colors.inkFaint} />
                     </View>
                   </TouchableOpacity>
@@ -230,11 +251,32 @@ export function SlateScreen({ onRun }: Props) {
             : 'Lines are the schedule feed\'s consensus at the last refresh. "vs mkt" shows where the model disagrees by three points or more. Tap a game for the full 10,000-run breakdown.'}
         </Text>
       </ScrollView>
+
+      <Modal visible={!!adding} transparent animationType="fade" onRequestClose={() => setAdding(null)}>
+        <TouchableOpacity style={styles.backdrop} activeOpacity={1} onPress={() => setAdding(null)}>
+          <TouchableOpacity activeOpacity={1} style={styles.sheetWrap}>
+            {!!adding && (
+              <AddToCard
+                league="nfl"
+                game={adding.game}
+                rec={records.find((r) => r.id === (adding.game as unknown as { id: string }).id)}
+                awayAbbr={adding.abbrs[0]}
+                homeAbbr={adding.abbrs[1]}
+                onClose={() => setAdding(null)}
+              />
+            )}
+          </TouchableOpacity>
+        </TouchableOpacity>
+      </Modal>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  slateAdd: { width: 26, height: 26, borderRadius: 13, borderWidth: 1, borderColor: colors.green, alignItems: 'center', justifyContent: 'center' },
+  slateAddOn: { backgroundColor: colors.green },
+  backdrop: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end', padding: 12 },
+  sheetWrap: { marginBottom: 24 },
   root: { flex: 1, backgroundColor: colors.bg },
   weekBar: { flexGrow: 0, flexShrink: 0, marginBottom: spacing.sm },
   weekTabs: { paddingHorizontal: spacing.lg, gap: spacing.sm },
