@@ -47,27 +47,71 @@ export interface EspnEvent {
 }
 
 const SITE = 'https://site.api.espn.com/apis/site/v2/sports';
+/** The standings tree lives on a different host prefix to the team list. */
+const STANDINGS = 'https://site.api.espn.com/apis/v2/sports';
 
 const hex = (v: unknown, fallback: string) => {
   const s = typeof v === 'string' ? v.replace('#', '').trim() : '';
   return /^[0-9a-f]{6}$/i.test(s) ? `#${s.toUpperCase()}` : fallback;
 };
 
+/**
+ * Divisions, conferences or table position, plus the season record.
+ *
+ * The /teams list does not carry either — it is a directory, not a standings
+ * table — so both come from the standings tree, which nests differently in
+ * every sport (league → conference → division in MLB, a flat table in MLS).
+ * Rather than special-case each shape, this walks the tree and takes the
+ * nearest named ancestor of whatever node actually holds team entries.
+ *
+ * It is best-effort by design: a league whose standings are not published yet
+ * keeps an empty group and a null record rather than failing the build.
+ */
+export async function loadStandings(path: string): Promise<Map<string, { group: string; record: string | null }>> {
+  const out = new Map<string, { group: string; record: string | null }>();
+  const json = await fetchJson<any>(`${STANDINGS}/${path}/standings`, `${path} standings`, 20000).catch(() => null);
+  if (!json) return out;
+
+  const summaryOf = (entry: any): string | null => {
+    const stats = entry?.stats ?? [];
+    const hit = stats.find((x: any) => x?.name === 'overall' || x?.type === 'total' || x?.name === 'record');
+    const s = hit?.displayValue ?? hit?.summary ?? null;
+    return typeof s === 'string' && /^\d+-\d/.test(s) ? s : null;
+  };
+
+  const walk = (node: any, name: string, depth = 0) => {
+    if (!node || depth > 6) return;
+    const here = typeof node.name === 'string' && node.name ? node.name : name;
+    for (const entry of node?.standings?.entries ?? []) {
+      const id = entry?.team?.id != null ? String(entry.team.id) : null;
+      if (id && !out.has(id)) out.set(id, { group: here, record: summaryOf(entry) });
+    }
+    for (const child of node?.children ?? []) walk(child, here, depth + 1);
+  };
+
+  walk(json, '');
+  return out;
+}
+
 /** Every team in a league, with the colours and logo the app draws with. */
 export async function loadTeams(path: string): Promise<EspnTeamRow[]> {
-  const json = await fetchJson<any>(`${SITE}/${path}/teams?limit=1000`, `${path} teams`, 20000).catch(() => null);
+  const [json, standings] = await Promise.all([
+    fetchJson<any>(`${SITE}/${path}/teams?limit=1000`, `${path} teams`, 20000).catch(() => null),
+    loadStandings(path),
+  ]);
   const rows = json?.sports?.[0]?.leagues?.[0]?.teams ?? [];
   const out: EspnTeamRow[] = [];
   for (const wrap of rows) {
     const t = wrap?.team;
     if (!t?.id || !t?.abbreviation) continue;
-    const summary = (t.record?.items ?? []).find((i: any) => i?.type === 'total')?.summary ?? null;
+    const standing = standings.get(String(t.id));
+    const summary = (t.record?.items ?? []).find((i: any) => i?.type === 'total')?.summary ?? standing?.record ?? null;
     out.push({
       id: String(t.id),
       abbr: String(t.abbreviation).toUpperCase(),
       name: String(t.displayName ?? t.name ?? t.abbreviation),
       short: String(t.shortDisplayName ?? t.name ?? t.abbreviation),
-      group: String(t.groups?.parent?.name ?? t.groups?.name ?? ''),
+      group: String(t.groups?.parent?.name ?? t.groups?.name ?? standing?.group ?? ''),
       colors: { primary: hex(t.color, '#2A3646'), secondary: hex(t.alternateColor, '#8FA1B4') },
       logoUrl: t.logos?.[0]?.href ?? null,
       record: summary,
