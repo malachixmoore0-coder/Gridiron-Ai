@@ -90,7 +90,7 @@ async function main() {
     const names = rosterNames(league, team.id);
     if (!names.length) { console.log(`${site!.school.padEnd(20)} — no local roster to match against`); continue; }
     const wanted = new Set(names.map(nameKey).filter((k) => k.length > 3));
-    const { url, photos: hits, tried } = await scrapeTeam(site!, league, wanted);
+    const { url, photos: hits, tried, listed } = await scrapeTeam(site!, league, wanted);
     asked += 1;
     if (hits.size) worked += 1;
     photos += hits.size;
@@ -100,6 +100,11 @@ async function main() {
     for (const t of tried) console.log(`${' '.repeat(21)}${String(t.status).padStart(3)} imgs=${String(t.images).padStart(3)} ${t.url}${t.note ? ` (${t.note})` : ''}`);
     const sample = [...hits.values()][0];
     if (sample) console.log(`${' '.repeat(21)}e.g. ${sample.slice(0, 140)}`);
+    // Nothing matched: say whether the page had names at all, and whose.
+    if (!hits.size) {
+      console.log(`${' '.repeat(21)}page lists ${listed.length}: ${listed.slice(0, 6).join(', ')}`);
+      console.log(`${' '.repeat(21)}we wanted ${wanted.size}: ${names.slice(0, 6).join(', ')}`);
+    }
   }
 
   console.log(`\n${worked}/${asked} schools answered with photographs · ${photos} players matched`);

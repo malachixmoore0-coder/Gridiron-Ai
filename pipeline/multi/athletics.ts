@@ -216,6 +216,23 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
   }
 }
 
+/**
+ * The names the page itself lists, read off its bio links.
+ *
+ * Worth having separately: when nothing matches, this says whether the parser
+ * failed or the school has simply moved on to next season's squad.
+ */
+export function pageNames(html: string): string[] {
+  const out = new Set<string>();
+  for (const a of html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)) {
+    for (const seg of a[1].split('/').filter(Boolean).slice(-2)) {
+      const key = seg.replace(/-/g, ' ').trim();
+      if (key.length > 4 && /[a-z]/i.test(key) && !/^\d+$/.test(key)) out.add(key);
+    }
+  }
+  return [...out];
+}
+
 /** The first real image URL in a slice of markup, wherever the vendor put it. */
 function firstImage(chunk: string): string | null {
   const hits: { at: number; url: string }[] = [];
@@ -286,6 +303,8 @@ export interface TeamPhotos {
   photos: Map<string, string>;
   /** What each URL shape actually did, so a dry spell can be diagnosed. */
   tried: { url: string; status: number; images: number; note?: string }[];
+  /** Names the page listed, whether or not we were looking for them. */
+  listed: string[];
 }
 
 /** Every URL shape a school's roster page might live at, in order of likelihood. */
@@ -303,15 +322,17 @@ export function rosterUrls(site: SchoolSite, leagueKey: string, season?: number)
 /** Try a school's roster page for a sport, in each shape its vendor might use. */
 export async function scrapeTeam(site: SchoolSite, leagueKey: string, wanted: Set<string>, season?: number): Promise<TeamPhotos> {
   const tried: TeamPhotos['tried'] = [];
+  let listed: string[] = [];
   for (const shape of rosterUrls(site, leagueKey, season)) {
     const page = await fetchText(shape, `${site.school} ${leagueKey} roster`);
     const images = page.body ? (page.body.match(/<img\b/gi) ?? []).length : 0;
     tried.push({ url: shape, status: page.status, images, note: page.note });
     if (!page.body) continue;
     const photos = photosFromHtml(page.body, page.url, wanted);
-    if (photos.size) return { url: page.url, photos, tried };
+    if (photos.size) return { url: page.url, photos, tried, listed: pageNames(page.body) };
+    if (!listed.length) listed = pageNames(page.body);
   }
-  return { url: null, photos: new Map(), tried };
+  return { url: null, photos: new Map(), tried, listed };
 }
 
 export interface AthleticsRun { teams: number; found: number; players: number; }
