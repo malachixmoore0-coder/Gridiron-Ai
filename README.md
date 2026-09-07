@@ -21,7 +21,7 @@ scoreboard, every twenty seconds, on top of that feed.
 ```
 src/            the NFL league: engine, data, screens
 src/cfb/        the college league: its own engine, data and screens
-src/sports/     the generic engine, league registry and feed for the other seven
+src/sports/     the generic engine, league registry, feed and rosters
 src/league/     the adapter all nine present to shared surfaces
 src/live/       live-score polling that overlays the published feed
 src/social/     profiles, follows, posts and tails
@@ -52,10 +52,34 @@ Leagues override their sport where they differ from its average — a WNBA total
 is 164, not the NBA's 224, and college baseball scores half again what MLB does.
 Those overrides live next to the league in the registry, not in the engine.
 
+### Rosters
+
+Every league under sixty teams publishes a roster per team: headshot, jersey,
+position, height, weight, age, experience, college, birthplace, injury status
+and a season stat line. Two requests per team plus a handful per league — the
+league-wide `statistics/byathlete` leaderboard is what makes it affordable,
+since asking for one athlete's line at a time would be hundreds of requests.
+
+Player grades are percentiles of ESPN's own league ranks, so a grade means
+"ahead of this share of every ranked player in the league" and nothing more. A
+player with no published statistics keeps no grade at all rather than being
+handed the median — a rookie who has not debuted is not an average player, and
+saying so would be the easiest lie in the app to tell.
+
 The college dataset is published by a companion repository
 ([CFB-Gridiron-AI](https://github.com/malachixmoore0-coder/CFB-Gridiron-AI)),
 which still runs the college pipeline on its own schedule. This app reads both
 feeds.
+
+### Profiles
+
+Profile pictures and banners are chosen from the device and stored as data
+URLs on the profile row rather than in a storage bucket: they are hard-capped
+client-side at 90 KB and 260 KB, which keeps a row a row and means the feature
+works identically on the device-only backend and on Supabase without either
+needing file storage configured. On the web the crop and resize happen on a
+canvas; on native the system picker crops and `expo-image-manipulator` does the
+rest. `docs/social-schema.sql` carries the migration for an existing database.
 
 ### Getting around
 

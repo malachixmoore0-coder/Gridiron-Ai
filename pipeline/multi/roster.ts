@@ -140,15 +140,17 @@ const HEADLINE: Record<SportId, { skater: StatSpec[]; keeper?: StatSpec[] }> = {
     ],
   },
   soccer: {
+    // Both the statistics feed's names and the leaders feed's category names,
+    // because MLS falls back to the latter.
     skater: [
-      { keys: ['totalGoals', 'goals'], label: 'G' },
+      { keys: ['totalGoals', 'goals', 'scoring'], label: 'G' },
       { keys: ['goalAssists', 'assists'], label: 'A' },
-      { keys: ['appearances'], label: 'Apps' },
+      { keys: ['appearances', 'gamesPlayed'], label: 'Apps' },
     ],
     keeper: [
-      { keys: ['saves'], label: 'Saves' },
+      { keys: ['saves', 'goalkeeperSaves'], label: 'Saves' },
       { keys: ['cleanSheet', 'shutouts'], label: 'CS' },
-      { keys: ['appearances'], label: 'Apps' },
+      { keys: ['appearances', 'gamesPlayed'], label: 'Apps' },
     ],
   },
   football: {
@@ -227,7 +229,11 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
   const LIMIT = 500;
   let pages = 1;
   for (let page = 1; page <= Math.min(pages, MAX_STAT_PAGES); page += 1) {
-    const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=${LIMIT}&page=${page}&season=${season}&seasontype=2`;
+    // qualified=false is what turns a leaderboard into a census. Left at its
+    // default, MLB returns the 141 batters who clear the plate-appearance
+    // threshold, which is a hundred and thirty stat lines across eight hundred
+    // rostered players — a page of dashes for everyone else.
+    const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&qualified=false&limit=${LIMIT}&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
 
     if (process.env.ROSTER_DEBUG && page === 1) {
@@ -261,6 +267,42 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
     }
   }
   if (process.env.ROSTER_DEBUG) console.log(`    [debug] collected ${out.size} athlete stat lines over ${Math.min(pages, MAX_STAT_PAGES)} page(s)`);
+  if (out.size === 0) return loadLeaders(path);
+  return out;
+}
+
+/**
+ * A fallback for leagues the statistics endpoint does not serve.
+ *
+ * ESPN has no byathlete feed for soccer, so MLS would publish rosters with no
+ * numbers on them at all. The leaders endpoint does exist, and while it only
+ * covers the top of each category, a striker's goal count is most of what
+ * anyone wanted from that page. Everyone else keeps an empty line, which is
+ * the truth: their numbers are not published anywhere this app can reach.
+ */
+async function loadLeaders(path: string): Promise<Map<string, StatLine>> {
+  const out = new Map<string, StatLine>();
+  const json = await fetchJson<any>(`${SITE}/${path}/leaders`, `${path} leaders`, 20000).catch(() => null);
+  const categories = json?.leaders?.categories ?? json?.categories ?? [];
+  for (const cat of categories) {
+    const name = String(cat?.name ?? cat?.abbreviation ?? '');
+    if (!name) continue;
+    (cat?.leaders ?? []).forEach((entry: any, i: number) => {
+      const id = entry?.athlete?.id != null ? String(entry.athlete.id) : null;
+      if (!id) return;
+      const line = out.get(id) ?? new Map<string, StatCell>();
+      if (!line.has(name)) {
+        line.set(name, {
+          display: str(entry?.displayValue) ?? String(entry?.value ?? ''),
+          value: numOf(entry?.value),
+          // A leaders list is already in rank order.
+          rank: i + 1,
+        });
+      }
+      out.set(id, line);
+    });
+  }
+  if (process.env.ROSTER_DEBUG) console.log(`    [debug] leaders fallback: ${out.size} athletes`);
   return out;
 }
 
