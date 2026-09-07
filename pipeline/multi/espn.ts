@@ -69,7 +69,12 @@ const hex = (v: unknown, fallback: string) => {
  */
 export async function loadStandings(path: string): Promise<Map<string, { group: string; record: string | null }>> {
   const out = new Map<string, { group: string; record: string | null }>();
-  const json = await fetchJson<any>(`${STANDINGS}/${path}/standings`, `${path} standings`, 20000).catch(() => null);
+  // level=3 asks for divisions rather than conferences, which is the more
+  // useful grouping where a league has them ("AL East" beats "American
+  // League"). Leagues without that depth ignore it; if the request fails
+  // outright, fall back to the default tree.
+  const json = await fetchJson<any>(`${STANDINGS}/${path}/standings?level=3`, `${path} standings`, 20000)
+    .catch(() => fetchJson<any>(`${STANDINGS}/${path}/standings`, `${path} standings (flat)`, 20000).catch(() => null));
   if (!json) return out;
 
   const summaryOf = (entry: any): string | null => {
