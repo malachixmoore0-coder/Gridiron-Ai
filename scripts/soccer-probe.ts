@@ -63,11 +63,7 @@ async function main() {
   const mode = process.argv[2] ?? 'clubs';
   if (mode === 'squad') await squad(process.argv[3]);
   else await clubs();
+  await closeBrowser();
 }
 
-// The browser is closed here rather than at the end of main, because a probe
-// that returns early down one branch would otherwise leave Chromium running
-// and node would never exit — which is exactly what happened.
-main()
-  .catch((e) => { console.error(e); process.exitCode = 1; })
-  .finally(async () => { out.flush(); await closeBrowser(); });
+main().then(() => out.flush()).catch((e) => { out.flush(); console.error(e); process.exit(1); });
