@@ -125,15 +125,35 @@ async function loadPlayers(season: number): Promise<GolfPlayer[]> {
 
 /** Pull one tournament's field, which the date-range scoreboard never carries. */
 async function loadField(eventId: string): Promise<GolfEntry[]> {
-  const json = await fetchJson<any>(`${SITE}/leaderboard?event=${eventId}`, `pga field ${eventId}`, 25000).catch(() => null);
-  const ev = json?.events?.[0] ?? json?.event ?? json;
-  const comp = ev?.competitions?.[0] ?? ev?.competition;
-  const competitors = comp?.competitors ?? ev?.competitors ?? [];
+  // ESPN's golf API has moved around; rather than guess at one shape, try the
+  // ones that have existed and use whichever answers with a field.
+  const shapes = [
+    `${SITE}/leaderboard?event=${eventId}`,
+    `https://site.api.espn.com/apis/site/v2/sports/golf/leaderboard?league=pga&event=${eventId}`,
+    `${SITE}/summary?event=${eventId}`,
+    `https://site.web.api.espn.com/apis/site/v2/sports/golf/pga/leaderboard?event=${eventId}`,
+  ];
 
-  if (process.env.ROSTER_DEBUG) {
-    console.log(`    [debug] field ${eventId}: keys ${json ? Object.keys(json).join(',') : 'null'} · competitors ${competitors.length}`);
-    if (competitors[0]) console.log('    [debug] competitor:', String(JSON.stringify(competitors[0])).slice(0, 700));
+  let json: any = null;
+  let used = '';
+  let competitors: any[] = [];
+  for (const url of shapes) {
+    const body = await fetchJson<any>(url, `pga field ${eventId}`, 25000).catch(() => null);
+    if (!body) continue;
+    const ev = body?.events?.[0] ?? body?.event ?? body;
+    const comp = ev?.competitions?.[0] ?? ev?.competition;
+    const found = comp?.competitors ?? ev?.competitors ?? body?.competitors ?? [];
+    if (process.env.ROSTER_DEBUG) {
+      console.log(`    [debug] ${url.replace(/^https:\/\/[^/]+/, '')} → keys ${Object.keys(body).join(',')} · competitors ${found.length}`);
+    }
+    if (found.length) { json = body; used = url; competitors = found; break; }
+    if (!json) { json = body; used = url; }
   }
+  if (process.env.ROSTER_DEBUG && competitors[0]) {
+    console.log('    [debug] competitor:', String(JSON.stringify(competitors[0])).slice(0, 700));
+  }
+  if (!competitors.length) return [];
+  void used;
 
   const out: GolfEntry[] = [];
   for (const c of competitors) {
