@@ -257,7 +257,14 @@ function firstImage(chunk: string): string | null {
  */
 export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string): SchoolPlayer[] {
   const anchors = [...html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)];
-  const slugOf = (href: string) => href.split('/').filter(Boolean).slice(-2).find((x) => /[a-z]/i.test(x) && !/^\d+$/.test(x));
+  // A player link is /…/roster/<name-slug>/<id>. The roster index itself is
+  // not a player, and neither is anything that has no segment after "roster".
+  const slugOf = (href: string) => {
+    const segs = href.split('?')[0].split('/').filter(Boolean);
+    const at = segs.lastIndexOf('roster');
+    if (at < 0) return undefined;
+    return segs.slice(at + 1).find((x) => /[a-z]/i.test(x) && !/^\d+$/.test(x));
+  };
   const out = new Map<string, SchoolPlayer>();
 
   anchors.forEach((a, i) => {
@@ -284,6 +291,10 @@ export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string):
     let photo: string | null = null;
     if (photoRaw) { try { photo = new URL(photoRaw, pageUrl).toString(); } catch { photo = null; } }
 
+    // A coach has a photograph and a bio link too, and neither a number nor a
+    // position. Nothing else on the page tells them apart from a player.
+    if (!jersey && !raw) return;
+
     out.set(slug, {
       id: `${idPrefix}-${slug}`,
       name,
@@ -309,13 +320,16 @@ export function rosterUrls(site: SchoolSite, leagueKey: string): string[] {
   for (const sport of ROSTER_PATHS[leagueKey] ?? []) {
     out.push(`https://${site.domain}/sports/${sport}/roster`);
     out.push(`https://www.${site.domain}/sports/${sport}/roster`);
+    // The schools that never moved to Sidearm, in the shapes they did keep.
+    out.push(`https://${site.domain}/sport/${sport}/roster`);
+    out.push(`https://${site.domain}/roster/${sport}`);
     out.push(`https://${site.domain}/roster.aspx?path=${sport}`);
   }
   return out;
 }
 
 /** A page listing this many players is a roster; anything less is a staff list. */
-const A_SQUAD = 9;
+const A_SQUAD = 12;
 
 /** Read a school's roster page, trying each shape its vendor might use. */
 export async function scrapeTeam(site: SchoolSite, leagueKey: string, idPrefix: string): Promise<TeamScrape> {
