@@ -41,7 +41,7 @@ const ROSTER_CONCURRENCY = 6;
 /** How many unknown headshots one run is allowed to chase, per league. */
 const HEADSHOT_BUDGET = Number(process.env.HEADSHOT_BUDGET ?? 1200);
 /** How many school roster pages one run is allowed to read, per league. */
-const ATHLETICS_BUDGET = Number(process.env.ATHLETICS_BUDGET ?? 40);
+const ATHLETICS_BUDGET = Number(process.env.ATHLETICS_BUDGET ?? 80);
 
 const readJson = <T>(p: string): T | null => { try { return JSON.parse(fs.readFileSync(p, 'utf8')) as T; } catch { return null; } };
 const writeJson = (dir: string, name: string, data: unknown) => {
