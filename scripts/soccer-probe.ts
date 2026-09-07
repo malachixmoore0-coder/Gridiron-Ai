@@ -10,6 +10,10 @@
  * since the sandbox cannot reach any of them.
  */
 import { renderPages, closeBrowser, extractImages } from '../pipeline/multi/render';
+import { report } from '../pipeline/lib/report';
+
+const out = report('soccer');
+const log = out.log;
 
 const CLUB_INDEX: Record<string, string> = {
   epl: 'https://www.premierleague.com/clubs',
@@ -30,7 +34,7 @@ async function clubs() {
   const pages = await renderPages(Object.values(CLUB_INDEX), { concurrency: 3, timeoutMs: 25_000 });
   for (const [key, url] of Object.entries(CLUB_INDEX)) {
     const html = pages.get(url);
-    console.log(`\n=== ${key} ${url} → ${html ? `${html.length} bytes` : 'did not open'}`);
+    log(`\n=== ${key} ${url} → ${html ? `${html.length} bytes` : 'did not open'}`);
     if (!html) continue;
     const counts = new Map<string, { n: number; sample: string }>();
     for (const m of html.matchAll(/href=["']([^"']+)["']/gi)) {
@@ -41,17 +45,17 @@ async function clubs() {
       if (hit) hit.n += 1; else counts.set(shape, { n: 1, sample: href });
     }
     const top = [...counts].sort((a, b) => b[1].n - a[1].n).slice(0, 14);
-    for (const [shape, { n, sample }] of top) console.log(`  ${String(n).padStart(3)}  ${shape}   e.g. ${sample.slice(0, 80)}`);
+    for (const [shape, { n, sample }] of top) log(`  ${String(n).padStart(3)}  ${shape}   e.g. ${sample.slice(0, 80)}`);
   }
 }
 
 async function squad(url: string) {
   const found = await extractImages([url], { settle: { selector: 'img', count: 12 } });
   const shots = found.get(url) ?? [];
-  console.log(`${url} → ${shots.length} images`);
+  log(`${url} → ${shots.length} images`);
   for (const c of shots.slice(0, 25)) {
-    console.log(`  alt=${JSON.stringify(c.alt.slice(0, 40))} text=${JSON.stringify(c.text.slice(0, 40))} href=${c.href.slice(0, 50)}`);
-    console.log(`      ${c.src.slice(0, 130)}`);
+    log(`  alt=${JSON.stringify(c.alt.slice(0, 40))} text=${JSON.stringify(c.text.slice(0, 40))} href=${c.href.slice(0, 50)}`);
+    log(`      ${c.src.slice(0, 130)}`);
   }
 }
 
@@ -62,4 +66,4 @@ async function main() {
   await closeBrowser();
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main().then(() => out.flush()).catch((e) => { out.flush(); console.error(e); process.exit(1); });

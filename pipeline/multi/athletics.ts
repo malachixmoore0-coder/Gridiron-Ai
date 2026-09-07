@@ -224,6 +224,16 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
   }
 }
 
+/**
+ * What a player's own link looks like, across the vendors.
+ *
+ * Sidearm's newer sites use /sports/baseball/roster/zane-adams/17285; its older
+ * ones use roster.aspx?rp_id=17285 with the name only in the label; others say
+ * /bios/ or /player/. All four are the same thing — the link a reader follows
+ * to one person — and it is the only reliable tie between a face and a name.
+ */
+const PLAYER_HREF = /<a\b[^>]*href=["']([^"'#]*(?:\/roster\/|\/bios?\/|\/player\/|rp_id=)[^"'#]*)["'][^>]*>/gi;
+
 /** Baseball's positions as the schools abbreviate them, and nothing else. */
 const POS = /\b(RHP|LHP|SP|RP|P|C|1B|2B|3B|SS|INF|IF|UTL|UT|OF|LF|CF|RF|DH)\b/;
 
@@ -257,12 +267,12 @@ function firstImage(chunk: string): string | null {
  * skipped rather than guessed at.
  */
 export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string): SchoolPlayer[] {
-  const anchors = [...html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)];
-  // A player link is /…/roster/<name-slug>/<id>. The roster index itself is
-  // not a player, and neither is anything that has no segment after "roster".
+  const anchors = [...html.matchAll(PLAYER_HREF)];
+  // A player link is /…/roster/<name-slug>/<id>. The roster index itself is not
+  // a player, and neither is anything with no name after the section it is in.
   const slugOf = (href: string) => {
     const segs = href.split('?')[0].split('/').filter(Boolean);
-    const at = segs.lastIndexOf('roster');
+    const at = Math.max(segs.lastIndexOf('roster'), segs.lastIndexOf('bio'), segs.lastIndexOf('bios'), segs.lastIndexOf('player'));
     if (at < 0) return undefined;
     return segs.slice(at + 1).find((x) => /[a-z]/i.test(x) && !/^\d+$/.test(x));
   };
@@ -271,17 +281,18 @@ export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string):
   anchors.forEach((a, i) => {
     const at = a.index ?? 0;
     const slug = slugOf(a[1]);
-    if (!slug || out.has(slug)) return;
 
     const aria = ATTR(a[0], 'aria-label') ?? ATTR(a[0], 'title') ?? '';
     const name = aria.replace(/\b(jersey|number|full bio|bio|profile)\b.*$/i, '').trim()
-      || slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
-    if (!nameKey(name)) return;
+      || (slug ?? '').split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    // Older sites put no name in the URL at all, only in the link's label.
+    const key = slug ?? nameKey(name);
+    if (!key || nameKey(name).length < 4 || out.has(key)) return;
 
     // The card runs to the next player's link — the next *different* one, since
     // a card links the same player twice, once from the photo and once from the
     // name, and the details sit between them.
-    const next = anchors.slice(i + 1).find((b) => slugOf(b[1]) !== slug);
+    const next = anchors.slice(i + 1).find((b) => (slugOf(b[1]) ?? b[1]) !== (slug ?? a[1]));
     const stop = Math.min(next?.index ?? html.length, at + 3000);
     const card = html.slice(at, stop);
     const text = card.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
@@ -296,8 +307,8 @@ export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string):
     // position. Nothing else on the page tells them apart from a player.
     if (!jersey && !raw) return;
 
-    out.set(slug, {
-      id: `${idPrefix}-${slug}`,
+    out.set(key, {
+      id: `${idPrefix}-${slug ?? nameKey(name)}`,
       name,
       jersey,
       pos: NORMAL_POS[raw] ?? raw ?? '',
@@ -388,7 +399,7 @@ export async function scrapeTeam(site: SchoolSite, leagueKey: string, idPrefix: 
   // A page that answers with almost nothing on it is a page that builds itself
   // in the browser. Open it in one.
   const rendered = await renderPages(alive.slice(0, 2), {
-    settle: { selector: 'a[href*="/roster/"]', count: A_SQUAD },
+    settle: { selector: 'a[href*="/roster/"], a[href*="rp_id="], a[href*="/player/"]', count: A_SQUAD },
   });
   for (const [url, html] of rendered) {
     const players = rosterFromHtml(html, url, idPrefix);
