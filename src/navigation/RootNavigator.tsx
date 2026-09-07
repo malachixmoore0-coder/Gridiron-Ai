@@ -28,6 +28,9 @@ import { BottomTabBar, TabKey } from '@/components/BottomTabBar';
 import { OverlayShell } from '@/components/OverlayShell';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { OnboardingScreen } from '@/screens/OnboardingScreen';
+import { AppSettingsScreen } from '@/screens/AppSettingsScreen';
+import { NavProvider } from '@/navigation/NavContext';
+import { haptic } from '@/utils/haptics';
 
 /* NFL */
 import { FloorScreen } from '@/screens/FloorScreen';
@@ -70,12 +73,13 @@ type Overlay =
   | { kind: 'parlay' }
   | { kind: 'upgrade' }
   | { kind: 'model'; league: LeagueId }
+  | { kind: 'settings' }
   | { kind: 'compose'; pick?: PostPick | null }
   | { kind: 'profile'; userId: string };
 
 const TITLES: Record<Overlay['kind'], string> = {
   result: 'Back', team: 'Back', player: 'Back', game: 'Back', simulate: 'Close',
-  parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back',
+  parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back', settings: 'Done',
 };
 
 const isWeb = Platform.OS === 'web';
@@ -99,11 +103,13 @@ export function RootNavigator() {
   }, []);
 
   const push = useCallback((o: Overlay) => {
+    haptic('light');
     setStack((s) => [...s, o]);
     if (isWeb && typeof window !== 'undefined') { depth.current += 1; window.history.pushState({ gi: depth.current }, ''); }
   }, []);
 
   const pop = useCallback(() => {
+    haptic('select');
     if (isWeb && typeof window !== 'undefined' && depth.current > 0) { window.history.back(); return; }
     setStack((s) => s.slice(0, -1));
   }, []);
@@ -123,6 +129,12 @@ export function RootNavigator() {
   const openUpgrade = () => push({ kind: 'upgrade' });
   const openCompose = (pick?: PostPick | null) => push({ kind: 'compose', pick });
   const openProfile = (userId: string) => push({ kind: 'profile', userId });
+  const nav = {
+    openProfile: () => openProfile(''),
+    openSettings: () => push({ kind: 'settings' }),
+    openUpgrade: () => push({ kind: 'upgrade' }),
+    openCard: () => { clearStack(); setTab('record'); },
+  };
 
   /** Every simulation goes through here, which is where the free meter is spent. */
   const run = (request: AnyRun, l: LeagueId = league) => {
@@ -144,6 +156,7 @@ export function RootNavigator() {
   const cfb = league === 'cfb';
 
   return (
+    <NavProvider value={nav}>
     <View style={styles.root}>
       <View style={styles.content}>
         {tab === 'home' && (
@@ -184,8 +197,9 @@ export function RootNavigator() {
         )}
       </View>
 
-      {/* Simulate is an action, not a destination, so it floats above the dock. */}
-      {tab !== 'social' && (
+      {/* Simulate is an action, not a destination, so it floats above the dock —
+          and only where rows do not already carry their own. */}
+      {(tab === 'home' || tab === 'teams' || tab === 'record') && (
         <TouchableOpacity
           style={styles.fab}
           activeOpacity={0.88}
@@ -198,7 +212,11 @@ export function RootNavigator() {
         </TouchableOpacity>
       )}
 
-      <BottomTabBar active={tab} onChange={(t) => { clearStack(); setTab(t); }} badge={Object.keys(overrides).length} />
+      <BottomTabBar
+        active={tab}
+        onChange={(t) => { if (t !== tab) haptic('select'); clearStack(); setTab(t); }}
+        badge={Object.keys(overrides).length}
+      />
 
       {stack.map((o, i) => (
         <View key={`${o.kind}-${i}`} style={[StyleSheet.absoluteFill, styles.overlay]}>
@@ -228,6 +246,13 @@ export function RootNavigator() {
                 o.league === 'cfb'
                   ? <CfbSettings onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
                   : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
+              ) : o.kind === 'settings' ? (
+                <AppSettingsScreen
+                  onProfile={() => openProfile('')}
+                  onUpgrade={openUpgrade}
+                  onModel={() => push({ kind: 'model', league })}
+                  onCard={() => { clearStack(); setTab('record'); }}
+                />
               ) : o.kind === 'parlay' ? (
                 <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
               ) : o.kind === 'upgrade' ? (
@@ -242,6 +267,7 @@ export function RootNavigator() {
         </View>
       ))}
     </View>
+    </NavProvider>
   );
 }
 

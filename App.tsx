@@ -10,6 +10,8 @@ import { EntitlementsProvider } from '@/context/EntitlementsContext';
 import { EngagementProvider } from '@/context/EngagementContext';
 import { SocialProvider } from '@/social/SocialContext';
 import { LiveProvider } from '@/live/LiveContext';
+import { PrefsProvider } from '@/context/PrefsContext';
+import { SplashGate } from '@/components/SplashGate';
 import { RootNavigator } from '@/navigation/RootNavigator';
 
 /**
@@ -21,7 +23,8 @@ import { RootNavigator } from '@/navigation/RootNavigator';
 export default function App() {
   return (
     <SafeAreaProvider>
-      <SettingsProvider>
+      <PrefsProvider>
+       <SettingsProvider>
         <CfbSettingsProvider>
           <TeamsProvider>
             <CfbTeamsProvider>
@@ -31,7 +34,9 @@ export default function App() {
                     <EngagementProvider>
                       <SocialProvider>
                         <StatusBar style="light" />
-                        <RootNavigator />
+                        <SplashGate>
+                          <RootNavigator />
+                        </SplashGate>
                       </SocialProvider>
                     </EngagementProvider>
                   </EntitlementsProvider>
@@ -40,7 +45,8 @@ export default function App() {
             </CfbTeamsProvider>
           </TeamsProvider>
         </CfbSettingsProvider>
-      </SettingsProvider>
+       </SettingsProvider>
+      </PrefsProvider>
     </SafeAreaProvider>
   );
 }

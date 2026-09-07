@@ -12,6 +12,8 @@ import { useTeams } from '@/cfb/context/TeamsContext';
 import { useLive } from '@/live/LiveContext';
 import { Modal } from 'react-native';
 import { AddToCard } from '@/components/AddToCard';
+import { BookOdds } from '@/components/BookOdds';
+import { haptic } from '@/utils/haptics';
 import { useEngagement } from '@/context/EngagementContext';
 import { buildInput, RunRequest } from '@/cfb/hooks/useAnalysis';
 import { TeamMark } from '@/cfb/components/TeamMark';
@@ -52,6 +54,8 @@ export function SlateScreen({ onRun }: Props) {
   const live = useLive();
   const eng = useEngagement();
   const [adding, setAdding] = useState<{ game: never; abbrs: [string, string] } | null>(null);
+  /** Which card is open. Tapping a game shows the books rather than firing a sim. */
+  const [open, setOpen] = useState<string | null>(null);
   const gamesForWeek = React.useCallback(
     (w: number, t: string) => feedForWeek(w, t).map((g) => {
       const s = live.scores.get(g.id);
@@ -98,11 +102,16 @@ export function SlateScreen({ onRun }: Props) {
           id: g.id, awayId: g.awayId, homeId: g.homeId, label: g.label, kickoff: '', timeTbd: false, neutralSite: !!g.neutralSite, primetime: !!g.primetime,
           weather: g.weather ?? null, homeSpread: null as number | null, totalLine: null as number | null, status: 'scheduled' as GameStatus, statusDetail: null as string | null,
           awayScore: null as number | null, homeScore: null as number | null, conferenceGame: false, broadcast: null as string | null, awayRank: null as number | null, homeRank: null as number | null,
+          awayMoneyline: null as number | null, homeMoneyline: null as number | null, lineSource: null as string | null,
+          books: null as LiveGame['books'],
         }))
       : gamesForWeek(selected.week, selected.gameType).map((g: LiveGame) => ({
           id: g.id, awayId: g.awayId, homeId: g.homeId, label: g.notes ?? g.stadium, kickoff: g.kickoff, timeTbd: g.timeTbd, neutralSite: g.neutralSite, primetime: g.primetime,
           weather: g.weatherHint && g.weatherHint !== 'dome' ? g.weatherHint : null, homeSpread: g.homeSpread, totalLine: g.totalLine, status: g.status, statusDetail: g.statusDetail ?? null,
           awayScore: g.awayScore, homeScore: g.homeScore, conferenceGame: g.conferenceGame, broadcast: g.broadcast, awayRank: g.awayRank, homeRank: g.homeRank,
+          // Carried through so the sportsbook drawer has real prices to show.
+          awayMoneyline: g.awayMoneyline, homeMoneyline: g.homeMoneyline, lineSource: g.lineSource ?? null,
+          books: g.books ?? null,
         }));
     return games.map((g) => {
       const req: RunRequest = { awayId: g.awayId, homeId: g.homeId, ctx: { neutralSite: g.neutralSite, primetime: g.primetime, weather: g.weather ?? 'auto' } };
@@ -191,7 +200,15 @@ export function SlateScreen({ onRun }: Props) {
                   : g.label;
                 const tags = [g.broadcast, g.primetime ? 'Primetime' : null, g.weather ? g.weather[0].toUpperCase() + g.weather.slice(1) : null, g.neutralSite ? 'Neutral' : g.conferenceGame ? CONFERENCE_SHORT[home.conference] : null].filter(Boolean).join(' · ');
                 return (
-                  <TouchableOpacity key={g.id} style={[styles.card, st === 'in_progress' && styles.cardLive]} activeOpacity={0.8} onPress={() => onRun(req)}>
+                  <TouchableOpacity
+                    key={g.id}
+                    style={[styles.card, st === 'in_progress' && styles.cardLive, open === g.id && styles.cardOpen]}
+                    activeOpacity={0.8}
+                    onPress={() => { haptic('select'); setOpen(open === g.id ? null : g.id); }}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: open === g.id }}
+                    accessibilityLabel={`${away.abbr} at ${home.abbr}, show sportsbook lines`}
+                  >
                     <View style={styles.top}>
                       <View style={styles.team}>
                         <TeamMark team={away} size={36} />
@@ -242,8 +259,36 @@ export function SlateScreen({ onRun }: Props) {
                           />
                         </TouchableOpacity>
                       )}
-                      <Ionicons name="chevron-forward" size={16} color={colors.inkFaint} />
+                      <Ionicons name={open === g.id ? 'chevron-up' : 'chevron-down'} size={16} color={colors.inkFaint} />
                     </View>
+
+                    {open === g.id && (
+                      <View>
+                        <BookOdds game={g as never} rec={rec} awayAbbr={away.abbr} homeAbbr={home.abbr} />
+                        <View style={styles.drawerActions}>
+                          <TouchableOpacity
+                            style={styles.drawerBtn}
+                            activeOpacity={0.85}
+                            onPress={() => { haptic('light'); setAdding({ game: g as never, abbrs: [away.abbr, home.abbr] }); }}
+                            accessibilityRole="button"
+                            accessibilityLabel="Add to your card"
+                          >
+                            <Ionicons name="bookmark-outline" size={14} color={colors.ink} />
+                            <Text style={styles.drawerBtnText}>Add to card</Text>
+                          </TouchableOpacity>
+                          <TouchableOpacity
+                            style={[styles.drawerBtn, styles.drawerBtnGo]}
+                            activeOpacity={0.85}
+                            onPress={() => { haptic('medium'); onRun(req); }}
+                            accessibilityRole="button"
+                            accessibilityLabel="Simulate this game"
+                          >
+                            <Ionicons name="analytics" size={14} color={colors.bg} />
+                            <Text style={[styles.drawerBtnText, { color: colors.bg }]}>Simulate</Text>
+                          </TouchableOpacity>
+                        </View>
+                      </View>
+                    )}
                   </TouchableOpacity>
                 );
               })}
@@ -279,6 +324,11 @@ export function SlateScreen({ onRun }: Props) {
 }
 
 const styles = StyleSheet.create({
+  cardOpen: { borderColor: colors.borderHi },
+  drawerActions: { flexDirection: 'row', gap: 8, marginTop: 12 },
+  drawerBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 6, paddingVertical: 10, borderRadius: 999, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
+  drawerBtnGo: { backgroundColor: colors.green, borderColor: colors.green },
+  drawerBtnText: { color: colors.ink, fontSize: 12, fontWeight: '800' },
   slateAdd: { width: 26, height: 26, borderRadius: 13, borderWidth: 1, borderColor: colors.green, alignItems: 'center', justifyContent: 'center' },
   slateAddOn: { backgroundColor: colors.green },
   backdrop: { flex: 1, backgroundColor: colors.overlay, justifyContent: 'flex-end', padding: 12 },

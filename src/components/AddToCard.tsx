@@ -15,6 +15,7 @@ import { View, Text, TouchableOpacity, ScrollView, StyleSheet } from 'react-nati
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import { useEngagement } from '@/context/EngagementContext';
+import { haptic } from '@/utils/haptics';
 import type { Market, PickSide } from '@/context/EngagementContext';
 import { bestQuote, coverProb, fmtOdds, overProb, quotesFor, type BookQuote } from '@/utils/edge';
 import type { LeagueGame, LeagueId, PredictionRecord } from '@/league/types';
@@ -118,7 +119,7 @@ export function AddToCard({ league, game, rec, awayAbbr, homeAbbr, onClose }: Pr
                 key={q.book}
                 style={[styles.book, on && styles.bookOn]}
                 activeOpacity={0.85}
-                onPress={() => setBookKey(q.book)}
+                onPress={() => { haptic('select'); setBookKey(q.book); }}
                 accessibilityRole="radio"
                 accessibilityState={{ selected: on }}
               >
@@ -139,6 +140,7 @@ export function AddToCard({ league, game, rec, awayAbbr, homeAbbr, onClose }: Pr
             activeOpacity={0.85}
             onPress={() => {
               if (saved) return;
+              haptic('success');
               eng.savePick({
                 league,
                 gameId: game.id,

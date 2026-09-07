@@ -9,6 +9,7 @@ import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { colors, radius } from '@/theme';
 import { useLeague } from '@/league/LeagueContext';
+import { haptic } from '@/utils/haptics';
 
 export function LeagueSwitch({ compact }: { compact?: boolean }) {
   const { league, setLeague, all } = useLeague();
@@ -21,7 +22,7 @@ export function LeagueSwitch({ compact }: { compact?: boolean }) {
             key={l.id}
             style={[styles.seg, compact && styles.segCompact, on && styles.segOn]}
             activeOpacity={0.85}
-            onPress={() => setLeague(l.id)}
+            onPress={() => { if (!on) haptic('medium'); setLeague(l.id); }}
             accessibilityRole="tab"
             accessibilityState={{ selected: on }}
             accessibilityLabel={l.label}

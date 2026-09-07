@@ -16,6 +16,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { AppState, Platform } from 'react-native';
 import { useLeague } from '@/league/LeagueContext';
+import { usePrefs } from '@/context/PrefsContext';
 import type { GameStatus } from '@/data/liveTypes';
 import type { LeagueGame, LeagueId } from '@/league/types';
 
@@ -91,6 +92,7 @@ function matchGame(
 
 export function LiveProvider({ children }: { children: React.ReactNode }) {
   const { nfl, cfb } = useLeague();
+  const prefs = usePrefs();
   const [scores, setScores] = useState<Map<string, LiveScore>>(new Map());
   const [connected, setConnected] = useState(false);
   const [lastPoll, setLastPoll] = useState<number | null>(null);
@@ -102,7 +104,7 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
   const views = useMemo(() => [nfl, cfb], [nfl, cfb]);
 
   const poll = useCallback(async () => {
-    if (disabled.current) return;
+    if (disabled.current || !prefs.livePolling) return;
     const next = new Map<string, LiveScore>();
     let ok = false;
     for (const view of views) {
@@ -142,7 +144,7 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
     if (ok) { failures.current = 0; setScores(next); setConnected(true); }
     else if (disabled.current) setConnected(false);
     setLastPoll(Date.now());
-  }, [views]);
+  }, [views, prefs.livePolling]);
 
   /* Cadence follows the games: fast while anything is in progress, slow when
      the board is quiet, stopped when nobody is looking. */
