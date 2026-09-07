@@ -8,10 +8,14 @@ import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { TeamMark } from '@/components/TeamMark';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { useEngagement } from '@/context/EngagementContext';
+import { useEntitlements } from '@/context/EntitlementsContext';
 
-interface Props { onOpenTeam: (id: string) => void; }
+interface Props { onOpenTeam: (id: string) => void; onUpgrade?: () => void; }
 
-export function TeamsScreen({ onOpenTeam }: Props) {
+export function TeamsScreen({ onOpenTeam, onUpgrade }: Props) {
+  const eng = useEngagement();
+  const ent = useEntitlements();
   const { overrides, clearOverrides, statusOf } = useSettings();
   const { divisions: DIVISIONS } = useTeams();
   const flaggedCount = Object.keys(overrides).length;
@@ -41,6 +45,14 @@ export function TeamsScreen({ onOpenTeam }: Props) {
                     <Text style={styles.meta}>{t.coaching.offScheme} · {t.coaching.defFront} / {t.coaching.baseCoverage}{t.coaching.headCoach ? ` · ${t.coaching.headCoach}` : ''}</Text>
                   </View>
                   {flags > 0 && <View style={styles.flag}><Text style={styles.flagText}>{flags}</Text></View>}
+                  <TouchableOpacity
+                    hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
+                    onPress={() => { if (eng.toggleFollow(t.id, ent.ent.follows) === 'limit') onUpgrade?.(); }}
+                    accessibilityRole="button"
+                    accessibilityLabel={eng.isFollowing(t.id) ? 'Unfollow' : 'Follow'}
+                  >
+                    <Ionicons name={eng.isFollowing(t.id) ? 'star' : 'star-outline'} size={16} color={eng.isFollowing(t.id) ? colors.gold : colors.inkGhost} />
+                  </TouchableOpacity>
                   <Ionicons name="chevron-forward" size={16} color={colors.inkFaint} />
                 </TouchableOpacity>
               );
