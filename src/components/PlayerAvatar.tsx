@@ -11,6 +11,12 @@ interface Props {
   size?: number;
   /** League-neutral colours, for the sports that have no NFL Team object. */
   tint?: { primary: string; secondary: string };
+  /**
+   * Fit the image inside the disc instead of cropping it. A face wants to be
+   * cropped; a flag standing in for a missing face does not, because a cropped
+   * flag is unrecognisable.
+   */
+  contain?: boolean;
 }
 
 /**
@@ -18,14 +24,19 @@ interface Props {
  * or broken image falls back to initials on the team's colour rather than a
  * placeholder face.
  */
-export function PlayerAvatar({ uri, name, team, size = 44, tint }: Props) {
+export function PlayerAvatar({ uri, name, team, size = 44, tint, contain }: Props) {
   const [failed, setFailed] = useState(false);
   const palette = team?.colors ?? tint;
   const bg = palette?.primary ?? colors.cardAlt;
   return (
     <View style={[styles.wrap, { width: size, height: size, borderRadius: size / 2, backgroundColor: bg, borderColor: palette?.secondary ?? colors.border }]}>
       {uri && !failed ? (
-        <Image source={{ uri }} style={{ width: size, height: size }} resizeMode="cover" onError={() => setFailed(true)} />
+        <Image
+          source={{ uri }}
+          style={{ width: size, height: size }}
+          resizeMode={contain ? 'contain' : 'cover'}
+          onError={() => setFailed(true)}
+        />
       ) : (
         <Text style={[styles.initials, { fontSize: size * 0.36 }]}>{initialsOf(name)}</Text>
       )}

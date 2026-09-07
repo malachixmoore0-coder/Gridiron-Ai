@@ -71,7 +71,13 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
         style={styles.hero}
       >
         <View style={styles.heroRow}>
-          <PlayerAvatar uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 78) : null} name={player.name} size={78} tint={team?.colors} />
+          <PlayerAvatar
+            uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 78) : player.flagUrl ?? null}
+            name={player.name}
+            size={78}
+            tint={team?.colors}
+            contain={!player.headshotUrl && !!player.flagUrl}
+          />
           <View style={{ flex: 1 }}>
             <Text style={styles.name} numberOfLines={2}>{player.name}</Text>
             <TouchableOpacity

@@ -10,7 +10,7 @@
 import type { GameStatus, GameWeather, PredictionRecord } from '@/data/liveTypes';
 import type { Weather } from '@/engine/types';
 
-import type { LeagueKey } from '@/sports/types';
+import type { LeagueKey, SportId } from '@/sports/types';
 
 export type LeagueId = LeagueKey;
 
@@ -90,7 +90,7 @@ export interface WeekRef { week: number; gameType: string; label: string; games:
 export interface LeagueView {
   id: LeagueId;
   /** Which sport's rules apply — decides draws, units and how a slate groups. */
-  sport: 'football' | 'basketball' | 'baseball' | 'soccer';
+  sport: SportId;
   /** True for the two football leagues, which run their own engine and screens. */
   bespoke: boolean;
   /** Still fetching this league's feed for the first time. */

@@ -33,6 +33,8 @@ export interface SportPlayer {
   experience: number | null;
   college: string | null;
   birthplace: string | null;
+  /** National flag, used where a headshot is missing — common in soccer. */
+  flagUrl?: string | null;
   status: string | null;
   injury: string | null;
   line: string | null;
@@ -47,7 +49,7 @@ export interface SportRosterFile {
   generatedAt: string;
   season: number;
   /** Where the season lines came from; 'none' means the league publishes none. */
-  statsSource?: 'league' | 'leaders' | 'none';
+  statsSource?: 'league' | 'leaders' | 'athlete' | 'none';
   players: SportPlayer[];
 }
 
@@ -56,6 +58,7 @@ export const UNIT_ORDER: Record<SportId, string[]> = {
   basketball: ['Guards', 'Wings', 'Bigs'],
   baseball: ['Starting pitchers', 'Relievers', 'Catchers', 'Infield', 'Outfield'],
   soccer: ['Goalkeepers', 'Defenders', 'Midfield', 'Forwards'],
+  hockey: ['Forwards', 'Defense', 'Goaltenders'],
   football: ['Offense', 'Defense', 'Special teams'],
 };
 

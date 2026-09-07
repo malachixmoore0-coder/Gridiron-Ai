@@ -23,7 +23,7 @@ import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
-import { gradeLeague, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
+import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -308,6 +308,20 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       });
     }
 
+    // Soccer has no league-wide statistics feed, so its numbers are collected
+    // one athlete at a time from the core API — but only for players who are
+    // actually on a published roster, which keeps it to the squads rather than
+    // every registered professional.
+    let source = statsSource;
+    if (source === 'none' && everyone.length) {
+      const perAthlete = await loadAthleteStats(meta.espn!, everyone.map((pl) => pl.id), season);
+      if (perAthlete.size) {
+        source = 'athlete';
+        const perDepth = rankDepth(perAthlete);
+        applyStats(everyone, meta.sport, perAthlete, perDepth);
+      }
+    }
+
     // Grades are percentiles within the league, so they are computed once
     // across every roster rather than team by team — a fourth outfielder on a
     // good team is not a starter, and a per-team grade would say he was.
@@ -321,13 +335,13 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       const prev = readJson<SportRosterFile>(target);
       if (prev && JSON.stringify(prev.players) === JSON.stringify(players)) continue;
       const file: SportRosterFile = {
-        teamId, league: meta.key, generatedAt: now.toISOString(), season, statsSource, players,
+        teamId, league: meta.key, generatedAt: now.toISOString(), season, statsSource: source, players,
       };
       writeJson(rosterDir, `${teamId}.json`, file);
       written += 1;
     }
     const withStats = everyone.filter((pl) => pl.stats.length).length;
-    console.log(`  ${perTeam.size} rosters (${written} changed) · ${everyone.length} players · ${withStats} with a stat line (${statsSource})`);
+    console.log(`  ${perTeam.size} rosters (${written} changed) · ${everyone.length} players · ${withStats} with a stat line (${source})`);
   }
 }
 

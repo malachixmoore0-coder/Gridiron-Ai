@@ -21,6 +21,7 @@ import type { SportId } from '../../src/sports/types';
 
 const SITE = 'https://site.api.espn.com/apis/site/v2/sports';
 const WEB = 'https://site.web.api.espn.com/apis/common/v3/sports';
+const CORE = 'https://sports.core.api.espn.com/v2/sports';
 /** 500 a page; twelve pages is more players than any league here has. */
 const MAX_STAT_PAGES = 12;
 
@@ -53,6 +54,12 @@ export interface SportPlayer {
   experience: number | null;
   college: string | null;
   birthplace: string | null;
+  /**
+   * The player's national flag. Soccer rosters are mostly missing headshots on
+   * ESPN — three photographs in a squad of twenty-eight — and a wall of blank
+   * discs is a worse page than one showing where each player is from.
+   */
+  flagUrl: string | null;
   status: string | null;
   injury: string | null;
   /** The line under the name: "18.4 PPG · 6.1 REB". */
@@ -75,7 +82,7 @@ export interface SportRosterFile {
    * ESPN serves no such feed for soccer, and a page that blamed the player for
    * that would be wrong about him.
    */
-  statsSource: 'league' | 'leaders' | 'none';
+  statsSource: 'league' | 'leaders' | 'athlete' | 'none';
   players: SportPlayer[];
 }
 
@@ -102,6 +109,11 @@ const UNITS: Record<SportId, { unit: string; pos: string[] }[]> = {
     { unit: 'Defenders', pos: ['D', 'DF', 'CB', 'LB', 'RB'] },
     { unit: 'Midfield', pos: ['M', 'MF', 'CM', 'AM', 'DM'] },
     { unit: 'Forwards', pos: ['F', 'FW', 'ST', 'W'] },
+  ],
+  hockey: [
+    { unit: 'Forwards', pos: ['C', 'LW', 'RW', 'F', 'W'] },
+    { unit: 'Defense', pos: ['D', 'LD', 'RD'] },
+    { unit: 'Goaltenders', pos: ['G'] },
   ],
   football: [
     { unit: 'Offense', pos: ['QB', 'RB', 'FB', 'WR', 'TE', 'OT', 'OG', 'C', 'OL'] },
@@ -147,17 +159,17 @@ const HEADLINE: Record<SportId, { skater: StatSpec[]; keeper?: StatSpec[] }> = {
     ],
   },
   soccer: {
-    // Both the statistics feed's names and the leaders feed's category names,
-    // because MLS falls back to the latter.
+    // The core API's own names, with the leaders feed's spellings kept as
+    // aliases so either source can fill the same three slots.
     skater: [
       { keys: ['totalGoals', 'goals', 'scoring'], label: 'G' },
       { keys: ['goalAssists', 'assists'], label: 'A' },
-      { keys: ['appearances', 'gamesPlayed'], label: 'Apps' },
+      { keys: ['appearances', 'gamesPlayed', 'gamesStarted'], label: 'Apps' },
     ],
     keeper: [
       { keys: ['saves', 'goalkeeperSaves'], label: 'Saves' },
       { keys: ['cleanSheet', 'shutouts'], label: 'CS' },
-      { keys: ['appearances', 'gamesPlayed'], label: 'Apps' },
+      { keys: ['appearances', 'gamesPlayed', 'gamesStarted'], label: 'Apps' },
     ],
   },
   football: {
@@ -167,13 +179,25 @@ const HEADLINE: Record<SportId, { skater: StatSpec[]; keeper?: StatSpec[] }> = {
       { keys: ['receivingYards'], label: 'Rec yds' },
     ],
   },
+  hockey: {
+    skater: [
+      { keys: ['points'], label: 'PTS' },
+      { keys: ['goals'], label: 'G' },
+      { keys: ['assists'], label: 'A' },
+    ],
+    keeper: [
+      { keys: ['savePct', 'savePercentage'], label: 'SV%' },
+      { keys: ['goalsAgainstAverage', 'avgGoalsAgainst'], label: 'GAA' },
+      { keys: ['wins'], label: 'W' },
+    ],
+  },
 };
 
 /** True where a sport's "keeper" stat set applies to this position. */
 const isSpecialist = (sport: SportId, pos: string) => {
   const p = (pos || '').toUpperCase();
   if (sport === 'baseball') return ['SP', 'RP', 'P', 'CP'].includes(p);
-  if (sport === 'soccer') return ['G', 'GK'].includes(p);
+  if (sport === 'soccer' || sport === 'hockey') return ['G', 'GK'].includes(p);
   return false;
 };
 
@@ -229,7 +253,7 @@ export async function loadLeagueStats(
   path: string,
   sport: SportId,
   season: number,
-): Promise<{ stats: Map<string, StatLine>; source: 'league' | 'leaders' | 'none' }> {
+): Promise<{ stats: Map<string, StatLine>; source: 'league' | 'leaders' | 'athlete' | 'none' }> {
   const out = new Map<string, StatLine>();
   const columns = new Map<string, string[]>();
   const LIMIT = 500;
@@ -294,6 +318,74 @@ export async function loadLeagueStats(
     return { stats: leaders, source: leaders.size ? 'leaders' as const : 'none' as const };
   }
   return { stats: out, source: 'league' as const };
+}
+
+/**
+ * Per-athlete season statistics, for the sports the league-wide endpoint does
+ * not cover.
+ *
+ * ESPN publishes no byathlete feed for soccer — not for the Premier League,
+ * not for any of the eight leagues here — but it does publish each player's
+ * season splits on the core API, one request at a time. Five thousand requests
+ * is a lot to ask of anyone, so this runs with a small amount of concurrency
+ * and only for the athletes actually on a published roster.
+ *
+ * The season and season-type that work vary by competition (a calendar-year
+ * league and an August-to-May one do not agree on what 2026 means), so the
+ * combination is discovered once from a single athlete and then reused.
+ */
+export async function loadAthleteStats(
+  path: string,
+  athleteIds: string[],
+  season: number,
+  concurrency = 8,
+): Promise<Map<string, StatLine>> {
+  const out = new Map<string, StatLine>();
+  if (!athleteIds.length) return out;
+  const league = path.split('/')[1];
+  const base = (id: string, y: number, t: number) =>
+    `${CORE}/${path.split('/')[0]}/leagues/${league}/seasons/${y}/types/${t}/athletes/${id}/statistics`;
+
+  // Find a (season, type) that actually answers, using the first few athletes
+  // in case the very first one has not played.
+  let combo: { y: number; t: number } | null = null;
+  const combos = [
+    { y: season, t: 1 }, { y: season, t: 2 },
+    { y: season + 1, t: 1 }, { y: season - 1, t: 1 },
+  ];
+  outer: for (const probe of athleteIds.slice(0, 4)) {
+    for (const c of combos) {
+      const json = await fetchJson<any>(base(probe, c.y, c.t), `${path} stat probe`, 12000).catch(() => null);
+      if (json?.splits?.categories?.length) { combo = c; break outer; }
+    }
+  }
+  if (!combo) {
+    if (process.env.ROSTER_DEBUG) console.log(`    [debug] ${path}: no season/type combination returned splits`);
+    return out;
+  }
+  if (process.env.ROSTER_DEBUG) console.log(`    [debug] ${path}: using season ${combo.y} type ${combo.t}`);
+
+  for (let i = 0; i < athleteIds.length; i += concurrency) {
+    const batch = athleteIds.slice(i, i + concurrency);
+    const rows = await Promise.all(batch.map((id) =>
+      fetchJson<any>(base(id, combo!.y, combo!.t), `${path} athlete ${id}`, 12000).catch(() => null)));
+    batch.forEach((id, j) => {
+      const cats = rows[j]?.splits?.categories ?? [];
+      if (!cats.length) return;
+      const line: StatLine = new Map();
+      for (const cat of cats) {
+        for (const st of cat?.stats ?? []) {
+          const name = str(st?.name) ?? str(st?.abbreviation);
+          if (!name || line.has(name)) continue;
+          const display = str(st?.displayValue) ?? (st?.value != null ? String(st.value) : null);
+          if (!display || display === '-') continue;
+          line.set(name, { display, value: numOf(st?.value), rank: numOf(st?.rank) });
+        }
+      }
+      if (line.size) out.set(id, line);
+    });
+  }
+  return out;
 }
 
 /**
@@ -425,6 +517,7 @@ export async function loadRoster(
       age: numOf(a?.age),
       experience: numOf(a?.experience?.years),
       college: str(a?.college?.name) ?? str(a?.college?.shortName),
+      flagUrl: str(a?.flag?.href) ?? str(a?.citizenshipCountry?.flag?.href),
       birthplace: [str(a?.birthPlace?.city), str(a?.birthPlace?.state) ?? str(a?.birthPlace?.country)].filter(Boolean).join(', ') || null,
       status: str(a?.status?.name) ?? str(a?.status?.type),
       injury: injury ? [str(injury?.status), str(injury?.details?.type)].filter(Boolean).join(' · ') || null : null,
@@ -435,6 +528,48 @@ export async function loadRoster(
     });
   }
   return out;
+}
+
+/**
+ * Attach headline numbers to players whose statistics arrived separately.
+ *
+ * The roster pass picks a player's three headline stats while it reads them,
+ * which does not work when the numbers come from a second source afterwards —
+ * so this does the same selection over an already-built roster.
+ */
+export function applyStats(
+  players: SportPlayer[],
+  sport: SportId,
+  stats: Map<string, StatLine>,
+  depth: Map<string, number>,
+): void {
+  for (const p of players) {
+    const line = stats.get(p.id);
+    if (!line) continue;
+    const specs = (isSpecialist(sport, p.pos) && HEADLINE[sport].keeper) || HEADLINE[sport].skater;
+    const picked: RosterStat[] = [];
+    for (const spec of specs) {
+      let hit: StatCell | undefined;
+      let hitKey = '';
+      for (const k of spec.keys) {
+        const v = line.get(k);
+        if (v && v.display && v.display !== '-') { hit = v; hitKey = k; break; }
+      }
+      if (!hit) continue;
+      const of = depth.get(hitKey) ?? null;
+      picked.push({
+        label: spec.label,
+        value: hit.display,
+        rank: hit.rank,
+        rankOf: of,
+        percentile: hit.rank != null && of && of > 1 ? Math.round((1 - (hit.rank - 1) / (of - 1)) * 100) : null,
+      });
+    }
+    if (!picked.length) continue;
+    p.stats = picked;
+    p.line = picked.map((x) => `${x.value} ${x.label}`).join(' · ');
+    p.ratingBasis = 'production';
+  }
 }
 
 /**

@@ -22,7 +22,7 @@ const SPORT_ICON: Record<SportId, keyof typeof Ionicons.glyphMap> = {
   football: 'american-football',
   basketball: 'basketball',
   baseball: 'baseball',
-  soccer: 'football',
+  soccer: 'football', hockey: 'snow',
 };
 
 export function LeagueSwitch({ compact }: { compact?: boolean }) {

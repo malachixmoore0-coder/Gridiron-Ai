@@ -13,13 +13,14 @@
  * shared either way.
  */
 
-export type SportId = 'football' | 'basketball' | 'baseball' | 'soccer';
+export type SportId = 'football' | 'basketball' | 'baseball' | 'soccer' | 'hockey';
 
 export type LeagueKey =
   | 'nfl' | 'cfb'          // bespoke football engines
   | 'nba' | 'wnba' | 'mbb' | 'wbb'
   | 'mlb' | 'cbase'
-  | 'mls';
+  | 'nhl'
+  | 'mls' | 'epl' | 'laliga' | 'seriea' | 'bundesliga' | 'ligue1' | 'ucl' | 'ligamx';
 
 /** How a sport's scores actually behave. */
 export interface SportProfile {
@@ -85,6 +86,15 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
     baseTotal: 2.9, spreadStep: 0.5, primaryMarket: 'moneyline',
     periods: ['1st half', '2nd half', 'Extra'], cadence: 'day',
   },
+  hockey: {
+    // Goals are rare events like soccer's, so the same Poisson applies — but a
+    // hockey game cannot end level. Overtime and the shootout settle it, which
+    // the engine handles the same way it handles extra innings.
+    unit: 'goal', model: 'poisson', draws: false,
+    marginSigma: 2.1, totalSigma: 1.8, homeEdge: 0.20, eloScale: 0.0030,
+    baseTotal: 6.1, spreadStep: 0.5, primaryMarket: 'moneyline',
+    periods: ['1st', '2nd', '3rd', 'OT', 'SO'], cadence: 'day',
+  },
 };
 
 export interface LeagueMeta {
@@ -136,7 +146,34 @@ export const LEAGUES: LeagueMeta[] = [
     // Aluminium bats and a much wider field: college games score half again what
     // an MLB game does, and blowouts are ordinary rather than notable.
     tune: { baseTotal: 12.4, marginSigma: 5.6, totalSigma: 4.2, homeEdge: 0.32, eloScale: 0.0038, spreadStep: 0.5 } },
-  { key: 'mls',   sport: 'soccer',     short: 'MLS',   name: 'MLS',                     group: 'Soccer',     slug: 'mls',   espn: 'soccer/usa.1',                        months: [2, 12], accent: '#35D0C8' },
+  { key: 'nhl',   sport: 'hockey',     short: 'NHL',   name: 'NHL',                     group: 'Hockey',     slug: 'nhl',   espn: 'hockey/nhl',                          months: [10, 6], accent: '#67C7F2' },
+
+  /* ---- Soccer -----------------------------------------------------------
+     Eight leagues rather than one. Every one of them publishes teams,
+     fixtures and results, which is everything the model needs; none of them
+     publishes per-player statistics through ESPN, which is why their roster
+     pages say so rather than pretending. Goal environments differ enough to
+     be worth tuning — a Bundesliga match is half a goal livelier than a
+     LaLiga one, and a model that ignores that is wrong on every total. */
+  { key: 'epl',        sport: 'soccer', short: 'EPL',    name: 'Premier League',   group: 'Soccer', slug: 'epl',        espn: 'soccer/eng.1',           months: [8, 5],  accent: '#8B5CF6',
+    tune: { baseTotal: 2.85, homeEdge: 0.24 } },
+  { key: 'laliga',     sport: 'soccer', short: 'LALIGA', name: 'LaLiga',           group: 'Soccer', slug: 'laliga',     espn: 'soccer/esp.1',           months: [8, 5],  accent: '#FF6B4A',
+    tune: { baseTotal: 2.55, homeEdge: 0.28 } },
+  { key: 'seriea',     sport: 'soccer', short: 'SERIEA', name: 'Serie A',          group: 'Soccer', slug: 'seriea',     espn: 'soccer/ita.1',           months: [8, 5],  accent: '#4D8BFF',
+    tune: { baseTotal: 2.70, homeEdge: 0.26 } },
+  { key: 'bundesliga', sport: 'soccer', short: 'BUND',   name: 'Bundesliga',       group: 'Soccer', slug: 'bundesliga', espn: 'soccer/ger.1',           months: [8, 5],  accent: '#E23D3D',
+    tune: { baseTotal: 3.15, homeEdge: 0.26 } },
+  { key: 'ligue1',     sport: 'soccer', short: 'LIGUE1', name: 'Ligue 1',          group: 'Soccer', slug: 'ligue1',     espn: 'soccer/fra.1',           months: [8, 5],  accent: '#F2C14E',
+    tune: { baseTotal: 2.75, homeEdge: 0.27 } },
+  { key: 'ucl',        sport: 'soccer', short: 'UCL',    name: 'Champions League', group: 'Soccer', slug: 'ucl',        espn: 'soccer/uefa.champions',  months: [9, 5],  accent: '#5B7FFF',
+    // A group stage pairing a champion with a qualifier is far more lopsided
+    // than any domestic league, so the rating gap counts for more.
+    tune: { baseTotal: 3.05, homeEdge: 0.22, eloScale: 0.0028 } },
+  { key: 'ligamx',     sport: 'soccer', short: 'LIGAMX', name: 'Liga MX',          group: 'Soccer', slug: 'ligamx',     espn: 'soccer/mex.1',           months: [1, 12], accent: '#2FA36B',
+    // Altitude and travel make Liga MX the strongest home field in the group.
+    tune: { baseTotal: 2.65, homeEdge: 0.38 } },
+  { key: 'mls',        sport: 'soccer', short: 'MLS',    name: 'MLS',              group: 'Soccer', slug: 'mls',        espn: 'soccer/usa.1',           months: [2, 12], accent: '#35D0C8',
+    tune: { baseTotal: 2.90, homeEdge: 0.32 } },
 ];
 
 export const LEAGUE_BY_KEY: Record<LeagueKey, LeagueMeta> =

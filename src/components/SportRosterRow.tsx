@@ -37,8 +37,15 @@ export function SportRosterRow({ player, team, onPress, showPos = true }: Props)
   return (
     <TouchableOpacity style={[styles.row, hurt && styles.dim]} activeOpacity={0.78} onPress={onPress} accessibilityRole="button">
       {/* Ask the CDN for a 40px face rather than pulling a full-size PNG
-          thirty times over on one screen. */}
-      <PlayerAvatar uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 40) : null} name={player.name} size={40} tint={team?.colors} />
+          thirty times over on one screen. Soccer squads are mostly missing
+          headshots on ESPN, so the national flag stands in before initials do. */}
+      <PlayerAvatar
+        uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 40) : player.flagUrl ?? null}
+        name={player.name}
+        size={40}
+        tint={team?.colors}
+        contain={!player.headshotUrl && !!player.flagUrl}
+      />
       <View style={{ flex: 1 }}>
         <Text style={styles.name} numberOfLines={1}>
           {player.jersey ? <Text style={styles.jersey}>#{player.jersey} </Text> : null}
