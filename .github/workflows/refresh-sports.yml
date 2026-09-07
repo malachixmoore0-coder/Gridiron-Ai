@@ -22,6 +22,10 @@ on:
         description: 'Space-separated league keys (blank = all)'
         required: false
         default: ''
+      debug:
+        description: 'Set to 1 to dump the raw shape of the league stats response'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -44,6 +48,10 @@ jobs:
       - run: npm ci
 
       - name: Build sport datasets
+        env:
+          # Set the workflow input "debug" to anything to have the roster step
+          # print what ESPN's league statistics endpoint actually returned.
+          ROSTER_DEBUG: ${{ github.event.inputs.debug }}
         run: npm run data:sports -- ${{ github.event.inputs.leagues }}
 
       - name: Commit

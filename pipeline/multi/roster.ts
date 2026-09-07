@@ -200,6 +200,10 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
   for (let page = 1; page <= 3; page += 1) {
     const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=500&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
+    if (process.env.ROSTER_DEBUG && page === 1) {
+      console.log('    [debug] byathlete keys:', json ? Object.keys(json).join(',') : 'null');
+      console.log('    [debug] sample:', JSON.stringify(json?.athletes?.[0] ?? json?.categories?.[0] ?? null).slice(0, 1500));
+    }
     const rows = json?.athletes ?? [];
     if (!rows.length) break;
     for (const row of rows) {
