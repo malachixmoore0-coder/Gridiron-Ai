@@ -176,7 +176,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     .slice(0, 20);
   let booked = 0;
   for (const g of soon) {
-    const books = await loadEventBooks(meta.espn!.split('/')[1], g.id).catch(() => []);
+    const books = await loadEventBooks(meta.espn!, g.id).catch(() => []);
     if (books.length) { g.books = books; booked += 1; }
   }
   console.log(`  ${booked}/${soon.length} games with per-book prices`);

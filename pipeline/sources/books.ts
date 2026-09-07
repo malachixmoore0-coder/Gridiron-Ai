@@ -50,8 +50,17 @@ interface OddsItem {
  * Every book on one event. `sport` is ESPN's league path, e.g. "nfl" or
  * "college-football".
  */
-export async function loadEventBooks(sport: string, eventId: string, timeoutMs = 9000): Promise<BookLine[]> {
-  const url = `https://sports.core.api.espn.com/v2/sports/football/leagues/${sport}/events/${eventId}/competitions/${eventId}/odds?limit=25`;
+/**
+ * Per-book prices for one event.
+ *
+ * `path` is ESPN's sport/league pair — "football/nfl", "basketball/nba",
+ * "soccer/usa.1". A bare league name is still accepted and assumed to be
+ * football, which is how this was originally called.
+ */
+export async function loadEventBooks(path: string, eventId: string, timeoutMs = 9000): Promise<BookLine[]> {
+  const full = path.includes('/') ? path : `football/${path}`;
+  const [sport, league] = full.split('/');
+  const url = `https://sports.core.api.espn.com/v2/sports/${sport}/leagues/${league}/events/${eventId}/competitions/${eventId}/odds?limit=25`;
   const json = await fetchJson<{ items?: OddsItem[] }>(url, `odds ${eventId}`, timeoutMs).catch(() => null);
   const items = json?.items ?? [];
   const out: BookLine[] = [];
