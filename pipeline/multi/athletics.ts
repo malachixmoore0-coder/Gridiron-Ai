@@ -187,7 +187,9 @@ const fromSrcset = (v: string): string | null => {
   return last ? last.split(/\s+/)[0] : null;
 };
 
-async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise<{ body: string; url: string } | null> {
+export interface PageResult { status: number; url: string; body: string; note?: string }
+
+async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise<PageResult> {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
@@ -195,19 +197,20 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
       signal: ctrl.signal,
       redirect: 'follow',
       headers: {
-        accept: 'text/html,application/xhtml+xml',
+        accept: 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'accept-language': 'en-US,en;q=0.9',
         // Some athletics sites answer an unfamiliar agent with a 403, and a
         // roster page is a public page; this is the same request a reader makes.
-        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36',
+        'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
       },
     });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const body = await res.text();
-    sourceLog.push({ name, url, ok: true, fetchedAt: new Date().toISOString() });
-    return { body, url: res.url || url };
+    const body = res.ok ? await res.text() : '';
+    sourceLog.push({ name, url, ok: res.ok, fetchedAt: new Date().toISOString(), note: res.ok ? undefined : `HTTP ${res.status}` });
+    return { status: res.status, url: res.url || url, body };
   } catch (e) {
-    sourceLog.push({ name, url, ok: false, fetchedAt: new Date().toISOString(), note: e instanceof Error ? e.message : String(e) });
-    return null;
+    const note = e instanceof Error ? e.message : String(e);
+    sourceLog.push({ name, url, ok: false, fetchedAt: new Date().toISOString(), note });
+    return { status: 0, url, body: '', note };
   } finally {
     clearTimeout(timer);
   }
@@ -270,19 +273,37 @@ export function photosFromHtml(html: string, pageUrl: string, wanted: Set<string
   return out;
 }
 
-export interface TeamPhotos { url: string | null; photos: Map<string, string>; }
+export interface TeamPhotos {
+  url: string | null;
+  photos: Map<string, string>;
+  /** What each URL shape actually did, so a dry spell can be diagnosed. */
+  tried: { url: string; status: number; images: number; note?: string }[];
+}
+
+/** Every URL shape a school's roster page might live at, in order of likelihood. */
+export function rosterUrls(site: SchoolSite, leagueKey: string, season?: number): string[] {
+  const out: string[] = [];
+  for (const sport of ROSTER_PATHS[leagueKey] ?? []) {
+    out.push(`https://${site.domain}/sports/${sport}/roster`);
+    if (season) out.push(`https://${site.domain}/sports/${sport}/roster/season/${season}`);
+    out.push(`https://www.${site.domain}/sports/${sport}/roster`);
+    out.push(`https://${site.domain}/roster.aspx?path=${sport}`);
+  }
+  return out;
+}
 
 /** Try a school's roster page for a sport, in each shape its vendor might use. */
-export async function scrapeTeam(site: SchoolSite, leagueKey: string, wanted: Set<string>): Promise<TeamPhotos> {
-  for (const sport of ROSTER_PATHS[leagueKey] ?? []) {
-    for (const shape of [`https://${site.domain}/sports/${sport}/roster`, `https://${site.domain}/roster.aspx?path=${sport}`]) {
-      const page = await fetchText(shape, `${site.school} ${leagueKey} roster`);
-      if (!page) continue;
-      const photos = photosFromHtml(page.body, page.url, wanted);
-      if (photos.size) return { url: page.url, photos };
-    }
+export async function scrapeTeam(site: SchoolSite, leagueKey: string, wanted: Set<string>, season?: number): Promise<TeamPhotos> {
+  const tried: TeamPhotos['tried'] = [];
+  for (const shape of rosterUrls(site, leagueKey, season)) {
+    const page = await fetchText(shape, `${site.school} ${leagueKey} roster`);
+    const images = page.body ? (page.body.match(/<img\b/gi) ?? []).length : 0;
+    tried.push({ url: shape, status: page.status, images, note: page.note });
+    if (!page.body) continue;
+    const photos = photosFromHtml(page.body, page.url, wanted);
+    if (photos.size) return { url: page.url, photos, tried };
   }
-  return { url: null, photos: new Map() };
+  return { url: null, photos: new Map(), tried };
 }
 
 export interface AthleticsRun { teams: number; found: number; players: number; }
