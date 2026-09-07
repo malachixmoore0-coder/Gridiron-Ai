@@ -55,6 +55,7 @@ jobs:
         if: ${{ github.event.inputs.probe != '' }}
         run: |
           if [ "${{ github.event.inputs.probe }}" = "2" ]; then npm run data:probe2;
+          elif [ "${{ github.event.inputs.probe }}" = "3" ]; then npm run data:probe3;
           elif [ "${{ github.event.inputs.probe }}" = "logos" ]; then npm run data:probe -- --logos;
           else npm run data:probe; fi
 

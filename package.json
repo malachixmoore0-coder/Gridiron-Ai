@@ -15,6 +15,7 @@
     "data:sports": "tsx pipeline/multi/build.ts",
     "data:probe": "tsx scripts/espn-probe.ts",
     "data:probe2": "tsx scripts/espn-probe2.ts",
+    "data:probe3": "tsx scripts/espn-probe3.ts",
     "data:golf": "tsx pipeline/multi/golf.ts"
   },
   "dependencies": {
