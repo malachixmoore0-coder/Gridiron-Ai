@@ -34,8 +34,8 @@ const MARKET_WEIGHT = 0.35;
 const HORIZON_DAYS = 12;
 /** How far back to read results for the ratings. */
 const LOOKBACK_DAYS = 240;
-/** Above this many teams, rosters cost more than they are worth. */
-const ROSTER_TEAM_CAP = 60;
+/** How many team rosters to fetch at once. Polite, and still fast enough. */
+const ROSTER_CONCURRENCY = 6;
 
 const readJson = <T>(p: string): T | null => { try { return JSON.parse(fs.readFileSync(p, 'utf8')) as T; } catch { return null; } };
 const writeJson = (dir: string, name: string, data: unknown) => {
@@ -91,14 +91,15 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   const to = new Date(now); to.setUTCDate(to.getUTCDate() + HORIZON_DAYS + 8);
   const events = await loadRange(meta.espn as string, from, to);
   console.log(`  ${teams.length} teams · ${events.length} events`);
-  if (!events.length) { console.log('  out of season — nothing to build'); return; }
 
   // Ratings carry forward from the last run, regressed toward the mean.
   const prevTeams = readJson<SportTeamsFile>(path.join(dir, 'teams.json'));
   const priors = new Map((prevTeams?.teams ?? []).map((t) => [t.id, t.rating]));
   const ratings = buildRatings(events, p, priors);
 
-  const season = new Date(events[events.length - 1].date).getUTCFullYear();
+  const season = events.length
+    ? new Date(events[events.length - 1].date).getUTCFullYear()
+    : (prevTeams?.season ?? now.getUTCFullYear());
   const byId = new Map(teams.map((t) => [t.id, t]));
   const rankOf = new Map<string, number>();
   for (const e of events) {
@@ -272,40 +273,61 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   };
 
   writeJson(dir, 'teams.json', teamsFile);
-  writeJson(dir, 'schedule.json', scheduleFile);
-  writeJson(dir, 'predictions.json', predictionsFile);
-  console.log(`  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`);
+  // An empty board must not overwrite a real one — a bad night at ESPN would
+  // erase the slate. It is written only when there is something on it, or when
+  // there is no board at all yet and the app needs one to render against.
+  if (events.length || !fs.existsSync(path.join(dir, 'schedule.json'))) {
+    writeJson(dir, 'schedule.json', scheduleFile);
+    writeJson(dir, 'predictions.json', predictionsFile);
+  }
+  console.log(events.length
+    ? `  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`
+    : '  out of season — teams published, board left as it was');
 
   // ---- rosters, one file per team so the app fetches only what it opens ---
-  // A 400-team college league would be four hundred requests and forty
-  // megabytes of JSON for a screen almost nobody opens, so rosters are built
-  // only where the league is small enough for them to be worth having.
-  if (sportTeams.length <= ROSTER_TEAM_CAP) {
+  // Every league gets them, college included. Four hundred sequential requests
+  // is the reason this used to be capped; a small amount of concurrency turns
+  // that into about a minute, and the app still only ever downloads the one
+  // team someone opened.
+  {
     const rosterDir = path.join(dir, 'rosters');
     const { stats: leagueStats, source: statsSource } = await loadLeagueStats(meta.espn!, meta.sport, season);
     const depth = rankDepth(leagueStats);
     const everyone: SportPlayer[] = [];
     const perTeam = new Map<string, SportPlayer[]>();
-    for (const t of sportTeams) {
-      const players = await loadRoster(meta.espn!, meta.sport, t.espnId, leagueStats, depth).catch(() => []);
-      if (!players.length) continue;
-      perTeam.set(t.id, players);
-      everyone.push(...players);
+
+    for (let i = 0; i < sportTeams.length; i += ROSTER_CONCURRENCY) {
+      const batch = sportTeams.slice(i, i + ROSTER_CONCURRENCY);
+      const results = await Promise.all(batch.map((t) =>
+        loadRoster(meta.espn!, meta.sport, t.espnId, leagueStats, depth).catch(() => [] as SportPlayer[])));
+      batch.forEach((t, j) => {
+        const players = results[j];
+        if (!players.length) return;
+        perTeam.set(t.id, players);
+        everyone.push(...players);
+      });
     }
+
     // Grades are percentiles within the league, so they are computed once
     // across every roster rather than team by team — a fourth outfielder on a
     // good team is not a starter, and a per-team grade would say he was.
     gradeLeague(everyone, meta.sport);
+
+    let written = 0;
     for (const [teamId, players] of perTeam) {
+      const target = path.join(rosterDir, `${teamId}.json`);
+      // Rewriting an unchanged roster would bump generatedAt and produce a diff
+      // on every run — a few thousand files a day of pure churn in the history.
+      const prev = readJson<SportRosterFile>(target);
+      if (prev && JSON.stringify(prev.players) === JSON.stringify(players)) continue;
       const file: SportRosterFile = {
         teamId, league: meta.key, generatedAt: now.toISOString(), season, statsSource, players,
       };
       writeJson(rosterDir, `${teamId}.json`, file);
+      written += 1;
     }
     const withStats = everyone.filter((pl) => pl.stats.length).length;
-    console.log(`  ${perTeam.size} rosters · ${everyone.length} players · ${withStats} with a stat line (${statsSource})`);
-  } else {
-    console.log(`  ${sportTeams.length} teams — too many to publish rosters for`);
+    console.log(`  ${perTeam.size} rosters (${written} changed) · ${everyone.length} players · ${withStats} with a stat line (${statsSource})`);
   }
 }
 

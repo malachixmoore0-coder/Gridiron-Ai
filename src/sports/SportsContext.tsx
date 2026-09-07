@@ -81,7 +81,9 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
     try {
       const [teams, schedule, predictions] = await Promise.all([
         getJson<SportTeamsFile>(feedUrl(meta.slug, 'teams.json')),
-        getJson<SportScheduleFile>(feedUrl(meta.slug, 'schedule.json')),
+        // A league between seasons publishes teams and no board; that is a
+        // state to render, not an error to swallow the whole feed for.
+        getJson<SportScheduleFile>(feedUrl(meta.slug, 'schedule.json')).catch(() => null),
         getJson<SportPredictionsFile>(feedUrl(meta.slug, 'predictions.json')).catch(() => null),
       ]);
       const at = Date.now();

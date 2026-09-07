@@ -111,7 +111,9 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
     const meta = LEAGUE_BY_KEY[key];
     const feed = sports.feeds[key];
     const refresh = () => sports.refresh(key);
-    if (!feed?.teams || !feed.schedule) return placeholder(key, !!feed?.loading, feed?.error ?? null, refresh);
+    // Teams without a board is a real state, not a broken one: a league is out
+    // of season for months at a time, and the Teams tab should still work.
+    if (!feed?.teams) return placeholder(key, !!feed?.loading, feed?.error ?? null, refresh);
 
     const teams: LeagueTeamRef[] = feed.teams.teams.map((t) => ({
       id: t.id, abbr: t.abbr, name: t.name, group: t.group,
@@ -119,15 +121,15 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
       rank: t.rank ?? undefined,
     }));
     const byId = new Map(teams.map((t) => [t.id, t]));
-    const games = feed.schedule.games as unknown as LeagueGame[];
-    const weeks = feed.schedule.weeks as WeekRef[];
-    const week = feed.schedule.week;
+    const games = (feed.schedule?.games ?? []) as unknown as LeagueGame[];
+    const weeks = (feed.schedule?.weeks ?? []) as WeekRef[];
+    const week = feed.schedule?.week ?? feed.teams.week;
     const records = (feed.predictions?.records ?? []) as never[];
     const recById = new Map(records.map((r) => [(r as { id: string }).id, r]));
 
     return {
       id: key, sport: meta.sport, bespoke: false, short: meta.short, label: meta.name,
-      season: feed.teams.season, week, phase: feed.schedule.phase, generatedAt: feed.teams.generatedAt,
+      season: feed.teams.season, week, phase: feed.schedule?.phase ?? feed.teams.phase, generatedAt: feed.teams.generatedAt,
       refreshing: !!feed.loading, refresh, loading: !!feed.loading, error: feed.error,
       games,
       weekGames: games.filter((g) => g.week === week),
