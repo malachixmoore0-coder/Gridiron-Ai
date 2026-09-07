@@ -35,7 +35,7 @@ const Ctx = createContext<State | null>(null);
 function placeholder(key: LeagueKey, loading: boolean, error: string | null, refresh: () => Promise<void>): LeagueView {
   const meta = LEAGUE_BY_KEY[key];
   return {
-    id: key, sport: meta.sport, bespoke: false, short: meta.short, label: meta.name,
+    id: key, sport: meta.sport, bespoke: false, field: meta.kind === 'field', short: meta.short, label: meta.name,
     season: 0, week: 1, phase: 'offseason', generatedAt: '',
     refreshing: loading, refresh, loading, error,
     games: [], weekGames: [], weeks: [], gamesForWeek: () => [],
@@ -111,6 +111,9 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
     const meta = LEAGUE_BY_KEY[key];
     const feed = sports.feeds[key];
     const refresh = () => sports.refresh(key);
+    // A field league publishes no teams or board at all — golf lives in its own
+    // feed — so it always presents the empty view and its own screens render.
+    if (meta.kind === 'field') return placeholder(key, false, null, async () => {});
     // Teams without a board is a real state, not a broken one: a league is out
     // of season for months at a time, and the Teams tab should still work.
     if (!feed?.teams) return placeholder(key, !!feed?.loading, feed?.error ?? null, refresh);

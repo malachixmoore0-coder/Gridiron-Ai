@@ -59,6 +59,8 @@ export const UNIT_ORDER: Record<SportId, string[]> = {
   baseball: ['Starting pitchers', 'Relievers', 'Catchers', 'Infield', 'Outfield'],
   soccer: ['Goalkeepers', 'Defenders', 'Midfield', 'Forwards'],
   hockey: ['Forwards', 'Defense', 'Goaltenders'],
+  // Golf has no positions; its players live in src/sports/golf.ts.
+  golf: [],
   football: ['Offense', 'Defense', 'Special teams'],
 };
 

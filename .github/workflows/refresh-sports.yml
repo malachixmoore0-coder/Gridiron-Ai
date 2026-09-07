@@ -63,6 +63,10 @@ jobs:
           ROSTER_DEBUG: ${{ github.event.inputs.debug }}
         run: npm run data:sports -- ${{ github.event.inputs.leagues }}
 
+      - name: Build the golf dataset
+        if: ${{ github.event.inputs.probe == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
+        run: npm run data:golf
+
       - name: Commit
         run: |
           git config user.name "gridiron-data-bot"

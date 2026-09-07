@@ -67,6 +67,11 @@ import { SportResultScreen } from '@/screens/SportResultScreen';
 import { SportRecordScreen } from '@/screens/SportRecordScreen';
 import { SportPlayerScreen } from '@/screens/SportPlayerScreen';
 
+/* Golf: an event and a field, so none of the two-team screens apply */
+import { GolfBoardScreen } from '@/screens/GolfBoardScreen';
+import { GolfPlayersScreen } from '@/screens/GolfPlayersScreen';
+import { GolfPlayerScreen } from '@/screens/GolfPlayerScreen';
+
 /* Shared */
 import { RecordHubScreen } from '@/screens/RecordHubScreen';
 import { SocialScreen } from '@/screens/SocialScreen';
@@ -82,6 +87,7 @@ type Overlay =
   | { kind: 'result'; league: LeagueId; request: AnyRun }
   | { kind: 'team'; league: LeagueId; teamId: string }
   | { kind: 'player'; league: LeagueId; teamId: string; playerId: string }
+  | { kind: 'golfer'; playerId: string }
   | { kind: 'game'; league: LeagueId; teamId: string; gameId: string }
   | { kind: 'simulate'; league: LeagueId }
   | { kind: 'parlay' }
@@ -92,7 +98,7 @@ type Overlay =
   | { kind: 'profile'; userId: string };
 
 const TITLES: Record<Overlay['kind'], string> = {
-  result: 'Back', team: 'Back', player: 'Back', game: 'Back', simulate: 'Close',
+  result: 'Back', team: 'Back', player: 'Back', golfer: 'Back', game: 'Back', simulate: 'Close',
   parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back', settings: 'Done',
 };
 
@@ -172,14 +178,18 @@ export function RootNavigator() {
 
   const cfb = league === 'cfb';
   /** Football runs its own screens; every other sport shares the generic ones. */
-  const generic = !active.bespoke;
+  const generic = !active.bespoke && !active.field;
+  /** Golf has no opponent, so it replaces the two-team tabs entirely. */
+  const field = active.field;
+  const openGolfer = (playerId: string) => push({ kind: 'golfer', playerId });
 
   return (
     <NavProvider value={nav}>
     <View style={styles.root}>
       <View style={styles.content}>
-        {tab === 'home' && (
-          <FloorScreen
+        {tab === 'home' && (field
+          ? <GolfBoardScreen onOpenPlayer={openGolfer} />
+          : <FloorScreen
             onRun={(r) => run(r as AnyRun, league)}
             onOpenGame={(t, g) => openGame(t, g, league)}
             onOpenTeam={(t) => openTeam(t, league)}
@@ -187,14 +197,15 @@ export function RootNavigator() {
             onOpenCard={() => setTab('record')}
             onOpenParlay={() => push({ kind: 'parlay' })}
             onOpenModel={() => push({ kind: 'model', league })}
-          />
-        )}
+          />)}
 
-        {tab === 'slate' && (generic
-          ? <SportSlateScreen onRun={(r) => run(r as AnyRun, league)} onOpenGame={(t, g) => openGame(t, g, league)} />
-          : cfb
-            ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
-            : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
+        {tab === 'slate' && (field
+          ? <GolfBoardScreen onOpenPlayer={openGolfer} />
+          : generic
+            ? <SportSlateScreen onRun={(r) => run(r as AnyRun, league)} onOpenGame={(t, g) => openGame(t, g, league)} />
+            : cfb
+              ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
+              : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
 
         {tab === 'record' && (
           <RecordHubScreen
@@ -205,11 +216,13 @@ export function RootNavigator() {
           />
         )}
 
-        {tab === 'teams' && (generic
-          ? <SportTeamsScreen onOpenTeam={(t) => openTeam(t, league)} onUpgrade={openUpgrade} />
-          : cfb
-            ? <CfbTeams onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
-            : <TeamsScreen onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />)}
+        {tab === 'teams' && (field
+          ? <GolfPlayersScreen onOpenPlayer={openGolfer} />
+          : generic
+            ? <SportTeamsScreen onOpenTeam={(t) => openTeam(t, league)} onUpgrade={openUpgrade} />
+            : cfb
+              ? <CfbTeams onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+              : <TeamsScreen onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />)}
 
         {tab === 'social' && (
           <SocialScreen
@@ -222,7 +235,7 @@ export function RootNavigator() {
 
       {/* Simulate is an action, not a destination, so it floats above the dock —
           and only where rows do not already carry their own. */}
-      {(tab === 'home' || tab === 'teams' || tab === 'record') && (
+      {!field && (tab === 'home' || tab === 'teams' || tab === 'record') && (
         <TouchableOpacity
           style={styles.fab}
           activeOpacity={0.88}
@@ -290,6 +303,8 @@ export function RootNavigator() {
                   onModel={() => push({ kind: 'model', league })}
                   onCard={() => { clearStack(); setTab('record'); }}
                 />
+              ) : o.kind === 'golfer' ? (
+                <GolfPlayerScreen playerId={o.playerId} onBack={pop} />
               ) : o.kind === 'parlay' ? (
                 <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
               ) : o.kind === 'upgrade' ? (

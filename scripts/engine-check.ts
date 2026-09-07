@@ -8,7 +8,8 @@ import path from 'node:path';
 import { TEAMS, getTeam } from '../src/data/teams';
 import type { Team } from '../src/engine/types';
 import { coverProbability, project, seedFor, simulate } from '../src/sports/engine';
-import { GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
+import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
+import { fieldSeed, simulateField } from '../src/sports/golf';
 
 let failures = 0;
 const check = (cond: boolean, msg: string) => {
@@ -209,6 +210,25 @@ console.log('\n— Multi-sport engine');
     check(l.bespoke ? !l.espn : !!l.espn, `${l.key}: generic leagues carry an ESPN path, bespoke ones do not`);
   }
   check(new Set(LEAGUES.map((l) => l.slug)).size === LEAGUES.length, 'league slugs are unique');
+
+  // A field league has no opponent, so it must never reach the head-to-head
+  // engine — the whole point of the kind flag.
+  for (const l of FIELD_LEAGUES) {
+    check(!GENERIC_LEAGUES.some((g) => g.key === l.key), `${l.key}: field leagues stay out of the head-to-head build`);
+  }
+  check(FIELD_LEAGUES.length > 0, 'at least one field league is registered');
+
+  // Golf's own model: a field, and a projection that has to sum to 100.
+  const field = Array.from({ length: 24 }, (_, i) => ({ id: `p${i}`, scoringAverage: 69 + i * 0.08 }));
+  const odds = simulateField(field, 4, 1500, fieldSeed('t1', 4));
+  const totalWin = odds.reduce((t, o) => t + o.winPct, 0);
+  check(Math.abs(totalWin - 100) < 0.001, `golf: win probabilities sum to 100 (${totalWin.toFixed(3)})`);
+  check(odds.every((o) => o.top10Pct >= o.top5Pct - 1e-9 && o.top5Pct >= o.winPct - 1e-9), 'golf: win ≤ top 5 ≤ top 10 for everyone');
+  check(odds[0].winPct > odds[odds.length - 1].winPct, 'golf: the lower scoring average wins more often');
+  const repeat = simulateField(field, 4, 1500, fieldSeed('t1', 4));
+  check(JSON.stringify(odds) === JSON.stringify(repeat), 'golf: same seed ⇒ identical field');
+  const noRounds = simulateField(field, 0, 500, 1);
+  check(noRounds.every((o) => o.winPct === 0), 'golf: a finished tournament is not re-simulated');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

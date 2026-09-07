@@ -13,20 +13,21 @@
  * shared either way.
  */
 
-export type SportId = 'football' | 'basketball' | 'baseball' | 'soccer' | 'hockey';
+export type SportId = 'football' | 'basketball' | 'baseball' | 'soccer' | 'hockey' | 'golf';
 
 export type LeagueKey =
   | 'nfl' | 'cfb'          // bespoke football engines
   | 'nba' | 'wnba' | 'mbb' | 'wbb'
   | 'mlb' | 'cbase'
   | 'nhl'
-  | 'mls' | 'epl' | 'laliga' | 'seriea' | 'bundesliga' | 'ligue1' | 'ucl' | 'ligamx';
+  | 'mls' | 'epl' | 'laliga' | 'seriea' | 'bundesliga' | 'ligue1' | 'ucl' | 'ligamx'
+  | 'pga';
 
 /** How a sport's scores actually behave. */
 export interface SportProfile {
   sport: SportId;
   /** What a score is called, in the singular. */
-  unit: 'point' | 'run' | 'goal';
+  unit: 'point' | 'run' | 'goal' | 'stroke';
   /**
    * Continuous sports (football, basketball) are modelled as a normal margin
    * around the projection; low-count sports (baseball, soccer) are modelled as
@@ -95,6 +96,16 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
     baseTotal: 6.1, spreadStep: 0.5, primaryMarket: 'moneyline',
     periods: ['1st', '2nd', '3rd', 'OT', 'SO'], cadence: 'day',
   },
+  golf: {
+    // Golf is not two sides and a margin, so the head-to-head engine never
+    // runs for it — src/sports/golf.ts simulates the whole field instead.
+    // These are that model's parameters: a round is drawn around a player's
+    // scoring average, and marginSigma is how much one round varies.
+    unit: 'stroke', model: 'normal', draws: false,
+    marginSigma: 2.9, totalSigma: 2.9, homeEdge: 0, eloScale: 0,
+    baseTotal: 71, spreadStep: 1, primaryMarket: 'moneyline',
+    periods: ['R1', 'R2', 'R3', 'R4'], cadence: 'day',
+  },
 };
 
 export interface LeagueMeta {
@@ -112,6 +123,13 @@ export interface LeagueMeta {
   slug: string;
   /** Bespoke leagues run their own engine and screens. */
   bespoke?: boolean;
+  /**
+   * A field sport — one event, a hundred and fifty entrants, no opponent.
+   * Nothing about a slate, a spread or a head-to-head simulation applies, so
+   * these leagues get their own screens rather than an empty version of the
+   * ones built for two teams.
+   */
+  kind?: 'field';
   /** Roughly when the season runs, for the offseason notice. */
   months: [number, number];
   /** A sport-specific accent used sparingly — chips, empty states, the picker. */
@@ -174,6 +192,8 @@ export const LEAGUES: LeagueMeta[] = [
     tune: { baseTotal: 2.65, homeEdge: 0.38 } },
   { key: 'mls',        sport: 'soccer', short: 'MLS',    name: 'MLS',              group: 'Soccer', slug: 'mls',        espn: 'soccer/usa.1',           months: [2, 12], accent: '#35D0C8',
     tune: { baseTotal: 2.90, homeEdge: 0.32 } },
+
+  { key: 'pga',   sport: 'golf',       short: 'PGA',   name: 'PGA Tour',                group: 'Golf',       slug: 'pga',   espn: 'golf/pga',   kind: 'field',   months: [1, 11], accent: '#7FD177' },
 ];
 
 export const LEAGUE_BY_KEY: Record<LeagueKey, LeagueMeta> =
@@ -184,8 +204,11 @@ export const profileFor = (key: LeagueKey): SportProfile => {
   return { sport: meta.sport, ...SPORTS[meta.sport], ...(meta.tune ?? {}) };
 };
 
-/** Leagues that share the generic engine, screens and pipeline. */
-export const GENERIC_LEAGUES = LEAGUES.filter((l) => !l.bespoke);
+/** Leagues that share the generic head-to-head engine, screens and pipeline. */
+export const GENERIC_LEAGUES = LEAGUES.filter((l) => !l.bespoke && !l.kind);
+
+/** Leagues that are an event and a field rather than two sides. */
+export const FIELD_LEAGUES = LEAGUES.filter((l) => l.kind === 'field');
 
 /** True when the league is between seasons right now. */
 export function inSeason(meta: LeagueMeta, at = new Date()): boolean {

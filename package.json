@@ -14,7 +14,8 @@
     "data:scores": "tsx scripts/refresh-scores.ts",
     "data:sports": "tsx pipeline/multi/build.ts",
     "data:probe": "tsx scripts/espn-probe.ts",
-    "data:probe2": "tsx scripts/espn-probe2.ts"
+    "data:probe2": "tsx scripts/espn-probe2.ts",
+    "data:golf": "tsx pipeline/multi/golf.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

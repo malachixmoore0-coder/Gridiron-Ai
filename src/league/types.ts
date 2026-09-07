@@ -93,6 +93,8 @@ export interface LeagueView {
   sport: SportId;
   /** True for the two football leagues, which run their own engine and screens. */
   bespoke: boolean;
+  /** True for a field sport — one event, many entrants, no opponent. */
+  field?: boolean;
   /** Still fetching this league's feed for the first time. */
   loading?: boolean;
   /** Why the feed is missing, when it is. */

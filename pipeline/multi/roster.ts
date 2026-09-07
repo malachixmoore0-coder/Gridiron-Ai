@@ -92,6 +92,9 @@ export interface SportRosterFile {
 --------------------------------------------------------------------------- */
 
 const UNITS: Record<SportId, { unit: string; pos: string[] }[]> = {
+  // Golf never reaches this file — it has no teams to build a roster from —
+  // but the map is keyed by every sport, so it needs a row.
+  golf: [{ unit: 'Field', pos: [] }],
   basketball: [
     { unit: 'Guards', pos: ['PG', 'SG', 'G'] },
     { unit: 'Wings', pos: ['SF', 'GF', 'F'] },
@@ -179,6 +182,7 @@ const HEADLINE: Record<SportId, { skater: StatSpec[]; keeper?: StatSpec[] }> = {
       { keys: ['receivingYards'], label: 'Rec yds' },
     ],
   },
+  golf: { skater: [] },
   hockey: {
     skater: [
       { keys: ['points'], label: 'PTS' },

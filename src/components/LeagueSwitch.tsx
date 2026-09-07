@@ -22,7 +22,7 @@ const SPORT_ICON: Record<SportId, keyof typeof Ionicons.glyphMap> = {
   football: 'american-football',
   basketball: 'basketball',
   baseball: 'baseball',
-  soccer: 'football', hockey: 'snow',
+  soccer: 'football', hockey: 'snow', golf: 'golf',
 };
 
 export function LeagueSwitch({ compact }: { compact?: boolean }) {
@@ -75,7 +75,8 @@ export function LeagueSwitch({ compact }: { compact?: boolean }) {
                         <View style={{ flex: 1 }}>
                           <Text style={[styles.rowName, on && { color: l.accent }]}>{l.name}</Text>
                           <Text style={styles.rowMeta}>
-                            {view.loading ? 'loading…'
+                            {l.kind === 'field' ? 'tournaments and the field'
+                              : view.loading ? 'loading…'
                               : games > 0 ? `${games} game${games === 1 ? '' : 's'} on the board`
                               : live ? 'in season' : 'out of season'}
                           </Text>
