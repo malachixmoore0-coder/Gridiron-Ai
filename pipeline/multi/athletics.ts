@@ -139,20 +139,27 @@ export const supportsAthletics = (leagueKey: string) => leagueKey in ROSTER_PATH
 
 // ---------------------------------------------------------------- the cache
 
-export interface AthleticsCache {
-  generatedAt: string;
-  /** athlete id → the photograph on their school's roster page. */
-  photos: Record<string, string>;
-  /** team id → when its roster page was last read, and what came of it. */
-  teams: Record<string, { checkedAt: string; url: string | null; found: number }>;
+export interface SchoolPlayer {
+  /** Stable across runs: the school id and the slug the site uses. */
+  id: string;
+  name: string;
+  jersey: string | null;
+  pos: string;
+  photo: string | null;
 }
 
-const empty = (): AthleticsCache => ({ generatedAt: new Date().toISOString(), photos: {}, teams: {} });
+export interface AthleticsCache {
+  generatedAt: string;
+  /** team id → the squad its school publishes, and when it was last read. */
+  teams: Record<string, { checkedAt: string; url: string | null; players: SchoolPlayer[] }>;
+}
+
+const empty = (): AthleticsCache => ({ generatedAt: new Date().toISOString(), teams: {} });
 
 export function readAthletics(dir: string): AthleticsCache {
   try {
     const raw = JSON.parse(fs.readFileSync(path.join(dir, 'athletics.json'), 'utf8')) as AthleticsCache;
-    return raw?.photos && raw?.teams ? raw : empty();
+    return raw?.teams ? raw : empty();
   } catch { return empty(); }
 }
 
@@ -216,22 +223,11 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
   }
 }
 
-/**
- * The names the page itself lists, read off its bio links.
- *
- * Worth having separately: when nothing matches, this says whether the parser
- * failed or the school has simply moved on to next season's squad.
- */
-export function pageNames(html: string): string[] {
-  const out = new Set<string>();
-  for (const a of html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)) {
-    for (const seg of a[1].split('/').filter(Boolean).slice(-2)) {
-      const key = seg.replace(/-/g, ' ').trim();
-      if (key.length > 4 && /[a-z]/i.test(key) && !/^\d+$/.test(key)) out.add(key);
-    }
-  }
-  return [...out];
-}
+/** Baseball's positions as the schools abbreviate them, and nothing else. */
+const POS = /\b(RHP|LHP|SP|RP|P|C|1B|2B|3B|SS|INF|IF|UTL|UT|OF|LF|CF|RF|DH)\b/;
+
+/** RHP is a starter to a school and a pitcher to the app's roster grouping. */
+const NORMAL_POS: Record<string, string> = { RHP: 'SP', LHP: 'SP', P: 'SP', INF: 'IF', UTL: 'IF', UT: 'IF' };
 
 /** The first real image URL in a slice of markup, wherever the vendor put it. */
 function firstImage(chunk: string): string | null {
@@ -245,108 +241,113 @@ function firstImage(chunk: string): string | null {
 }
 
 /**
- * Read one roster page and return the photographs it has for the names given.
+ * The squad a school publishes, read off its own roster page.
  *
- * The reliable tie between a picture and a person is the bio link the picture
- * sits inside — /sports/baseball/roster/zane-adams/17285 — which every vendor
- * builds the same way because it is the page's own navigation. So the anchors
- * are what this walks, each one bounded by the next so a player without a photo
- * cannot borrow the one below him. Captions are read too, for the older sites
- * that put the name in an alt attribute and nothing else.
+ * This exists because ESPN has no college baseball roster to give. Ask it for
+ * Arizona and it answers with sixty-eight names spanning a decade, no
+ * positions, no numbers and no photographs — an all-time athlete index, not a
+ * team. The school's page is the roster: current, numbered, and with the
+ * pictures the sports information office took.
  *
- * A candidate is kept only when the name it is tied to is one we asked for.
- * Wanting the name first is what makes this safe to point at a page nobody has
- * looked at.
+ * Each player is one bio link. The link's own label carries the name and the
+ * jersey number ("Zane Adams jersey number 20 full bio"), the picture is the
+ * first image inside the card, and the position is whichever of baseball's
+ * abbreviations appears in the card's text. A card that yields no name is
+ * skipped rather than guessed at.
  */
-export function photosFromHtml(html: string, pageUrl: string, wanted: Set<string>): Map<string, string> {
-  const out = new Map<string, string>();
-
-  const take = (key: string | null, raw: string | null) => {
-    if (!key || !raw || out.has(key) || !wanted.has(key)) return;
-    if (JUNK.test(raw)) return;
-    let abs: string;
-    try { abs = new URL(raw, pageUrl).toString(); } catch { return; }
-    if (/^https?:/i.test(abs)) out.set(key, abs);
-  };
-
-  // 1. The bio links, each window ending where the next link begins.
+export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string): SchoolPlayer[] {
   const anchors = [...html.matchAll(/<a\b[^>]*href=["']([^"'#]*\/roster\/[^"'#]+)["'][^>]*>/gi)];
+  const slugOf = (href: string) => href.split('/').filter(Boolean).slice(-2).find((x) => /[a-z]/i.test(x) && !/^\d+$/.test(x));
+  const out = new Map<string, SchoolPlayer>();
+
   anchors.forEach((a, i) => {
     const at = a.index ?? 0;
-    const keys: string[] = [];
-    // .../roster/zane-adams/17285 — the slug is the name, the number is not.
-    for (const seg of a[1].split('/').filter(Boolean).slice(-2)) {
-      const key = nameKey(seg.replace(/-/g, ' '));
-      if (key.length > 4) keys.push(key);
-    }
-    // "Zane Adams jersey number 20 full bio" — the label, minus the furniture.
-    const aria = ATTR(a[0], 'aria-label') ?? ATTR(a[0], 'title');
-    if (aria) keys.push(nameKey(aria.replace(/\b(jersey|number|full bio|bio|profile|player)\b.*$/i, '')));
+    const slug = slugOf(a[1]);
+    if (!slug || out.has(slug)) return;
 
-    const hit = keys.find((k) => wanted.has(k) && !out.has(k));
-    if (!hit) return;
-    const stop = Math.min(anchors[i + 1]?.index ?? html.length, at + 2500);
-    take(hit, firstImage(html.slice(at, stop)));
+    const aria = ATTR(a[0], 'aria-label') ?? ATTR(a[0], 'title') ?? '';
+    const name = aria.replace(/\b(jersey|number|full bio|bio|profile)\b.*$/i, '').trim()
+      || slug.split('-').map((w) => w.charAt(0).toUpperCase() + w.slice(1)).join(' ');
+    if (!nameKey(name)) return;
+
+    // The card runs to the next player's link — the next *different* one, since
+    // a card links the same player twice, once from the photo and once from the
+    // name, and the details sit between them.
+    const next = anchors.slice(i + 1).find((b) => slugOf(b[1]) !== slug);
+    const stop = Math.min(next?.index ?? html.length, at + 3000);
+    const card = html.slice(at, stop);
+    const text = card.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ');
+
+    const jersey = /jersey number (\d+)/i.exec(aria)?.[1] ?? /#\s?(\d{1,2})\b/.exec(text)?.[1] ?? null;
+    const raw = POS.exec(text.replace(new RegExp(name, 'i'), ' '))?.[1] ?? '';
+    const photoRaw = firstImage(card);
+    let photo: string | null = null;
+    if (photoRaw) { try { photo = new URL(photoRaw, pageUrl).toString(); } catch { photo = null; } }
+
+    out.set(slug, {
+      id: `${idPrefix}-${slug}`,
+      name,
+      jersey,
+      pos: NORMAL_POS[raw] ?? raw ?? '',
+      photo,
+    });
   });
 
-  // 2. Vendors that caption the photograph and leave the markup silent.
-  for (const m of html.matchAll(/<img\b[^>]*>/gi)) {
-    const alt = ATTR(m[0], 'alt');
-    if (alt) take(nameKey(alt), firstImage(m[0]));
-  }
-
-  return out;
+  return [...out.values()];
 }
 
-export interface TeamPhotos {
+export interface TeamScrape {
   url: string | null;
-  photos: Map<string, string>;
-  /** What each URL shape actually did, so a dry spell can be diagnosed. */
-  tried: { url: string; status: number; images: number; note?: string }[];
-  /** Names the page listed, whether or not we were looking for them. */
-  listed: string[];
+  players: SchoolPlayer[];
+  /** What each URL shape did, so a dry spell can be diagnosed from the log. */
+  tried: { url: string; status: number; players: number; note?: string }[];
 }
 
 /** Every URL shape a school's roster page might live at, in order of likelihood. */
-export function rosterUrls(site: SchoolSite, leagueKey: string, season?: number): string[] {
+export function rosterUrls(site: SchoolSite, leagueKey: string): string[] {
   const out: string[] = [];
   for (const sport of ROSTER_PATHS[leagueKey] ?? []) {
     out.push(`https://${site.domain}/sports/${sport}/roster`);
-    if (season) out.push(`https://${site.domain}/sports/${sport}/roster/season/${season}`);
     out.push(`https://www.${site.domain}/sports/${sport}/roster`);
     out.push(`https://${site.domain}/roster.aspx?path=${sport}`);
   }
   return out;
 }
 
-/** Try a school's roster page for a sport, in each shape its vendor might use. */
-export async function scrapeTeam(site: SchoolSite, leagueKey: string, wanted: Set<string>, season?: number): Promise<TeamPhotos> {
-  const tried: TeamPhotos['tried'] = [];
-  let listed: string[] = [];
-  for (const shape of rosterUrls(site, leagueKey, season)) {
+/** A page listing this many players is a roster; anything less is a staff list. */
+const A_SQUAD = 9;
+
+/** Read a school's roster page, trying each shape its vendor might use. */
+export async function scrapeTeam(site: SchoolSite, leagueKey: string, idPrefix: string): Promise<TeamScrape> {
+  const tried: TeamScrape['tried'] = [];
+  let best: { url: string; players: SchoolPlayer[] } | null = null;
+
+  for (const shape of rosterUrls(site, leagueKey)) {
     const page = await fetchText(shape, `${site.school} ${leagueKey} roster`);
-    const images = page.body ? (page.body.match(/<img\b/gi) ?? []).length : 0;
-    tried.push({ url: shape, status: page.status, images, note: page.note });
-    if (!page.body) continue;
-    const photos = photosFromHtml(page.body, page.url, wanted);
-    if (photos.size) return { url: page.url, photos, tried, listed: pageNames(page.body) };
-    if (!listed.length) listed = pageNames(page.body);
+    const players = page.body ? rosterFromHtml(page.body, page.url, idPrefix) : [];
+    tried.push({ url: shape, status: page.status, players: players.length, note: page.note });
+    if (!best || players.length > best.players.length) best = { url: page.url, players };
+    // A full squad is as good as it gets; stop paying for the other shapes.
+    if (players.length >= A_SQUAD) break;
   }
-  return { url: null, photos: new Map(), tried, listed };
+
+  return best && best.players.length >= A_SQUAD
+    ? { url: best.url, players: best.players, tried }
+    : { url: null, players: [], tried };
 }
 
-export interface AthleticsRun { teams: number; found: number; players: number; }
+export interface AthleticsRun { read: number; answered: number; players: number; }
 
 /**
- * Fill in what the schools publish, for as many teams as this run can afford.
+ * Read as many school roster pages as this run can afford.
  *
- * Teams are re-read on a slow cycle rather than every build: a roster page
- * changes a few times a year, and reading seventy of them three times a day to
- * be told the same thing is the mistake the ESPN backfill already made once.
+ * Pages are re-read on a slow cycle rather than every build: a roster changes a
+ * few times a season, and reading seventy of them three times a day to be told
+ * the same thing is the mistake the ESPN headshot backfill already made once.
  */
 export async function backfillFromSchools(
   leagueKey: string,
-  teams: { id: string; logoUrl?: string | null; players: { id: string; name: string }[] }[],
+  teams: { id: string; logoUrl?: string | null }[],
   cache: AthleticsCache,
   budget: number,
   recheckDays = 21,
@@ -355,32 +356,26 @@ export async function backfillFromSchools(
   const stale = Date.now() - recheckDays * 86_400_000;
   const due = teams
     .map((t) => ({ team: t, site: siteFor(t.logoUrl) }))
-    .filter((r): r is { team: typeof teams[number]; site: SchoolSite } => !!r.site)
+    .filter((r): r is { team: { id: string; logoUrl?: string | null }; site: SchoolSite } => !!r.site)
     .filter(({ team }) => {
       const seen = cache.teams[team.id];
       return !seen || Date.parse(seen.checkedAt) < stale;
     })
     .slice(0, budget);
 
-  let found = 0;
+  let answered = 0;
   let players = 0;
 
   for (let i = 0; i < due.length; i += concurrency) {
     const batch = due.slice(i, i + concurrency);
-    const results = await Promise.all(batch.map(({ site, team }) => {
-      const wanted = new Set(team.players.map((p) => nameKey(p.name)).filter((k) => k.length > 3));
-      return scrapeTeam(site, leagueKey, wanted).catch(() => ({ url: null, photos: new Map<string, string>() }));
-    }));
+    const results = await Promise.all(batch.map(({ site, team }) =>
+      scrapeTeam(site, leagueKey, `${site.id}`).catch(() => ({ url: null, players: [], tried: [] } as TeamScrape))));
     batch.forEach(({ team }, j) => {
-      const { url, photos } = results[j];
-      cache.teams[team.id] = { checkedAt: new Date().toISOString(), url, found: photos.size };
-      if (photos.size) found += 1;
-      for (const p of team.players) {
-        const hit = photos.get(nameKey(p.name));
-        if (hit) { cache.photos[p.id] = hit; players += 1; }
-      }
+      const { url, players: squad } = results[j];
+      cache.teams[team.id] = { checkedAt: new Date().toISOString(), url, players: squad };
+      if (squad.length) { answered += 1; players += squad.length; }
     });
   }
 
-  return { teams: due.length, found, players };
+  return { read: due.length, answered, players };
 }

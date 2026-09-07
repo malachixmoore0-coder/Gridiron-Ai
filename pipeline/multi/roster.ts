@@ -128,7 +128,7 @@ const UNITS: Record<SportId, { unit: string; pos: string[] }[]> = {
 /** The order units appear in, so a roster reads top to bottom the usual way. */
 export const unitOrder = (sport: SportId): string[] => UNITS[sport].map((u) => u.unit);
 
-function unitOf(sport: SportId, pos: string): string {
+export function unitOf(sport: SportId, pos: string): string {
   const p = (pos || '').toUpperCase();
   for (const u of UNITS[sport]) if (u.pos.includes(p)) return u.unit;
   return UNITS[sport][UNITS[sport].length - 1].unit;

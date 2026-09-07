@@ -23,9 +23,9 @@ import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
-import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
+import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, unitOf, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
-import { backfillFromSchools, readAthletics, supportsAthletics, writeAthletics } from './athletics';
+import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -48,6 +48,23 @@ const writeJson = (dir: string, name: string, data: unknown) => {
   fs.mkdirSync(dir, { recursive: true });
   fs.writeFileSync(path.join(dir, name), JSON.stringify(data));
 };
+
+/** A player as the school publishes him, in the shape the app already reads. */
+const fromSchool = (p: SchoolPlayer): SportPlayer => ({
+  id: p.id,
+  name: p.name,
+  short: p.name,
+  jersey: p.jersey,
+  pos: p.pos || '—',
+  unit: unitOf('baseball', p.pos),
+  headshotUrl: p.photo,
+  height: null, weight: null, age: null, experience: null,
+  college: null, birthplace: null, flagUrl: null,
+  status: null, injury: null, line: null,
+  // A school page carries no season line, and inventing one would be worse
+  // than the blank the app already knows how to render.
+  stats: [], rating: null, ratingBasis: 'roster',
+});
 
 const dayKey = (iso: string) => iso.slice(0, 10);
 const label = (iso: string) =>
@@ -299,7 +316,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     const rosterDir = path.join(dir, 'rosters');
     const { stats: leagueStats, source: statsSource } = await loadLeagueStats(meta.espn!, meta.sport, season);
     const depth = rankDepth(leagueStats);
-    const everyone: SportPlayer[] = [];
+    let everyone: SportPlayer[] = [];
     const perTeam = new Map<string, SportPlayer[]>();
 
     for (let i = 0; i < sportTeams.length; i += ROSTER_CONCURRENCY) {
@@ -348,29 +365,41 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       if (asked) writeCache(dir, cache);
     }
 
-    // ESPN has no photograph for a college player and no link to the school
-    // that does, so the schools get read directly: their own roster pages are
-    // where the sports information office puts the pictures. Only the schools
-    // in the map, only the players still without a photo, and only a few teams
-    // a run — a roster page changes a couple of times a season, not thrice a
-    // day.
+    // The schools publish what ESPN does not.
+    //
+    // For basketball that is the missing photograph on an otherwise good
+    // roster. For college baseball it is the roster itself: ask ESPN for
+    // Arizona and it answers with sixty-eight names spanning a decade, no
+    // positions, no numbers and no pictures — an all-time athlete index, not a
+    // team. Where a school publishes a squad, that squad is the truth.
+    //
+    // Only the schools in the map, and only a few pages a run: a roster changes
+    // a couple of times a season, not three times a day.
     if (supportsAthletics(meta.key)) {
       const school = readAthletics(dir);
-      const byId = new Map(sportTeams.map((t) => [t.id, t]));
-      const shortfall = [...perTeam].map(([teamId, players]) => ({
-        id: teamId,
-        logoUrl: byId.get(teamId)?.logoUrl,
-        players: players.filter((pl) => !pl.headshotUrl && !school.photos[pl.id]).map((pl) => ({ id: pl.id, name: pl.name })),
-      })).filter((t) => t.players.length);
+      const run = await backfillFromSchools(meta.key, sportTeams, school, ATHLETICS_BUDGET);
+      if (run.read) writeAthletics(dir, school);
 
-      const run = await backfillFromSchools(meta.key, shortfall, school, ATHLETICS_BUDGET);
-      let fromSchools = 0;
-      for (const pl of everyone) {
-        const hit = school.photos[pl.id];
-        if (!pl.headshotUrl && hit) { pl.headshotUrl = hit; fromSchools += 1; }
+      let filled = 0;
+      let replaced = 0;
+      for (const t of sportTeams) {
+        const squad = school.teams[t.id]?.players ?? [];
+        if (!squad.length) continue;
+        if (meta.key === 'cbase') {
+          perTeam.set(t.id, squad.map((p) => fromSchool(p)));
+          replaced += 1;
+        } else {
+          const photo = new Map(squad.map((p) => [nameKey(p.name), p.photo]));
+          for (const pl of perTeam.get(t.id) ?? []) {
+            const hit = photo.get(nameKey(pl.name));
+            if (!pl.headshotUrl && hit) { pl.headshotUrl = hit; filled += 1; }
+          }
+        }
       }
-      if (run.teams) writeAthletics(dir, school);
-      console.log(`  schools: read ${run.teams} roster page${run.teams === 1 ? '' : 's'} · ${run.found} answered · ${run.players} new photos · ${fromSchools} players now have one`);
+      if (replaced) everyone = [...perTeam.values()].flat();
+      console.log(`  schools: read ${run.read} page${run.read === 1 ? '' : 's'} · ${run.answered} answered · ${run.players} players`
+        + (replaced ? ` · ${replaced} rosters taken from the school` : '')
+        + (filled ? ` · ${filled} photographs filled in` : ''));
     }
 
     // Grades are percentiles within the league, so they are computed once
