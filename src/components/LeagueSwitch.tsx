@@ -13,6 +13,10 @@
  * Names are short — CFB, MCBB — everywhere except soccer, where eight
  * four-letter abbreviations would be a guessing game and the full names are
  * what anyone would recognise.
+ *
+ * The drawer is ordered by the calendar, not the registry: whatever is being
+ * played today comes first. Opening Basketball in July and reading "NBA, out
+ * of season" before the WNBA's live board is the wrong way round.
  */
 import React, { useMemo, useState } from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, ScrollView, Image } from 'react-native';
@@ -39,6 +43,9 @@ function useSports(): { group: string; sport: SportId; leagues: LeagueMeta[] }[]
 /** Soccer needs its full names; everything else is better short. */
 const labelFor = (l: LeagueMeta) => (l.sport === 'soccer' ? l.name : l.short);
 
+/** Games on the board, then in season, then the rest. */
+const band = (l: LeagueMeta, games: number) => (games > 0 ? 0 : inSeason(l) ? 1 : 2);
+
 export function LeagueSwitch() {
   const { league, setLeague, viewFor } = useLeague();
   const groups = useSports();
@@ -59,6 +66,18 @@ export function LeagueSwitch() {
   };
 
   const drawer = groups.find((g) => g.group === open);
+
+  // Sort is stable, so leagues sharing a band keep the registry's order and
+  // only the calendar moves anything.
+  const rows = useMemo(() => {
+    if (!drawer) return [];
+    return drawer.leagues
+      .map((l) => {
+        const view = viewFor(l.key);
+        return { l, view, games: view.games.filter((x) => x.status !== 'final').length };
+      })
+      .sort((a, b) => band(a.l, a.games) - band(b.l, b.games));
+  }, [drawer, viewFor]);
 
   return (
     <View>
@@ -98,10 +117,8 @@ export function LeagueSwitch() {
 
       {!!drawer && (
         <View style={styles.drawer}>
-          {drawer.leagues.map((l) => {
+          {rows.map(({ l, view, games }) => {
             const on = l.key === league;
-            const view = viewFor(l.key);
-            const games = view.games.filter((x) => x.status !== 'final').length;
             return (
               <TouchableOpacity
                 key={l.key}

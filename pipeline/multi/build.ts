@@ -25,6 +25,7 @@ import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
+import { backfillFromSchools, readAthletics, supportsAthletics, writeAthletics } from './athletics';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -39,6 +40,8 @@ const LOOKBACK_DAYS = 240;
 const ROSTER_CONCURRENCY = 6;
 /** How many unknown headshots one run is allowed to chase, per league. */
 const HEADSHOT_BUDGET = Number(process.env.HEADSHOT_BUDGET ?? 1200);
+/** How many school roster pages one run is allowed to read, per league. */
+const ATHLETICS_BUDGET = Number(process.env.ATHLETICS_BUDGET ?? 40);
 
 const readJson = <T>(p: string): T | null => { try { return JSON.parse(fs.readFileSync(p, 'utf8')) as T; } catch { return null; } };
 const writeJson = (dir: string, name: string, data: unknown) => {
@@ -343,6 +346,31 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
         ? `  headshots: ${missing.length} missing · this league publishes none, not asking again`
         : `  headshots: ${missing.length} missing · asked ${asked} · found ${found} · ${still} still without one${exhausted ? ' · giving up on this league' : ''}`);
       if (asked) writeCache(dir, cache);
+    }
+
+    // ESPN has no photograph for a college player and no link to the school
+    // that does, so the schools get read directly: their own roster pages are
+    // where the sports information office puts the pictures. Only the schools
+    // in the map, only the players still without a photo, and only a few teams
+    // a run — a roster page changes a couple of times a season, not thrice a
+    // day.
+    if (supportsAthletics(meta.key)) {
+      const school = readAthletics(dir);
+      const byId = new Map(sportTeams.map((t) => [t.id, t]));
+      const shortfall = [...perTeam].map(([teamId, players]) => ({
+        id: teamId,
+        logoUrl: byId.get(teamId)?.logoUrl,
+        players: players.filter((pl) => !pl.headshotUrl && !school.photos[pl.id]).map((pl) => ({ id: pl.id, name: pl.name })),
+      })).filter((t) => t.players.length);
+
+      const run = await backfillFromSchools(meta.key, shortfall, school, ATHLETICS_BUDGET);
+      let fromSchools = 0;
+      for (const pl of everyone) {
+        const hit = school.photos[pl.id];
+        if (!pl.headshotUrl && hit) { pl.headshotUrl = hit; fromSchools += 1; }
+      }
+      if (run.teams) writeAthletics(dir, school);
+      console.log(`  schools: read ${run.teams} roster page${run.teams === 1 ? '' : 's'} · ${run.found} answered · ${run.players} new photos · ${fromSchools} players now have one`);
     }
 
     // Grades are percentiles within the league, so they are computed once

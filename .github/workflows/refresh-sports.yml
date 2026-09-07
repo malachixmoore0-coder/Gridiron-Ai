@@ -30,6 +30,10 @@ on:
         description: 'Set to 1 to probe candidate ESPN leagues instead of building'
         required: false
         default: ''
+      schools:
+        description: 'Probe school athletics roster pages instead of building, e.g. "cbase 12"'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -59,8 +63,12 @@ jobs:
           elif [ "${{ github.event.inputs.probe }}" = "logos" ]; then npm run data:probe -- --logos;
           else npm run data:probe; fi
 
+      - name: Probe school roster pages
+        if: ${{ github.event.inputs.schools != '' }}
+        run: npm run data:schools -- ${{ github.event.inputs.schools }}
+
       - name: Build sport datasets
-        if: ${{ github.event.inputs.probe == '' }}
+        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' }}
         env:
           # Set the workflow input "debug" to anything to have the roster step
           # print what ESPN's league statistics endpoint actually returned.
@@ -68,7 +76,7 @@ jobs:
         run: npm run data:sports -- ${{ github.event.inputs.leagues }}
 
       - name: Build the golf dataset
-        if: ${{ github.event.inputs.probe == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
+        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && (github.event.inputs.leagues == '' || contains(github.event.inputs.leagues, 'pga')) }}
         run: npm run data:golf
 
       - name: Commit
