@@ -21,6 +21,8 @@ import type { SportId } from '../../src/sports/types';
 
 const SITE = 'https://site.api.espn.com/apis/site/v2/sports';
 const WEB = 'https://site.web.api.espn.com/apis/common/v3/sports';
+/** 500 a page; twelve pages is more players than any league here has. */
+const MAX_STAT_PAGES = 12;
 
 export interface RosterStat {
   /** "PTS", "AVG", "G" — short enough for a chip. */
@@ -218,7 +220,12 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
   const out = new Map<string, StatLine>();
   const columns = new Map<string, string[]>();
 
-  for (let page = 1; page <= 4; page += 1) {
+  // ESPN pages this as a leaderboard, so stopping at the first short page
+  // would keep only the top of it — the reason a first pass had six of a
+  // twenty-eight man roster and no pitchers at all. Page until its own
+  // pagination says there is nothing left.
+  let pages = 1;
+  for (let page = 1; page <= Math.min(pages, MAX_STAT_PAGES); page += 1) {
     const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=500&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
 
@@ -235,6 +242,9 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
       if (name && Array.isArray(cat?.names) && !columns.has(name)) columns.set(name, cat.names.map(String));
     }
 
+    const reported = numOf(json?.pagination?.pages);
+    if (reported != null && reported > pages) pages = reported;
+
     const rows = json?.athletes ?? [];
     if (!rows.length) break;
     for (const row of rows) {
@@ -242,7 +252,6 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
       if (!id || out.has(id)) continue;
       out.set(id, rowStats(row, columns));
     }
-    if (rows.length < 500) break;
   }
   return out;
 }

@@ -103,6 +103,11 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
               <View key={s.label} style={styles.stat}>
                 <Text style={[styles.statValue, numeric]}>{s.value}</Text>
                 <Text style={styles.statLabel}>{s.label}</Text>
+                {s.rank != null && (
+                  <Text style={styles.statRank} numberOfLines={1}>
+                    {ordinal(s.rank)}{s.rankOf ? ` of ${s.rankOf}` : ''} in {meta.short}
+                  </Text>
+                )}
                 {s.percentile != null && (
                   <View style={styles.pctTrack}>
                     <View style={[styles.pctFill, { width: `${Math.max(3, Math.min(100, s.percentile))}%` }]} />
@@ -113,9 +118,9 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
           </View>
           {player.rating != null && (
             <Text style={styles.muted}>
-              Grade {player.rating} — a percentile against every {player.unit.toLowerCase().replace(/s$/, '')} in {meta.short} with a published
-              line{rank >= 0 ? `, ${ordinal(rank + 1)} of ${peers.length} on this roster` : ''}. It is a comparison, not a projection: it says
-              where this season has ranked, not what happens next.
+              Grade {player.rating} — where {player.stats[0]?.label ?? 'this'} sits against every ranked player in {meta.short}
+              {rank >= 0 ? `, ${ordinal(rank + 1)} of ${peers.length} on this roster` : ''}. It is a comparison, not a projection: it
+              says where this season has ranked, not what happens next.
             </Text>
           )}
         </View>
@@ -200,6 +205,7 @@ const styles = StyleSheet.create({
   stat: { flex: 1, padding: spacing.sm, borderRadius: radius.md, backgroundColor: colors.cardAlt },
   statValue: { color: colors.ink, fontSize: 18, fontWeight: '900' },
   statLabel: { color: colors.inkFaint, fontSize: 9, fontWeight: '900', letterSpacing: 0.7, textTransform: 'uppercase', marginTop: 2 },
+  statRank: { color: colors.inkGhost, fontSize: 9, marginTop: 3 },
   pctTrack: { height: 4, borderRadius: 2, backgroundColor: colors.border, marginTop: 6, overflow: 'hidden' },
   pctFill: { height: 4, borderRadius: 2, backgroundColor: colors.green },
 
