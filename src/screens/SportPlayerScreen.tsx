@@ -18,6 +18,7 @@ import { useActiveLeague } from '@/league/LeagueContext';
 import { useRoster, type SportPlayer } from '@/sports/roster';
 import { LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
 import { tintOver } from '@/utils/tint';
+import { sizedHeadshot } from '@/utils/roster';
 import { haptic } from '@/utils/haptics';
 
 interface Props {
@@ -70,7 +71,7 @@ export function SportPlayerScreen({ teamId, playerId, onBack, onOpenTeam }: Prop
         style={styles.hero}
       >
         <View style={styles.heroRow}>
-          <PlayerAvatar uri={player.headshotUrl} name={player.name} size={78} tint={team?.colors} />
+          <PlayerAvatar uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 78) : null} name={player.name} size={78} tint={team?.colors} />
           <View style={{ flex: 1 }}>
             <Text style={styles.name} numberOfLines={2}>{player.name}</Text>
             <TouchableOpacity

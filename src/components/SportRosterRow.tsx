@@ -12,6 +12,7 @@ import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import { PlayerAvatar } from '@/components/PlayerAvatar';
+import { sizedHeadshot } from '@/utils/roster';
 import type { SportPlayer } from '@/sports/roster';
 import type { LeagueTeamRef } from '@/league/types';
 
@@ -33,7 +34,9 @@ export function SportRosterRow({ player, team, onPress, showPos = true }: Props)
 
   return (
     <TouchableOpacity style={[styles.row, hurt && styles.dim]} activeOpacity={0.78} onPress={onPress} accessibilityRole="button">
-      <PlayerAvatar uri={player.headshotUrl} name={player.name} size={40} tint={team?.colors} />
+      {/* Ask the CDN for a 40px face rather than pulling a full-size PNG
+          thirty times over on one screen. */}
+      <PlayerAvatar uri={player.headshotUrl ? sizedHeadshot(player.headshotUrl, 40) : null} name={player.name} size={40} tint={team?.colors} />
       <View style={{ flex: 1 }}>
         <Text style={styles.name} numberOfLines={1}>
           {player.jersey ? <Text style={styles.jersey}>#{player.jersey} </Text> : null}

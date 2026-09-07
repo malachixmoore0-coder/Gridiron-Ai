@@ -224,16 +224,18 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
   // would keep only the top of it — the reason a first pass had six of a
   // twenty-eight man roster and no pitchers at all. Page until its own
   // pagination says there is nothing left.
+  const LIMIT = 500;
   let pages = 1;
   for (let page = 1; page <= Math.min(pages, MAX_STAT_PAGES); page += 1) {
-    const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=500&page=${page}&season=${season}&seasontype=2`;
+    const url = `${WEB}/${path}/statistics/byathlete?region=us&lang=en&contentorigin=espn&limit=${LIMIT}&page=${page}&season=${season}&seasontype=2`;
     const json = await fetchJson<any>(url, `${path} athlete stats p${page}`, 25000).catch(() => null);
 
     if (process.env.ROSTER_DEBUG && page === 1) {
       const row = json?.athletes?.[0];
       const { athlete: _drop, ...rest } = row ?? {};
-      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names }))).slice(0, 1200));
-      console.log('    [debug] row without athlete:', JSON.stringify(rest).slice(0, 1600));
+      console.log('    [debug] pagination:', JSON.stringify(json?.pagination ?? null));
+      console.log('    [debug] top-level categories:', JSON.stringify((json?.categories ?? []).map((c: any) => ({ name: c?.name, names: c?.names }))).slice(0, 1400));
+      console.log('    [debug] row without athlete:', JSON.stringify(rest).slice(0, 1200));
     }
 
     // The column names come with the first page and hold for the rest.
@@ -242,17 +244,23 @@ export async function loadLeagueStats(path: string, season: number): Promise<Map
       if (name && Array.isArray(cat?.names) && !columns.has(name)) columns.set(name, cat.names.map(String));
     }
 
-    const reported = numOf(json?.pagination?.pages);
+    // ESPN does not always report a page count, so derive one from the total
+    // where it does, and otherwise keep going for as long as pages come back
+    // full — a short page is the only reliable end-of-list signal.
+    const reported = numOf(json?.pagination?.pages)
+      ?? (numOf(json?.pagination?.count) != null ? Math.ceil((numOf(json?.pagination?.count) as number) / LIMIT) : null);
     if (reported != null && reported > pages) pages = reported;
 
     const rows = json?.athletes ?? [];
     if (!rows.length) break;
+    if (reported == null && rows.length >= LIMIT) pages = page + 1;
     for (const row of rows) {
       const id = row?.athlete?.id != null ? String(row.athlete.id) : null;
       if (!id || out.has(id)) continue;
       out.set(id, rowStats(row, columns));
     }
   }
+  if (process.env.ROSTER_DEBUG) console.log(`    [debug] collected ${out.size} athlete stat lines over ${Math.min(pages, MAX_STAT_PAGES)} page(s)`);
   return out;
 }
 
