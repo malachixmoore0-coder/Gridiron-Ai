@@ -23,6 +23,7 @@ import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
+import { gradeLeague, loadLeagueStats, loadRoster, type SportPlayer, type SportRosterFile } from './roster';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -33,6 +34,8 @@ const MARKET_WEIGHT = 0.35;
 const HORIZON_DAYS = 12;
 /** How far back to read results for the ratings. */
 const LOOKBACK_DAYS = 240;
+/** Above this many teams, rosters cost more than they are worth. */
+const ROSTER_TEAM_CAP = 60;
 
 const readJson = <T>(p: string): T | null => { try { return JSON.parse(fs.readFileSync(p, 'utf8')) as T; } catch { return null; } };
 const writeJson = (dir: string, name: string, data: unknown) => {
@@ -272,6 +275,37 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   writeJson(dir, 'schedule.json', scheduleFile);
   writeJson(dir, 'predictions.json', predictionsFile);
   console.log(`  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`);
+
+  // ---- rosters, one file per team so the app fetches only what it opens ---
+  // A 400-team college league would be four hundred requests and forty
+  // megabytes of JSON for a screen almost nobody opens, so rosters are built
+  // only where the league is small enough for them to be worth having.
+  if (sportTeams.length <= ROSTER_TEAM_CAP) {
+    const rosterDir = path.join(dir, 'rosters');
+    const leagueStats = await loadLeagueStats(meta.espn!, season);
+    const everyone: SportPlayer[] = [];
+    const perTeam = new Map<string, SportPlayer[]>();
+    for (const t of sportTeams) {
+      const players = await loadRoster(meta.espn!, meta.sport, t.espnId, leagueStats).catch(() => []);
+      if (!players.length) continue;
+      perTeam.set(t.id, players);
+      everyone.push(...players);
+    }
+    // Grades are percentiles within the league, so they are computed once
+    // across every roster rather than team by team — a fourth outfielder on a
+    // good team is not a starter, and a per-team grade would say he was.
+    gradeLeague(everyone, meta.sport);
+    for (const [teamId, players] of perTeam) {
+      const file: SportRosterFile = {
+        teamId, league: meta.key, generatedAt: now.toISOString(), season, players,
+      };
+      writeJson(rosterDir, `${teamId}.json`, file);
+    }
+    const withStats = everyone.filter((pl) => pl.stats.length).length;
+    console.log(`  ${perTeam.size} rosters · ${everyone.length} players · ${withStats} with a stat line`);
+  } else {
+    console.log(`  ${sportTeams.length} teams — too many to publish rosters for`);
+  }
 }
 
 async function main() {
