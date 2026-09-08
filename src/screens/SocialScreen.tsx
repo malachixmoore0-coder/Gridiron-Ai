@@ -140,8 +140,8 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
                 <SignInRow onGoogle={() => s.signIn('google')} onApple={() => s.signIn('apple')} busy={s.busy} />
                 {!s.live && (
                   <Text style={styles.signNote}>
-                    Sign-in providers are not connected yet, so this creates a profile on this device only. Nothing you
-                    post here leaves the phone.
+                    The account server is not connected yet, so this makes a profile on this device only — no email is
+                    sent, and nothing you post here leaves the phone.
                   </Text>
                 )}
               </View>

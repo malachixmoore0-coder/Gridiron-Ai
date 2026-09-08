@@ -23,6 +23,8 @@ interface State {
   setScope: (s: FeedScope) => void;
   refreshFeed: () => Promise<void>;
   signIn: (p: AuthProvider) => Promise<void>;
+  /** Email a sign-in link. Returns what to tell the user, verbatim. */
+  signInWithEmail: (email: string) => Promise<{ sent: boolean; message: string }>;
   signOut: () => Promise<void>;
   /** Erase the account. Clears local state here; the backend clears its own. */
   deleteAccount: () => Promise<void>;
@@ -98,6 +100,23 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
         if (s) { setSession(s); setMe(await api.getProfile(s.userId)); await loadFeed(scope); }
       } catch (e) { setError((e as Error).message); }
       setBusy(false);
+    },
+    signInWithEmail: async (email) => {
+      setBusy(true); setError(null);
+      try {
+        const r = await api.signInWithEmail(email);
+        // The device-only backend signs you straight in and says so; a real one
+        // sends a link and the session arrives when it is clicked.
+        const restored = await api.restore().catch(() => null);
+        if (restored) { setSession(restored); setMe(await api.getProfile(restored.userId)); await loadFeed(scope); }
+        return r;
+      } catch (e) {
+        const message = e instanceof Error ? e.message : 'That did not go through.';
+        setError(message);
+        return { sent: false, message };
+      } finally {
+        setBusy(false);
+      }
     },
     signOut: async () => { await api.signOut(); setSession(null); setMe(null); await loadFeed('everyone'); },
     deleteAccount: async () => {

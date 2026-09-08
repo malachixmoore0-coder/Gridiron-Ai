@@ -4,7 +4,7 @@
  * has to carry the model's numbers, the tail button, and nothing else.
  */
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
@@ -219,17 +219,71 @@ function renderText(text: string, onHandle: (handle: string) => void) {
   });
 }
 
+/**
+ * Sign-in.
+ *
+ * Email leads because it is the only one of the three that works without a
+ * developer console: Google needs an OAuth client and Apple needs a paid
+ * programme, and a button that opens an error is worse than no button. It is
+ * also the better account — a link in an inbox is proof of an address, and
+ * there is no password on our side to store, reset or leak.
+ */
 export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; onApple: () => void; busy?: boolean }) {
+  const social = useSocial();
+  const [email, setEmail] = useState('');
+  const [note, setNote] = useState<string | null>(null);
+  const [sending, setSending] = useState(false);
+
+  const send = async () => {
+    if (!email.trim() || sending) return;
+    setSending(true);
+    setNote(null);
+    const r = await social.signInWithEmail(email);
+    setNote(r.message);
+    if (r.sent) setEmail('');
+    setSending(false);
+  };
+
   return (
-    <View style={styles.signRow}>
-      <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onGoogle} disabled={busy} accessibilityLabel="Continue with Google">
-        <Ionicons name="logo-google" size={16} color={colors.ink} />
-        <Text style={styles.signText}>Google</Text>
+    <View style={{ gap: spacing.sm }}>
+      <View style={styles.emailRow}>
+        <Ionicons name="mail-outline" size={16} color={colors.inkFaint} />
+        <TextInput
+          style={styles.emailInput}
+          value={email}
+          onChangeText={setEmail}
+          placeholder="you@email.com"
+          placeholderTextColor={colors.inkGhost}
+          autoCapitalize="none"
+          autoCorrect={false}
+          keyboardType="email-address"
+          onSubmitEditing={send}
+          accessibilityLabel="Email address"
+        />
+      </View>
+      <TouchableOpacity
+        style={[styles.emailBtn, (!email.trim() || sending) && styles.emailBtnOff]}
+        activeOpacity={0.85}
+        onPress={send}
+        disabled={!email.trim() || sending}
+        accessibilityRole="button"
+        accessibilityLabel="Email me a sign-in link"
+      >
+        <Text style={styles.emailBtnText}>{sending ? 'Sending…' : 'Email me a link'}</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onApple} disabled={busy} accessibilityLabel="Continue with Apple">
-        <Ionicons name="logo-apple" size={17} color={colors.ink} />
-        <Text style={styles.signText}>Apple</Text>
-      </TouchableOpacity>
+      {!!note && <Text style={styles.signNote}>{note}</Text>}
+
+      <Text style={styles.signOr}>or</Text>
+      <View style={styles.signRow}>
+        <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onGoogle} disabled={busy} accessibilityLabel="Continue with Google">
+          <Ionicons name="logo-google" size={16} color={colors.ink} />
+          <Text style={styles.signText}>Google</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onApple} disabled={busy} accessibilityLabel="Continue with Apple">
+          <Ionicons name="logo-apple" size={17} color={colors.ink} />
+          <Text style={styles.signText}>Apple</Text>
+        </TouchableOpacity>
+      </View>
     </View>
   );
 }
@@ -272,6 +326,13 @@ const styles = StyleSheet.create({
   sheetRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: 14 },
   sheetRowText: { color: colors.ink, fontSize: 14.5, fontWeight: '700' },
   sheetDone: { color: colors.green, fontSize: 14, fontWeight: '800', paddingVertical: 18, textAlign: 'center' },
+  emailRow: { flexDirection: 'row', alignItems: 'center', gap: 8, paddingHorizontal: spacing.md, paddingVertical: 11, borderRadius: radius.pill, backgroundColor: colors.bgAlt, borderWidth: 1, borderColor: colors.border },
+  emailInput: { flex: 1, color: colors.ink, fontSize: 14, padding: 0 },
+  emailBtn: { alignItems: 'center', paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.green },
+  emailBtnOff: { opacity: 0.4 },
+  emailBtnText: { color: colors.bg, fontSize: 14, fontWeight: '900' },
+  signNote: { color: colors.inkDim, fontSize: 11.5, lineHeight: 16 },
+  signOr: { color: colors.inkGhost, fontSize: 11, fontWeight: '700', textAlign: 'center', marginTop: 2 },
   signRow: { flexDirection: 'row', gap: spacing.sm },
   signBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.borderHi },
   signText: { color: colors.ink, fontSize: 14, fontWeight: '800' },

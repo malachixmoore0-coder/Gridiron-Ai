@@ -84,12 +84,32 @@ export class SupabaseBackend implements Backend {
   }
 
   async signIn(provider: Session['provider']): Promise<Session | null> {
-    if (provider === 'local') return null;
+    // Email is not an OAuth provider — it goes through signInWithEmail.
+    if (provider === 'local' || provider === 'email') return null;
     const redirectTo = Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.origin + window.location.pathname : undefined;
     const { error } = await db().auth.signInWithOAuth({ provider, options: { redirectTo } });
     if (error) throw new Error(error.message);
     // Web redirects away and comes back; the session is picked up by restore().
     return null;
+  }
+
+  /**
+   * A magic link, which is the whole account system for a product that has no
+   * business storing passwords. Supabase sends the mail; there is no OAuth
+   * console to configure, no Apple developer programme to pay for, and nothing
+   * to leak in a breach because there is no credential on our side at all.
+   */
+  async signInWithEmail(email: string): Promise<{ sent: boolean; message: string }> {
+    const to = email.trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(to)) {
+      return { sent: false, message: 'That does not look like an email address.' };
+    }
+    const emailRedirectTo = Platform.OS === 'web' && typeof window !== 'undefined'
+      ? window.location.origin + window.location.pathname
+      : undefined;
+    const { error } = await db().auth.signInWithOtp({ email: to, options: { emailRedirectTo } });
+    if (error) return { sent: false, message: error.message };
+    return { sent: true, message: `Link sent to ${to}. It expires in an hour.` };
   }
 
   async signOut(): Promise<void> { await db().auth.signOut(); this.me = null; }

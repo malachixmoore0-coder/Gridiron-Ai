@@ -101,6 +101,24 @@ export class LocalBackend implements Backend {
     return s.session;
   }
 
+  /**
+   * There is no server to mail anything, and saying "check your inbox" when
+   * nothing was sent is the kind of lie that costs a user ten minutes and all
+   * of their trust. So this makes the device profile and says exactly that.
+   */
+  async signInWithEmail(email: string): Promise<{ sent: boolean; message: string }> {
+    const to = email.trim().toLowerCase();
+    if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(to)) {
+      return { sent: false, message: 'That does not look like an email address.' };
+    }
+    const session = await this.signIn('email');
+    const s = await this.load();
+    const me = s.profiles[session.userId];
+    if (me) { me.handle = handleFrom(to.split('@')[0]); me.displayName = to.split('@')[0]; }
+    await this.save();
+    return { sent: false, message: 'Sign-in is not connected yet, so this made a profile on this device only. Nothing was emailed.' };
+  }
+
   async signOut(): Promise<void> { const s = await this.load(); s.session = null; await this.save(); }
 
   /**

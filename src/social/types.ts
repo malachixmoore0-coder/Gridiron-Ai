@@ -8,7 +8,7 @@
  */
 import type { LeagueId } from '@/league/types';
 
-export type AuthProvider = 'google' | 'apple' | 'local';
+export type AuthProvider = 'google' | 'apple' | 'email' | 'local';
 
 export interface Profile {
   id: string;
@@ -93,6 +93,11 @@ export interface Backend {
   readonly live: boolean;
   restore(): Promise<Session | null>;
   signIn(provider: AuthProvider): Promise<Session | null>;
+  /**
+   * Email a sign-in link. The cheapest real account there is: no OAuth console,
+   * no developer programme, no password to store or leak.
+   */
+  signInWithEmail(email: string): Promise<{ sent: boolean; message: string }>;
   signOut(): Promise<void>;
   /** Erase the account and everything it owns. Not reversible, by design. */
   deleteAccount(): Promise<void>;
