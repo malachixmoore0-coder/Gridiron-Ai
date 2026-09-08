@@ -15,7 +15,7 @@
  * below that spine rather than instead of it. Nobody should have to relearn the
  * app when they tap NCAA.
  */
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -138,6 +138,10 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
         : view.weeks.find((w) => w.week === view.week)?.label ?? 'Today';
 
   const s = eng.summary;
+  const scroller = useRef<ScrollView>(null);
+  /** Where the Upset Radar section starts, so the chip can jump straight to it. */
+  const radarY = useRef(0);
+
   const ctxFor = (g: LeagueGame) => ({ neutralSite: g.neutralSite, primetime: !!g.primetime, weather: 'auto' as const });
 
   return (
@@ -152,9 +156,56 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
       <Ticker items={tick} />
 
       <ScrollView
+        ref={scroller}
         contentContainerStyle={styles.body}
         refreshControl={<RefreshControl refreshing={view.refreshing} onRefresh={view.refresh} tintColor={colors.green} />}
       >
+        {/*
+          The tools, at a fixed height on the page.
+          Upset Radar and the Parlay Lab sat below the Edge Board, which is a
+          list whose length is however many games are on today — so they were a
+          screen and a half down on a quiet Tuesday and four on a Saturday, and
+          their position was never the same twice. Here they are always in the
+          same place, one tap from the top, whatever the board is doing.
+        */}
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.tools} contentContainerStyle={styles.toolsRow}>
+          <TouchableOpacity
+            style={styles.tool}
+            activeOpacity={0.85}
+            onPress={() => {
+              haptic('select');
+              if (!radar.length) { onUpgrade(); return; }
+              scroller.current?.scrollTo({ y: Math.max(0, radarY.current - 8), animated: true });
+            }}
+            accessibilityRole="button"
+            accessibilityLabel="Upset Radar"
+          >
+            <Ionicons name="radio-outline" size={15} color={colors.gold} />
+            <Text style={styles.toolText}>Upset Radar</Text>
+            {radar.length > 0 && <Text style={[styles.toolCount, numeric]}>{radar.length}</Text>}
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.tool}
+            activeOpacity={0.85}
+            onPress={() => { haptic('select'); onOpenParlay(); }}
+            accessibilityRole="button"
+            accessibilityLabel="Parlay Lab"
+          >
+            <Ionicons name="git-merge" size={15} color={colors.gold} />
+            <Text style={styles.toolText}>Parlay Lab</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.tool}
+            activeOpacity={0.85}
+            onPress={() => { haptic('select'); onOpenCard(); }}
+            accessibilityRole="button"
+            accessibilityLabel="Your card"
+          >
+            <Ionicons name="bookmark" size={15} color={colors.green} />
+            <Text style={styles.toolText}>Your card</Text>
+            {s.open > 0 && <Text style={[styles.toolCount, numeric]}>{s.open}</Text>}
+          </TouchableOpacity>
+        </ScrollView>
         {/* ---- the poll, college only ---- */}
         {ranked.length > 0 && (
           <View style={styles.rail}>
@@ -323,7 +374,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
 
         {/* ---- upset radar, wherever there are dogs the model likes ---- */}
         {radar.length > 0 && (
-          <>
+          <View onLayout={(e) => { radarY.current = e.nativeEvent.layout.y; }}>
             <View style={[styles.sectionHead, { marginTop: spacing.md }]}>
               <View style={styles.sectionTitleWrap}>
                 <Text style={styles.sectionTitle}>Upset Radar</Text>
@@ -355,7 +406,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
                 style={{ marginBottom: spacing.lg }}
               />
             )}
-          </>
+          </View>
         )}
 
         <TouchableOpacity style={styles.lab} activeOpacity={0.88} onPress={onOpenParlay}>
@@ -691,6 +742,14 @@ const styles = StyleSheet.create({
   empty: { alignItems: 'center', gap: 8, padding: spacing.xl, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, marginBottom: spacing.lg },
   emptyText: { color: colors.inkFaint, fontSize: 12, textAlign: 'center', lineHeight: 17, maxWidth: 300, marginBottom: spacing.lg },
 
+  // Content-sized and scrollable rather than three equal columns: "Upset Radar"
+  // does not fit a third of a phone and wrapping a two-word product name onto
+  // two lines looks like a bug. It also leaves room for a fourth tool later.
+  tools: { flexGrow: 0, flexShrink: 0, marginHorizontal: -spacing.lg, marginBottom: spacing.lg },
+  toolsRow: { flexDirection: 'row', gap: spacing.sm, paddingHorizontal: spacing.lg },
+  tool: { flexDirection: 'row', alignItems: 'center', gap: 7, paddingVertical: 10, paddingHorizontal: 14, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
+  toolText: { color: colors.ink, fontSize: 12.5, fontWeight: '800' },
+  toolCount: { color: colors.inkFaint, fontSize: 11, fontWeight: '900' },
   lab: { borderRadius: radius.lg, overflow: 'hidden', marginTop: spacing.sm, marginBottom: spacing.lg, borderWidth: 1, borderColor: colors.border },
   labBg: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
   labIcon: { width: 34, height: 34, borderRadius: 12, backgroundColor: colors.goldSoft, alignItems: 'center', justifyContent: 'center' },

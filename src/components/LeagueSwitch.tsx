@@ -102,11 +102,20 @@ export function LeagueSwitch() {
               accessibilityLabel={`${g.group}${here ? `, showing ${labelFor(current)}` : ''}`}
             >
               <SportGlyph sport={g.sport} size={15} color={tone} />
+              {/* The bar names the sport, always — it used to swap in the
+                  selected league's name on the active chip, which read as
+                  "NFL" sitting next to "Basketball" and made football look
+                  like a top-level tab while every other sport was a group.
+                  Which league you are on is still answered, by a tag on the
+                  active chip rather than by replacing the sport's name. */}
               <Text style={[styles.sportText, here && { color: tone }]} numberOfLines={1}>
-                {/* The bar shows which league you are on, not just the sport —
-                    otherwise "Basketball" tells you nothing about where you are. */}
-                {here ? labelFor(current) : g.group}
+                {g.group}
               </Text>
+              {here && g.leagues.length > 1 && (
+                <View style={[styles.activeTag, { borderColor: tone }]}>
+                  <Text style={[styles.activeTagText, { color: tone }]}>{current.short}</Text>
+                </View>
+              )}
               {g.leagues.length > 1 && (
                 <Ionicons name={showing ? 'chevron-up' : 'chevron-down'} size={11} color={here ? tone : colors.inkGhost} />
               )}
@@ -182,6 +191,8 @@ const styles = StyleSheet.create({
     borderRadius: radius.pill, backgroundColor: colors.card,
     borderWidth: 1, borderColor: colors.border,
   },
+  activeTag: { paddingHorizontal: 5, paddingVertical: 1, borderRadius: radius.sm, borderWidth: 1 },
+  activeTagText: { fontSize: 9.5, fontWeight: '900', letterSpacing: 0.3 },
   sportText: { color: colors.inkDim, fontSize: 11.5, fontWeight: '800' },
 
   drawer: { marginTop: spacing.sm, gap: 5 },
