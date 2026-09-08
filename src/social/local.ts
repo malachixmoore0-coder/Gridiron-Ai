@@ -10,7 +10,8 @@
  * shared one and the same screens keep working unchanged.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Backend, FeedScope, Post, PostPick, Profile, Session, colorFor, handleFrom, hashtagsIn } from './types';
+import { Backend, FeedScope, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
+import { RATE_WINDOW_MS, qualityOf, rateLimited, screen } from './moderation';
 
 const KEY = 'gridiron-ai.social.local.v1';
 
@@ -21,9 +22,13 @@ interface Store {
   follows: string[];
   likes: string[];
   tails: string[];
+  blocks: string[];
+  reports: (ReportInput & { at: number })[];
+  /** When this device last posted, for the rate limit. */
+  postedAt: number[];
 }
 
-const EMPTY: Store = { session: null, profiles: {}, posts: [], follows: [], likes: [], tails: [] };
+const EMPTY: Store = { session: null, profiles: {}, posts: [], follows: [], likes: [], tails: [], blocks: [], reports: [], postedAt: [] };
 
 /**
  * A handful of seeded accounts so the feed demonstrates what it is for. They
@@ -41,6 +46,17 @@ const SAMPLE_POSTS = (): Post[] => [
   { id: 'seed2', authorId: 'sample:dogs', text: 'Upset Radar had three live dogs on Saturday. Two hit. This is the whole reason I pay for it. #upsetradar #cfb', hashtags: ['upsetradar', 'cfb'], createdAt: Date.now() - 3600_000 * 9, likes: 88, likedByMe: false, tails: 26, tailedByMe: false, replies: 0 },
   { id: 'seed3', authorId: 'sample:sat', text: 'Reminder that a 4-leg parlay at +650 the model prices at +900 is not a good bet, it is a good story. #parlaylab', hashtags: ['parlaylab'], createdAt: Date.now() - 3600_000 * 26, likes: 133, likedByMe: false, tails: 3, tailedByMe: false, replies: 0 },
 ];
+
+/**
+ * Feed order: recency, with quality allowed to move a post about a day either
+ * way. Chronological alone lets one loud account own the timeline; pure ranking
+ * makes a live board feel stale. Weighting recency and demoting noise gets both.
+ */
+export function sortFeed(list: Post[]): Post[] {
+  const DAY = 86_400_000;
+  const rank = (p: Post) => p.createdAt + (qualityOf(p.text, !!p.pick) - 50) * (DAY / 100);
+  return [...list].filter((p) => screen(p.text).verdict !== 'block').sort((a, b) => rank(b) - rank(a));
+}
 
 export class LocalBackend implements Backend {
   readonly kind = 'local' as const;
@@ -87,6 +103,27 @@ export class LocalBackend implements Backend {
 
   async signOut(): Promise<void> { const s = await this.load(); s.session = null; await this.save(); }
 
+  /**
+   * Erasure, on the device. Everything this account authored, follows, blocked
+   * or reported goes with it — the seeded sample accounts stay, because they are
+   * not the user's data and the app has to have something to show afterwards.
+   */
+  async deleteAccount(): Promise<void> {
+    const s = await this.load();
+    const me = s.session?.userId;
+    if (!me) return;
+    delete s.profiles[me];
+    s.posts = s.posts.filter((p) => p.authorId !== me);
+    s.session = null;
+    s.follows = [];
+    s.likes = [];
+    s.tails = [];
+    s.blocks = [];
+    s.reports = [];
+    s.postedAt = [];
+    await this.save();
+  }
+
   async getProfile(userId: string): Promise<Profile | null> { const s = await this.load(); return s.profiles[userId] ?? null; }
 
   async profileByHandle(handle: string): Promise<Profile | null> {
@@ -122,6 +159,23 @@ export class LocalBackend implements Backend {
 
   async isFollowing(userId: string): Promise<boolean> { const s = await this.load(); return s.follows.includes(userId); }
 
+  async blocked(): Promise<string[]> { const s = await this.load(); return [...s.blocks]; }
+
+  async block(userId: string, on: boolean): Promise<void> {
+    const s = await this.load();
+    s.blocks = on ? [...new Set([...s.blocks, userId])] : s.blocks.filter((b) => b !== userId);
+    // Blocking is also unfollowing. Leaving the follow in place would keep them
+    // in "Following" counts and in a feed the block was meant to end.
+    if (on) s.follows = s.follows.filter((f) => f !== userId);
+    await this.save();
+  }
+
+  async report(input: ReportInput): Promise<void> {
+    const s = await this.load();
+    s.reports = [...s.reports, { ...input, at: Date.now() }].slice(-200);
+    await this.save();
+  }
+
   /**
    * On this device there is exactly one person who can follow anybody — you —
    * so a sample account's followers list is you, or nobody. The denormalised
@@ -149,20 +203,28 @@ export class LocalBackend implements Backend {
       list = list.filter((p) => s.follows.includes(p.authorId) || p.authorId === mine);
     }
     if (scope === 'picks') list = list.filter((p) => !!p.pick);
-    return list
-      .filter((p) => !p.replyTo)
-      .sort((a, b) => b.createdAt - a.createdAt)
+    return sortFeed(list.filter((p) => !p.replyTo && !s.blocks.includes(p.authorId)))
       .map((p) => this.hydrate(p));
   }
 
   async postsBy(userId: string): Promise<Post[]> {
     const s = await this.load();
-    return s.posts.filter((p) => p.authorId === userId).sort((a, b) => b.createdAt - a.createdAt).map((p) => this.hydrate(p));
+    // A profile is chronological on purpose — it is a record of what somebody
+    // said and when, not a ranked feed — but a blocked account still shows
+    // nothing, and screened-out posts still go.
+    if (s.blocks.includes(userId)) return [];
+    return s.posts
+      .filter((p) => p.authorId === userId && screen(p.text).verdict !== 'block')
+      .sort((a, b) => b.createdAt - a.createdAt)
+      .map((p) => this.hydrate(p));
   }
 
   async createPost(input: { text: string; gifUrl?: string | null; pick?: PostPick | null; replyTo?: string | null }): Promise<Post> {
     const s = await this.load();
     if (!s.session) throw new Error('Sign in to post');
+    const verdict = screen(input.text ?? '');
+    if (verdict.verdict === 'block') throw new Error(verdict.reason);
+    if (rateLimited(s.postedAt)) throw new Error('You have posted a lot in the last hour. Give it a few minutes.');
     const post: Post = {
       id: `p${Date.now().toString(36)}`,
       authorId: s.session.userId,
@@ -175,6 +237,7 @@ export class LocalBackend implements Backend {
       likes: 0, likedByMe: false, tails: 0, tailedByMe: false, replies: 0,
     };
     s.posts = [post, ...s.posts].slice(0, 500);
+    s.postedAt = [...s.postedAt.filter((t) => Date.now() - t < RATE_WINDOW_MS), Date.now()];
     if (input.replyTo) {
       const parent = s.posts.find((p) => p.id === input.replyTo);
       if (parent) parent.replies += 1;

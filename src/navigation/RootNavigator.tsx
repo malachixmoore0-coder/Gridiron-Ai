@@ -78,6 +78,7 @@ import { SocialScreen } from '@/screens/SocialScreen';
 import { ComposeScreen } from '@/screens/ComposeScreen';
 import { ProfileScreen } from '@/screens/ProfileScreen';
 import { PeopleScreen, type PeopleTab } from '@/screens/PeopleScreen';
+import { PrivacyScreen } from '@/screens/PrivacyScreen';
 import { useSocial } from '@/social/SocialContext';
 import { openedOnProfile, showAppPath, showProfilePath } from '@/social/links';
 import { ParlayScreen } from '@/screens/ParlayScreen';
@@ -99,12 +100,13 @@ type Overlay =
   | { kind: 'settings' }
   | { kind: 'compose'; pick?: PostPick | null }
   | { kind: 'profile'; userId: string; handle?: string }
-  | { kind: 'people'; userId: string; name: string; tab: PeopleTab };
+  | { kind: 'people'; userId: string; name: string; tab: PeopleTab }
+  | { kind: 'privacy' };
 
 const TITLES: Record<Overlay['kind'], string> = {
   result: 'Back', team: 'Back', player: 'Back', golfer: 'Back', game: 'Back', simulate: 'Close',
   parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back', settings: 'Done',
-  people: 'Back',
+  people: 'Back', privacy: 'Back',
 };
 
 const isWeb = Platform.OS === 'web';
@@ -358,6 +360,7 @@ export function RootNavigator() {
                     : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
               ) : o.kind === 'settings' ? (
                 <AppSettingsScreen
+                  onPrivacy={() => push({ kind: 'privacy' })}
                   onProfile={() => openProfile('me')}
                   onUpgrade={openUpgrade}
                   onModel={() => push({ kind: 'model', league })}
@@ -369,6 +372,8 @@ export function RootNavigator() {
                 <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
               ) : o.kind === 'upgrade' ? (
                 <UpgradeScreen onBack={pop} />
+              ) : o.kind === 'privacy' ? (
+                <PrivacyScreen onDone={pop} />
               ) : o.kind === 'people' ? (
                 <PeopleScreen userId={o.userId} name={o.name} tab={o.tab} onOpenProfile={openProfile} />
               ) : o.kind === 'compose' ? (

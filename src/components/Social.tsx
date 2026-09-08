@@ -3,11 +3,12 @@
  * row. The post card is the important one — it is the unit that travels, so it
  * has to carry the model's numbers, the tail button, and nothing else.
  */
-import React from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, Image, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
+import { REPORT_REASONS } from '@/social/moderation';
 import { useSocial } from '@/social/SocialContext';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
@@ -78,6 +79,10 @@ interface PostCardProps {
 export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDelete, mine }: PostCardProps) {
   const p = post.author;
   const social = useSocial();
+  const [menu, setMenu] = useState(false);
+  const [reporting, setReporting] = useState(false);
+  const [done, setDone] = useState<string | null>(null);
+  const mine_ = mine || post.authorId === social.me?.id;
   /** An @handle in the text is a link, the same as it is everywhere else. */
   const openHandle = async (handle: string) => {
     const found = await social.profileByHandle(handle).catch(() => null);
@@ -96,11 +101,15 @@ export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDe
           </Text>
           <Text style={styles.handle}>@{p?.handle ?? 'unknown'} · {ago(post.createdAt)}</Text>
         </TouchableOpacity>
-        {mine && !!onDelete && (
+        {mine_ && !!onDelete ? (
           <TouchableOpacity onPress={onDelete} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityLabel="Delete post">
             <Ionicons name="trash-outline" size={15} color={colors.inkGhost} />
           </TouchableOpacity>
-        )}
+        ) : !mine_ ? (
+          <TouchableOpacity onPress={() => setMenu(true)} hitSlop={{ top: 12, bottom: 12, left: 12, right: 12 }} accessibilityRole="button" accessibilityLabel="Post options: block or report">
+            <Ionicons name="ellipsis-horizontal" size={16} color={colors.inkGhost} />
+          </TouchableOpacity>
+        ) : null}
       </View>
 
       {!!post.text && <Text style={styles.text}>{renderText(post.text, openHandle)}</Text>}
@@ -125,6 +134,56 @@ export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDe
           <Ionicons name="chevron-forward" size={14} color={colors.inkGhost} />
         </TouchableOpacity>
       )}
+
+      {/* Block and report live behind the same control on every post, because a
+          safety action people cannot find is one they do not take. */}
+      <Modal visible={menu} transparent animationType="fade" onRequestClose={() => { setMenu(false); setReporting(false); }}>
+        <TouchableOpacity style={styles.sheetBack} activeOpacity={1} onPress={() => { setMenu(false); setReporting(false); }}>
+          <View style={styles.sheet}>
+            {done ? (
+              <Text style={styles.sheetDone}>{done}</Text>
+            ) : reporting ? (
+              <>
+                <Text style={styles.sheetTitle}>Report this post</Text>
+                {REPORT_REASONS.map((r) => (
+                  <TouchableOpacity
+                    key={r.key}
+                    style={styles.sheetRow}
+                    activeOpacity={0.8}
+                    onPress={async () => {
+                      await social.report({ postId: post.id, subjectId: post.authorId, reason: r.key }).catch(() => {});
+                      setDone('Reported. Thanks — we look at every one.');
+                      setTimeout(() => { setMenu(false); setReporting(false); setDone(null); }, 1600);
+                    }}
+                  >
+                    <Text style={styles.sheetRowText}>{r.label}</Text>
+                  </TouchableOpacity>
+                ))}
+              </>
+            ) : (
+              <>
+                <Text style={styles.sheetTitle}>@{p?.handle ?? 'this account'}</Text>
+                <TouchableOpacity style={styles.sheetRow} activeOpacity={0.8} onPress={() => setReporting(true)}>
+                  <Ionicons name="flag-outline" size={15} color={colors.ink} />
+                  <Text style={styles.sheetRowText}>Report this post</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.sheetRow}
+                  activeOpacity={0.8}
+                  onPress={async () => {
+                    await social.block(post.authorId, true).catch(() => {});
+                    setDone('Blocked. You will not see them again.');
+                    setTimeout(() => { setMenu(false); setDone(null); }, 1600);
+                  }}
+                >
+                  <Ionicons name="ban-outline" size={15} color={colors.negative} />
+                  <Text style={[styles.sheetRowText, { color: colors.negative }]}>Block @{p?.handle ?? 'them'}</Text>
+                </TouchableOpacity>
+              </>
+            )}
+          </View>
+        </TouchableOpacity>
+      </Modal>
 
       <View style={styles.actions}>
         <TouchableOpacity style={styles.action} activeOpacity={0.8} onPress={() => onLike(!post.likedByMe)} accessibilityLabel="Like">
@@ -207,6 +266,12 @@ const styles = StyleSheet.create({
   tailOn: { backgroundColor: colors.green },
   tailText: { color: colors.green, fontSize: 12, fontWeight: '900' },
 
+  sheetBack: { flex: 1, backgroundColor: 'rgba(5,8,12,0.82)', justifyContent: 'flex-end' },
+  sheet: { backgroundColor: colors.card, borderTopLeftRadius: radius.xl, borderTopRightRadius: radius.xl, borderWidth: 1, borderColor: colors.borderHi, padding: spacing.lg, paddingBottom: spacing.xxl, gap: 2 },
+  sheetTitle: { color: colors.inkFaint, fontSize: 12, fontWeight: '800', marginBottom: spacing.sm },
+  sheetRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, paddingVertical: 14 },
+  sheetRowText: { color: colors.ink, fontSize: 14.5, fontWeight: '700' },
+  sheetDone: { color: colors.green, fontSize: 14, fontWeight: '800', paddingVertical: 18, textAlign: 'center' },
   signRow: { flexDirection: 'row', gap: spacing.sm },
   signBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.borderHi },
   signText: { color: colors.ink, fontSize: 14, fontWeight: '800' },

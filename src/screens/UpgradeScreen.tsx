@@ -172,13 +172,14 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
               style={styles.input}
               value={code}
               onChangeText={setCode}
-              placeholder="FOUNDER"
+              placeholder="ENTER CODE"
               placeholderTextColor={colors.inkGhost}
               autoCapitalize="characters"
               autoCorrect={false}
             />
-            <TouchableOpacity style={styles.redeemBtn} activeOpacity={0.85} onPress={() => {
-              const r = ent.redeem(code);
+            <TouchableOpacity style={styles.redeemBtn} activeOpacity={0.85} onPress={async () => {
+              setNote('Checking…');
+              const r = await ent.redeem(code);
               setNote(r.message);
               if (r.ok) setCode('');
             }}>

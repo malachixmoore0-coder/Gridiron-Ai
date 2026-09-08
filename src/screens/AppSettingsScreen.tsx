@@ -31,9 +31,11 @@ interface Props {
   onUpgrade: () => void;
   onModel: () => void;
   onCard: () => void;
+  /** Data export and account deletion. */
+  onPrivacy: () => void;
 }
 
-export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard }: Props) {
+export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard, onPrivacy }: Props) {
   const social = useSocial();
   const ent = useEntitlements();
   const eng = useEngagement();
@@ -72,6 +74,16 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard }: Pro
         {/* ---- plan ---- */}
         <Group title="Plan">
           <Row icon="flash" label={ent.paid ? 'Manage plan' : 'Go Pro'} value={ent.tier.name} onPress={onUpgrade} />
+          {/* Say plainly whether anybody has checked. A plan the app cannot
+              confirm is not the same as one it can, and pretending otherwise is
+              how a support queue fills up with people who think they paid. */}
+          {ent.paid && (
+            <Row
+              icon={ent.verified ? 'shield-checkmark' : 'shield-outline'}
+              label="Plan status"
+              value={ent.verified ? 'Verified' : ent.verifiable ? 'Checking…' : 'Unverified'}
+            />
+          )}
           <Row icon="bookmark" label="Your card" value={`${eng.summary.open} open`} onPress={onCard} />
         </Group>
 
@@ -124,6 +136,7 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard }: Pro
         {/* ---- legal ---- */}
         <Group title="The small print">
           <Row icon="shield-checkmark" label="How the model is graded" value="Record tab" onPress={onCard} />
+          <Row icon="lock-closed" label="Your data & account" value="Export or delete" onPress={onPrivacy} />
           <Row
             icon="help-buoy"
             label="Responsible gambling"
@@ -166,9 +179,9 @@ function Group({ title, note, children }: { title: string; note?: string; childr
   );
 }
 
-function Row({ icon, label, value, onPress }: { icon: keyof typeof Ionicons.glyphMap; label: string; value?: string; onPress: () => void }) {
+function Row({ icon, label, value, onPress }: { icon: keyof typeof Ionicons.glyphMap; label: string; value?: string; onPress?: () => void }) {
   return (
-    <TouchableOpacity style={styles.row} activeOpacity={0.8} onPress={() => { haptic('light'); onPress(); }} accessibilityRole="button" accessibilityLabel={label}>
+    <TouchableOpacity style={styles.row} activeOpacity={onPress ? 0.8 : 1} disabled={!onPress} onPress={() => { haptic('light'); onPress?.(); }} accessibilityRole={onPress ? 'button' : 'text'} accessibilityLabel={label}>
       <View style={styles.rowIcon}><Ionicons name={icon} size={15} color={colors.green} /></View>
       <Text style={styles.rowLabel}>{label}</Text>
       {!!value && <Text style={styles.rowValue} numberOfLines={1}>{value}</Text>}

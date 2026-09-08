@@ -16,7 +16,9 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Backend, FeedScope, Post, PostPick, Profile, Session, colorFor, handleFrom, hashtagsIn } from './types';
+import { Backend, FeedScope, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
+import { screen } from './moderation';
+import { sortFeed } from './local';
 
 const URL = (process.env.EXPO_PUBLIC_SUPABASE_URL as string | undefined)?.trim();
 const ANON = (process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY as string | undefined)?.trim();
@@ -92,6 +94,19 @@ export class SupabaseBackend implements Backend {
 
   async signOut(): Promise<void> { await db().auth.signOut(); this.me = null; }
 
+  /**
+   * Erasure, server side. One RPC, because the delete has to reach auth.users
+   * and a client cannot. `delete_account()` takes no argument on purpose — it
+   * reads auth.uid() itself, so there is no id to tamper with and no way to
+   * point it at somebody else.
+   */
+  async deleteAccount(): Promise<void> {
+    const { error } = await db().rpc('delete_account');
+    if (error) throw new Error(error.message);
+    await db().auth.signOut();
+    this.me = null;
+  }
+
   /** First sign-in writes the profile row the rest of the app reads. */
   private async ensureProfile(user: { id: string; email?: string | null; user_metadata?: Record<string, unknown> }) {
     const { data } = await db().from('profiles').select('id').eq('id', user.id).maybeSingle();
@@ -150,6 +165,37 @@ export class SupabaseBackend implements Backend {
     return !!data;
   }
 
+  async blocked(): Promise<string[]> {
+    if (!this.me) return [];
+    const { data } = await db().from('blocks').select('blocked_id').eq('blocker_id', this.me).limit(1000);
+    return (data ?? []).map((r) => String((r as Record<string, unknown>).blocked_id));
+  }
+
+  async block(userId: string, on: boolean): Promise<void> {
+    if (!this.me) throw new Error('Sign in first');
+    if (on) {
+      await db().from('blocks').upsert({ blocker_id: this.me, blocked_id: userId });
+      // Blocking is also unfollowing, both ways: the point of a block is that
+      // neither timeline carries the other any more.
+      await db().from('follows').delete().eq('follower_id', this.me).eq('followee_id', userId);
+      await db().from('follows').delete().eq('follower_id', userId).eq('followee_id', this.me);
+    } else {
+      await db().from('blocks').delete().eq('blocker_id', this.me).eq('blocked_id', userId);
+    }
+  }
+
+  async report(input: ReportInput): Promise<void> {
+    if (!this.me) throw new Error('Sign in first');
+    const { error } = await db().from('reports').insert({
+      reporter_id: this.me,
+      post_id: input.postId ?? null,
+      subject_id: input.subjectId,
+      reason: input.reason,
+      detail: input.detail ?? null,
+    });
+    if (error) throw new Error(error.message);
+  }
+
   async followersOf(userId: string): Promise<Profile[]> {
     const { data } = await db().from('follows').select('profiles!follows_follower_id_fkey(*)').eq('followee_id', userId).limit(100);
     return (data ?? []).map((r) => rowToProfile((r as Record<string, unknown>).profiles as Record<string, unknown>));
@@ -165,16 +211,23 @@ export class SupabaseBackend implements Backend {
     let q = db().from(view).select('*, profiles:author_id(*)').is('reply_to', null).order('created_at', { ascending: false }).limit(60);
     if (scope === 'picks') q = q.not('pick', 'is', null);
     const { data } = await q;
-    return (data ?? []).map((r) => rowToPost(r as Record<string, unknown>, this.me));
+    // Screened again on the way in. The database hides blocked authors and
+    // moderated posts, but a feed this client does not control is still input,
+    // and a rule enforced only where the post is written is not enforced.
+    return sortFeed((data ?? []).map((r) => rowToPost(r as Record<string, unknown>, this.me)));
   }
 
   async postsBy(userId: string): Promise<Post[]> {
     const { data } = await db().from('feed_public').select('*, profiles:author_id(*)').eq('author_id', userId).order('created_at', { ascending: false }).limit(60);
-    return (data ?? []).map((r) => rowToPost(r as Record<string, unknown>, this.me));
+    return (data ?? [])
+      .map((r) => rowToPost(r as Record<string, unknown>, this.me))
+      .filter((p) => screen(p.text).verdict !== 'block');
   }
 
   async createPost(input: { text: string; gifUrl?: string | null; pick?: PostPick | null; replyTo?: string | null }): Promise<Post> {
     if (!this.me) throw new Error('Sign in to post');
+    const verdict = screen(input.text ?? '');
+    if (verdict.verdict === 'block') throw new Error(verdict.reason);
     const { data, error } = await db().from('posts').insert({
       author_id: this.me,
       text: input.text.trim(),

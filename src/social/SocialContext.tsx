@@ -8,7 +8,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { backend } from './backend';
-import type { AuthProvider, FeedScope, Post, PostPick, Profile, Session } from './types';
+import type { AuthProvider, FeedScope, Post, PostPick, Profile, ReportInput, Session } from './types';
 
 interface State {
   ready: boolean;
@@ -24,8 +24,11 @@ interface State {
   refreshFeed: () => Promise<void>;
   signIn: (p: AuthProvider) => Promise<void>;
   signOut: () => Promise<void>;
+  /** Erase the account. Clears local state here; the backend clears its own. */
+  deleteAccount: () => Promise<void>;
   saveProfile: (patch: Partial<Profile>) => Promise<void>;
-  post: (input: { text: string; gifUrl?: string | null; pick?: PostPick | null; replyTo?: string | null }) => Promise<void>;
+  /** False when the post was refused — moderation, rate limit, or a backend error. */
+  post: (input: { text: string; gifUrl?: string | null; pick?: PostPick | null; replyTo?: string | null }) => Promise<boolean>;
   remove: (id: string) => Promise<void>;
   like: (id: string, on: boolean) => Promise<void>;
   tail: (id: string, on: boolean) => Promise<void>;
@@ -38,6 +41,10 @@ interface State {
   postsOf: (userId: string) => Promise<Post[]>;
   following: (userId: string) => Promise<boolean>;
   search: (q: string) => Promise<Profile[]>;
+  /** Accounts this device has blocked, kept in state so the UI can react. */
+  blocked: string[];
+  block: (userId: string, on: boolean) => Promise<void>;
+  report: (input: ReportInput) => Promise<void>;
 }
 
 const Ctx = createContext<State | null>(null);
@@ -51,6 +58,7 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
   const [scope, setScope] = useState<FeedScope>('everyone');
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [blocked, setBlocked] = useState<string[]>([]);
 
   const loadFeed = useCallback(async (s: FeedScope) => {
     try { setFeed(await api.feed(s)); } catch (e) { setError((e as Error).message); }
@@ -63,6 +71,7 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
         setSession(s);
         if (s) setMe(await api.getProfile(s.userId));
       } catch { /* signed out */ }
+      try { setBlocked(await api.blocked()); } catch { /* none */ }
       await loadFeed('everyone');
       setReady(true);
     })();
@@ -91,6 +100,13 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
       setBusy(false);
     },
     signOut: async () => { await api.signOut(); setSession(null); setMe(null); await loadFeed('everyone'); },
+    deleteAccount: async () => {
+      await api.deleteAccount();
+      setSession(null);
+      setMe(null);
+      setBlocked([]);
+      await loadFeed('everyone');
+    },
     saveProfile: async (patch) => {
       if (!me) return;
       setBusy(true);
@@ -100,9 +116,11 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
     },
     post: async (input) => {
       setBusy(true); setError(null);
-      try { await api.createPost(input); await loadFeed(scope); }
+      let ok = false;
+      try { await api.createPost(input); await loadFeed(scope); ok = true; }
       catch (e) { setError((e as Error).message); }
       setBusy(false);
+      return ok;
     },
     remove: async (id) => { await api.deletePost(id); await loadFeed(scope); },
     like: async (id, on) => {
@@ -121,7 +139,14 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
     postsOf: (userId) => api.postsBy(userId),
     following: (userId) => api.isFollowing(userId),
     search: (q) => api.searchProfiles(q),
-  }), [ready, api, session, me, busy, error, feed, scope, loadFeed]);
+    blocked,
+    block: async (userId, on) => {
+      await api.block(userId, on);
+      setBlocked(await api.blocked().catch(() => blocked));
+      await loadFeed(scope);
+    },
+    report: (input) => api.report(input),
+  }), [ready, api, session, me, busy, error, feed, scope, loadFeed, blocked]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

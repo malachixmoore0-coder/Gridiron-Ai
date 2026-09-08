@@ -14,13 +14,15 @@ import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLeague } from '@/league/LeagueContext';
 import { hashtagsIn, type PostPick } from '@/social/types';
+import { MAX_POST_LENGTH, screen } from '@/social/moderation';
 import { giphyReady, looksLikeGif, searchGifs, type Gif } from '@/social/giphy';
 import { Avatar, SignInRow } from '@/components/Social';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
 interface Props { onDone: () => void; initialPick?: PostPick | null; }
 
-const MAX = 500;
+/** The screening module owns the limit, so the counter and the check agree. */
+const MAX = MAX_POST_LENGTH;
 
 export function ComposeScreen({ onDone, initialPick }: Props) {
   const s = useSocial();
@@ -52,10 +54,19 @@ export function ComposeScreen({ onDone, initialPick }: Props) {
   /** Open picks on the card, newest first — the things worth posting about. */
   const candidates = useMemo(() => eng.picks.filter((p) => p.status === 'open').slice(0, 20), [eng.picks]);
 
+  /**
+   * Screened as you type, not only on send. Telling somebody a post was refused
+   * after they wrote it is a worse experience than telling them while they can
+   * still change it, and it means nobody hits Send into a wall.
+   */
+  const check = useMemo(() => screen(text), [text]);
+  const refused = check.verdict === 'block';
+
   const send = async () => {
-    if (!text.trim() && !pick && !gif) return;
-    await s.post({ text, gifUrl: gif, pick });
-    onDone();
+    if (refused || (!text.trim() && !pick && !gif)) return;
+    // Only leave the composer if the post actually landed — the backend screens
+    // again, and a rate limit can refuse something this screen was happy with.
+    if (await s.post({ text, gifUrl: gif, pick })) onDone();
   };
 
   if (!s.signedIn) {
@@ -75,10 +86,10 @@ export function ComposeScreen({ onDone, initialPick }: Props) {
       <View style={styles.head}>
         <Text style={styles.title}>New post</Text>
         <TouchableOpacity
-          style={[styles.send, (!text.trim() && !pick && !gif) && styles.sendOff]}
+          style={[styles.send, (refused || (!text.trim() && !pick && !gif)) && styles.sendOff]}
           activeOpacity={0.85}
           onPress={send}
-          disabled={s.busy || (!text.trim() && !pick && !gif)}
+          disabled={s.busy || refused || (!text.trim() && !pick && !gif)}
           accessibilityLabel="Post"
         >
           <Text style={styles.sendText}>{s.busy ? 'Posting…' : 'Post'}</Text>
@@ -98,6 +109,13 @@ export function ComposeScreen({ onDone, initialPick }: Props) {
             autoFocus
           />
         </View>
+
+        {(refused || !!s.error) && (
+          <View style={styles.refused}>
+            <Ionicons name="alert-circle" size={15} color={colors.negative} />
+            <Text style={styles.refusedText}>{refused ? check.reason : s.error}</Text>
+          </View>
+        )}
 
         {!!tags.length && (
           <View style={styles.tags}>
@@ -220,6 +238,8 @@ const styles = StyleSheet.create({
 
   body: { padding: spacing.lg, paddingTop: spacing.sm, paddingBottom: clearance.overlay },
   editor: { flexDirection: 'row', gap: spacing.md },
+  refused: { flexDirection: 'row', alignItems: 'flex-start', gap: 8, marginTop: spacing.sm, padding: spacing.md, borderRadius: radius.md, backgroundColor: 'rgba(255,95,109,0.10)', borderWidth: 1, borderColor: 'rgba(255,95,109,0.35)' },
+  refusedText: { flex: 1, color: colors.negative, fontSize: 12.5, lineHeight: 18, fontWeight: '600' },
   input: { flex: 1, color: colors.ink, fontSize: 16, lineHeight: 22, minHeight: 110, textAlignVertical: 'top', padding: 0 },
 
   tags: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: spacing.sm },

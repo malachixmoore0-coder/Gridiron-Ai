@@ -156,3 +156,122 @@ alter table profiles add constraint profiles_avatar_url_check
 alter table profiles drop constraint if exists profiles_banner_url_check;
 alter table profiles add constraint profiles_banner_url_check
   check (banner_url is null or char_length(banner_url) <= 400000);
+
+-- ---------------------------------------------------------------------------
+-- Entitlements. Written only by the entitlements edge function, which runs with
+-- the service role; the client may read its own row and nothing else. There is
+-- deliberately no insert or update policy, so a signed-in user cannot grant
+-- themselves a tier even with a valid JWT and a hand-rolled request.
+-- ---------------------------------------------------------------------------
+create table if not exists entitlements (
+  user_id    uuid primary key references auth.users on delete cascade,
+  tier       text not null default 'walkon'
+             check (tier in ('walkon','starter','allpro','franchise')),
+  expires_at timestamptz,
+  source     text not null default 'none'
+             check (source in ('none','trial','code','stripe')),
+  ref        text,
+  updated_at timestamptz not null default now()
+);
+
+alter table entitlements enable row level security;
+drop policy if exists entitlements_read_own on entitlements;
+create policy entitlements_read_own on entitlements for select using (auth.uid() = user_id);
+
+-- Promo codes never reach a client. The redeem route reads this with the
+-- service role, which is the whole point of moving redemption off the device.
+create table if not exists promo_codes (
+  code      text primary key,
+  tier      text not null check (tier in ('starter','allpro','franchise')),
+  days      integer not null check (days > 0),
+  max_uses  integer,
+  uses      integer not null default 0,
+  note      text,
+  created_at timestamptz not null default now()
+);
+alter table promo_codes enable row level security;
+-- No policies at all: the service role bypasses RLS, everyone else sees nothing.
+
+-- ---------------------------------------------------------------------------
+-- Moderation and safety.
+-- ---------------------------------------------------------------------------
+create table if not exists blocks (
+  blocker_id uuid not null references profiles on delete cascade,
+  blocked_id uuid not null references profiles on delete cascade,
+  created_at timestamptz not null default now(),
+  primary key (blocker_id, blocked_id)
+);
+alter table blocks enable row level security;
+drop policy if exists blocks_own on blocks;
+create policy blocks_own on blocks for all using (auth.uid() = blocker_id) with check (auth.uid() = blocker_id);
+
+create table if not exists reports (
+  id          uuid primary key default gen_random_uuid(),
+  reporter_id uuid references profiles on delete set null,
+  post_id     uuid references posts on delete cascade,
+  subject_id  uuid references profiles on delete cascade,
+  reason      text not null,
+  detail      text,
+  status      text not null default 'open' check (status in ('open','actioned','dismissed')),
+  created_at  timestamptz not null default now()
+);
+alter table reports enable row level security;
+-- A reporter may file and may see what they filed. Nobody else reads the queue
+-- through the API; moderators use the dashboard, which runs as service role.
+drop policy if exists reports_insert on reports;
+create policy reports_insert on reports for insert with check (auth.uid() = reporter_id);
+drop policy if exists reports_read_own on reports;
+create policy reports_read_own on reports for select using (auth.uid() = reporter_id);
+
+-- Posts hidden by moderation stay in the table (an audit trail beats a delete)
+-- but drop out of every read path.
+alter table posts add column if not exists hidden_at timestamptz;
+alter table posts add column if not exists hidden_reason text;
+
+-- Blocked authors and hidden posts disappear from the feed for the reader, in
+-- the database rather than in the client, so a patched client cannot un-hide
+-- somebody who blocked them.
+drop policy if exists posts_read on posts;
+create policy posts_read on posts for select using (
+  hidden_at is null
+  and not exists (
+    select 1 from blocks b
+    where (b.blocker_id = auth.uid() and b.blocked_id = posts.author_id)
+       or (b.blocker_id = posts.author_id and b.blocked_id = auth.uid())
+  )
+  and (
+    author_id = auth.uid()
+    or exists (select 1 from profiles p where p.id = posts.author_id and not p.is_private)
+    or exists (select 1 from follows f where f.follower_id = auth.uid() and f.followee_id = posts.author_id)
+  )
+);
+
+-- ---------------------------------------------------------------------------
+-- Right to erasure. One call, everything the account owns, the login included.
+-- Security definer so it can reach auth.users; it can only ever delete the
+-- caller, because it never takes an id as an argument.
+-- ---------------------------------------------------------------------------
+create or replace function delete_account()
+returns void
+language plpgsql
+security definer
+set search_path = public, auth
+as $$
+declare
+  me uuid := auth.uid();
+begin
+  if me is null then
+    raise exception 'not signed in';
+  end if;
+  -- Everything below cascades from profiles or auth.users, but reports are
+  -- deliberately kept with a null reporter: a moderation record should survive
+  -- the account that filed it, without naming them.
+  update reports set reporter_id = null where reporter_id = me;
+  delete from entitlements where user_id = me;
+  delete from profiles where id = me;
+  delete from auth.users where id = me;
+end;
+$$;
+
+revoke all on function delete_account() from public;
+grant execute on function delete_account() to authenticated;

@@ -52,6 +52,7 @@ jobs:
         run: |
           if [ "${{ inputs.skip_weather }}" = "true" ]; then npm run data:build:offline; else npm run data:build; fi
 
+      - run: npm run test:moderation
       - name: Engine sanity checks against the fresh data
         run: npm run test:engine
 

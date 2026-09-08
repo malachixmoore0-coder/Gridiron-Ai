@@ -70,6 +70,14 @@ export interface Post {
   replies: number;
 }
 
+export interface ReportInput {
+  /** The post being reported, when it is about a post rather than an account. */
+  postId?: string | null;
+  subjectId: string;
+  reason: string;
+  detail?: string | null;
+}
+
 export interface Session {
   userId: string;
   provider: AuthProvider;
@@ -86,6 +94,8 @@ export interface Backend {
   restore(): Promise<Session | null>;
   signIn(provider: AuthProvider): Promise<Session | null>;
   signOut(): Promise<void>;
+  /** Erase the account and everything it owns. Not reversible, by design. */
+  deleteAccount(): Promise<void>;
   getProfile(userId: string): Promise<Profile | null>;
   /** Resolve an @handle to an account. This is what makes /@handle a real address. */
   profileByHandle(handle: string): Promise<Profile | null>;
@@ -95,6 +105,10 @@ export interface Backend {
   isFollowing(userId: string): Promise<boolean>;
   followersOf(userId: string): Promise<Profile[]>;
   followingOf(userId: string): Promise<Profile[]>;
+  /** Accounts this user has blocked. Their posts never reach the feed. */
+  blocked(): Promise<string[]>;
+  block(userId: string, on: boolean): Promise<void>;
+  report(input: ReportInput): Promise<void>;
   feed(scope: FeedScope, cursor?: number): Promise<Post[]>;
   postsBy(userId: string): Promise<Post[]>;
   createPost(input: { text: string; gifUrl?: string | null; pick?: PostPick | null; replyTo?: string | null }): Promise<Post>;

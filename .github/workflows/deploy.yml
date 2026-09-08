@@ -36,6 +36,7 @@ jobs:
           PLAYWRIGHT_SKIP_BROWSER_DOWNLOAD: '1'
       - run: npm run typecheck
       - run: npm run test:engine
+      - run: npm run test:moderation
       - name: Export web app
         env:
           EXPO_BASE_URL: /${{ github.event.repository.name }}

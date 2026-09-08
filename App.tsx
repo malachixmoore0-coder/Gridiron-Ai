@@ -11,6 +11,7 @@ import { GolfProvider } from '@/sports/GolfContext';
 import { EntitlementsProvider } from '@/context/EntitlementsContext';
 import { EngagementProvider } from '@/context/EngagementContext';
 import { SocialProvider } from '@/social/SocialContext';
+import { EntitlementSync } from '@/monetize/EntitlementSync';
 import { LiveProvider } from '@/live/LiveContext';
 import { PrefsProvider } from '@/context/PrefsContext';
 import { SplashGate } from '@/components/SplashGate';
@@ -37,6 +38,7 @@ export default function App() {
                   <EntitlementsProvider>
                     <EngagementProvider>
                       <SocialProvider>
+                        <EntitlementSync />
                         <StatusBar style="light" />
                         <SplashGate>
                           <RootNavigator />
