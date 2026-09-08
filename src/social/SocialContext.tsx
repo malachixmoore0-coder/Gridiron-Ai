@@ -9,6 +9,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { backend } from './backend';
 import { authCallback } from './callback';
+import { emailCodeEnabled } from './emailCode';
 import type { AuthProvider, FeedScope, Post, PostPick, Profile, ReportInput, Session } from './types';
 
 interface State {
@@ -138,7 +139,9 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
       } catch (e) { setError((e as Error).message); }
       setBusy(false);
     },
-    canVerifyCode: !!api.verifyEmailCode,
+    // Both halves have to be true: a backend that can verify a code, and an
+    // email template that actually sends one.
+    canVerifyCode: !!api.verifyEmailCode && emailCodeEnabled,
     retryProfile: async () => {
       setBusy(true); setError(null);
       try { await adopt(await api.restore()); }

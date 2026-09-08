@@ -24,6 +24,7 @@ import { sortFeed } from './local';
 // consumes the fragment.
 import { authCallback } from './callback';
 import { appUrl } from './links';
+import { emailCodeEnabled } from './emailCode';
 
 const URL = (process.env.EXPO_PUBLIC_SUPABASE_URL as string | undefined)?.trim();
 const ANON = (process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY as string | undefined)?.trim();
@@ -169,7 +170,13 @@ export class SupabaseBackend implements Backend {
     }
     const { error } = await db().auth.signInWithOtp({ email: to, options: { emailRedirectTo: appUrl() } });
     if (error) return { sent: false, message: error.message };
-    return { sent: true, message: `Sent to ${to}. Open the link in this browser, or type the code from the email. Both expire in an hour.` };
+    // Only mention the code when the template actually sends one.
+    return {
+      sent: true,
+      message: emailCodeEnabled
+        ? `Sent to ${to}. Open the link in this browser, or type the code from the email. Both expire in an hour.`
+        : `Sent to ${to}. Open the link in this browser — it expires in an hour, and only works once.`,
+    };
   }
 
   /**

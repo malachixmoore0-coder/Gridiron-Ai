@@ -241,17 +241,23 @@ screen rather than implying an audience that is not there. To make it real:
    that is not on that list is silently replaced with the Site URL, which is
    how a sign-in link ends up delivering somebody to the wrong place — or to
    `localhost:3000`, which is the default.
-3. Add `{{ .Token }}` to the **Confirm signup** and **Magic Link** templates
-   under Authentication → Emails. This is not cosmetic. The default templates
-   carry the link alone, the link is single-use, and mail clients and corporate
-   link scanners routinely follow it in the background to check it is safe —
-   which spends it before the recipient ever taps. The app offers the six-digit
-   code as a second way in precisely because a code cannot be consumed by a
-   machine on the user's behalf, and it can only offer it if the mail contains
-   one.
-4. Point Authentication → Emails at real SMTP before launch. The built-in
-   sender is rate-limited to a couple of messages an hour and is documented as
-   testing-only; on a launch day it fails closed and nobody can sign up.
+3. Point Authentication → Emails at real SMTP **first**, before anything else
+   about email. The built-in sender is rate-limited to a couple of messages an
+   hour and documented as testing-only, so it fails closed on a launch day —
+   and Supabase will not let a project edit its email templates at all until
+   custom SMTP is configured, which makes step 4 impossible without this one.
+   Brevo's free tier verifies a single sending address rather than a whole
+   domain, which is the shortest path if you do not own one; Resend is the
+   better long-term answer once you do.
+4. Then add `{{ .Token }}` to the **Confirm signup** and **Magic Link**
+   templates, and set `EXPO_PUBLIC_EMAIL_CODE=1`. This is not cosmetic. The
+   default templates carry the link alone, the link is single-use, and mail
+   clients and corporate link scanners routinely follow it in the background to
+   check it is safe — which spends it before the recipient ever taps. The app
+   offers a six-digit code as a second way in precisely because a code cannot
+   be consumed by a machine on the user's behalf. Until both the template edit
+   and the flag are done the code box stays hidden, because a box for a code
+   the email does not contain is a promise it cannot keep.
 5. Enable Google and Apple under Authentication → Providers, if you want them,
    and list them in `EXPO_PUBLIC_OAUTH_PROVIDERS`. Unset means email only, and
    the buttons stay hidden rather than offering a provider that is not there.
@@ -261,6 +267,7 @@ screen rather than implying an audience that is not there. To make it real:
 EXPO_PUBLIC_SUPABASE_URL=https://<project>.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=<anon key>
 EXPO_PUBLIC_GIPHY_KEY=<optional, enables GIF search>
+EXPO_PUBLIC_EMAIL_CODE=1   # only once the templates carry {{ .Token }}
 ```
 
 The anon key is meant to be public; everything that matters is enforced by the

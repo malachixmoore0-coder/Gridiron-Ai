@@ -50,6 +50,7 @@ jobs:
           EXPO_PUBLIC_ENTITLEMENTS_URL: ${{ vars.ENTITLEMENTS_URL }}
           # e.g. "google,apple" once those providers are configured in Supabase.
           EXPO_PUBLIC_OAUTH_PROVIDERS: ${{ vars.OAUTH_PROVIDERS }}
+          EXPO_PUBLIC_EMAIL_CODE: ${{ vars.EMAIL_CODE }}
         run: npx expo export --platform web
       - name: Prepare Pages artifact
         run: |
