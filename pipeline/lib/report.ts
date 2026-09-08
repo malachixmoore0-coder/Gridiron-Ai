@@ -17,13 +17,30 @@ export interface Report {
   flush: () => void;
 }
 
+/**
+ * How long a probe may run before it is made to hand in what it has.
+ *
+ * These scripts talk to a few dozen strangers' servers and one of them will
+ * eventually accept a connection and go quiet in a way no per-request timeout
+ * catches. Better a partial report than a runner held until it is killed.
+ */
+const DEADLINE_MS = Number(process.env.PROBE_DEADLINE_MS ?? 15 * 60_000);
+
 export function report(name: string): Report {
   const lines: string[] = [`# ${name} — ${new Date().toISOString()}`, ''];
+  const write = () => {
+    fs.mkdirSync(DIR, { recursive: true });
+    fs.writeFileSync(path.join(DIR, `${name}.txt`), `${lines.join('\n')}\n`);
+  };
+  const bomb = setTimeout(() => {
+    lines.push('', `-- gave up after ${Math.round(DEADLINE_MS / 60_000)} minutes --`);
+    console.error(`${name}: deadline reached, writing what we have`);
+    write();
+    process.exit(3);
+  }, DEADLINE_MS);
+
   return {
     log: (line = '') => { lines.push(line); console.log(line); },
-    flush: () => {
-      fs.mkdirSync(DIR, { recursive: true });
-      fs.writeFileSync(path.join(DIR, `${name}.txt`), `${lines.join('\n')}\n`);
-    },
+    flush: () => { clearTimeout(bomb); write(); },
   };
 }

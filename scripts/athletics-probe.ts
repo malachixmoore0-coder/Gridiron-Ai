@@ -37,6 +37,7 @@ async function shapes(schools: string[], league: string) {
     const site = SCHOOL_SITES.find((x) => x.school.toLowerCase() === want.toLowerCase());
     if (!site) { log(`${want}: not in the map`); continue; }
     const url = rosterUrls(site, league)[0];
+    log(`\n--- ${site.school}: ${url}`);
 
     // With a timeout: a site that accepts the connection and then says nothing
     // will otherwise hold the whole probe open until the runner gives up.

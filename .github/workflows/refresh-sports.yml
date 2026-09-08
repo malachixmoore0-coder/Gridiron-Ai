@@ -74,9 +74,15 @@ jobs:
           path: ~/.cache/ms-playwright
           key: playwright-chromium-${{ hashFiles('package-lock.json') }}
 
+      # The cache holds the browser, not the shared libraries it links against,
+      # so the system side is installed on every run and only the download is
+      # skipped when the cache hits.
       - name: Install Chromium
         if: steps.pw-cache.outputs.cache-hit != 'true'
-        run: npx playwright install --with-deps chromium
+        run: npx playwright install chromium
+
+      - name: Install Chromium's system libraries
+        run: npx playwright install-deps chromium
 
       - name: Probe candidate leagues
         if: ${{ github.event.inputs.probe != '' }}

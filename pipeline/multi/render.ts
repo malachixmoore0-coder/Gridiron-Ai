@@ -23,6 +23,7 @@ async function open(): Promise<Browser | null> {
   if (browser || tried) return browser;
   tried = true;
   try {
+    console.log('  (render) starting Chromium');
     // Required rather than imported: where Chromium or the package is missing
     // this has to degrade to "no pages rendered", not take the build down.
     const { chromium } = require('playwright') as typeof import('playwright');
@@ -31,7 +32,11 @@ async function open(): Promise<Browser | null> {
       // than download a second copy of the same thing.
       executablePath: process.env.CHROMIUM_PATH || undefined,
       args: ['--no-sandbox', '--disable-dev-shm-usage'],
+      // A browser that will not start should say so in seconds, not hold the
+      // job until the runner is killed.
+      timeout: 60_000,
     });
+    console.log('  (render) Chromium up');
   } catch (e) {
     console.warn(`  (render) no browser available: ${e instanceof Error ? e.message : String(e)}`);
     browser = null;
