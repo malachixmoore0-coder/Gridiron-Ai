@@ -1,7 +1,7 @@
-# soccer — 2026-09-08T01:28:08.889Z
+# soccer — 2026-09-08T01:38:44.582Z
 
 
-=== epl https://www.premierleague.com/en/clubs → 391026 bytes
+=== epl https://www.premierleague.com/en/clubs → 391526 bytes
    87  /resources/#/i/svg-output/icons.svg#icn-external-link   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-external-link
    71  /resources/#/i/svg-output/icons.svg#icn-chevron-right   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-chevron-right
    51  /resources/#/i/svg-output/icons.svg#icn-stadium   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-stadium
@@ -14,7 +14,7 @@
     3  https://www.premierleague.com/en/stats   e.g. https://www.premierleague.com/en/stats
   (no club link found)
 
-=== laliga https://www.laliga.com/en-US/clubs → 179899 bytes
+=== laliga https://www.laliga.com/en-US/clubs → 179870 bytes
     3  https://www.laliga.com/informacion-legal/politica-cookies   e.g. https://www.laliga.com/informacion-legal/politica-cookies
     2  /   e.g. /
     2  /_next/static/css/#   e.g. /_next/static/css/3eff8dd1f3e9f76f.css
@@ -27,7 +27,7 @@
     1  https://www.laliga.com/laliga-easports   e.g. https://www.laliga.com/laliga-easports
   (no club link found)
 
-=== bundesliga https://www.bundesliga.com/en/bundesliga/clubs → 736338 bytes
+=== bundesliga https://www.bundesliga.com/en/bundesliga/clubs → 736345 bytes
    12  #   e.g. styles-M7PAVYCE.css
     8  https://bundesliga.go.link/#   e.g. https://bundesliga.go.link/jss6p
     6  /assets/favicons/#   e.g. /assets/favicons/favicon-16x16.png
@@ -40,7 +40,7 @@
     3  /en/bundesliga/info/broadcasters   e.g. /en/bundesliga/info/broadcasters
   → club pages look like /en/bundesliga/clubs/# (6)
 
-=== seriea https://en.legaseriea.it/team → 1596772 bytes
+=== seriea https://en.legaseriea.it/team → 1596701 bytes
    11  /_next/static/chunks/#   e.g. /_next/static/chunks/webpack-e011fb0ebd706d56.js
     8  /_next/static/media/#   e.g. /_next/static/media/2a91a414f28b9df3-s.p.woff
     3  /_next/static/css/#   e.g. /_next/static/css/5c9555c91fd9709e.css
@@ -53,7 +53,7 @@
     1  https://www.googletagservices.com/tag/js/gpt.js   e.g. https://www.googletagservices.com/tag/js/gpt.js
   (no club link found)
 
-=== ligue1 https://ligue1.com/en/competitions/ligue1mcdonalds/standings → 343552 bytes
+=== ligue1 https://ligue1.com/en/competitions/ligue1mcdonalds/standings → 348783 bytes
    18  /en/club-sheet/#/info   e.g. /en/club-sheet/l1_championship_club_2026_9/info
     9  /en/articles/#   e.g. /en/articles/l1_article_5793-matchday-two-what-are-the-key-stats
     8  /fonts/#   e.g. /fonts/GTAmerica-Bold.woff2
@@ -66,7 +66,7 @@
     3  https://#/   e.g. https://plus.ligue1.com/
   → club pages look like /en/club-sheet/#/info (18)
 
-=== mls https://www.mlssoccer.com/clubs/ → 421002 bytes
+=== mls https://www.mlssoccer.com/clubs/ → 420954 bytes
     4  /assets/fonts/MLSTifo/#   e.g. /assets/fonts/MLSTifo/MLSTifo--regular.woff2
     4  https://soc.cr/#   e.g. https://soc.cr/4krM2op
     4  /media-resources/   e.g. /media-resources/
@@ -79,7 +79,7 @@
     3  https://www.mlssoccer.com/clubs/index   e.g. https://www.mlssoccer.com/clubs/index
   (no club link found)
 
-=== ligamx https://ligamx.net → 623189 bytes
+=== ligamx https://ligamx.net → 634501 bytes
   100  /estadistica/g/#   e.g. /estadistica/g/eyJ0aXR1bG9UYWJsYSI6IkcgLSBKb3PpIFNhbG9t824gUm9uZPNuIiwic
    99  /estadistica/mj/#   e.g. /estadistica/mj/eyJ0aXR1bG9UYWJsYSI6Ik1KIC0gSm9z6SBTYWxvbfNuIFJvbmTzbiIs
    54  estadistica/tj/#   e.g. estadistica/tj/eyJ0aXR1bG9UYWJsYSI6IlRvdGFsIGRlIEp1ZWdvcyAtIEFt6XJpY2EiL
@@ -92,7 +92,7 @@
    17  http://online.caliente.mx/promoRedirect   e.g. http://online.caliente.mx/promoRedirect?member=ligamx&amp;campaign=DEFAU
   → club pages look like cancha/club/#/america (11)
 
-=== ucl https://www.uefa.com/uefachampionsleague/clubs/ → 309712 bytes
+=== ucl https://www.uefa.com/uefachampionsleague/clubs/ → 309698 bytes
    81  /uefachampionsleague/clubs/#/   e.g. /uefachampionsleague/clubs/50129--aek-athens/
    36  https://www.uefa.com/CompiledAssets/UefaCom/js/../js/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../js/npm-beautiful-react
    12  https://www.uefa.com/CompiledAssets/UefaCom/js/../css/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../css/83021.a838bbde.css
@@ -193,7 +193,7 @@
   alt="LIGUE1PLUS Logo" text="Official broadcasters" href=https://plus.ligue1.com/
       /images/partnerships/LIGUE1PLUS.webp
 
---- ligamx https://ligamx.net/cancha/club/1/america → 150 images
+--- ligamx https://ligamx.net/cancha/club/1/america → 144 images
   alt="América" text="" href=/cancha/club/1/america
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/1/1.png?rnd=300622
   alt="Guadalajara" text="" href=/cancha/club/7/guadalajara
@@ -215,7 +215,7 @@
   alt="Monterrey" text="" href=/cancha/club/14/monterrey
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/14/14.png?rnd=300622
 
---- ligamx https://ligamx.net/cancha/club/1/america/squad → 147 images
+--- ligamx https://ligamx.net/cancha/club/1/america/squad → 144 images
   alt="América" text="" href=/cancha/club/1/america
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/1/1.png?rnd=300622
   alt="Guadalajara" text="" href=/cancha/club/7/guadalajara
