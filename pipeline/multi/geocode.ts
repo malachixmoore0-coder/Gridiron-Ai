@@ -50,9 +50,16 @@ const key = (place: string) => place.trim().toLowerCase();
 /**
  * Coordinates for a place name, or null.
  *
- * A null is cached as hard as a hit: a city the geocoder cannot find today it
- * will not find tomorrow either, and re-asking every build is how a
- * best-effort lookup turns into a rate limit.
+ * A miss and a failure are not the same thing, and the first version of this
+ * cached them the same way — on the reasoning that a city the geocoder cannot
+ * find today it will not find tomorrow either. That is true of a name the
+ * geocoder genuinely does not know. It is not true of a request that never got
+ * an answer, and the first real run proved it: Berlin, Hamburg and Athens all
+ * came back empty and were then cached as permanently unfindable, which is
+ * plainly a rate limit rather than a gap in the world's gazetteer.
+ *
+ * So only an actual answer of "no results" is cached. A failed request returns
+ * null for this build and is asked again on the next one.
  */
 export async function geocode(place: string): Promise<Point | null> {
   const name = place.trim();
@@ -65,10 +72,24 @@ export async function geocode(place: string): Promise<Point | null> {
   // where "Chicago" finds it immediately, so the qualifier is used to choose
   // between results rather than to search with.
   const [city, region] = name.split(',').map((x) => x.trim());
-  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(city)}&count=10&language=en&format=json`;
-  const data = await fetchJson<{ results?: { latitude: number; longitude: number; admin1?: string; country?: string }[] }>(
-    url, `Geocode ${name}`, 10_000,
-  ).catch(() => null);
+  // Hyphens are how "Newcastle-upon-Tyne" is written on a scoreboard and not
+  // how it is indexed in a gazetteer.
+  const query = city.replace(/-/g, ' ').trim();
+  const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(query)}&count=10&language=en&format=json`;
+
+  type Row = { latitude: number; longitude: number; admin1?: string; country?: string };
+  let data: { results?: Row[] } | null = null;
+  let answered = false;
+  // Two tries with a pause between them: a free keyless API rate-limits a burst
+  // of a hundred and thirty cities, and the pause is cheaper than the miss.
+  for (let attempt = 0; attempt < 2 && !answered; attempt += 1) {
+    if (attempt) await new Promise((r) => setTimeout(r, 1200));
+    try {
+      data = await fetchJson<{ results?: Row[] }>(url, `Geocode ${name}`, 10_000);
+      answered = true;
+    } catch { /* try once more, then give up without caching */ }
+  }
+  if (!answered) return null;
 
   const results = data?.results ?? [];
   const wanted = region?.toLowerCase();
