@@ -53,6 +53,8 @@ export interface RenderOpts {
   settle?: { selector: string; count: number };
   timeoutMs?: number;
   concurrency?: number;
+  /** How long to sit on the page after it settles, for the slow hydrators. */
+  waitMs?: number;
 }
 
 /**
@@ -98,7 +100,7 @@ export async function renderPages(urls: string[], opts: RenderOpts = {}): Promis
       }
       // Lazy lists render on scroll; one sweep to the bottom is enough.
       await page.evaluate('window.scrollTo(0, document.body.scrollHeight)').catch(() => {});
-      await page.waitForTimeout(900);
+      await page.waitForTimeout(opts.waitMs ?? 900);
       out.set(url, await page.content());
     } catch { /* a page that will not open is a page with no roster on it */ }
     finally { await page.close().catch(() => {}); }
@@ -181,7 +183,7 @@ async function runOnPages(
         ).catch(() => {});
       }
       await page.evaluate('window.scrollTo(0, document.body.scrollHeight)').catch(() => {});
-      await page.waitForTimeout(1200);
+      await page.waitForTimeout(opts.waitMs ?? 1200);
       sink.set(url, (await page.evaluate(script)) as ImageCandidate[]);
     } catch { /* a page that will not open has no squad on it */ }
     finally { await page.close().catch(() => {}); }

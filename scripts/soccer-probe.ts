@@ -36,8 +36,22 @@ const CLUB_INDEX: Record<string, string> = {
 const shapeOf = (href: string) =>
   href.split('?')[0].split('/').map((s) => (s && /\d/.test(s) ? '#' : s)).join('/');
 
+/** Anything that looks like it points at one club rather than a section. */
+const CLUBBY = /\/(clubs?|teams?|equipos?|squadre?|club)\//i;
+
 async function clubs() {
-  const pages = await renderPages(Object.values(CLUB_INDEX), { concurrency: 3, timeoutMs: 25_000 });
+  // These pages hydrate late — the Premier League's club grid is not in the
+  // markup at all until its scripts run — so the browser is told what to wait
+  // for rather than being given a fixed pause.
+  const pages = await renderPages(Object.values(CLUB_INDEX), {
+    concurrency: 2,
+    timeoutMs: 30_000,
+    settle: { selector: 'a[href*="club"], a[href*="team"], a[href*="equipo"]', count: 10 },
+    waitMs: 3500,
+  });
+
+  const firstClub: Record<string, string> = {};
+
   for (const [key, url] of Object.entries(CLUB_INDEX)) {
     const html = pages.get(url);
     log(`\n=== ${key} ${url} → ${html ? `${html.length} bytes` : 'did not open'}`);
@@ -50,8 +64,28 @@ async function clubs() {
       const hit = counts.get(shape);
       if (hit) hit.n += 1; else counts.set(shape, { n: 1, sample: href });
     }
-    const top = [...counts].sort((a, b) => b[1].n - a[1].n).slice(0, 14);
-    for (const [shape, { n, sample }] of top) log(`  ${String(n).padStart(3)}  ${shape}   e.g. ${sample.slice(0, 80)}`);
+    const ranked = [...counts].sort((a, b) => b[1].n - a[1].n);
+    for (const [shape, { n, sample }] of ranked.slice(0, 10)) log(`  ${String(n).padStart(3)}  ${shape.slice(0, 72)}   e.g. ${sample.slice(0, 72)}`);
+
+    // The club link is the one that repeats about as often as there are clubs.
+    const club = ranked.find(([shape, { n }]) => n >= 8 && CLUBBY.test(shape) && /#|-/.test(shape));
+    if (!club) { log('  (no club link found)'); continue; }
+    try { firstClub[key] = new URL(club[1].sample, url).toString(); } catch { /* not a URL */ }
+    log(`  → club pages look like ${club[0]} (${club[1].n})`);
+  }
+
+  // And what a club page holds: the squad, or a link to it.
+  for (const [key, club] of Object.entries(firstClub)) {
+    const tries = [club, `${club.replace(/\/$/, '')}/squad`];
+    const found = await extractImages(tries, { settle: { selector: 'img', count: 12 }, waitMs: 3000, concurrency: 2 });
+    for (const url of tries) {
+      const cards = found.get(url) ?? [];
+      log(`\n--- ${key} ${url} → ${cards.length} images`);
+      for (const c of cards.slice(0, 10)) {
+        log(`  alt=${JSON.stringify(c.alt.slice(0, 34))} text=${JSON.stringify(c.text.slice(0, 40))} href=${c.href.slice(0, 44)}`);
+        log(`      ${c.src.slice(0, 120)}`);
+      }
+    }
   }
 }
 
