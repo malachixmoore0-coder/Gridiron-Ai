@@ -19,6 +19,9 @@ import { RefMark } from '@/components/RefMark';
 import { BookOdds } from '@/components/BookOdds';
 import { AddToCard } from '@/components/AddToCard';
 import { ProbBar } from '@/components/ProbBar';
+import { ConvictionCell } from '@/components/Pro';
+import { useEntitlements } from '@/context/EntitlementsContext';
+import { convictionOf, isPrice } from '@/utils/edge';
 import { useActiveLeague } from '@/league/LeagueContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLive } from '@/live/LiveContext';
@@ -31,6 +34,7 @@ import type { LeagueGame } from '@/league/types';
 interface Props {
   onRun: (r: { awayId: string; homeId: string; ctx: { neutralSite: boolean; primetime: boolean; weather: 'auto' } }) => void;
   onOpenGame: (teamId: string, gameId: string) => void;
+  onUpgrade: () => void;
 }
 
 const WEEK_TAB = 132;
@@ -48,7 +52,8 @@ const SECTIONS = [
   { key: 'final', title: 'Final', icon: 'checkmark-done', blurb: 'How the model did' },
 ] as const;
 
-export function SportSlateScreen({ onRun, onOpenGame }: Props) {
+export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
+  const ent = useEntitlements();
   const view = useActiveLeague();
   const eng = useEngagement();
   const live = useLive();
@@ -90,6 +95,33 @@ export function SportSlateScreen({ onRun, onOpenGame }: Props) {
     out.final.sort((a, b) => b.kickoff.localeCompare(a.kickoff));
     return out;
   }, [games, now, liveHours]);
+
+  /**
+   * Conviction per game, and how much of it this tier gets to read. Ranked over
+   * the whole week so a filter cannot promote a game into the free set, and
+   * capped by the same depth that limits the Edge Board — a rung buys more of
+   * the board ranked, and it means the same thing on every screen.
+   */
+  const convictions = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const g of games) {
+      // Soccer's moneyline arrives in the spread field, and a price is not a
+      // handicap: comparing a model margin against one is meaningless.
+      if (g.status !== 'scheduled' || g.homeSpread == null || isPrice(g.homeSpread)) continue;
+      const rec = view.findRecord(g.id);
+      if (!rec) continue;
+      const e = rec.spread - g.homeSpread;
+      const side = e < 0 ? rec.homeWinPct : rec.awayWinPct;
+      m.set(g.id, convictionOf(e, side, rec.updates ?? 0));
+    }
+    return m;
+  }, [games, view]);
+
+  const readable = useMemo(() => {
+    const depth = ent.ent.edgeBoardDepth;
+    if (depth === Infinity || depth >= convictions.size) return null;
+    return new Set([...convictions.entries()].sort((a, b) => b[1] - a[1]).slice(0, depth).map(([id]) => id));
+  }, [convictions, ent.ent.edgeBoardDepth]);
 
   if (view.loading && !games.length) {
     return (
@@ -224,6 +256,13 @@ export function SportSlateScreen({ onRun, onOpenGame }: Props) {
                           {onCard && <Ionicons name="bookmark" size={13} color={colors.green} />}
                           <Ionicons name={opened ? 'chevron-up' : 'chevron-down'} size={15} color={colors.inkFaint} />
                         </View>
+                        {convictions.has(g.id) && (
+                          <ConvictionCell
+                            value={convictions.get(g.id)!}
+                            locked={!!readable && !readable.has(g.id)}
+                            onUpgrade={onUpgrade}
+                          />
+                        )}
                       </>
                     )}
 

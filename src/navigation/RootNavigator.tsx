@@ -254,10 +254,10 @@ export function RootNavigator() {
         {tab === 'slate' && (field
           ? <GolfBoardScreen onOpenPlayer={openGolfer} />
           : generic
-            ? <SportSlateScreen onRun={(r) => run(r as AnyRun, league)} onOpenGame={(t, g) => openGame(t, g, league)} />
+            ? <SportSlateScreen onRun={(r) => run(r as AnyRun, league)} onOpenGame={(t, g) => openGame(t, g, league)} onUpgrade={openUpgrade} />
             : cfb
-              ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} />
-              : <SlateScreen onRun={(r) => run(r, 'nfl')} />)}
+              ? <CfbSlate onRun={(r) => run(r as AnyRun, 'cfb')} onUpgrade={openUpgrade} />
+              : <SlateScreen onRun={(r) => run(r, 'nfl')} onUpgrade={openUpgrade} />)}
 
         {tab === 'record' && (
           <RecordHubScreen

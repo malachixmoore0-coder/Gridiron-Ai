@@ -129,7 +129,8 @@ function reasonFor(row: Omit<EdgeRow, 'reason' | 'conviction'>, awayAbbr: string
  * both sides of the wire.
  */
 const HANDICAP_LIMIT = 30;
-const isPrice = (v: number | null | undefined) => v != null && Math.abs(v) > HANDICAP_LIMIT;
+/** Over thirty means the number in the spread field is a price, not a handicap. */
+export const isPrice = (v: number | null | undefined) => v != null && Math.abs(v) > HANDICAP_LIMIT;
 const handicapOf = (v: number | null | undefined) => (v == null || isPrice(v) ? null : v);
 
 /**

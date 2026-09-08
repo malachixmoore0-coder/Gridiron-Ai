@@ -63,6 +63,49 @@ export function MeterPill({ left, onPress, compact }: { left: number; onPress?: 
   );
 }
 
+/**
+ * Conviction on a slate row — or the fact that there is one you cannot read.
+ *
+ * This is the line the ladder is actually drawn on. The model's number and its
+ * distance from the market are free on every game, because a single edge is
+ * noise: the model's own margin error is wider than any one disagreement, so a
+ * lone "+4.0 vs mkt" is not something a bettor can act on with confidence. What
+ * converts a board of sixteen numbers into a bet is knowing which of them is
+ * reliable, and that is conviction — edge, the model's own confidence, and how
+ * settled the number is, blended.
+ *
+ * So the locked state shows the shape of the bar without its value. Withholding
+ * something derivable would teach people the paywall is theatre; this is the one
+ * quantity on the row that cannot be worked out from the numbers beside it.
+ */
+export function ConvictionCell({ value, locked, onUpgrade }: { value: number; locked: boolean; onUpgrade?: () => void }) {
+  if (!locked) {
+    return (
+      <View style={styles.convRow}>
+        <Text style={styles.convLabel}>CONV</Text>
+        <ConvictionBar value={value} width={64} />
+        <Text style={[styles.convValue, numeric]}>{value}</Text>
+      </View>
+    );
+  }
+  return (
+    <TouchableOpacity
+      style={styles.convRow}
+      activeOpacity={0.8}
+      onPress={onUpgrade}
+      disabled={!onUpgrade}
+      accessibilityRole="button"
+      accessibilityLabel="Conviction score locked. Upgrade to rank the whole board."
+    >
+      <Text style={styles.convLabel}>CONV</Text>
+      <View style={styles.convLocked}>
+        {[0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((i) => <View key={i} style={styles.convGhost} />)}
+      </View>
+      <Ionicons name="lock-closed" size={10} color={colors.gold} />
+    </TouchableOpacity>
+  );
+}
+
 export function StreakPill({ days, onPress }: { days: number; onPress?: () => void }) {
   if (days <= 0) return null;
   return (
@@ -148,6 +191,11 @@ const styles = StyleSheet.create({
   lockChip: { flexDirection: 'row', alignItems: 'center', gap: 3, paddingHorizontal: 6, paddingVertical: 3, borderRadius: radius.sm, backgroundColor: colors.goldSoft },
   lockChipText: { color: colors.gold, fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
 
+  convRow: { flexDirection: 'row', alignItems: 'center', gap: 6 },
+  convLabel: { color: colors.inkFaint, fontSize: 8, fontWeight: '900', letterSpacing: 0.8 },
+  convValue: { color: colors.ink, fontSize: 12, fontWeight: '900' },
+  convLocked: { flexDirection: 'row', gap: 2, width: 64 },
+  convGhost: { flex: 1, height: 6, borderRadius: 2, backgroundColor: colors.border },
   meter: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, paddingVertical: 4, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
   meterSmall: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 4, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
   meterOut: { borderColor: colors.negative, backgroundColor: colors.negativeSoft },

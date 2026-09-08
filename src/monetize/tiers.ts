@@ -115,10 +115,11 @@ export const TIERS: Tier[] = [
     hook: 'See the model work before you pay a cent.',
     bullets: [
       'Eighteen leagues in one app',
+      'Every model number on the full slate — line, total and the gap to market',
       'A free pick every day, a different sport each time',
+      'Conviction ranking on the 3 best games a day',
       '3 simulations a day at 2,000 runs',
-      'Top 3 of the Edge Board',
-      'Full slate, live scores and box scores',
+      'Live scores, box scores and the closing-line panel',
       'Last 7 days of the track record',
     ],
     entitlements: FREE,
@@ -134,7 +135,7 @@ export const TIERS: Tier[] = [
     bullets: [
       'Unlimited sims at 10,000 runs, every league',
       "Four sports' best play every day, not one",
-      'The whole Edge Board — Sunday and Saturday',
+      'Conviction ranking on 10 games a day, any league',
       'Lock of the Day with the reasoning',
       'Full season track record + calibration',
       'Follow 5 teams and post your picks',
@@ -162,6 +163,7 @@ export const TIERS: Tier[] = [
     hook: 'Every sport on the board, the props, and the parlay maths behind them.',
     bullets: [
       'Everything in Starter, at 25,000 runs',
+      'Conviction on every game on the board — no cap',
       'Every sport on the board, every day',
       'Correlated parlay builder (up to 4 legs)',
       'Player prop projections — NFL and college football',

@@ -17,6 +17,9 @@ import { haptic } from '@/utils/haptics';
 import { useEngagement } from '@/context/EngagementContext';
 import { buildInput, RunRequest } from '@/cfb/hooks/useAnalysis';
 import { TeamMark } from '@/cfb/components/TeamMark';
+import { ConvictionCell } from '@/components/Pro';
+import { useEntitlements } from '@/context/EntitlementsContext';
+import { convictionOf } from '@/utils/edge';
 import { ProbBar } from '@/cfb/components/ProbBar';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { TabHeader } from '@/components/TabHeader';
@@ -25,7 +28,7 @@ import { Chip } from '@/components/Chip';
 import { SAMPLE_SLATE } from '@/cfb/data/slate';
 import { CONFERENCE_ORDER, CONFERENCE_SHORT } from '@/cfb/data/teams';
 
-interface Props { onRun: (req: RunRequest) => void; }
+interface Props { onRun: (req: RunRequest) => void; onUpgrade: () => void; }
 
 type Filter = 'all' | 'ranked' | 'p4' | 'g5' | Conference;
 const QUICK_RUNS = 1000;
@@ -48,7 +51,8 @@ const SECTIONS: { key: GameStatus; title: string; icon: keyof typeof Ionicons.gl
 ];
 
 /** The season's slate, one tab per week, split into games playing now, still to come, and done. */
-export function SlateScreen({ onRun }: Props) {
+export function SlateScreen({ onRun, onUpgrade }: Props) {
+  const ent = useEntitlements();
   const s = useSettings();
   const { getTeam, hasTeam, weeks, gamesForWeek: feedForWeek, week, season, phase, generatedAt, poll, records } = useTeams();
   const live = useLive();
@@ -138,7 +142,29 @@ export function SlateScreen({ onRun }: Props) {
 
   const byStatus = (st: GameStatus) => visible.filter(({ g }) => effectiveStatus(g, now) === st)
     .sort((a, b) => (st === 'final' ? b.g.kickoff.localeCompare(a.g.kickoff) : a.g.kickoff.localeCompare(b.g.kickoff)));
-  const graded = new Map(records.map((r) => [r.id, r]));
+  const graded = useMemo(() => new Map(records.map((r) => [r.id, r])), [records]);
+
+  /**
+   * Conviction per game, and how much of it this tier gets to read. Ranked over
+   * the whole week so a filter cannot promote a game into the free set, and
+   * capped by the same depth that limits the Edge Board.
+   */
+  const convictions = useMemo(() => {
+    const m = new Map<string, number>();
+    for (const { g, a } of rows) {
+      if (g.status !== 'scheduled' || g.homeSpread === null) continue;
+      const e = a.simulation.spread - g.homeSpread;
+      const side = e < 0 ? a.simulation.homeWinPct : a.simulation.awayWinPct;
+      m.set(g.id, convictionOf(e, side, graded.get(g.id)?.updates ?? 0));
+    }
+    return m;
+  }, [rows, graded]);
+
+  const readable = useMemo(() => {
+    const depth = ent.ent.edgeBoardDepth;
+    if (depth === Infinity || depth >= convictions.size) return null;
+    return new Set([...convictions.entries()].sort((a, b) => b[1] - a[1]).slice(0, depth).map(([id]) => id));
+  }, [convictions, ent.ent.edgeBoardDepth]);
 
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
@@ -242,6 +268,13 @@ export function SlateScreen({ onRun }: Props) {
                       )}
                       {st === 'scheduled' && edge !== null && Math.abs(edge) >= 3 && (
                         <Text style={[styles.edge, { color: colors.gold }]}>{edge < 0 ? home.abbr : away.abbr} +{Math.abs(edge).toFixed(1)} vs mkt</Text>
+                      )}
+                      {st === 'scheduled' && convictions.has(g.id) && (
+                        <ConvictionCell
+                          value={convictions.get(g.id)!}
+                          locked={!!readable && !readable.has(g.id)}
+                          onUpgrade={onUpgrade}
+                        />
                       )}
                       {st !== 'final' && (
                         <TouchableOpacity
