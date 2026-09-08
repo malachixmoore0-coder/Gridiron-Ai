@@ -19,6 +19,11 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Backend, FeedScope, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
 import { screen } from './moderation';
 import { sortFeed } from './local';
+// Imported for its side effect as much as its value: reading the URL happens at
+// this module's load, which is before anything here constructs a client and
+// consumes the fragment.
+import { authCallback } from './callback';
+import { appUrl } from './links';
 
 const URL = (process.env.EXPO_PUBLIC_SUPABASE_URL as string | undefined)?.trim();
 const ANON = (process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY as string | undefined)?.trim();
@@ -70,24 +75,82 @@ const rowToPost = (r: Record<string, unknown>, meId: string | null): Post => ({
   replies: Number(r.replies ?? 0),
 });
 
+type AuthUser = { id: string; email?: string | null; app_metadata?: Record<string, unknown>; user_metadata?: Record<string, unknown> };
+
 export class SupabaseBackend implements Backend {
   readonly kind = 'supabase' as const;
   readonly live = true;
   private me: string | null = null;
+  private problem: string | null = null;
+
+  /** Read once and cleared, so the same complaint is not shown twice. */
+  lastProblem(): string | null {
+    const p = this.problem;
+    this.problem = null;
+    return p;
+  }
 
   async restore(): Promise<Session | null> {
-    const { data } = await db().auth.getSession();
-    if (!data.session) return null;
-    this.me = data.session.user.id;
-    await this.ensureProfile(data.session.user);
-    return { userId: this.me, provider: (data.session.user.app_metadata?.provider as Session['provider']) ?? 'google', token: data.session.access_token };
+    const { data, error } = await db().auth.getSession();
+    if (error) throw new Error(error.message);
+    if (!data.session) {
+      // No session and no error is the ordinary signed-out case — unless this
+      // page load began with a link, in which case the link is why, and the
+      // reason is sitting in the URL that brought us here.
+      const cb = authCallback();
+      if (cb.kind === 'error') throw new Error(cb.message);
+      return null;
+    }
+    return this.adopt(data.session.user as AuthUser, data.session.access_token);
+  }
+
+  /**
+   * Turn a Supabase user into our session, and make sure a profile row exists.
+   *
+   * The profile insert used to run before the session was returned, so a failure
+   * to create it threw away a perfectly valid sign-in — the user clicked their
+   * link, authenticated, and landed back on the sign-in card. The session is
+   * built first now and the profile problem is recorded beside it, because being
+   * signed in with a broken profile is a state worth showing and repairing, and
+   * being silently signed out is not.
+   */
+  private async adopt(user: AuthUser, token?: string | null): Promise<Session> {
+    this.me = user.id;
+    const session: Session = {
+      userId: user.id,
+      provider: (user.app_metadata?.provider as Session['provider']) ?? 'email',
+      token: token ?? null,
+    };
+    try { await this.ensureProfile(user); }
+    catch (e) { this.problem = (e as Error).message; }
+    return session;
+  }
+
+  /**
+   * A session can turn up long after boot: a link opened in a second tab, an
+   * expired token quietly refreshed, a sign-out somewhere else. Without this the
+   * app only ever learns about the session it had at mount.
+   */
+  onAuthChange(fn: (s: Session | null) => void): () => void {
+    const { data } = db().auth.onAuthStateChange((event, session) => {
+      // Nothing may await inside this callback — auth-js holds its own lock
+      // while it runs, and calling back into the client here deadlocks it. Hand
+      // the work to the next tick instead.
+      setTimeout(() => {
+        if (!session) {
+          if (event === 'SIGNED_OUT') { this.me = null; fn(null); }
+          return;
+        }
+        this.adopt(session.user as AuthUser, session.access_token).then(fn).catch(() => {});
+      }, 0);
+    });
+    return () => data.subscription.unsubscribe();
   }
 
   async signIn(provider: Session['provider']): Promise<Session | null> {
     // Email is not an OAuth provider — it goes through signInWithEmail.
     if (provider === 'local' || provider === 'email') return null;
-    const redirectTo = Platform.OS === 'web' && typeof window !== 'undefined' ? window.location.origin + window.location.pathname : undefined;
-    const { error } = await db().auth.signInWithOAuth({ provider, options: { redirectTo } });
+    const { error } = await db().auth.signInWithOAuth({ provider, options: { redirectTo: appUrl() } });
     if (error) throw new Error(error.message);
     // Web redirects away and comes back; the session is picked up by restore().
     return null;
@@ -104,12 +167,26 @@ export class SupabaseBackend implements Backend {
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]{2,}$/.test(to)) {
       return { sent: false, message: 'That does not look like an email address.' };
     }
-    const emailRedirectTo = Platform.OS === 'web' && typeof window !== 'undefined'
-      ? window.location.origin + window.location.pathname
-      : undefined;
-    const { error } = await db().auth.signInWithOtp({ email: to, options: { emailRedirectTo } });
+    const { error } = await db().auth.signInWithOtp({ email: to, options: { emailRedirectTo: appUrl() } });
     if (error) return { sent: false, message: error.message };
-    return { sent: true, message: `Link sent to ${to}. It expires in an hour.` };
+    return { sent: true, message: `Sent to ${to}. Open the link in this browser, or type the code from the email. Both expire in an hour.` };
+  }
+
+  /**
+   * The same one-time password, typed instead of clicked.
+   *
+   * `type: 'email'` covers both a first sign-up and a returning sign-in, so one
+   * entry box handles every case the link handles. The code only reaches the
+   * user if the email template includes `{{ .Token }}` — the default template
+   * ships the link alone, which is exactly the thing scanners keep eating.
+   */
+  async verifyEmailCode(email: string, code: string): Promise<Session | null> {
+    const token = code.replace(/\D/g, '');
+    if (token.length < 6) throw new Error('That code is six digits.');
+    const { data, error } = await db().auth.verifyOtp({ email: email.trim().toLowerCase(), token, type: 'email' });
+    if (error) throw new Error(error.message);
+    if (!data.session) return null;
+    return this.adopt(data.session.user as AuthUser, data.session.access_token);
   }
 
   async signOut(): Promise<void> { await db().auth.signOut(); this.me = null; }

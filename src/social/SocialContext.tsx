@@ -8,6 +8,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { backend } from './backend';
+import { authCallback } from './callback';
 import type { AuthProvider, FeedScope, Post, PostPick, Profile, ReportInput, Session } from './types';
 
 interface State {
@@ -25,6 +26,12 @@ interface State {
   signIn: (p: AuthProvider) => Promise<void>;
   /** Email a sign-in link. Returns what to tell the user, verbatim. */
   signInWithEmail: (email: string) => Promise<{ sent: boolean; message: string }>;
+  /** Trade the code from that email for a session. True when it worked. */
+  verifyEmailCode: (email: string, code: string) => Promise<boolean>;
+  /** Have another go at the profile row a signed-in account is missing. */
+  retryProfile: () => Promise<void>;
+  /** True when this backend can accept a typed code as well as a link. */
+  canVerifyCode: boolean;
   signOut: () => Promise<void>;
   /** Erase the account. Clears local state here; the backend clears its own. */
   deleteAccount: () => Promise<void>;
@@ -62,6 +69,22 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const [blocked, setBlocked] = useState<string[]>([]);
 
+  /**
+   * A session and its profile, applied together.
+   *
+   * Every way in ends here — boot, a typed code, a link consumed after the app
+   * was already running — so none of them can forget to load the profile or to
+   * report a problem the backend recorded on the way.
+   */
+  const adopt = useCallback(async (s: Session | null) => {
+    setSession(s);
+    if (!s) { setMe(null); return; }
+    try { setMe(await api.getProfile(s.userId)); }
+    catch (e) { setError((e as Error).message); }
+    const problem = api.lastProblem?.() ?? null;
+    if (problem) setError(problem);
+  }, [api]);
+
   const loadFeed = useCallback(async (s: FeedScope) => {
     try { setFeed(await api.feed(s)); } catch (e) { setError((e as Error).message); }
   }, [api]);
@@ -69,15 +92,29 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
-        const s = await api.restore();
-        setSession(s);
-        if (s) setMe(await api.getProfile(s.userId));
-      } catch { /* signed out */ }
+        await adopt(await api.restore());
+      } catch (e) {
+        // Not silent any more. A sign-in that fails on the way back from a mail
+        // link used to land here and end as an empty sign-in card, which reads
+        // to the user as a link that did nothing at all.
+        setError((e as Error).message);
+      }
       try { setBlocked(await api.blocked()); } catch { /* none */ }
       await loadFeed('everyone');
       setReady(true);
     })();
-  }, [api, loadFeed]);
+  }, [api, loadFeed, adopt]);
+
+  /* Sessions that arrive on their own: a link opened once the app was already
+     up, a refreshed token, a sign-out in another tab. */
+  useEffect(() => api.onAuthChange?.((s) => { void adopt(s); }), [api, adopt]);
+
+  /* A link that came back refused says so even before anything is tried, so the
+     sign-in card explains itself on the very first paint. */
+  useEffect(() => {
+    const cb = authCallback();
+    if (cb.kind === 'error') setError(cb.message);
+  }, []);
 
   useEffect(() => { if (ready) loadFeed(scope); }, [scope, ready, loadFeed]);
 
@@ -97,9 +134,29 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
       setBusy(true); setError(null);
       try {
         const s = await api.signIn(p);
-        if (s) { setSession(s); setMe(await api.getProfile(s.userId)); await loadFeed(scope); }
+        if (s) { await adopt(s); await loadFeed(scope); }
       } catch (e) { setError((e as Error).message); }
       setBusy(false);
+    },
+    canVerifyCode: !!api.verifyEmailCode,
+    retryProfile: async () => {
+      setBusy(true); setError(null);
+      try { await adopt(await api.restore()); }
+      catch (e) { setError((e as Error).message); }
+      setBusy(false);
+    },
+    verifyEmailCode: async (email, code) => {
+      setBusy(true); setError(null);
+      try {
+        const s = (await api.verifyEmailCode?.(email, code)) ?? null;
+        if (!s) { setError('That code did not work. Check it, or send a new one.'); return false; }
+        await adopt(s);
+        await loadFeed(scope);
+        return true;
+      } catch (e) {
+        setError(e instanceof Error ? e.message : 'That code did not work.');
+        return false;
+      } finally { setBusy(false); }
     },
     signInWithEmail: async (email) => {
       setBusy(true); setError(null);
@@ -108,7 +165,7 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
         // The device-only backend signs you straight in and says so; a real one
         // sends a link and the session arrives when it is clicked.
         const restored = await api.restore().catch(() => null);
-        if (restored) { setSession(restored); setMe(await api.getProfile(restored.userId)); await loadFeed(scope); }
+        if (restored) { await adopt(restored); await loadFeed(scope); }
         return r;
       } catch (e) {
         const message = e instanceof Error ? e.message : 'That did not go through.';
@@ -165,7 +222,7 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
       await loadFeed(scope);
     },
     report: (input) => api.report(input),
-  }), [ready, api, session, me, busy, error, feed, scope, loadFeed, blocked]);
+  }), [ready, api, session, me, busy, error, feed, scope, loadFeed, blocked, adopt]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

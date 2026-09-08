@@ -147,6 +147,27 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
               </View>
             )}
 
+            {/* Signed in, but the profile row never appeared. Everything social
+                reads from that row, so without it the account is half-built —
+                and the reason is worth showing rather than leaving the app
+                looking merely broken. */}
+            {s.signedIn && !s.me && s.ready && (
+              <View style={styles.repair}>
+                <Text style={styles.repairTitle}>Your account is signed in, but its profile did not save.</Text>
+                {!!s.error && <Text style={styles.repairWhy}>{s.error}</Text>}
+                <TouchableOpacity
+                  style={styles.repairBtn}
+                  activeOpacity={0.85}
+                  onPress={s.retryProfile}
+                  disabled={s.busy}
+                  accessibilityRole="button"
+                  accessibilityLabel="Try creating the profile again"
+                >
+                  <Text style={styles.repairBtnText}>{s.busy ? 'Trying…' : 'Try again'}</Text>
+                </TouchableOpacity>
+              </View>
+            )}
+
             {!!suggested.length && (
               <View style={styles.suggest}>
                 <Text style={styles.suggestTitle}>Who to follow</Text>
@@ -205,6 +226,11 @@ const styles = StyleSheet.create({
   body: { padding: spacing.lg, paddingBottom: clearance.dock },
   empty: { color: colors.inkFaint, fontSize: 13, textAlign: 'center', marginTop: spacing.xl, lineHeight: 19 },
 
+  repair: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.negative, padding: spacing.lg, marginBottom: spacing.lg, gap: spacing.sm },
+  repairTitle: { color: colors.ink, fontSize: 14, fontWeight: '800' },
+  repairWhy: { color: colors.inkDim, fontSize: 11.5, lineHeight: 16 },
+  repairBtn: { alignSelf: 'flex-start', paddingHorizontal: spacing.lg, paddingVertical: 9, borderRadius: radius.pill, backgroundColor: colors.green },
+  repairBtnText: { color: colors.bg, fontSize: 13, fontWeight: '900' },
   signCard: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.borderHi, padding: spacing.lg, marginBottom: spacing.lg, gap: spacing.sm },
   signTitle: { ...T.section, color: colors.ink, fontSize: 17 },
   signBlurb: { color: colors.inkDim, fontSize: 13, lineHeight: 19 },

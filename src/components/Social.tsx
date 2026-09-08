@@ -234,6 +234,10 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
   const [email, setEmail] = useState('');
   const [note, setNote] = useState<string | null>(null);
   const [sending, setSending] = useState(false);
+  /* The code box only appears once a mail has actually been sent, because until
+     then there is nothing to type and an empty field is just clutter. */
+  const [sent, setSent] = useState(false);
+  const [code, setCode] = useState('');
 
   const send = async () => {
     if (!email.trim() || sending) return;
@@ -241,7 +245,15 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
     setNote(null);
     const r = await social.signInWithEmail(email);
     setNote(r.message);
-    if (r.sent) setEmail('');
+    if (r.sent) setSent(true);
+    setSending(false);
+  };
+
+  const verify = async () => {
+    if (code.replace(/\D/g, '').length < 6 || sending) return;
+    setSending(true);
+    const ok = await social.verifyEmailCode(email, code);
+    if (!ok) setCode('');
     setSending(false);
   };
 
@@ -268,16 +280,45 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
         onPress={send}
         disabled={!email.trim() || sending}
         accessibilityRole="button"
-        accessibilityLabel="Email me a sign-in link"
+        accessibilityLabel={sent ? 'Send another sign-in link' : 'Email me a sign-in link'}
       >
-        <Text style={styles.emailBtnText}>{sending ? 'Sending…' : 'Email me a link'}</Text>
+        <Text style={styles.emailBtnText}>{sending ? 'Sending…' : sent ? 'Send another' : 'Email me a link'}</Text>
       </TouchableOpacity>
       {!!note && <Text style={styles.signNote}>{note}</Text>}
 
+      {/* A code cannot be spent by a link scanner, so it is the way in that
+          always works — offered second because tapping a link is easier when
+          the link survives the trip. */}
+      {sent && social.canVerifyCode && (
+        <View style={styles.codeRow}>
+          <TextInput
+            style={styles.codeInput}
+            value={code}
+            onChangeText={(t) => setCode(t.replace(/\D/g, '').slice(0, 6))}
+            placeholder="6-digit code"
+            placeholderTextColor={colors.inkGhost}
+            keyboardType="number-pad"
+            onSubmitEditing={verify}
+            accessibilityLabel="Six-digit code from the email"
+          />
+          <TouchableOpacity
+            style={[styles.codeBtn, code.length < 6 && styles.emailBtnOff]}
+            activeOpacity={0.85}
+            onPress={verify}
+            disabled={code.length < 6 || sending}
+            accessibilityRole="button"
+            accessibilityLabel="Sign in with this code"
+          >
+            <Text style={styles.emailBtnText}>Sign in</Text>
+          </TouchableOpacity>
+        </View>
+      )}
+
       {/* Whatever went wrong, said out loud. An OAuth failure used to land in
           state nothing rendered, so a misconfigured provider looked like a
-          button that simply did not work. */}
-      {!!social.error && !note && <Text style={styles.signError}>{social.error}</Text>}
+          button that simply did not work — and a link that came back expired
+          looked like a link that did nothing at all. */}
+      {!!social.error && <Text style={styles.signError}>{social.error}</Text>}
 
       {/* Only the providers actually switched on. */}
       {!!OAUTH_PROVIDERS.length && (
@@ -345,6 +386,9 @@ const styles = StyleSheet.create({
   emailInput: { flex: 1, color: colors.ink, fontSize: 14, padding: 0 },
   emailBtn: { alignItems: 'center', paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.green },
   emailBtnOff: { opacity: 0.4 },
+  codeRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  codeInput: { flex: 1, color: colors.ink, fontSize: 15, fontWeight: '800', letterSpacing: 3, paddingHorizontal: spacing.md, paddingVertical: 11, borderRadius: radius.pill, backgroundColor: colors.bgAlt, borderWidth: 1, borderColor: colors.border },
+  codeBtn: { alignItems: 'center', paddingHorizontal: spacing.lg, paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.green },
   emailBtnText: { color: colors.bg, fontSize: 14, fontWeight: '900' },
   signNote: { color: colors.inkDim, fontSize: 11.5, lineHeight: 16 },
   signError: { color: colors.negative, fontSize: 11.5, lineHeight: 16, fontWeight: '600' },

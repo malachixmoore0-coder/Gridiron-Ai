@@ -98,6 +98,16 @@ export interface Backend {
    * no developer programme, no password to store or leak.
    */
   signInWithEmail(email: string): Promise<{ sent: boolean; message: string }>;
+  /**
+   * Trade a six-digit code from the same email for a session.
+   *
+   * The link and the code are the same one-time password wearing different
+   * clothes, but only the link can be spent by a machine: mail apps and
+   * corporate scanners follow links to check them, and a single-use link that
+   * has been followed is a dead link by the time a person taps it. A code has
+   * to be read and typed, so nothing can consume it on the user's behalf.
+   */
+  verifyEmailCode?(email: string, code: string): Promise<Session | null>;
   signOut(): Promise<void>;
   /** Erase the account and everything it owns. Not reversible, by design. */
   deleteAccount(): Promise<void>;
@@ -120,6 +130,19 @@ export interface Backend {
   deletePost(id: string): Promise<void>;
   like(postId: string, on: boolean): Promise<void>;
   tail(postId: string, on: boolean): Promise<void>;
+  /**
+   * Something that went wrong alongside a call that otherwise succeeded, read
+   * once and cleared. A profile row that would not insert is the case this
+   * exists for: it must not cost the user their session, but it cannot be
+   * silent either, because every screen that needs a profile will be empty.
+   */
+  lastProblem?(): string | null;
+  /**
+   * Sessions that arrive on their own — a link consumed after the app had
+   * already booted, a token refresh, a sign-out in another tab. Returns its own
+   * unsubscribe.
+   */
+  onAuthChange?(fn: (s: Session | null) => void): () => void;
 }
 
 /** #tags, lowercased, deduped, in the order they appear. */

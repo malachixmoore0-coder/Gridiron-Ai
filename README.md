@@ -235,8 +235,27 @@ screen rather than implying an audience that is not there. To make it real:
 1. Create a Supabase project, then run `docs/social-schema.sql` in its SQL
    editor — that file carries the tables, the counters and every row-level
    security policy the privacy switches promise.
-2. Enable Google and Apple under Authentication → Providers.
-3. Set the build-time variables:
+2. Under Authentication → URL Configuration set the **Site URL** to the
+   published address (`https://<user>.github.io/Gridiron-Ai/`) and add
+   `https://<user>.github.io/Gridiron-Ai/**` to **Redirect URLs**. A redirect
+   that is not on that list is silently replaced with the Site URL, which is
+   how a sign-in link ends up delivering somebody to the wrong place — or to
+   `localhost:3000`, which is the default.
+3. Add `{{ .Token }}` to the **Confirm signup** and **Magic Link** templates
+   under Authentication → Emails. This is not cosmetic. The default templates
+   carry the link alone, the link is single-use, and mail clients and corporate
+   link scanners routinely follow it in the background to check it is safe —
+   which spends it before the recipient ever taps. The app offers the six-digit
+   code as a second way in precisely because a code cannot be consumed by a
+   machine on the user's behalf, and it can only offer it if the mail contains
+   one.
+4. Point Authentication → Emails at real SMTP before launch. The built-in
+   sender is rate-limited to a couple of messages an hour and is documented as
+   testing-only; on a launch day it fails closed and nobody can sign up.
+5. Enable Google and Apple under Authentication → Providers, if you want them,
+   and list them in `EXPO_PUBLIC_OAUTH_PROVIDERS`. Unset means email only, and
+   the buttons stay hidden rather than offering a provider that is not there.
+6. Set the build-time variables:
 
 ```
 EXPO_PUBLIC_SUPABASE_URL=https://<project>.supabase.co

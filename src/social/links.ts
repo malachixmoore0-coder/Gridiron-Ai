@@ -55,6 +55,18 @@ const FALLBACK_BASE = '/Gridiron-Ai';
 
 export const profilePath = (handle: string) => `${BASE}/@${handle}`;
 
+/**
+ * Where a sign-in link should come back to.
+ *
+ * The app itself, never the profile the visitor happened to arrive on: sending
+ * the link back to `/@someone` would work, but it would also put a stranger's
+ * handle in the address of the mail we just sent, and the redirect has to match
+ * an entry in the project's allow-list — one stable address does, a handle per
+ * user does not.
+ */
+export const appUrl = (): string | undefined =>
+  hasWindow() ? `${ORIGIN}${BASE || FALLBACK_BASE}/` : undefined;
+
 /** The address you would text somebody. Absolute, and valid off-device. */
 export const profileUrl = (handle: string) =>
   `${ORIGIN}${BASE || FALLBACK_BASE}/@${handle}`;
