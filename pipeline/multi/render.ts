@@ -55,7 +55,33 @@ export interface RenderOpts {
   concurrency?: number;
   /** How long to sit on the page after it settles, for the slow hydrators. */
   waitMs?: number;
+  /** Record the JSON the page fetches for itself, rather than reading its DOM. */
+  captureApi?: (url: string, body: string) => void;
 }
+
+/**
+ * Get the consent wall out of the way.
+ *
+ * Half the league sites render nothing behind their cookie dialog, so a page
+ * read without dismissing it is a page with no squad on it. Every known button
+ * is tried and every failure ignored — a site without a wall simply has nothing
+ * here to click.
+ */
+const CONSENT = [
+  '#onetrust-accept-btn-handler',
+  'button#didomi-notice-agree-button',
+  'button[id*="accept" i]',
+  'button[class*="accept" i]',
+  'button:has-text("Accept All")',
+  'button:has-text("Accept")',
+  'button:has-text("I Accept")',
+  'button:has-text("Agree")',
+  'button:has-text("Allow all")',
+  'button:has-text("Aceptar")',
+  'button:has-text("Accetta")',
+  "button:has-text(\"J'accepte\")",
+  'button:has-text("Alle akzeptieren")',
+];
 
 /**
  * Open each URL and return the HTML the browser ended up with.
@@ -88,6 +114,7 @@ export async function renderPages(urls: string[], opts: RenderOpts = {}): Promis
     const page = await ctx.newPage();
     try {
       await page.goto(url, { waitUntil: 'domcontentloaded', timeout });
+      await dismissConsent(page);
       if (opts.settle) {
         const { selector, count } = opts.settle;
         // Written as source rather than a closure: this file is compiled
@@ -175,6 +202,7 @@ async function runOnPages(
     const page = await ctx.newPage();
     try {
       await page.goto(url, { waitUntil: 'domcontentloaded', timeout });
+      await dismissConsent(page);
       if (opts.settle) {
         await page.waitForFunction(
           `document.querySelectorAll(${JSON.stringify(opts.settle.selector)}).length >= ${opts.settle.count}`,
@@ -193,4 +221,60 @@ async function runOnPages(
     await Promise.all(urls.slice(i, i + concurrency).map(one));
   }
   await ctx.close().catch(() => {});
+}
+
+/** Click whichever consent button this site happens to use, if any. */
+async function dismissConsent(page: { locator: (s: string) => { first: () => { click: (o: { timeout: number }) => Promise<void> } } }): Promise<void> {
+  for (const sel of CONSENT) {
+    try {
+      await page.locator(sel).first().click({ timeout: 1200 });
+      return;
+    } catch { /* not this one */ }
+  }
+}
+
+export interface JsonHit { url: string; bytes: number; snippet: string }
+
+/**
+ * The JSON a page fetches for itself.
+ *
+ * Reading a rendered DOM is the last resort; a site that draws its squad from
+ * its own API is far better asked directly, and the way to find that API is to
+ * watch the page use it. This loads each URL and writes down every JSON
+ * response it sees, largest first — the squad is rarely the small one.
+ */
+export async function captureJson(urls: string[], opts: RenderOpts = {}): Promise<Map<string, JsonHit[]>> {
+  const out = new Map<string, JsonHit[]>();
+  if (!urls.length) return out;
+  const b = await open();
+  if (!b) return out;
+
+  const ctx = await b.newContext({
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+    viewport: { width: 1280, height: 2400 },
+  });
+  const timeout = opts.timeoutMs ?? 25_000;
+
+  for (const url of urls) {
+    const hits: JsonHit[] = [];
+    const page = await ctx.newPage();
+    page.on('response', (res) => {
+      const type = res.headers()['content-type'] ?? '';
+      if (!/json/i.test(type)) return;
+      res.text()
+        .then((body) => { hits.push({ url: res.url(), bytes: body.length, snippet: body.slice(0, 220) }); })
+        .catch(() => { /* a body that cannot be read tells us nothing */ });
+    });
+    try {
+      await page.goto(url, { waitUntil: 'domcontentloaded', timeout });
+      await dismissConsent(page);
+      await page.evaluate('window.scrollTo(0, document.body.scrollHeight)').catch(() => {});
+      await page.waitForTimeout(opts.waitMs ?? 5000);
+    } catch { /* what it managed to fetch is still worth having */ }
+    await page.close().catch(() => {});
+    out.set(url, hits.sort((x, y) => y.bytes - x.bytes));
+  }
+
+  await ctx.close().catch(() => {});
+  return out;
 }

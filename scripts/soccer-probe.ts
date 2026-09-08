@@ -9,7 +9,7 @@
  * which are all single-page apps. This exists to find their shapes from CI,
  * since the sandbox cannot reach any of them.
  */
-import { renderPages, closeBrowser, extractImages } from '../pipeline/multi/render';
+import { renderPages, closeBrowser, captureJson, extractImages } from '../pipeline/multi/render';
 import { report } from '../pipeline/lib/report';
 
 const out = report('soccer');
@@ -37,7 +37,7 @@ const shapeOf = (href: string) =>
   href.split('?')[0].split('/').map((s) => (s && /\d/.test(s) ? '#' : s)).join('/');
 
 /** Anything that looks like it points at one club rather than a section. */
-const CLUBBY = /\/(clubs?|teams?|equipos?|squadre?|club)\//i;
+const CLUBBY = /\/(clubs?|teams?|equipos?|squadre?|club-sheet|equipo)\b/i;
 
 async function clubs() {
   // These pages hydrate late — the Premier League's club grid is not in the
@@ -68,7 +68,7 @@ async function clubs() {
     for (const [shape, { n, sample }] of ranked.slice(0, 10)) log(`  ${String(n).padStart(3)}  ${shape.slice(0, 72)}   e.g. ${sample.slice(0, 72)}`);
 
     // The club link is the one that repeats about as often as there are clubs.
-    const club = ranked.find(([shape, { n }]) => n >= 8 && CLUBBY.test(shape) && /#|-/.test(shape));
+    const club = ranked.find(([shape, { n }]) => n >= 6 && CLUBBY.test(shape) && /#|-/.test(shape));
     if (!club) { log('  (no club link found)'); continue; }
     try { firstClub[key] = new URL(club[1].sample, url).toString(); } catch { /* not a URL */ }
     log(`  → club pages look like ${club[0]} (${club[1].n})`);
