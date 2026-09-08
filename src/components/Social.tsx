@@ -8,6 +8,7 @@ import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
+import { useSocial } from '@/social/SocialContext';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
 export function Avatar({ profile, size = 40, onPress }: { profile?: Profile | null; size?: number; onPress?: () => void }) {
@@ -21,6 +22,38 @@ export function Avatar({ profile, size = 40, onPress }: { profile?: Profile | nu
     </View>
   );
   return onPress ? <TouchableOpacity activeOpacity={0.8} onPress={onPress} accessibilityRole="button">{body}</TouchableOpacity> : body;
+}
+
+/**
+ * One person in a list — search results, followers, following, who-to-follow.
+ *
+ * They all want the same three things (who, their record, a way in), and a list
+ * that looks different depending on which screen you reached it from is a list
+ * people have to re-learn each time.
+ */
+export function PersonRow({ profile, onPress, right }: { profile: Profile; onPress: () => void; right?: React.ReactNode }) {
+  const rec = profile.showRecord ? profile.record : null;
+  return (
+    <TouchableOpacity
+      style={styles.person}
+      activeOpacity={0.85}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${profile.displayName}, @${profile.handle}`}
+    >
+      <Avatar profile={profile} size={42} />
+      <View style={{ flex: 1 }}>
+        <Text style={styles.personName} numberOfLines={1}>{profile.displayName}</Text>
+        <Text style={styles.personHandle} numberOfLines={1}>
+          @{profile.handle}
+          {rec && rec.won + rec.lost > 0 ? ` · ${rec.won}-${rec.lost}` : ''}
+          {` · ${profile.followers} follower${profile.followers === 1 ? '' : 's'}`}
+        </Text>
+        {!!profile.bio && <Text style={styles.personBio} numberOfLines={1}>{profile.bio}</Text>}
+      </View>
+      {right ?? <Ionicons name="chevron-forward" size={15} color={colors.inkGhost} />}
+    </TouchableOpacity>
+  );
 }
 
 const ago = (ts: number) => {
@@ -44,6 +77,12 @@ interface PostCardProps {
 
 export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDelete, mine }: PostCardProps) {
   const p = post.author;
+  const social = useSocial();
+  /** An @handle in the text is a link, the same as it is everywhere else. */
+  const openHandle = async (handle: string) => {
+    const found = await social.profileByHandle(handle).catch(() => null);
+    if (found) onOpenProfile(found.id);
+  };
   return (
     <View style={styles.card}>
       <View style={styles.head}>
@@ -64,7 +103,7 @@ export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDe
         )}
       </View>
 
-      {!!post.text && <Text style={styles.text}>{renderText(post.text)}</Text>}
+      {!!post.text && <Text style={styles.text}>{renderText(post.text, openHandle)}</Text>}
 
       {!!post.gifUrl && (
         <Image source={{ uri: post.gifUrl }} style={styles.gif} resizeMode="cover" accessibilityLabel="GIF" />
@@ -105,13 +144,20 @@ export function PostCard({ post, onOpenProfile, onLike, onTail, onOpenPick, onDe
   );
 }
 
-/** Hashtags get the accent; everything else is plain. */
-function renderText(text: string) {
-  const parts = text.split(/(#[\p{L}\p{N}_]{2,30})/gu);
-  return parts.map((part, i) =>
-    part.startsWith('#')
-      ? <Text key={i} style={styles.tag}>{part}</Text>
-      : <Text key={i}>{part}</Text>);
+/** Hashtags get the accent, @handles are links, everything else is plain. */
+function renderText(text: string, onHandle: (handle: string) => void) {
+  const parts = text.split(/(#[\p{L}\p{N}_]{2,30}|@[a-z0-9_]{1,30})/giu);
+  return parts.map((part, i) => {
+    if (part.startsWith('#')) return <Text key={i} style={styles.tag}>{part}</Text>;
+    if (part.startsWith('@')) {
+      return (
+        <Text key={i} style={styles.mention} onPress={() => onHandle(part.slice(1).toLowerCase())}>
+          {part}
+        </Text>
+      );
+    }
+    return <Text key={i}>{part}</Text>;
+  });
 }
 
 export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; onApple: () => void; busy?: boolean }) {
@@ -131,6 +177,11 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
 
 const styles = StyleSheet.create({
   avatar: { alignItems: 'center', justifyContent: 'center' },
+
+  person: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: spacing.md, marginBottom: spacing.sm },
+  personName: { color: colors.ink, fontSize: 14, fontWeight: '800' },
+  personHandle: { color: colors.inkFaint, fontSize: 11, marginTop: 1 },
+  personBio: { color: colors.inkGhost, fontSize: 11, marginTop: 3 },
   avatarText: { color: colors.white, fontWeight: '900' },
 
   card: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md, marginBottom: spacing.sm },
@@ -140,6 +191,7 @@ const styles = StyleSheet.create({
   handle: { color: colors.inkFaint, fontSize: 11, marginTop: 1 },
   text: { color: colors.ink, fontSize: 14, lineHeight: 20, marginTop: spacing.sm },
   tag: { color: colors.green, fontWeight: '800' },
+  mention: { color: colors.away, fontWeight: '800' },
   gif: { width: '100%', height: 190, borderRadius: radius.md, marginTop: spacing.sm, backgroundColor: colors.cardAlt },
 
   pick: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginTop: spacing.sm, padding: spacing.sm, borderRadius: radius.md, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },

@@ -31,6 +31,10 @@ interface State {
   tail: (id: string, on: boolean) => Promise<void>;
   follow: (userId: string, on: boolean) => Promise<void>;
   profileOf: (userId: string) => Promise<Profile | null>;
+  /** Resolve an @handle, which is how a /@handle link finds its account. */
+  profileByHandle: (handle: string) => Promise<Profile | null>;
+  followersOf: (userId: string) => Promise<Profile[]>;
+  followingOf: (userId: string) => Promise<Profile[]>;
   postsOf: (userId: string) => Promise<Post[]>;
   following: (userId: string) => Promise<boolean>;
   search: (q: string) => Promise<Profile[]>;
@@ -111,6 +115,9 @@ export function SocialProvider({ children }: { children: React.ReactNode }) {
     },
     follow: async (userId, on) => { await api.follow(userId, on); if (me) setMe(await api.getProfile(me.id)); },
     profileOf: (userId) => api.getProfile(userId),
+    profileByHandle: (handle) => api.profileByHandle(handle),
+    followersOf: (userId) => api.followersOf(userId),
+    followingOf: (userId) => api.followingOf(userId),
     postsOf: (userId) => api.postsBy(userId),
     following: (userId) => api.isFollowing(userId),
     search: (q) => api.searchProfiles(q),

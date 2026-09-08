@@ -113,6 +113,12 @@ export class SupabaseBackend implements Backend {
     return data ? rowToProfile(data) : null;
   }
 
+  async profileByHandle(handle: string): Promise<Profile | null> {
+    const t = handle.trim().replace(/^@/, '');
+    const { data } = await db().from('profiles').select('*').ilike('handle', t).maybeSingle();
+    return data ? rowToProfile(data) : null;
+  }
+
   async upsertProfile(p: Profile): Promise<Profile> {
     const { data, error } = await db().from('profiles').update({
       handle: p.handle, display_name: p.displayName, bio: p.bio,

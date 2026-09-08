@@ -5,7 +5,7 @@
  * that makes a football timeline worth reading: you can see what someone took,
  * what the model thought of it, and tail it into your own card in one tap.
  */
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
@@ -13,7 +13,7 @@ import { colors, radius, spacing, type as T, clearance } from '@/theme';
 import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLeague } from '@/league/LeagueContext';
-import { Avatar, PostCard, SignInRow } from '@/components/Social';
+import { Avatar, PersonRow, PostCard, SignInRow } from '@/components/Social';
 import { LeagueSwitch } from '@/components/LeagueSwitch';
 import type { FeedScope, Profile } from '@/social/types';
 import type { LeagueId } from '@/league/types';
@@ -37,6 +37,14 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
   const [query, setQuery] = useState('');
   const [found, setFound] = useState<Profile[] | null>(null);
   const [searching, setSearching] = useState(false);
+  /** A handful of accounts to start from, so a new feed is not a dead end. */
+  const [suggested, setSuggested] = useState<Profile[]>([]);
+
+  useEffect(() => {
+    let live = true;
+    s.search('').then((all) => { if (live) setSuggested(all.slice(0, 3)); }).catch(() => {});
+    return () => { live = false; };
+  }, [s]);
 
   const runSearch = async (q: string) => {
     setQuery(q);
@@ -99,16 +107,7 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
         <ScrollView contentContainerStyle={styles.body}>
           {searching && <ActivityIndicator color={colors.green} style={{ marginTop: spacing.lg }} />}
           {!searching && !found.length && <Text style={styles.empty}>Nobody by that name yet.</Text>}
-          {found.map((p) => (
-            <TouchableOpacity key={p.id} style={styles.person} activeOpacity={0.85} onPress={() => onOpenProfile(p.id)}>
-              <Avatar profile={p} size={40} />
-              <View style={{ flex: 1 }}>
-                <Text style={styles.personName}>{p.displayName}</Text>
-                <Text style={styles.personHandle}>@{p.handle} · {p.followers} follower{p.followers === 1 ? '' : 's'}</Text>
-              </View>
-              <Ionicons name="chevron-forward" size={15} color={colors.inkGhost} />
-            </TouchableOpacity>
-          ))}
+          {found.map((p) => <PersonRow key={p.id} profile={p} onPress={() => onOpenProfile(p.id)} />)}
         </ScrollView>
       ) : (
         <>
@@ -145,6 +144,13 @@ export function SocialScreen({ onCompose, onOpenProfile, onOpenGame }: Props) {
                     post here leaves the phone.
                   </Text>
                 )}
+              </View>
+            )}
+
+            {!!suggested.length && (
+              <View style={styles.suggest}>
+                <Text style={styles.suggestTitle}>Who to follow</Text>
+                {suggested.map((p) => <PersonRow key={p.id} profile={p} onPress={() => onOpenProfile(p.id)} />)}
               </View>
             )}
 
@@ -204,9 +210,8 @@ const styles = StyleSheet.create({
   signBlurb: { color: colors.inkDim, fontSize: 13, lineHeight: 19 },
   signNote: { color: colors.inkGhost, fontSize: 11, lineHeight: 16, marginTop: 2 },
 
-  person: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, padding: spacing.md, marginBottom: spacing.sm },
-  personName: { color: colors.ink, fontSize: 14, fontWeight: '800' },
-  personHandle: { color: colors.inkFaint, fontSize: 11, marginTop: 1 },
+  suggest: { marginBottom: spacing.lg },
+  suggestTitle: { ...T.section, color: colors.ink, fontSize: 15, marginBottom: spacing.sm },
 
   fab: { position: 'absolute', right: spacing.lg, bottom: spacing.lg, width: 52, height: 52, borderRadius: 26, backgroundColor: colors.green, alignItems: 'center', justifyContent: 'center' },
 });

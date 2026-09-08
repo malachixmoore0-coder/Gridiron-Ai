@@ -89,6 +89,12 @@ export class LocalBackend implements Backend {
 
   async getProfile(userId: string): Promise<Profile | null> { const s = await this.load(); return s.profiles[userId] ?? null; }
 
+  async profileByHandle(handle: string): Promise<Profile | null> {
+    const s = await this.load();
+    const t = handle.trim().toLowerCase().replace(/^@/, '');
+    return Object.values(s.profiles).find((p) => p.handle.toLowerCase() === t) ?? null;
+  }
+
   async upsertProfile(p: Profile): Promise<Profile> {
     const s = await this.load();
     s.profiles[p.id] = { ...s.profiles[p.id], ...p };
@@ -116,7 +122,18 @@ export class LocalBackend implements Backend {
 
   async isFollowing(userId: string): Promise<boolean> { const s = await this.load(); return s.follows.includes(userId); }
 
-  async followersOf(): Promise<Profile[]> { return []; }
+  /**
+   * On this device there is exactly one person who can follow anybody — you —
+   * so a sample account's followers list is you, or nobody. The denormalised
+   * count on the profile is still the seeded number; the list is only ever the
+   * part this device can actually vouch for, which is the honest answer until a
+   * shared backend can name the rest.
+   */
+  async followersOf(userId: string): Promise<Profile[]> {
+    const s = await this.load();
+    const me = s.session && s.profiles[s.session.userId];
+    return me && s.follows.includes(userId) ? [me] : [];
+  }
 
   async followingOf(userId: string): Promise<Profile[]> {
     const s = await this.load();

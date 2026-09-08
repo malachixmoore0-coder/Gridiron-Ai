@@ -77,6 +77,9 @@ import { RecordHubScreen } from '@/screens/RecordHubScreen';
 import { SocialScreen } from '@/screens/SocialScreen';
 import { ComposeScreen } from '@/screens/ComposeScreen';
 import { ProfileScreen } from '@/screens/ProfileScreen';
+import { PeopleScreen, type PeopleTab } from '@/screens/PeopleScreen';
+import { useSocial } from '@/social/SocialContext';
+import { openedOnProfile, showAppPath, showProfilePath } from '@/social/links';
 import { ParlayScreen } from '@/screens/ParlayScreen';
 import { UpgradeScreen } from '@/screens/UpgradeScreen';
 import type { PostPick } from '@/social/types';
@@ -95,11 +98,13 @@ type Overlay =
   | { kind: 'model'; league: LeagueId }
   | { kind: 'settings' }
   | { kind: 'compose'; pick?: PostPick | null }
-  | { kind: 'profile'; userId: string };
+  | { kind: 'profile'; userId: string; handle?: string }
+  | { kind: 'people'; userId: string; name: string; tab: PeopleTab };
 
 const TITLES: Record<Overlay['kind'], string> = {
   result: 'Back', team: 'Back', player: 'Back', golfer: 'Back', game: 'Back', simulate: 'Close',
   parlay: 'Back', upgrade: 'Close', model: 'Back', compose: 'Cancel', profile: 'Back', settings: 'Done',
+  people: 'Back',
 };
 
 const isWeb = Platform.OS === 'web';
@@ -112,6 +117,7 @@ export function RootNavigator() {
   const ent = useEntitlements();
   const eng = useEngagement();
   const { league, active } = useLeague();
+  const social = useSocial();
   const [tab, setTab] = useState<TabKey>('home');
   const [stack, setStack] = useState<Overlay[]>([]);
   /** Measured height of the dock, so the Simulate button can clear it exactly. */
@@ -145,6 +151,49 @@ export function RootNavigator() {
     if (isWeb && typeof window !== 'undefined' && n > 0) { depth.current = 0; window.history.go(-n); }
   }, []);
 
+  /**
+   * A profile link is an entry point, not just an exit.
+   *
+   * Somebody opening `/@coldnumbers` has arrived at that account, so the app
+   * boots and then pushes the profile on top of the Floor — which also means
+   * Back lands them in the app rather than bouncing them off the site. The
+   * handle is resolved once, and only once the social layer has finished
+   * restoring, or a signed-in user's own profile would miss.
+   */
+  const deepLinked = useRef(false);
+  useEffect(() => {
+    if (!isWeb || deepLinked.current || !social.ready) return;
+    const handle = openedOnProfile();
+    if (!handle) return;
+    deepLinked.current = true;
+    let live = true;
+    social.profileByHandle(handle).then((p) => {
+      // Push even when the handle resolves to nothing: the profile screen's own
+      // "no account at that address" state is the right answer to a dead link,
+      // and it keeps the address bar honest instead of silently landing on the
+      // Floor as if nothing had been asked for.
+      if (live) setStack((cur) => (cur.length ? cur : [{ kind: 'profile', userId: p?.id ?? `@${handle}`, handle }]));
+    }).catch(() => {});
+    return () => { live = false; };
+  }, [social]);
+
+  /** Keep the address bar on whatever the top of the stack actually is. */
+  useEffect(() => {
+    if (!isWeb) return;
+    const top = stack[stack.length - 1];
+    if (top?.kind === 'profile' && top.handle) showProfilePath(top.handle);
+    else showAppPath();
+  }, [stack]);
+
+  /** The profile screen reports its handle once loaded, so the URL can name it. */
+  const nameProfile = useCallback((index: number, handle: string) => {
+    setStack((cur) => {
+      const at = cur[index];
+      if (!at || at.kind !== 'profile' || at.handle === handle) return cur;
+      return cur.map((o, i) => (i === index ? { ...o, handle } : o));
+    });
+  }, []);
+
   if (!loaded || !ent.loaded) return <View style={styles.root} />;
   if (!onboarded) return <OnboardingScreen onDone={() => {}} />;
 
@@ -154,6 +203,7 @@ export function RootNavigator() {
   const openUpgrade = () => push({ kind: 'upgrade' });
   const openCompose = (pick?: PostPick | null) => push({ kind: 'compose', pick });
   const openProfile = (userId: string) => push({ kind: 'profile', userId });
+  const openPeople = (userId: string, tab: PeopleTab, name: string) => push({ kind: 'people', userId, name, tab });
   const nav = {
     openProfile: () => openProfile('me'),
     openSettings: () => push({ kind: 'settings' }),
@@ -319,10 +369,18 @@ export function RootNavigator() {
                 <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
               ) : o.kind === 'upgrade' ? (
                 <UpgradeScreen onBack={pop} />
+              ) : o.kind === 'people' ? (
+                <PeopleScreen userId={o.userId} name={o.name} tab={o.tab} onOpenProfile={openProfile} />
               ) : o.kind === 'compose' ? (
                 <ComposeScreen onDone={pop} initialPick={o.pick ?? null} />
               ) : (
-                <ProfileScreen userId={o.userId} onOpenProfile={openProfile} onCompose={() => openCompose(null)} />
+                <ProfileScreen
+                  userId={o.userId}
+                  onOpenProfile={openProfile}
+                  onCompose={() => openCompose(null)}
+                  onOpenPeople={openPeople}
+                  onResolved={(handle) => nameProfile(i, handle)}
+                />
               )}
             </OverlayShell>
           </ErrorBoundary>

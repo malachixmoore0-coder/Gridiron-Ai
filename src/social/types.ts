@@ -87,6 +87,8 @@ export interface Backend {
   signIn(provider: AuthProvider): Promise<Session | null>;
   signOut(): Promise<void>;
   getProfile(userId: string): Promise<Profile | null>;
+  /** Resolve an @handle to an account. This is what makes /@handle a real address. */
+  profileByHandle(handle: string): Promise<Profile | null>;
   upsertProfile(p: Profile): Promise<Profile>;
   searchProfiles(q: string): Promise<Profile[]>;
   follow(userId: string, follow: boolean): Promise<void>;
