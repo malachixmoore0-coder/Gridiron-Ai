@@ -9,6 +9,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
 import { REPORT_REASONS } from '@/social/moderation';
+import { OAUTH_PROVIDERS, oauthEnabled } from '@/social/oauth';
 import { useSocial } from '@/social/SocialContext';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
@@ -273,17 +274,31 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
       </TouchableOpacity>
       {!!note && <Text style={styles.signNote}>{note}</Text>}
 
-      <Text style={styles.signOr}>or</Text>
-      <View style={styles.signRow}>
-        <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onGoogle} disabled={busy} accessibilityLabel="Continue with Google">
-          <Ionicons name="logo-google" size={16} color={colors.ink} />
-          <Text style={styles.signText}>Google</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onApple} disabled={busy} accessibilityLabel="Continue with Apple">
-          <Ionicons name="logo-apple" size={17} color={colors.ink} />
-          <Text style={styles.signText}>Apple</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Whatever went wrong, said out loud. An OAuth failure used to land in
+          state nothing rendered, so a misconfigured provider looked like a
+          button that simply did not work. */}
+      {!!social.error && !note && <Text style={styles.signError}>{social.error}</Text>}
+
+      {/* Only the providers actually switched on. */}
+      {!!OAUTH_PROVIDERS.length && (
+        <>
+          <Text style={styles.signOr}>or</Text>
+          <View style={styles.signRow}>
+            {oauthEnabled('google') && (
+              <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onGoogle} disabled={busy} accessibilityLabel="Continue with Google">
+                <Ionicons name="logo-google" size={16} color={colors.ink} />
+                <Text style={styles.signText}>Google</Text>
+              </TouchableOpacity>
+            )}
+            {oauthEnabled('apple') && (
+              <TouchableOpacity style={styles.signBtn} activeOpacity={0.85} onPress={onApple} disabled={busy} accessibilityLabel="Continue with Apple">
+                <Ionicons name="logo-apple" size={17} color={colors.ink} />
+                <Text style={styles.signText}>Apple</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        </>
+      )}
     </View>
   );
 }
@@ -332,6 +347,7 @@ const styles = StyleSheet.create({
   emailBtnOff: { opacity: 0.4 },
   emailBtnText: { color: colors.bg, fontSize: 14, fontWeight: '900' },
   signNote: { color: colors.inkDim, fontSize: 11.5, lineHeight: 16 },
+  signError: { color: colors.negative, fontSize: 11.5, lineHeight: 16, fontWeight: '600' },
   signOr: { color: colors.inkGhost, fontSize: 11, fontWeight: '700', textAlign: 'center', marginTop: 2 },
   signRow: { flexDirection: 'row', gap: spacing.sm },
   signBtn: { flex: 1, flexDirection: 'row', alignItems: 'center', justifyContent: 'center', gap: 8, paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.borderHi },
