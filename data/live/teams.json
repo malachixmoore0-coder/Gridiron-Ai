@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-08T04:44:33.311Z",
+ "generatedAt": "2026-09-08T16:42:10.781Z",
  "season": 2026,
  "week": 1,
  "phase": "preseason",
@@ -1434,15 +1434,15 @@
      "jersey": "79"
     },
     {
-     "id": "bal-00-0033901",
-     "name": "Ethan Pocic",
+     "id": "bal-00-0036369",
+     "name": "John Simpson",
      "pos": "OL",
      "role": "starter",
      "rating": 70,
      "snapPct": 0.95,
      "pbwr": 0.826,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yl6ylttfhl37pjf4iqxi",
-     "jersey": "77"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/avxt0i2490vqynqfd2qp",
+     "jersey": "74"
     },
     {
      "id": "bal-00-0038505",
@@ -2407,16 +2407,16 @@
      "jersey": "97"
     },
     {
-     "id": "pit-00-0040678",
-     "name": "Derrick Harmon",
+     "id": "pit-00-0039110",
+     "name": "Keeanu Benton",
      "pos": "DT",
      "role": "rotational",
-     "rating": 84,
-     "snapPct": 0.55,
-     "prwr": 0.075,
-     "note": "0.75 sacks/g · 5 QB hits in 4 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ogsybhwk95emepsiu0my",
-     "jersey": "99"
+     "rating": 87,
+     "snapPct": 0.64,
+     "prwr": 0.082,
+     "note": "0.69 sacks/g · 12 QB hits in 8 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gmc2bdwzpvi0bkklmpjw",
+     "jersey": "95"
     },
     {
      "id": "pit-00-0036323",
@@ -5454,15 +5454,15 @@
      "jersey": "78"
     },
     {
-     "id": "dal-00-0037243",
-     "name": "Tyler Smith",
+     "id": "dal-00-0038731",
+     "name": "TJ Bass",
      "pos": "OL",
      "role": "starter",
      "rating": 75,
      "snapPct": 0.95,
      "pbwr": 0.875,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gdosyozck6qewvzmpag2",
-     "jersey": "73"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hnmg3ncfxso056ybw5zz",
+     "jersey": "66"
     },
     {
      "id": "dal-00-0034967",
@@ -5693,17 +5693,17 @@
      "jersey": "1"
     },
     {
-     "id": "nyg-00-0035535",
-     "name": "Darius Slayton",
+     "id": "nyg-00-0036309",
+     "name": "Darnell Mooney",
      "pos": "WR",
      "role": "starter",
-     "rating": 78,
-     "snapPct": 0.81,
-     "targetShare": 0.096,
-     "tprr": 0.128,
-     "note": "0.28 EPA/target on 65 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/otksyfjll5waf0vsczeu",
-     "jersey": "18"
+     "rating": 59,
+     "snapPct": 0.82,
+     "targetShare": 0.107,
+     "tprr": 0.14,
+     "note": "0.05 EPA/target on 72 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eaejonwaflt9drrs9ika",
+     "jersey": "17"
     },
     {
      "id": "nyg-00-0037837",
@@ -5721,17 +5721,18 @@
      "jersey": "82"
     },
     {
-     "id": "nyg-00-0036309",
-     "name": "Darnell Mooney",
+     "id": "nyg-00-0035645",
+     "name": "Gunner Olszewski",
      "pos": "WR",
      "role": "rotational",
-     "rating": 59,
-     "snapPct": 0.82,
-     "targetShare": 0.107,
-     "tprr": 0.14,
-     "note": "0.05 EPA/target on 72 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eaejonwaflt9drrs9ika",
-     "jersey": "17"
+     "rating": 56,
+     "snapPct": 0.1,
+     "targetShare": 0.019,
+     "tprr": 0.207,
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q6fs5e2eotgeh47xeo74",
+     "jersey": "80"
     },
     {
      "id": "nyg-00-0037838",
