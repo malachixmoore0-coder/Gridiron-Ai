@@ -140,13 +140,27 @@ create policy tails_read on tails for select using (true);
 -- hidden by moderation, readable by anyone who queried the view instead of the
 -- table. With it on, the view is evaluated as the caller and the policy holds.
 
-create or replace view feed_public with (security_invoker = on) as
+-- Dropped and recreated rather than `create or replace`, which cannot change a
+-- view's column list: `select p.*` is expanded when the view is made, so the
+-- first time a column is added to `posts` further down this file, a re-run
+-- would try to widen the view and fail with "cannot change name of view
+-- column". Dropping first is what actually makes this file safe to run twice.
+-- Order matters — feed_following reads feed_public, so it goes first.
+drop view if exists feed_following;
+drop view if exists feed_public;
+
+-- The moderation columns have to exist before the views expand `p.*`, or the
+-- views and the table disagree about what a post is.
+alter table posts add column if not exists hidden_at timestamptz;
+alter table posts add column if not exists hidden_reason text;
+
+create view feed_public with (security_invoker = on) as
   select p.*,
          coalesce((select array_agg(l.user_id) from likes l where l.post_id = p.id), '{}') as likes_by,
          coalesce((select array_agg(t.user_id) from tails t where t.post_id = p.id), '{}') as tails_by
   from posts p;
 
-create or replace view feed_following with (security_invoker = on) as
+create view feed_following with (security_invoker = on) as
   select f.* from feed_public f
   where f.author_id = auth.uid()
      or exists (select 1 from follows fo where fo.followee_id = f.author_id and fo.follower_id = auth.uid());
@@ -231,9 +245,8 @@ drop policy if exists reports_read_own on reports;
 create policy reports_read_own on reports for select using (auth.uid() = reporter_id);
 
 -- Posts hidden by moderation stay in the table (an audit trail beats a delete)
--- but drop out of every read path.
-alter table posts add column if not exists hidden_at timestamptz;
-alter table posts add column if not exists hidden_reason text;
+-- but drop out of every read path. The columns themselves are added further up,
+-- before the views expand `p.*` over them.
 
 -- Blocked authors and hidden posts disappear from the feed for the reader, in
 -- the database rather than in the client, so a patched client cannot un-hide
