@@ -37,6 +37,19 @@ const SIMS = 10_000;
 /** How much the market is allowed to pull a projection. */
 const MARKET_WEIGHT = 0.35;
 /** Only price games this far ahead — a rating snapshot a month out says nothing. */
+/**
+ * How far ahead a forecast is worth fetching.
+ *
+ * Open-Meteo will answer fifteen days out and the answer is close to
+ * worthless — a weather model has little skill past about a week, and nobody is
+ * pricing a Tuesday game on next Saturday's rain. Four days covers everything
+ * on the board that anyone is actually looking at, and it is the difference
+ * between a few dozen requests per league per build and a few hundred.
+ */
+const WEATHER_DAYS = 4;
+/** Forecasts in flight at once. Polite to a free, keyless API; fast enough. */
+const WEATHER_CONCURRENCY = 6;
+
 const HORIZON_DAYS = 12;
 /** How far back to read results for the ratings. */
 const LOOKBACK_DAYS = 240;
@@ -200,20 +213,36 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       g.status === 'scheduled'
       && g.roof !== 'dome'
       && !!cityOf.get(g.id)
-      && Date.parse(g.kickoff) - Date.now() < 15 * 86_400_000
+      && Date.parse(g.kickoff) - Date.now() < WEATHER_DAYS * 86_400_000
       && Date.parse(g.kickoff) > Date.now() - 3 * 3_600_000);
 
-    let got = 0;
-    for (const g of upcoming) {
-      const at = await geocode(cityOf.get(g.id)!);
-      if (!at) continue;
-      const wx = await forecastAt(at.lat, at.lng, g.kickoff);
-      if (!wx) continue;
-      g.weather = wx;
-      g.weatherHint = wx.summary;
-      got += 1;
+    // The cities first, one at a time and once ever, so the geocoder is never
+    // asked the same question twice and never asked in parallel.
+    const points = new Map<string, { lat: number; lng: number } | null>();
+    for (const city of new Set(upcoming.map((g) => cityOf.get(g.id)!))) {
+      points.set(city, await geocode(city));
     }
     saveGeocache();
+
+    // Then the forecasts, a few at a time. Sequentially this was the slowest
+    // step in the whole build by an order of magnitude — a hundred and fifty
+    // round trips at a couple of hundred milliseconds each, every day, for
+    // numbers nobody looks at until the week of.
+    let got = 0;
+    for (let i = 0; i < upcoming.length; i += WEATHER_CONCURRENCY) {
+      const batch = upcoming.slice(i, i + WEATHER_CONCURRENCY);
+      const wxs = await Promise.all(batch.map((g) => {
+        const at = points.get(cityOf.get(g.id)!);
+        return at ? forecastAt(at.lat, at.lng, g.kickoff) : Promise.resolve(null);
+      }));
+      batch.forEach((g, j) => {
+        const wx = wxs[j];
+        if (!wx) return;
+        g.weather = wx;
+        g.weatherHint = wx.summary;
+        got += 1;
+      });
+    }
     console.log(`  weather on ${got}/${upcoming.length} upcoming ${meta.short} games`);
   }
 
