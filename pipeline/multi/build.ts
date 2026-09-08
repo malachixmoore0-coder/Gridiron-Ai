@@ -439,8 +439,4 @@ async function main() {
   console.log(`\n${ok}/${sourceLog.length} sources OK`);
 }
 
-main()
-  .catch((e) => { console.error(e); process.exitCode = 1; })
-  // The browser's driver can outlive the browser, so the build says when it is
-  // done rather than waiting to be told it may go.
-  .finally(() => { setTimeout(() => process.exit(process.exitCode ?? 0), 500); });
+main().catch((e) => { console.error(e); process.exitCode = 1; });

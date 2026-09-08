@@ -232,9 +232,6 @@ async function fetchText(url: string, name: string, timeoutMs = 20_000): Promise
  * /bios/ or /player/. All four are the same thing — the link a reader follows
  * to one person — and it is the only reliable tie between a face and a name.
  */
-/** Path segments that are part of the site's filing system, not a person. */
-const SECTION = /^(season|staff|coaches|players|roster|bios?|player|\d[\d-]*)$/i;
-
 const PLAYER_HREF = /<a\b[^>]*href=["']([^"'#]*(?:\/roster\/|\/bios?\/|\/player\/|rp_id=)[^"'#]*)["'][^>]*>/gi;
 
 /** Baseball's positions as the schools abbreviate them, and nothing else. */
@@ -277,9 +274,7 @@ export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string):
     const segs = href.split('?')[0].split('/').filter(Boolean);
     const at = Math.max(segs.lastIndexOf('roster'), segs.lastIndexOf('bio'), segs.lastIndexOf('bios'), segs.lastIndexOf('player'));
     if (at < 0) return undefined;
-    // Read from the end: Vanderbilt's links are /roster/season/2025-26/staff/
-    // tim-corbin-2, and the name is the last thing on them, never the first.
-    return segs.slice(at + 1).reverse().find((x) => /[a-z]/i.test(x) && !SECTION.test(x));
+    return segs.slice(at + 1).find((x) => /[a-z]/i.test(x) && !/^\d+$/.test(x));
   };
   const out = new Map<string, SchoolPlayer>();
 
