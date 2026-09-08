@@ -22,6 +22,7 @@
  */
 import { createRng, hashString } from '@/engine/rng';
 import type { SportProfile } from '@/sports/types';
+import type { Weather } from '@/engine/types';
 
 export interface SimTeam {
   id: string;
@@ -38,6 +39,8 @@ export interface SimInput {
   away: SimTeam;
   /** Neutral floor, court or pitch — no home edge. */
   neutral?: boolean;
+  /** Forecast at first pitch or kick-off. Ignored for sports played indoors. */
+  weather?: Weather | null;
   /** Market home line, when one exists, used only for the blended projection. */
   marketHomeSpread?: number | null;
   marketTotal?: number | null;
@@ -89,6 +92,47 @@ function poisson(rand: () => number, lambda: number): number {
 }
 
 /**
+ * What the weather does to a scoreline, and — just as importantly — what it is
+ * not allowed to pretend to know.
+ *
+ * Two honest limits shape this.
+ *
+ * **No margin effect.** Football can shift the *margin* for weather because it
+ * knows each side's pass dependence, so it can say which team a wet ball hurts
+ * more. There is no equivalent here: nothing in the feed says whether a
+ * pitcher is a flyball arm or whether a side plays through the air. Inventing a
+ * side would be fake precision on the one number people bet, so weather here
+ * moves the total and leaves the margin alone.
+ *
+ * **Wind widens rather than shifts.** Wind out at Wrigley is a home-run day;
+ * wind in at the same park kills the same swing. Which one it is depends on the
+ * stadium's orientation against the wind bearing, and the feed carries neither.
+ * So wind is modelled as what it honestly is — more uncertainty, no known
+ * direction — and it is the one condition that does not move the projection at
+ * all.
+ *
+ * The multipliers are proportional rather than absolute so one table serves
+ * every sport: five per cent off a baseball total is about half a run, and off a
+ * soccer total about a seventh of a goal, which is the right relative size in
+ * both.
+ */
+const WEATHER: Record<Weather, { total: number; spread: number }> = {
+  dome: { total: 1, spread: 1 },
+  clear: { total: 1, spread: 1 },
+  // Dense cold air carries a struck ball less far, in every sport that hits one.
+  cold: { total: 0.95, spread: 1 },
+  // Thin warm air is the same effect with the sign flipped, and smaller.
+  heat: { total: 1.03, spread: 1 },
+  rain: { total: 0.94, spread: 1.02 },
+  wind: { total: 1, spread: 1.12 },
+  snow: { total: 0.88, spread: 1.05 },
+};
+
+/** The weather actually in force: nothing at all for a sport played indoors. */
+const conditions = (input: SimInput, p: SportProfile) =>
+  (p.outdoor && input.weather ? WEATHER[input.weather] : null) ?? WEATHER.clear;
+
+/**
  * The projection before any simulation: a rating gap converted to margin, the
  * home edge, and — when the pipeline supplies one — a pull toward the market.
  * The market is not gospel, but a number twenty books agree on carries
@@ -101,7 +145,10 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
 
   const attack = (input.home.attack ?? 1) * (input.away.defence ?? 1);
   const defend = (input.away.attack ?? 1) * (input.home.defence ?? 1);
-  let total = p.baseTotal * ((attack + defend) / 2);
+  // Weather lands on the model's own total, before the market blend — a book
+  // has already priced the forecast, so letting the market pull afterwards is
+  // what stops the adjustment being counted twice.
+  let total = p.baseTotal * ((attack + defend) / 2) * conditions(input, p).total;
 
   // A market number is only worth following if it is a market number. A feed
   // that files a price in the spread field — soccer arrived with Chelsea at
@@ -131,6 +178,14 @@ export function simulate(input: SimInput, p: SportProfile, runs = 10_000, seed =
   const rng = createRng(seed);
   const rand = () => rng.next();
   const { margin, total } = project(input, p);
+  /**
+   * How much wider the weather makes the day. One for everything except wind,
+   * rain and snow — and for wind it is the *only* thing that changes, because
+   * the direction it blows is the part the feed cannot tell us.
+   */
+  const spreadMult = conditions(input, p).spread;
+  /** Extra dispersion on the total, in scoring units. Zero on a clear day. */
+  const totalJitter = total * (spreadMult - 1);
 
   let homeWins = 0;
   let awayWins = 0;
@@ -148,8 +203,20 @@ export function simulate(input: SimInput, p: SportProfile, runs = 10_000, seed =
     const lambdaHome = Math.max(0.05, (total + margin) / 2);
     const lambdaAway = Math.max(0.05, (total - margin) / 2);
     for (let i = 0; i < runs; i += 1) {
-      const h = poisson(rand, lambdaHome);
-      const a = poisson(rand, lambdaAway);
+      // A windy day is not a lower-scoring day, it is a *less predictable* one,
+      // so the rate itself is drawn per run rather than fixed. A Poisson whose
+      // mean varies is overdispersed, which is exactly the shape wanted: same
+      // expected score, fatter tails on both ends. On a clear day this costs
+      // nothing — the jitter is zero and the rates are the ones above.
+      let lh = lambdaHome;
+      let la = lambdaAway;
+      if (totalJitter > 0) {
+        const t = Math.max(p.baseTotal * 0.3, total + normal(rand) * totalJitter);
+        lh = Math.max(0.05, (t + margin) / 2);
+        la = Math.max(0.05, (t - margin) / 2);
+      }
+      const h = poisson(rand, lh);
+      const a = poisson(rand, la);
       let hs = h;
       let as = a;
       if (h === a && !p.draws) {
@@ -167,8 +234,8 @@ export function simulate(input: SimInput, p: SportProfile, runs = 10_000, seed =
     }
   } else {
     for (let i = 0; i < runs; i += 1) {
-      const m = margin + normal(rand) * p.marginSigma;
-      const t = Math.max(p.baseTotal * 0.3, total + normal(rand) * p.totalSigma);
+      const m = margin + normal(rand) * p.marginSigma * spreadMult;
+      const t = Math.max(p.baseTotal * 0.3, total + normal(rand) * p.totalSigma * spreadMult);
       const h = (t + m) / 2;
       const a = (t - m) / 2;
       sumHome += h;

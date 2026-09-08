@@ -31,6 +31,10 @@ export interface EspnEvent {
   detail: string | null;
   neutral: boolean;
   venue: string;
+  /** City the venue is in, for a forecast lookup. Empty when ESPN omits it. */
+  venueCity: string;
+  /** ESPN's own roof flag. True means no weather can reach the game. */
+  venueIndoor: boolean;
   awayId: string;
   homeId: string;
   awayScore: number | null;
@@ -189,6 +193,12 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       detail: comp.status?.type?.shortDetail ?? null,
       neutral: !!comp.neutralSite,
       venue: String(comp.venue?.fullName ?? ''),
+      // Address and roof come straight from the scoreboard, which is what makes
+      // a forecast possible for eighteen leagues without a curated table of
+      // stadium coordinates to keep up to date.
+      venueCity: [comp.venue?.address?.city, comp.venue?.address?.state ?? comp.venue?.address?.country]
+        .filter(Boolean).map(String).join(', '),
+      venueIndoor: !!comp.venue?.indoor,
       awayId: String(away.team.id),
       homeId: String(home.team.id),
       awayScore: started ? num(away.score) : null,

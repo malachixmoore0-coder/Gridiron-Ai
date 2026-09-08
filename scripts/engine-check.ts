@@ -12,6 +12,7 @@ import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/spor
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
+import type { Weather } from '../src/engine/types';
 
 let failures = 0;
 const check = (cond: boolean, msg: string) => {
@@ -270,6 +271,59 @@ console.log('\n— Multi-sport engine');
   const clear = total(undefined);
   const snow = total('snow');
   check(clear - snow > 2, `forecast: snow cuts the projected total (${clear.toFixed(1)} → ${snow.toFixed(1)})`);
+}
+
+/**
+ * The generic engine's own weather term, which the eighteen other leagues use.
+ *
+ * The two claims worth defending are the ones it refuses to make: no margin
+ * shift, because nothing in the feed says which side a wet ball hurts; and no
+ * total shift for wind, because whether it blows out or in depends on a
+ * stadium orientation the feed does not carry.
+ */
+{
+  console.log('\nGeneric weather');
+  const team = (rating: number) => ({ id: `t${rating}`, rating, attack: 1, defence: 1 });
+  const runFor = (sport: 'baseball' | 'soccer' | 'basketball', weather: Weather | null) => {
+    const p = profileFor(sport === 'baseball' ? 'mlb' : sport === 'soccer' ? 'epl' : 'nba');
+    return simulate(
+      { home: team(1550), away: team(1500), weather, marketWeight: 0 },
+      p, 30000, seedFor('h', 'a'),
+    );
+  };
+
+  const mlbClear = runFor('baseball', null);
+  const mlbCold = runFor('baseball', 'cold');
+  const mlbWind = runFor('baseball', 'wind');
+  check(mlbClear.total - mlbCold.total > 0.2, `generic: cold cuts a baseball total (${mlbClear.total.toFixed(2)} → ${mlbCold.total.toFixed(2)})`);
+  check(Math.abs(mlbWind.total - mlbClear.total) < 0.25, 'generic: wind does not shift the total, only widens it');
+  check(Math.abs(mlbCold.spread - mlbClear.spread) < 0.15, 'generic: weather leaves the margin to the ratings');
+  check(Math.abs(mlbWind.spread - mlbClear.spread) < 0.15, 'generic: wind leaves the margin alone too');
+
+  /*
+   * Where the widening actually lands depends on the model. In a low-count
+   * sport both sides' scoring rates move together — wind out is a big day for
+   * everyone — so the extra spread goes into the *total* and the margin barely
+   * notices, which is why there is no margin-range assertion above. On the
+   * normal model it is the margin sigma that is scaled, and that is directly
+   * visible, so the mechanism is checked there.
+   */
+  const normalRun = (weather: Weather | null) => simulate(
+    { home: team(1550), away: team(1500), weather, marketWeight: 0 },
+    profileFor('nfl'), 30000, seedFor('h', 'a'),
+  );
+  const nClear = normalRun(null);
+  const nWind = normalRun('wind');
+  check(nWind.p90 - nWind.p10 > (nClear.p90 - nClear.p10) * 1.05, 'generic: wind widens the range on a continuous sport');
+
+  const eplClear = runFor('soccer', null);
+  const eplSnow = runFor('soccer', 'snow');
+  check(eplClear.total - eplSnow.total > 0.15, `generic: snow cuts a soccer total (${eplClear.total.toFixed(2)} → ${eplSnow.total.toFixed(2)})`);
+
+  // Indoors is indoors. A cold snap must not reach a basketball court.
+  const nbaClear = runFor('basketball', null);
+  const nbaCold = runFor('basketball', 'cold');
+  check(nbaClear.total === nbaCold.total, 'generic: weather never reaches an indoor sport');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

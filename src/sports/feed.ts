@@ -8,7 +8,8 @@
  * other sports actually need: a draw price, a rating on the team, and a group
  * key that means "week" in football and "day" everywhere else.
  */
-import type { BookLine, GameStatus } from '@/data/liveTypes';
+import type { BookLine, GameStatus, GameWeather } from '@/data/liveTypes';
+import type { Weather } from '@/engine/types';
 import type { LeagueKey, SportId } from '@/sports/types';
 
 export interface SportTeam {
@@ -58,8 +59,13 @@ export interface SportGame {
   /** Soccer's third price. Null everywhere a draw cannot happen. */
   drawMoneyline?: number | null;
   primetime: boolean;
-  weather: null;
-  weatherHint: null;
+  /**
+   * Kick-off forecast, for the outdoor sports the build can reach. These were
+   * hard-null when every generic league was assumed to be played indoors or
+   * with the weather ignored; baseball and soccer carry a real one now.
+   */
+  weather: GameWeather | null;
+  weatherHint: Weather | null;
   awayScore: number | null;
   homeScore: number | null;
   status: GameStatus;

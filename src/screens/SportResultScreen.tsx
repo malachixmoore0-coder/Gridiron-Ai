@@ -55,6 +55,9 @@ export function SportResultScreen({ request, onBack, onOpenTeam }: Props) {
       home: { id: request.homeId, rating: teams.get(request.homeId)?.rating ?? 1500, attack: teams.get(request.homeId)?.attack, defence: teams.get(request.homeId)?.defence },
       away: { id: request.awayId, rating: teams.get(request.awayId)?.rating ?? 1500, attack: teams.get(request.awayId)?.attack, defence: teams.get(request.awayId)?.defence },
       neutral: request.ctx.neutralSite,
+      // The forecast the navigator resolved, or the game's own if this screen
+      // was reached without one. Ignored outright for a sport played indoors.
+      weather: (request.ctx.weather !== 'auto' ? request.ctx.weather : null) ?? game?.weatherHint ?? null,
       marketHomeSpread: game?.homeSpread ?? null,
       marketTotal: game?.totalLine ?? null,
       marketWeight: request.marketWeight ?? 0.35,

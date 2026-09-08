@@ -25,6 +25,8 @@ import { simulate, seedFor } from '../../src/sports/engine';
 import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, unitOf, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
+import { geocode, saveGeocache } from './geocode';
+import { forecastAt } from '../sources/weather';
 import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
 import { closeBrowser } from './render';
 import { readLines, recordLines, writeLines } from './lines';
@@ -149,6 +151,15 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   const days = [...new Set(events.map((e) => dayKey(e.date)))].sort();
   const dayIndex = new Map(days.map((d, i) => [d, i + 1]));
 
+  /**
+   * Kick-off weather, for the sports it can actually reach.
+   *
+   * Indoors is skipped on ESPN's own roof flag rather than a guess, and the
+   * whole step is skipped for basketball and hockey, so a forecast is never
+   * fetched for a game played under a roof. The city is geocoded once ever and
+   * cached, which is what keeps this a few calls per build rather than one per
+   * game per day.
+   */
   const games: SportGame[] = events
     .filter((e) => byId.has(e.homeId) && byId.has(e.awayId))
     .map((e) => ({
@@ -162,7 +173,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       homeId: e.homeId,
       neutralSite: e.neutral,
       stadium: e.venue,
-      roof: 'outdoors',
+      roof: e.venueIndoor ? 'dome' : 'outdoors',
       homeSpread: e.homeSpread,
       totalLine: e.totalLine,
       awayMoneyline: e.awayMoneyline,
@@ -181,6 +192,30 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       homeRank: e.homeRank,
       books: null,
     }));
+
+  // ---- kick-off weather, for the sports it can reach ----------------------
+  if (p.outdoor && !process.argv.includes('--no-weather')) {
+    const cityOf = new Map(events.map((e) => [e.id, e.venueCity]));
+    const upcoming = games.filter((g) =>
+      g.status === 'scheduled'
+      && g.roof !== 'dome'
+      && !!cityOf.get(g.id)
+      && Date.parse(g.kickoff) - Date.now() < 15 * 86_400_000
+      && Date.parse(g.kickoff) > Date.now() - 3 * 3_600_000);
+
+    let got = 0;
+    for (const g of upcoming) {
+      const at = await geocode(cityOf.get(g.id)!);
+      if (!at) continue;
+      const wx = await forecastAt(at.lat, at.lng, g.kickoff);
+      if (!wx) continue;
+      g.weather = wx;
+      g.weatherHint = wx.summary;
+      got += 1;
+    }
+    saveGeocache();
+    console.log(`  weather on ${got}/${upcoming.length} upcoming ${meta.short} games`);
+  }
 
   const groups: SportGroup[] = days.map((d, i) => {
     const list = games.filter((g) => dayKey(g.kickoff) === d);
@@ -262,6 +297,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
             home: { id: home.id, rating: home.rating, attack: home.attack, defence: home.defence },
             away: { id: away.id, rating: away.rating, attack: away.attack, defence: away.defence },
             neutral: g.neutralSite,
+            weather: g.weatherHint,
             marketHomeSpread: g.homeSpread,
             marketTotal: g.totalLine,
             marketWeight: MARKET_WEIGHT,

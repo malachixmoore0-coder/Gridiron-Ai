@@ -219,7 +219,14 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                           </Text>
                         )}
                         <Text style={styles.venue} numberOfLines={1}>
-                          {g.broadcast || (g.neutralSite ? 'Neutral' : g.stadium) || meta.short}
+                          {[
+                            g.broadcast || (g.neutralSite ? 'Neutral' : g.stadium) || meta.short,
+                            // Named where it applies, because it moves the total
+                            // and a number that moves for a reason should say so.
+                            g.weatherHint && g.weatherHint !== 'clear' && g.weatherHint !== 'dome'
+                              ? g.weatherHint[0].toUpperCase() + g.weatherHint.slice(1)
+                              : null,
+                          ].filter(Boolean).join(' · ')}
                         </Text>
                       </View>
                       <View style={styles.team}>
