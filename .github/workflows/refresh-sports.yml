@@ -92,7 +92,10 @@ jobs:
           elif [ "${{ github.event.inputs.probe }}" = "logos" ]; then npm run data:probe -- --logos;
           else npm run data:probe; fi
 
+      # A probe is a question, not a gate: a failed one must still leave its
+      # report behind and let the next question be asked.
       - name: Probe school roster pages
+        continue-on-error: true
         if: ${{ github.event.inputs.schools != '' }}
         # Through the environment rather than into the command line: a school
         # called "Texas A&M" is a valid input and not a shell operator.
@@ -101,6 +104,7 @@ jobs:
         run: npm run data:schools -- $ARGS
 
       - name: Probe the league sites
+        continue-on-error: true
         if: ${{ github.event.inputs.soccer != '' }}
         env:
           ARGS: ${{ github.event.inputs.soccer }}
@@ -120,6 +124,7 @@ jobs:
         run: npm run data:golf
 
       - name: Commit
+        if: always()
         run: |
           git config user.name "gridiron-data-bot"
           git config user.email "gridiron-data-bot@users.noreply.github.com"
