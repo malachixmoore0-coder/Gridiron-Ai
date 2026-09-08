@@ -1,0 +1,452 @@
+{
+ "aguascalientes, mexico": {
+  "lat": 21.88262,
+  "lng": -102.2843
+ },
+ "anaheim, california": {
+  "lat": 33.83529,
+  "lng": -117.9145
+ },
+ "angers, france": {
+  "lat": 47.47156,
+  "lng": -0.55202
+ },
+ "athens, greece": null,
+ "atlanta, georgia": {
+  "lat": 33.749,
+  "lng": -84.38798
+ },
+ "aue, germany": {
+  "lat": 50.59034,
+  "lng": 12.70657
+ },
+ "augsburg, germany": null,
+ "auxerre, france": {
+  "lat": 47.7996,
+  "lng": 3.57033
+ },
+ "baltimore, maryland": {
+  "lat": 39.29038,
+  "lng": -76.61219
+ },
+ "barcelona, spain": {
+  "lat": 41.38879,
+  "lng": 2.15899
+ },
+ "bergamo, italy": {
+  "lat": 45.69601,
+  "lng": 9.66721
+ },
+ "berlin, germany": null,
+ "bilbao, spain": {
+  "lat": 43.26271,
+  "lng": -2.92528
+ },
+ "birmingham, england": {
+  "lat": 52.48142,
+  "lng": -1.89983
+ },
+ "bologna, italy": {
+  "lat": 44.49381,
+  "lng": 11.33875
+ },
+ "boston, massachusetts": {
+  "lat": 42.35843,
+  "lng": -71.05977
+ },
+ "bournemouth, england": {
+  "lat": 50.72048,
+  "lng": -1.8795
+ },
+ "bremen, germany": {
+  "lat": 53.07582,
+  "lng": 8.80717
+ },
+ "brentford, england": {
+  "lat": 51.48619,
+  "lng": -0.3083
+ },
+ "brest, france": {
+  "lat": 48.39029,
+  "lng": -4.48628
+ },
+ "bronx, new york": {
+  "lat": 40.93815,
+  "lng": -73.83208
+ },
+ "brugge, belgium": {
+  "lat": 51.20892,
+  "lng": 3.22424
+ },
+ "chicago, illinois": {
+  "lat": 41.85003,
+  "lng": -87.65005
+ },
+ "cincinnati, ohio": {
+  "lat": 39.12711,
+  "lng": -84.51439
+ },
+ "ciudad juárez, mexico": {
+  "lat": 31.72024,
+  "lng": -106.46084
+ },
+ "cleveland, ohio": {
+  "lat": 41.4995,
+  "lng": -81.69541
+ },
+ "cologne, germany": {
+  "lat": 50.93333,
+  "lng": 6.95
+ },
+ "como, italy": {
+  "lat": 45.80819,
+  "lng": 9.0832
+ },
+ "coventry, england": {
+  "lat": 52.40656,
+  "lng": -1.51217
+ },
+ "denver, colorado": {
+  "lat": 39.73915,
+  "lng": -104.9847
+ },
+ "detroit, michigan": {
+  "lat": 42.33143,
+  "lng": -83.04575
+ },
+ "eindhoven, netherlands": {
+  "lat": 51.44083,
+  "lng": 5.47778
+ },
+ "elche, spain": {
+  "lat": 38.26218,
+  "lng": -0.70107
+ },
+ "falmer, england": {
+  "lat": 50.86529,
+  "lng": -0.07733
+ },
+ "firenze, italy": {
+  "lat": 43.80077,
+  "lng": 11.23441
+ },
+ "frankfurt, germany": {
+  "lat": 50.11552,
+  "lng": 8.68417
+ },
+ "freiburg im breisgau, germany": {
+  "lat": 47.9959,
+  "lng": 7.85222
+ },
+ "frosinone, italy": {
+  "lat": 41.63976,
+  "lng": 13.34109
+ },
+ "gelsenkirchen, germany": {
+  "lat": 51.50508,
+  "lng": 7.09654
+ },
+ "genova, italy": {
+  "lat": 45.21604,
+  "lng": 11.87211
+ },
+ "getafe, spain": {
+  "lat": 40.30571,
+  "lng": -3.73295
+ },
+ "guadalajara, mexico": {
+  "lat": 20.67738,
+  "lng": -103.34749
+ },
+ "guadalupe, mexico": {
+  "lat": 25.67678,
+  "lng": -100.25646
+ },
+ "hamburg norderstedt, germany": null,
+ "istanbul, türkiye": {
+  "lat": 41.01384,
+  "lng": 28.94966
+ },
+ "kansas city, missouri": {
+  "lat": 39.09973,
+  "lng": -94.57857
+ },
+ "la coruña, spain": {
+  "lat": 25.88048,
+  "lng": -103.29757
+ },
+ "le havre, france": {
+  "lat": 49.49346,
+  "lng": 0.10785
+ },
+ "le mans, france": {
+  "lat": 48.0021,
+  "lng": 0.20251
+ },
+ "lecce, italy": {
+  "lat": 40.35481,
+  "lng": 18.17244
+ },
+ "leeds, england": {
+  "lat": 53.79648,
+  "lng": -1.54785
+ },
+ "leipzig, germany": {
+  "lat": 51.33962,
+  "lng": 12.37129
+ },
+ "león de los aldamas, mexico": null,
+ "leverkusen, germany": {
+  "lat": 51.0303,
+  "lng": 6.98432
+ },
+ "lille, france": {
+  "lat": 50.63391,
+  "lng": 3.05512
+ },
+ "lisbon, portugal": {
+  "lat": 38.72509,
+  "lng": -9.1498
+ },
+ "liverpool, england": {
+  "lat": 53.41058,
+  "lng": -2.97794
+ },
+ "london, england": {
+  "lat": 51.50853,
+  "lng": -0.12574
+ },
+ "lorient, france": {
+  "lat": 47.74817,
+  "lng": -3.37177
+ },
+ "los angeles, california": {
+  "lat": 34.05223,
+  "lng": -118.24368
+ },
+ "lyon, france": {
+  "lat": 45.74906,
+  "lng": 4.84789
+ },
+ "madrid, spain": {
+  "lat": 40.4165,
+  "lng": -3.70256
+ },
+ "mainz, germany": {
+  "lat": 49.98185,
+  "lng": 8.28008
+ },
+ "malaga, spain": {
+  "lat": 36.72016,
+  "lng": -4.42034
+ },
+ "manchester, england": {
+  "lat": 53.48095,
+  "lng": -2.23743
+ },
+ "manises, spain": {
+  "lat": 39.49139,
+  "lng": -0.46349
+ },
+ "marseille, france": {
+  "lat": 43.29695,
+  "lng": 5.38107
+ },
+ "mexico city, mexico": {
+  "lat": 19.42847,
+  "lng": -99.12766
+ },
+ "milano, italy": {
+  "lat": 42.78235,
+  "lng": 12.59836
+ },
+ "minneapolis, minnesota": {
+  "lat": 44.97997,
+  "lng": -93.26384
+ },
+ "monaco, france": {
+  "lat": 43.73718,
+  "lng": 7.42145
+ },
+ "mönchengladbach, germany": {
+  "lat": 51.18539,
+  "lng": 6.44172
+ },
+ "monza, italy": {
+  "lat": 45.58005,
+  "lng": 9.27246
+ },
+ "münchen, germany": {
+  "lat": 48.13743,
+  "lng": 11.57549
+ },
+ "napoli, italy": {
+  "lat": 40.87618,
+  "lng": 14.5195
+ },
+ "newcastle-upon-tyne, england": null,
+ "nice, france": {
+  "lat": 43.70313,
+  "lng": 7.26608
+ },
+ "nottingham, england": {
+  "lat": 52.9536,
+  "lng": -1.15047
+ },
+ "pachuca, mexico": {
+  "lat": 20.11697,
+  "lng": -98.73329
+ },
+ "paderborn, germany": {
+  "lat": 51.71905,
+  "lng": 8.75439
+ },
+ "pamplona, spain": {
+  "lat": 42.81687,
+  "lng": -1.64323
+ },
+ "paris, france": {
+  "lat": 48.85341,
+  "lng": 2.3488
+ },
+ "parma, italy": {
+  "lat": 44.79935,
+  "lng": 10.32618
+ },
+ "philadelphia, pennsylvania": {
+  "lat": 39.95238,
+  "lng": -75.16362
+ },
+ "pittsburgh, pennsylvania": {
+  "lat": 40.44062,
+  "lng": -79.99589
+ },
+ "porto, portugal": {
+  "lat": 41.1485,
+  "lng": -8.61097
+ },
+ "prague, czechia": {
+  "lat": 50.08804,
+  "lng": 14.42076
+ },
+ "puebla, mexico": {
+  "lat": 19.04778,
+  "lng": -98.20723
+ },
+ "queens, new york": {
+  "lat": 40.68149,
+  "lng": -73.83652
+ },
+ "reggio emilia, italy": {
+  "lat": 44.69825,
+  "lng": 10.63125
+ },
+ "rennes, france": {
+  "lat": 48.11109,
+  "lng": -1.67431
+ },
+ "roma, italy": {
+  "lat": 44.99364,
+  "lng": 11.10642
+ },
+ "sacramento, california": {
+  "lat": 38.58157,
+  "lng": -121.4944
+ },
+ "san diego, california": {
+  "lat": 32.71571,
+  "lng": -117.16472
+ },
+ "san francisco, california": {
+  "lat": 37.77493,
+  "lng": -122.41942
+ },
+ "san luis potosi, mexico": {
+  "lat": 22.15234,
+  "lng": -100.97135
+ },
+ "san sebastian, spain": {
+  "lat": 28.09163,
+  "lng": -17.11331
+ },
+ "santander, spain": {
+  "lat": 43.46589,
+  "lng": -3.80493
+ },
+ "santiago de querétaro, mexico": {
+  "lat": 20.58806,
+  "lng": -100.38806
+ },
+ "sevilla, spain": {
+  "lat": 37.38283,
+  "lng": -5.97317
+ },
+ "sinsheim, germany": {
+  "lat": 49.2529,
+  "lng": 8.87867
+ },
+ "spiesen-elversberg, germany": {
+  "lat": 49.31667,
+  "lng": 7.13333
+ },
+ "st. louis, missouri": {
+  "lat": 38.62727,
+  "lng": -90.19789
+ },
+ "strasbourg, france": {
+  "lat": 48.58392,
+  "lng": 7.74553
+ },
+ "stuttgart, germany": {
+  "lat": 48.78232,
+  "lng": 9.17702
+ },
+ "sunderland, england": {
+  "lat": 54.90465,
+  "lng": -1.38222
+ },
+ "tijuana, mexico": {
+  "lat": 32.5027,
+  "lng": -117.00371
+ },
+ "toluca, mexico": {
+  "lat": 19.28786,
+  "lng": -99.65324
+ },
+ "torino, italy": {
+  "lat": 45.07049,
+  "lng": 7.68682
+ },
+ "torreón, mexico": {
+  "lat": 25.54389,
+  "lng": -103.41898
+ },
+ "toulouse, france": {
+  "lat": 43.60426,
+  "lng": 1.44367
+ },
+ "udine, italy": {
+  "lat": 46.0693,
+  "lng": 13.23715
+ },
+ "venezia, italy": {
+  "lat": 44.42329,
+  "lng": 11.17365
+ },
+ "vigo, spain": {
+  "lat": 42.23282,
+  "lng": -8.72264
+ },
+ "villarreal, spain": {
+  "lat": 38.72572,
+  "lng": -7.21533
+ },
+ "vitoria-gasteiz, spain": {
+  "lat": 42.84998,
+  "lng": -2.67268
+ },
+ "washington, district of columbia": {
+  "lat": 38.89511,
+  "lng": -77.03637
+ }
+}
