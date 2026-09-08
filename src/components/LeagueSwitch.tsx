@@ -168,7 +168,12 @@ function Crest({ league }: { league: LeagueMeta }) {
 }
 
 const styles = StyleSheet.create({
-  bar: { flexGrow: 0 },
+  // flexShrink matters as much as flexGrow: a row in a flex column shrinks by
+  // default, and a horizontal ScrollView clips what it cannot fit. The strip
+  // was 26pt tall around a 47pt tab, so every label lost its second line and
+  // the tabs disappeared under the card below. It is not the thing that gives
+  // way when the column is short of room.
+  bar: { flexGrow: 0, flexShrink: 0 },
   barInner: { gap: 6, alignItems: 'flex-start', paddingRight: spacing.lg },
 
   sport: {
