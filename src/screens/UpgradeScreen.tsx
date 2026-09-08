@@ -133,6 +133,20 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
                     <Text style={styles.bulletText}>{b}</Text>
                   </View>
                 ))}
+                {/* Being built, and said so. A tick beside something that does
+                    not exist yet is the difference between a roadmap and a
+                    misrepresentation, and the tick is what people pay for. */}
+                {!!t.soon?.length && (
+                  <>
+                    <Text style={styles.soonHead}>IN BUILD — NOT INCLUDED YET</Text>
+                    {t.soon.map((b) => (
+                      <View key={b} style={styles.bullet}>
+                        <Ionicons name="construct-outline" size={13} color={colors.inkGhost} />
+                        <Text style={styles.soonText}>{b}</Text>
+                      </View>
+                    ))}
+                  </>
+                )}
               </View>
               {mine ? (
                 <View style={[styles.cta, styles.ctaCurrent]}><Text style={styles.ctaCurrentText}>Your plan</Text></View>
@@ -238,6 +252,8 @@ const styles = StyleSheet.create({
   tierPer: { color: colors.inkFaint, fontSize: 10, fontWeight: '700' },
   tierHook: { color: colors.inkDim, fontSize: 13, lineHeight: 18, marginTop: spacing.sm },
   bullets: { gap: 7, marginTop: spacing.md },
+  soonHead: { color: colors.inkGhost, fontSize: 9, fontWeight: '900', letterSpacing: 0.8, marginTop: spacing.sm },
+  soonText: { color: colors.inkFaint, fontSize: 12, flex: 1, fontStyle: 'italic' },
   bullet: { flexDirection: 'row', alignItems: 'flex-start', gap: 8 },
   bulletText: { color: colors.inkDim, fontSize: 12, lineHeight: 17, flex: 1 },
   cta: { marginTop: spacing.md, borderRadius: radius.pill, overflow: 'hidden' },

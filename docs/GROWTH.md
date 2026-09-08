@@ -58,7 +58,8 @@ The three things a bettor pays for, in the order they will pay for them:
 | They want | The feature | Tier |
 |---|---|---|
 | To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, every league | Starter |
-| To turn a number into a bet | Line shopping across books, Parlay Lab, props, Upset Radar | All-Pro |
+| To turn a number into a bet | Parlay Lab, props (football), Upset Radar in every league | All-Pro |
+| Line shopping across books | In build — the odds feed carries one book today, so it is not sold yet | — |
 | To be seen being right | A profile, a public record, followers and tails | Free, and it sells the tiers |
 | To run it themselves | Raw feed, backtests, editable weights | Franchise |
 

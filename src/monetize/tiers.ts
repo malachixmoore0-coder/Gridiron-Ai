@@ -43,17 +43,17 @@ export interface Entitlements {
   props: boolean;
   /** Correlated parlay builder; number = max legs, 0 = locked. */
   parlayLegs: number;
-  /** Line-move history and steam alerts. */
+  /** Line-move history and steam alerts. NOT WIRED — no screen reads this. */
   lineMoves: boolean;
-  /** What-if lab: re-run with any player in or out. */
+  /** What-if lab: re-run with any player in or out. NOT WIRED. */
   lab: boolean;
-  /** Saved-pick card and share images. */
+  /** Saved-pick card and share images. NOT WIRED — nothing reads this yet. */
   shareCards: 'off' | 'basic' | 'branded';
   /** Teams you can follow for a personalised feed. */
   follows: number;
-  /** Raw JSON model feed + backtests. */
+  /** Raw JSON model feed + backtests. NOT WIRED, and the feed is public today. */
   apiAccess: boolean;
-  /** Model weight editing (your own priors). */
+  /** Model weight editing (your own priors). NOT WIRED. */
   customWeights: boolean;
 }
 
@@ -66,8 +66,23 @@ export interface Tier {
   annual: number;
   /** The one line that sells this rung. */
   hook: string;
-  /** Bullets shown on the card — written as outcomes, not features. */
+  /**
+   * What this rung gives you today. Every line here must be something a
+   * subscriber can open the app and use right now — if it is on the roadmap it
+   * goes in `soon`, where it is labelled as such and nobody is charged for a
+   * promise.
+   */
   bullets: string[];
+  /**
+   * Being built, shown as such and never as a reason to pay yet.
+   *
+   * This list exists because the alternative is worse: five entitlements were
+   * being advertised with no code reading them at all — the what-if lab, line
+   * moves, the raw feed, editable weights, branded share cards — and line
+   * shopping was sold on a feed that returns one book. Saying "in build" costs
+   * a sale. Taking money for it costs a refund and the benefit of the doubt.
+   */
+  soon?: string[];
   entitlements: Entitlements;
   accent: 'ink' | 'green' | 'gold' | 'platinum';
 }
@@ -144,16 +159,20 @@ export const TIERS: Tier[] = [
     tagline: 'For the bettor with a bankroll',
     monthly: 2999,
     annual: 24900,
-    hook: 'Line shopping, props and the tools that turn a number into a bet.',
+    hook: 'Every sport on the board, the props, and the parlay maths behind them.',
     bullets: [
       'Everything in Starter, at 25,000 runs',
       'Every sport on the board, every day',
-      'Line shopping: every book on every game',
       'Correlated parlay builder (up to 4 legs)',
-      'Player prop projections on every starter',
-      'Upset Radar across all 134 college programs',
+      'Player prop projections — NFL and college football',
+      'Upset Radar: every underdog the model has winning, in any league',
+      'Follow as many teams as you like',
+    ],
+    soon: [
+      'Line shopping across books — needs a feed that carries more than one',
       'What-if lab: pull a starter, re-run instantly',
-      'Branded share cards for your group chat',
+      'Line-move history and steam alerts',
+      'Branded share cards',
     ],
     entitlements: {
       ...FREE,
@@ -179,14 +198,16 @@ export const TIERS: Tier[] = [
     tagline: 'For the syndicate',
     monthly: 9900,
     annual: 89900,
-    hook: 'The model itself — weights, feed and all.',
+    hook: 'The deepest simulations, the longest parlays, and a direct line to the build.',
     bullets: [
       'Everything in All-Pro, at 50,000 runs',
+      '8-leg parlay engine with the correlation haircut',
+      'Direct line to the build',
+    ],
+    soon: [
       'Raw JSON feed: every projection, every hour',
       'Backtests against the full season archive',
       'Edit the node weights and keep your own priors',
-      '8-leg parlay engine with correlation matrix',
-      'Direct line to the build',
     ],
     entitlements: {
       simsPerDay: Infinity,

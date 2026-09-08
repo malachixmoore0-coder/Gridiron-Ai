@@ -75,6 +75,9 @@
   .tier .who{color:var(--faint);font-size:12px;margin-bottom:14px}
   .price{font-size:34px;font-weight:900;letter-spacing:-1.4px}
   .price small{font-size:13px;color:var(--faint);font-weight:700;letter-spacing:0}
+  /* What is being built, said plainly on the card that takes the money. */
+  .tier .soon{color:var(--faint);font-size:11.5px;line-height:1.5;margin:14px 0 0;font-style:italic;
+    border-top:1px solid rgba(255,255,255,.07);padding-top:10px}
   .tier ul{list-style:none;padding:0;margin:16px 0 0}
   .tier li{color:var(--dim);font-size:13.5px;padding:6px 0 6px 22px;position:relative}
   .tier li::before{content:"";position:absolute;left:0;top:12px;width:9px;height:9px;border-radius:3px;
@@ -143,12 +146,12 @@
     <div class="card"><span class="tag">ALL-PRO</span><h3>Parlay Lab</h3>
       <p>Model probability per leg, a correlation haircut on same-game legs, and the fair price next to the book's.
       It will tell you to pass, which is the point.</p></div>
-    <div class="card"><span class="tag">ALL-PRO</span><h3>Line shopping</h3>
-      <p>DraftKings, FanDuel, BetMGM, Caesars and the rest, side by side on every game. Price a parlay at the book you
-      actually use, or let "best available" shop each leg for you.</p></div>
+    <div class="card"><span class="tag">IN BUILD</span><h3>Line shopping</h3>
+      <p>Every book side by side on every game, with "best available" shopping each leg for you. The screens are
+      written; the odds feed behind them carries one book today, so this is not something you are charged for yet.</p></div>
     <div class="card"><span class="tag">ALL-PRO</span><h3>Prop projections</h3>
-      <p>A projection <em>and</em> a range for every starter, scaled to the game script the model expects. The range
-      is the part every other prop tool leaves out.</p></div>
+      <p>A projection <em>and</em> a range for every starter in the NFL and college football, scaled to the game
+      script the model expects. The range is the part every other prop tool leaves out. Other sports are next.</p></div>
     <div class="card"><span class="tag">EVERYONE</span><h3>Your Card</h3>
       <p>Save a pick and it grades itself off the same final score the model is graded on. Flat-unit P&L, a streak,
       and an image built for a group chat.</p></div>
@@ -169,22 +172,26 @@
   <div class="prices">
     <div class="tier ink"><h3>Walk-On</h3><div class="who">Free forever</div>
       <div class="price">$0</div>
-      <ul><li>Both leagues, one app</li><li>3 simulations a day at 2,000 runs</li>
+      <ul><li>Eighteen leagues, one app</li><li>A free pick every day, a different sport each time</li>
+      <li>3 simulations a day at 2,000 runs</li>
       <li>Top 3 of the Edge Board</li><li>Full slate, live scores, box scores</li><li>Last 7 days of the record</li></ul></div>
     <div class="tier"><h3>Starter</h3><div class="who">For Sundays and Saturdays</div>
       <div class="price">$12.99<small>/mo</small></div>
-      <ul><li>Unlimited sims at 10,000 runs</li><li>The whole board, Sunday and Saturday</li><li>Lock of the Day</li>
+      <ul><li>Unlimited sims at 10,000 runs</li><li>Four sports' best play every day</li>
+      <li>The whole board, Sunday and Saturday</li><li>Lock of the Day</li>
       <li>Full record + calibration</li><li>Post picks, follow 5 teams</li></ul></div>
     <div class="tier feature gold"><span class="ribbon">MOST POPULAR</span><h3>All-Pro</h3>
       <div class="who">For the bettor with a bankroll</div>
       <div class="price">$29.99<small>/mo</small></div>
-      <ul><li>Everything in Starter, at 25,000 runs</li><li>Line shopping across every book</li>
-      <li>Parlay Lab, up to 4 legs</li><li>Prop projections on every starter</li>
-      <li>Upset Radar across 134 programs</li><li>What-if lab</li><li>Branded share cards</li></ul></div>
+      <ul><li>Everything in Starter, at 25,000 runs</li><li>Every sport on the board, every day</li>
+      <li>Parlay Lab, up to 4 legs</li><li>Prop projections — NFL and college football</li>
+      <li>Upset Radar in every league</li><li>Follow as many teams as you like</li></ul>
+      <p class="soon">In build, not included yet: line shopping, the what-if lab, line-move alerts, branded share cards.</p></div>
     <div class="tier ink"><h3>Franchise</h3><div class="who">For the syndicate</div>
       <div class="price">$99<small>/mo</small></div>
-      <ul><li>50,000 runs</li><li>Raw JSON feed, hourly</li><li>Season backtests</li>
-      <li>Editable node weights</li><li>8-leg parlay engine</li></ul></div>
+      <ul><li>50,000 runs</li><li>8-leg parlay engine with the correlation haircut</li>
+      <li>Direct line to the build</li></ul>
+      <p class="soon">In build, not included yet: raw JSON feed, season backtests, editable node weights.</p></div>
   </div>
   <p class="cta-note" style="margin-top:22px">
     One subscription covers all eighteen leagues — there is no per-sport plan. Annual is roughly two months free on every tier. Prices in USD.
