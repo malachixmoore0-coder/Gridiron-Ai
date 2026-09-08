@@ -35,6 +35,7 @@ import { SportGlyph } from '@/components/SportGlyph';
 import { crossSportBoard, freePickIndex, type CrossPick } from '@/utils/board';
 import type { LeagueGame } from '@/league/types';
 import { haptic } from '@/utils/haptics';
+import { SHORT_NOTICE } from '@/legal/notices';
 
 interface Props {
   onRun: (r: { awayId: string; homeId: string; ctx: { neutralSite: boolean; primetime: boolean; weather: 'auto' } }) => void;
@@ -369,8 +370,8 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
         </TouchableOpacity>
 
         <Text style={styles.legal}>
-          Projections, not predictions. Every number here is the same model that is graded in the open on the Record tab.
-          21+. If betting stops being fun, stop — 1-800-GAMBLER.
+          Projections, not predictions. Every number here is the same model that is graded in the open on the Record
+          tab. {SHORT_NOTICE}
         </Text>
       </ScrollView>
 

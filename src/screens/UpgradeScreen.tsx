@@ -23,6 +23,7 @@ import { useTeams } from '@/context/TeamsContext';
 import { summarize } from '@/utils/record';
 import { TIERS, TRIAL_DAYS, annualSaving, price, type Cycle, type Tier } from '@/monetize/tiers';
 import { BILLING_PORTAL, openLink, paymentsLive } from '@/monetize/checkout';
+import { FULL_NOTICE } from '@/legal/notices';
 
 const accentOf = (a: Tier['accent']) =>
   a === 'green' ? colors.green : a === 'gold' ? colors.gold : a === 'platinum' ? '#D9E2EC' : colors.inkDim;
@@ -196,9 +197,7 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
         )}
 
         <Text style={styles.legal}>
-          Cancel any time — a subscription runs to the end of the period you paid for. Prices in USD.
-          Projections are information, not advice, and no model beats a book every week. 21+ where betting is legal.
-          If it stops being fun, stop: 1-800-GAMBLER.
+          Cancel any time — a subscription runs to the end of the period you paid for. Prices in USD. {FULL_NOTICE}
         </Text>
       </ScrollView>
     </View>

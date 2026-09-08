@@ -24,6 +24,7 @@ import { useEngagement } from '@/context/EngagementContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { SignInRow } from '@/components/Social';
 import { haptic } from '@/utils/haptics';
+import { HELP_NOTE, SHORT_NOTICE } from '@/legal/notices';
 
 interface Props { onDone: () => void; }
 
@@ -172,8 +173,7 @@ export function PrivacyScreen({ onDone }: Props) {
         )}
 
         <Text style={styles.foot}>
-          21+ where sports betting is legal. Projections are information, not advice. If betting stops being fun,
-          stop — 1-800-GAMBLER.
+          {SHORT_NOTICE} {HELP_NOTE}
         </Text>
       </ScrollView>
     </SafeAreaView>

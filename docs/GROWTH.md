@@ -308,11 +308,17 @@ two-app bundle. Review the funnel and put money into whichever step is leaking.
   in deliberately: the alternative is hiding the record, which destroys the only
   durable asset the product has.
 - **Regulatory.** This is information, not advice, and it must keep saying so.
-  21+, no guaranteed-profit language ever, responsible-gambling messaging on
-  every surface that shows a pick, and a rating that reflects the category. App
-  store distribution of gambling-adjacent apps has real rules; the web build
-  sidesteps most of them and also sidesteps the 30% cut, which is why the web
-  build is the primary product.
+  The product takes no wager, holds no balance and settles nothing, so it is not
+  a sportsbook and should not describe itself as one — the copy used to carry
+  "21+ where sports betting is legal" on five surfaces, which is a book's notice
+  on a product that is not a book. All of it now comes from `src/legal/notices`
+  so it cannot drift again. What does not move: no guaranteed-profit language
+  ever, no pick sold as a tip, and a problem-gambling resource kept in reach
+  because plenty of readers are betting on these numbers even though the app
+  never touches the bet. App store distribution of gambling-adjacent apps has
+  real rules regardless of what the app itself does; the web build sidesteps
+  most of them and also sidesteps the 30% cut, which is why the web build is the
+  primary product.
 - **Data dependency.** The feed is built from public sources on a schedule. If
   ESPN or nflverse changes shape mid-season the app degrades to cached data.
   Monitor the refresh workflow; a silent staleness bug is worse than an outage.

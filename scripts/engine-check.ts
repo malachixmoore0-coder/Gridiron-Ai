@@ -10,6 +10,8 @@ import type { Team } from '../src/engine/types';
 import { coverProbability, project, seedFor, simulate } from '../src/sports/engine';
 import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
 import { fieldSeed, simulateField } from '../src/sports/golf';
+import { withForecast } from '@/utils/forecast';
+import type { LeagueView } from '@/league/types';
 
 let failures = 0;
 const check = (cond: boolean, msg: string) => {
@@ -229,6 +231,45 @@ console.log('\n— Multi-sport engine');
   check(JSON.stringify(odds) === JSON.stringify(repeat), 'golf: same seed ⇒ identical field');
   const noRounds = simulateField(field, 0, 500, 1);
   check(noRounds.every((o) => o.winPct === 0), 'golf: a finished tournament is not re-simulated');
+}
+
+/**
+ * Weather reaches the simulation.
+ *
+ * It is a real term — the Environment node cuts the projected total by up to
+ * four points — and it used to be dropped on every launch point except the
+ * Slate, because `weather: 'auto'` means "no answer" to the engine and it falls
+ * back to clear skies. `withForecast` resolves it at the funnel; these are the
+ * assertions that stop it being quietly bypassed again.
+ */
+{
+  console.log('\nForecast');
+  const view = { games: [
+    { awayId: 'gb', homeId: 'chi', weatherHint: 'snow' },
+    { awayId: 'mia', homeId: 'lv', weatherHint: 'dome' },
+    { awayId: 'sf', homeId: 'lar', weatherHint: null },
+  ] } as unknown as LeagueView;
+  const req = (a: string, h: string, weather: unknown = 'auto') =>
+    ({ awayId: a, homeId: h, ctx: { neutralSite: false, primetime: false, weather } });
+  const wx = (r: ReturnType<typeof req>) => (withForecast(r, view).ctx as { weather: unknown }).weather;
+
+  check(wx(req('gb', 'chi')) === 'snow', "forecast: 'auto' picks up the game's weather");
+  check(wx(req('mia', 'lv')) === 'auto', 'forecast: a dome is left to the engine');
+  check(wx(req('sf', 'lar')) === 'auto', 'forecast: no forecast on file stays auto');
+  check(wx(req('nyj', 'buf')) === 'auto', 'forecast: an unknown game stays auto');
+  check(wx(req('gb', 'chi', 'wind')) === 'wind', 'forecast: an explicit choice is never overridden');
+
+  // And it has to actually move the number, or none of the above matters.
+  const home = TEAMS.find((t) => t.id === 'chi')!;
+  const away = TEAMS.find((t) => t.id === 'gb')!;
+  const weights = { scheme: 25, personnel: 35, environment: 15, xfactor: 25 };
+  const total = (weather: 'snow' | undefined) => analyzeMatchup(
+    { home, away, neutralSite: false, primetime: false, weather, injuredOut: [], questionable: [] },
+    { weights, simulations: 8000, homeFieldBase: 3 },
+  ).simulation.projectedTotal;
+  const clear = total(undefined);
+  const snow = total('snow');
+  check(clear - snow > 2, `forecast: snow cuts the projected total (${clear.toFixed(1)} → ${snow.toFixed(1)})`);
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

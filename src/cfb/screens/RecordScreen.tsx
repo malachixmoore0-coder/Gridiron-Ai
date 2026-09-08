@@ -17,6 +17,7 @@ import { ClosingLine } from '@/components/ClosingLine';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { Locked } from '@/components/Pro';
 import { spreadText, oneDp, timeAgo } from '@/cfb/utils/format';
+import { NOT_ADVICE } from '@/legal/notices';
 
 interface Props { onRun: (req: RunRequest) => void; onUpgrade?: () => void; }
 
@@ -135,7 +136,7 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
 
         <Text style={styles.note}>
           Predictions use the default model{modelText ? ` (${modelText})` : ''} and the reported injury statuses at refresh time, not your local weights or overrides.
-          "vs spread" and "over / under" only count games where the model disagreed with the market by at least half a point. Not betting advice.
+          "vs spread" and "over / under" only count games where the model disagreed with the market by at least half a point. {NOT_ADVICE}
         </Text>
       </ScrollView>
     </SafeAreaView>

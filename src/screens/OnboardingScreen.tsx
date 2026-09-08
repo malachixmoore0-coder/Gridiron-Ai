@@ -5,6 +5,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
+import { NOT_ADVICE } from '@/legal/notices';
 
 const NODES: { icon: keyof typeof Ionicons.glyphMap; title: string; weight: string; text: string }[] = [
   { icon: 'flag', title: 'Scheme & Tactical Bias', weight: '25%', text: 'Offense vs the specific front and coverage it will see, play-action leverage, 3rd-down and red-zone tendencies, in-game adjustments.' },
@@ -40,7 +41,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
         ))}
         <View style={styles.note}>
           <Ionicons name="information-circle" size={16} color={colors.inkDim} />
-          <Text style={styles.noteText}>Ships on an editable sample dataset (preseason-2026 estimates). Not betting advice.</Text>
+          <Text style={styles.noteText}>Ships on an editable sample dataset (preseason-2026 estimates). {NOT_ADVICE}</Text>
         </View>
         <TouchableOpacity
           style={styles.trial}

@@ -35,6 +35,7 @@ import { OnboardingScreen } from '@/screens/OnboardingScreen';
 import { AppSettingsScreen } from '@/screens/AppSettingsScreen';
 import { NavProvider } from '@/navigation/NavContext';
 import { haptic } from '@/utils/haptics';
+import { withForecast } from '@/utils/forecast';
 
 /* NFL */
 import { FloorScreen } from '@/screens/FloorScreen';
@@ -118,7 +119,7 @@ export function RootNavigator() {
   const { loaded, onboarded, overrides } = useSettings();
   const ent = useEntitlements();
   const eng = useEngagement();
-  const { league, active } = useLeague();
+  const { league, active, viewFor } = useLeague();
   const social = useSocial();
   const [tab, setTab] = useState<TabKey>('home');
   const [stack, setStack] = useState<Overlay[]>([]);
@@ -213,10 +214,16 @@ export function RootNavigator() {
     openCard: () => { clearStack(); setTab('record'); },
   };
 
-  /** Every simulation goes through here, which is where the free meter is spent. */
+  /**
+   * Every simulation goes through here, which is where the free meter is spent
+   * and where the forecast is resolved. Both belong at the funnel rather than
+   * at the call sites: the meter because a screen should not be able to forget
+   * to charge, and the weather because eight of them did forget, and ran the
+   * model on clear skies for games the feed had a forecast for.
+   */
   const run = (request: AnyRun, l: LeagueId = league) => {
     if (!ent.spendSim()) { openUpgrade(); return; }
-    push({ kind: 'result', league: l, request });
+    push({ kind: 'result', league: l, request: withForecast(request, viewFor(l)) });
   };
 
   /** Share a saved pick: hand the composer the pick with its numbers attached. */

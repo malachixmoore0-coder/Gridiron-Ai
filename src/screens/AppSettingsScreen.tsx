@@ -25,6 +25,7 @@ import { useLive } from '@/live/LiveContext';
 import { usePrefs } from '@/context/PrefsContext';
 import { hapticsSupported, haptic } from '@/utils/haptics';
 import { timeAgo } from '@/utils/format';
+import { FULL_NOTICE, HELP_LINE, HELP_URL } from '@/legal/notices';
 
 interface Props {
   onProfile: () => void;
@@ -140,17 +141,15 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard, onPri
           <Row
             icon="help-buoy"
             label="Responsible gambling"
-            value="1-800-GAMBLER"
-            onPress={() => Linking.openURL('https://www.ncpgambling.org/help-treatment/').catch(() => {})}
+            value={HELP_LINE}
+            onPress={() => Linking.openURL(HELP_URL).catch(() => {})}
           />
         </Group>
 
         {!!note && <Text style={styles.note}>{note}</Text>}
 
         <Text style={styles.legal}>
-          Gridiron AI publishes projections, not advice. Every number is produced by a model that is graded in the
-          open, and no model beats a sportsbook every week. 21+ where sports betting is legal. If betting stops being
-          fun, stop.
+          {FULL_NOTICE}
         </Text>
         <Text style={styles.build}>
           {active.season} season · {ent.tier.name}{ent.trial.active ? ` · trial, ${ent.trial.daysLeft}d left` : ''}
