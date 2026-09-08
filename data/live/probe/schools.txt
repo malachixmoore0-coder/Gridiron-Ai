@@ -1,0 +1,170 @@
+# schools — 2026-09-08T00:50:36.589Z
+
+
+--- Auburn: https://auburntigers.com/sports/baseball/roster
+
+Auburn fetched https://auburntigers.com/sports/baseball/roster → 200 1152259 bytes · 57 images
+  109  /_nuxt/#   e.g. /_nuxt/Placement.D4K79jTW.css
+   25  https://twitter.com/#   e.g. https://twitter.com/Jake_Marciano4
+   17  https://www.instagram.com/#   e.g. https://www.instagram.com/drew_whalen6
+    3  /tickets/baseball   e.g. /tickets/baseball
+    3  https://neville.auburntigers.com/   e.g. https://neville.auburntigers.com/
+    2  https://auburntigers.com/imgproxy/#/#/#/#/#   e.g. https://auburntigers.com/imgproxy/-9UK_CETxgFsO5noo1kyvTxyAhyX2fvfkS0B
+    2  /   e.g. /
+    2  /sports/baseball   e.g. /sports/baseball
+    2  /sports/baseball/schedule   e.g. /sports/baseball/schedule
+    2  /sports/baseball/roster   e.g. /sports/baseball/roster
+    2  /sports/baseball/news   e.g. /sports/baseball/news
+    2  /tickets/mbb   e.g. /tickets/mbb
+
+Auburn rendered https://auburntigers.com/sports/baseball/roster → 200 1166133 bytes · 57 images
+  109  /_nuxt/#   e.g. /_nuxt/Placement.D4K79jTW.css
+   25  https://twitter.com/#   e.g. https://twitter.com/Jake_Marciano4
+   17  https://www.instagram.com/#   e.g. https://www.instagram.com/drew_whalen6
+    3  /tickets/baseball   e.g. /tickets/baseball
+    3  https://neville.auburntigers.com/   e.g. https://neville.auburntigers.com/
+    2  https://auburntigers.com/imgproxy/#/#/#/#/#   e.g. https://auburntigers.com/imgproxy/-9UK_CETxgFsO5noo1kyvTxyAhyX2fvfkS0B
+    2  https://auburntigers.com/_nuxt/#   e.g. https://auburntigers.com/_nuxt/default.liL8M7gm.css
+    2  /   e.g. /
+    2  /sports/baseball   e.g. /sports/baseball
+    2  /sports/baseball/schedule   e.g. /sports/baseball/schedule
+    2  /sports/baseball/roster   e.g. /sports/baseball/roster
+    2  /sports/baseball/news   e.g. /sports/baseball/news
+
+--- LSU: https://lsusports.net/sports/baseball/roster
+
+LSU fetched https://lsusports.net/sports/baseball/roster → 200 1039202 bytes · 104 images
+  112  /_nuxt/#   e.g. /_nuxt/Placement.D4K79jTW.css
+   20  https://www.instagram.com/#   e.g. https://www.instagram.com/tanner_reaves5
+   17  http://twitter.com/#   e.g. http://twitter.com/Monster_Milam99
+    3  /tickets/baseball/   e.g. /tickets/baseball/
+    3  /sports/bsb/roster/   e.g. /sports/bsb/roster/
+    3  https://lsusports.evenue.net/list/BK?_ga=#.190981290.1045273794.178118   e.g. https://lsusports.evenue.net/list/BK?_ga=2.190981290.1045273794.178118
+    3  /#/   e.g. /all-in-1-pass/
+    3  https://shop.lsupix.net/   e.g. https://shop.lsupix.net/
+    3  https://www.lsushop.net/#?_s=bm-lsu_athletic_carousel&amp;utm_medium=r   e.g. https://www.lsushop.net/br-76+d-8006?_s=bm-lsu_athletic_carousel&amp;u
+    2  /_fonts/#   e.g. /_fonts/DjqLtQmWy3Sy26TlSZoazWKlNJfaXSyR1J7pZxNm01w-pf5_Q6V6zxlBs7jQCj
+    2  https://lsusports.net/imgproxy/#/#/#/#/#   e.g. https://lsusports.net/imgproxy/XBU0VwMOoQaVzqmT3OIZrZuKAv84JFeFbtKgIu3
+    2  /   e.g. /
+
+LSU rendered https://lsusports.net/sports/baseball/roster → 200 1041650 bytes · 104 images
+  112  /_nuxt/#   e.g. /_nuxt/Placement.D4K79jTW.css
+   20  https://www.instagram.com/#   e.g. https://www.instagram.com/tanner_reaves5
+   17  http://twitter.com/#   e.g. http://twitter.com/Monster_Milam99
+    3  /tickets/baseball/   e.g. /tickets/baseball/
+    3  /sports/bsb/roster/   e.g. /sports/bsb/roster/
+    3  https://lsusports.evenue.net/list/BK?_ga=#.190981290.1045273794.178118   e.g. https://lsusports.evenue.net/list/BK?_ga=2.190981290.1045273794.178118
+    3  /#/   e.g. /all-in-1-pass/
+    3  https://shop.lsupix.net/   e.g. https://shop.lsupix.net/
+    3  https://www.lsushop.net/#?_s=bm-lsu_athletic_carousel&amp;utm_medium=r   e.g. https://www.lsushop.net/br-76+d-8006?_s=bm-lsu_athletic_carousel&amp;u
+    2  /_fonts/#   e.g. /_fonts/DjqLtQmWy3Sy26TlSZoazWKlNJfaXSyR1J7pZxNm01w-pf5_Q6V6zxlBs7jQCj
+    2  https://lsusports.net/imgproxy/#/#/#/#/#   e.g. https://lsusports.net/imgproxy/XBU0VwMOoQaVzqmT3OIZrZuKAv84JFeFbtKgIu3
+    2  /   e.g. /
+
+--- Arkansas: https://arkansasrazorbacks.com/sports/baseball/roster
+
+Arkansas fetched https://arkansasrazorbacks.com/sports/baseball/roster → 404 0 bytes · 0 images
+
+Arkansas rendered https://arkansasrazorbacks.com/sports/baseball/roster → 200 160187 bytes · 9 images
+    4  https://hogsplus.com/   e.g. https://hogsplus.com/
+    2  /   e.g. /
+    2  https://arkansasrazorbacks.evenue.net/list/TR   e.g. https://arkansasrazorbacks.evenue.net/list/TR
+    2  https://arkansasrazorbacks.com/thehogpod/   e.g. https://arkansasrazorbacks.com/thehogpod/
+    2  https://arkansasrazorbacks.com/razorback-sports-network/talent-affilia   e.g. https://arkansasrazorbacks.com/razorback-sports-network/talent-affilia
+    2  http://www.statbroadcast.com/events/statbroadcast.php?gid=ark   e.g. http://www.statbroadcast.com/events/statbroadcast.php?gid=ark
+    2  https://arkansasrazorbacks.com/gameday-app/   e.g. https://arkansasrazorbacks.com/gameday-app/
+    2  https://www.tysonfoods.com/   e.g. https://www.tysonfoods.com/
+    2  https://wmt.digital/privacy   e.g. https://wmt.digital/privacy
+    1  http://gmpg.org/xfn/#   e.g. http://gmpg.org/xfn/11
+    1  https://arkansasrazorbacks.com/favicon.ico   e.g. https://arkansasrazorbacks.com/favicon.ico
+    1  //ajax.googleapis.com   e.g. //ajax.googleapis.com
+
+--- Vanderbilt: https://vucommodores.com/sports/baseball/roster
+
+Vanderbilt fetched https://vucommodores.com/sports/baseball/roster → 200 1109866 bytes · 7 images
+  116  /_nuxt/#   e.g. /_nuxt/entry.CUHZ2gA0.css
+   22  https://www.instagram.com/#   e.g. https://www.instagram.com/loganjohnstone10
+    6  /sports/baseball/roster/season/#/staff/#   e.g. /sports/baseball/roster/season/2025-26/staff/tim-corbin-2
+    4  https://www.facebook.com/vanderbiltathletics   e.g. https://www.facebook.com/vanderbiltathletics
+    4  https://www.facebook.com/#/   e.g. https://www.facebook.com/Vanderbilt-XC-Track-and-Field-165267506861717
+    3  https://twitter.com/vandyxctrack   e.g. https://twitter.com/vandyxctrack
+    3  https://www.instagram.com/vandyxctrack/   e.g. https://www.instagram.com/vandyxctrack/
+    3  /firstbank-stadium-premium-seating/   e.g. /firstbank-stadium-premium-seating/
+    3  /memorial-premium-seating/   e.g. /memorial-premium-seating/
+    2  https://vucommodores.com/imgproxy/#/#/#/#/#   e.g. https://vucommodores.com/imgproxy/Hrk7LSogUqpOwNJEQsbIPRLd1EseXCQGXoei
+    2  /   e.g. /
+    2  /sports/baseball   e.g. /sports/baseball
+
+Vanderbilt rendered https://vucommodores.com/sports/baseball/roster → 200 1186427 bytes · 40 images
+  116  /_nuxt/#   e.g. /_nuxt/entry.CUHZ2gA0.css
+   47  https://vucommodores.com/_nuxt/#   e.g. https://vucommodores.com/_nuxt/D6YUFyQM.js
+   22  https://www.instagram.com/#   e.g. https://www.instagram.com/loganjohnstone10
+   17  /sports/baseball   e.g. /sports/baseball
+   15  /boxscore/#   e.g. /boxscore/10611
+   11  /documents/#   e.g. /documents/5c06fb98-009f-4ecf-9592-51ae3407fe9f.pdf
+    6  /sports/baseball/roster/season/#/staff/#   e.g. /sports/baseball/roster/season/2025-26/staff/tim-corbin-2
+    5  /news/#/#/#/#   e.g. /news/2026/05/19/on-to-the-next-round-2
+    4  https://www.facebook.com/vanderbiltathletics   e.g. https://www.facebook.com/vanderbiltathletics
+    4  https://www.facebook.com/#/   e.g. https://www.facebook.com/Vanderbilt-XC-Track-and-Field-165267506861717
+    3  https://vucommodores.com/#/   e.g. https://vucommodores.com/game-by-game-promotions-2/
+    3  https://twitter.com/vandyxctrack   e.g. https://twitter.com/vandyxctrack
+
+--- Clemson: https://clemsontigers.com/sports/baseball/roster
+
+Clemson fetched https://clemsontigers.com/sports/baseball/roster → 200 1152125 bytes · 70 images
+  113  /_nuxt/#   e.g. /_nuxt/Placement.B2Ny0DVK.css
+   26  https://x.com/#   e.g. https://x.com/BriggsSul2024
+   21  https://www.instagram.com/#   e.g. https://www.instagram.com/briggssullivan22
+   10  /sports/baseball/roster/season/#/staff/#   e.g. /sports/baseball/roster/season/2025/staff/brad-owens-160845
+    4  https://twitter.com/clemsontrackxc   e.g. https://twitter.com/clemsontrackxc
+    4  https://www.facebook.com/#/   e.g. https://www.facebook.com/Clemson-University-Track-Field-14105359927788
+    4  https://www.instagram.com/clemsontrackxc/   e.g. https://www.instagram.com/clemsontrackxc/
+    3  https://clemsontigers.com/#   e.g. https://clemsontigers.com/2026-footballtickets
+    2  https://clemsontigers.com/imgproxy/#/#/#/#/#   e.g. https://clemsontigers.com/imgproxy/D4kbDDhQmdjx_fDGKvKfokORlEddNQuC677
+    2  /sports/baseball   e.g. /sports/baseball
+    2  https://data.clemsontigers.com/Stats/Baseball/#/teamstat.htm   e.g. https://data.clemsontigers.com/Stats/Baseball/2026/teamstat.htm
+    2  /sports/cross-country/   e.g. /sports/cross-country/
+
+Clemson rendered https://clemsontigers.com/sports/baseball/roster → 200 1162549 bytes · 70 images
+  113  /_nuxt/#   e.g. /_nuxt/Placement.B2Ny0DVK.css
+   26  https://x.com/#   e.g. https://x.com/BriggsSul2024
+   21  https://www.instagram.com/#   e.g. https://www.instagram.com/briggssullivan22
+   10  /sports/baseball/roster/season/#/staff/#   e.g. /sports/baseball/roster/season/2025/staff/brad-owens-160845
+    4  https://twitter.com/clemsontrackxc   e.g. https://twitter.com/clemsontrackxc
+    4  https://www.facebook.com/#/   e.g. https://www.facebook.com/Clemson-University-Track-Field-14105359927788
+    4  https://www.instagram.com/clemsontrackxc/   e.g. https://www.instagram.com/clemsontrackxc/
+    3  https://clemsontigers.com/#   e.g. https://clemsontigers.com/2026-footballtickets
+    2  https://clemsontigers.com/imgproxy/#/#/#/#/#   e.g. https://clemsontigers.com/imgproxy/D4kbDDhQmdjx_fDGKvKfokORlEddNQuC677
+    2  https://clemsontigers.com/_nuxt/#   e.g. https://clemsontigers.com/_nuxt/BAfTPTL0.js
+    2  /sports/baseball   e.g. /sports/baseball
+    2  https://data.clemsontigers.com/Stats/Baseball/#/teamstat.htm   e.g. https://data.clemsontigers.com/Stats/Baseball/2026/teamstat.htm
+
+--- Kentucky: https://ukathletics.com/sports/baseball/roster
+
+Kentucky fetched https://ukathletics.com/sports/baseball/roster → 200 214312 bytes · 29 images
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-facebook.svg#ic   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-facebook.svg#ic
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-twitter.svg#ico   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-twitter.svg#ico
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-instagram.svg#i   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-instagram.svg#i
+   12  https://storage.googleapis.com/ukathletics-com/#/#/#   e.g. https://storage.googleapis.com/ukathletics-com/2022/02/c0f833dd-favico
+    6  https://ukathletics.com/sports/baseball/roster/coach/#/   e.g. https://ukathletics.com/sports/baseball/roster/coach/austin-cousino-2/
+    4  https://www.facebook.com/KentuckyTrack/   e.g. https://www.facebook.com/KentuckyTrack/
+    4  https://ukathletics.com/app/themes/uk/dist/images/arrow-down.svg#arrow   e.g. https://ukathletics.com/app/themes/uk/dist/images/arrow-down.svg#arrow
+    4  https://x.com/#   e.g. https://x.com/str8ched
+    3  https://twitter.com/KentuckyTrack   e.g. https://twitter.com/KentuckyTrack
+    3  https://instagram.com/kentuckytrack   e.g. https://instagram.com/kentuckytrack
+    2  https://ukathletics.com/app/themes/uk/resources/assets/images/#   e.g. https://ukathletics.com/app/themes/uk/resources/assets/images/favicon-
+    2  https://ukathletics.com/   e.g. https://ukathletics.com/
+
+Kentucky rendered https://ukathletics.com/sports/baseball/roster → 200 263973 bytes · 31 images
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-facebook.svg#ic   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-facebook.svg#ic
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-twitter.svg#ico   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-twitter.svg#ico
+   23  https://ukathletics.com/app/themes/uk/dist/images/icon-instagram.svg#i   e.g. https://ukathletics.com/app/themes/uk/dist/images/icon-instagram.svg#i
+   12  https://storage.googleapis.com/ukathletics-com/#/#/#   e.g. https://storage.googleapis.com/ukathletics-com/2022/02/c0f833dd-favico
+    6  https://ukathletics.com/sports/baseball/roster/coach/#/   e.g. https://ukathletics.com/sports/baseball/roster/coach/austin-cousino-2/
+    4  https://www.facebook.com/KentuckyTrack/   e.g. https://www.facebook.com/KentuckyTrack/
+    4  https://ukathletics.com/app/themes/uk/dist/images/arrow-down.svg#arrow   e.g. https://ukathletics.com/app/themes/uk/dist/images/arrow-down.svg#arrow
+    4  https://x.com/#   e.g. https://x.com/str8ched
+    3  https://twitter.com/KentuckyTrack   e.g. https://twitter.com/KentuckyTrack
+    3  https://instagram.com/kentuckytrack   e.g. https://instagram.com/kentuckytrack
+    2  https://ukathletics.com/app/themes/uk/resources/assets/images/#   e.g. https://ukathletics.com/app/themes/uk/resources/assets/images/favicon-
+    2  https://ukathletics.com/   e.g. https://ukathletics.com/
