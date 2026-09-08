@@ -25,7 +25,14 @@ interface Props { userId: string; onOpenProfile: (id: string) => void; onCompose
 export function ProfileScreen({ userId, onOpenProfile, onCompose }: Props) {
   const s = useSocial();
   const eng = useEngagement();
-  const isMe = !!s.me && (userId === s.me.id || userId === 'me');
+  /**
+   * The header avatar and Settings both open "your" profile, and they do it
+   * whether or not you have signed in yet — so self is decided by the sentinel
+   * id, never by whether a profile record happens to exist. Deciding it the
+   * other way is what made your own avatar open a screen reading "That account
+   * no longer exists."
+   */
+  const isMe = !userId || userId === 'me' || userId === s.me?.id;
   const [profile, setProfile] = useState<Profile | null>(isMe ? s.me : null);
   const [posts, setPosts] = useState<Post[]>([]);
   const [followed, setFollowed] = useState(false);
@@ -90,7 +97,7 @@ export function ProfileScreen({ userId, onOpenProfile, onCompose }: Props) {
   // same way. Nothing separate to maintain and nothing to fake.
   const card = eng.summary;
 
-  if (!s.signedIn && isMe) {
+  if (isMe && (!s.signedIn || (!loading && !profile))) {
     return (
       <SafeAreaView edges={['top']} style={styles.safe}>
         <ScrollView contentContainerStyle={styles.body}>
@@ -113,8 +120,10 @@ export function ProfileScreen({ userId, onOpenProfile, onCompose }: Props) {
   if (!profile) {
     return (
       <SafeAreaView edges={['top']} style={styles.safe}>
-        <Text style={styles.title}>Not found</Text>
-        <Text style={styles.blurb}>That account no longer exists.</Text>
+        <ScrollView contentContainerStyle={styles.body}>
+          <Text style={styles.title}>Not found</Text>
+          <Text style={styles.blurb}>That account no longer exists.</Text>
+        </ScrollView>
       </SafeAreaView>
     );
   }

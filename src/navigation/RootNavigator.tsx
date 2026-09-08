@@ -114,6 +114,8 @@ export function RootNavigator() {
   const { league, active } = useLeague();
   const [tab, setTab] = useState<TabKey>('home');
   const [stack, setStack] = useState<Overlay[]>([]);
+  /** Measured height of the dock, so the Simulate button can clear it exactly. */
+  const [dock, setDock] = useState(62);
   const depth = useRef(0);
 
   /* Web: mirror the overlay stack into history so the browser and the phone's
@@ -153,7 +155,7 @@ export function RootNavigator() {
   const openCompose = (pick?: PostPick | null) => push({ kind: 'compose', pick });
   const openProfile = (userId: string) => push({ kind: 'profile', userId });
   const nav = {
-    openProfile: () => openProfile(''),
+    openProfile: () => openProfile('me'),
     openSettings: () => push({ kind: 'settings' }),
     openUpgrade: () => push({ kind: 'upgrade' }),
     openCard: () => { clearStack(); setTab('record'); },
@@ -234,10 +236,16 @@ export function RootNavigator() {
       </View>
 
       {/* Simulate is an action, not a destination, so it floats above the dock —
-          and only where rows do not already carry their own. */}
-      {!field && (tab === 'home' || tab === 'teams' || tab === 'record') && (
+          and only on Teams, which is the one tab whose rows do not already run
+          one. On the Floor every edge row carries its own Simulate button and on
+          Record the whole card runs one, so there the floating button was pure
+          overlap: it sat on top of the controls it duplicated. Its offset is the
+          dock's measured height rather than a guess, because the dock grows by
+          the home-indicator inset and a fixed number rides up onto the tabs on
+          exactly the phones that have one. */}
+      {!field && tab === 'teams' && (
         <TouchableOpacity
-          style={styles.fab}
+          style={[styles.fab, { bottom: dock + 14 }]}
           activeOpacity={0.88}
           onPress={() => push({ kind: 'simulate', league })}
           accessibilityRole="button"
@@ -248,11 +256,13 @@ export function RootNavigator() {
         </TouchableOpacity>
       )}
 
-      <BottomTabBar
-        active={tab}
-        onChange={(t) => { if (t !== tab) haptic('select'); clearStack(); setTab(t); }}
-        badge={Object.keys(overrides).length}
-      />
+      <View onLayout={(e) => setDock(e.nativeEvent.layout.height)}>
+        <BottomTabBar
+          active={tab}
+          onChange={(t) => { if (t !== tab) haptic('select'); clearStack(); setTab(t); }}
+          badge={Object.keys(overrides).length}
+        />
+      </View>
 
       {stack.map((o, i) => (
         <View key={`${o.kind}-${i}`} style={[StyleSheet.absoluteFill, styles.overlay]}>
@@ -298,7 +308,7 @@ export function RootNavigator() {
                     : <SettingsScreen onBack={pop} onUpgrade={openUpgrade} onOpenCard={() => { clearStack(); setTab('record'); }} />
               ) : o.kind === 'settings' ? (
                 <AppSettingsScreen
-                  onProfile={() => openProfile('')}
+                  onProfile={() => openProfile('me')}
                   onUpgrade={openUpgrade}
                   onModel={() => push({ kind: 'model', league })}
                   onCard={() => { clearStack(); setTab('record'); }}
@@ -328,7 +338,7 @@ const styles = StyleSheet.create({
   content: { flex: 1 },
   overlay: { backgroundColor: colors.bg },
   fab: {
-    position: 'absolute', right: spacing.lg, bottom: 78, flexDirection: 'row', alignItems: 'center', gap: 7,
+    position: 'absolute', right: spacing.lg, flexDirection: 'row', alignItems: 'center', gap: 7,
     paddingHorizontal: 16, paddingVertical: 11, borderRadius: radius.pill, backgroundColor: colors.green,
     shadowColor: '#000', shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.4, shadowRadius: 14, elevation: 8,
   },

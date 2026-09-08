@@ -122,15 +122,16 @@ export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
  * What a scrolling screen has to leave clear at the bottom.
  *
  * Every screen ended with forty points of padding, which was less than the
- * furniture standing over it: the dock is about sixty-four points tall and the
- * floating Simulate button reaches a hundred and twenty. The last rows of every
- * list were unreachable — you could scroll to the end and still be reading
- * through a button.
+ * furniture standing over it: the dock is sixty-four points tall before the
+ * home-indicator inset — closer to a hundred with one — and the floating
+ * Simulate button clears the dock by fourteen and stands forty tall on top of
+ * that. The last rows of every list were unreachable: you could scroll to the
+ * end and still be reading through a button.
  *
  *   dock    — a tab screen, under the dock and the floating action
  *   overlay — a pushed screen, under its own back bar
  */
-export const clearance = { dock: 136, overlay: 84 };
+export const clearance = { dock: 156, overlay: 84 };
 
 export const shadow = {
   card: { shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.45, shadowRadius: 20, elevation: 6 },

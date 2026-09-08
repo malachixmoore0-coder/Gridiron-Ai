@@ -1,18 +1,22 @@
 /**
  * A sport mark, drawn rather than shipped.
  *
- * Nine leagues need a way to tell themselves apart at a glance, and four small
- * images would have meant four assets to keep in sync with the palette and four
- * more things to get wrong on a high-density screen. These are built from plain
- * views — a ball and its markings, reduced to the two or three strokes that
- * survive at twenty pixels — so they take a league's accent colour directly and
- * stay sharp at any size.
+ * Eighteen leagues across six sports need a way to tell themselves apart at a
+ * glance, and six images would have meant six assets to keep in sync with the
+ * palette and six more things to get wrong on a high-density screen. These are
+ * vector paths on a shared 24-unit grid, so they take a league's accent colour
+ * directly and stay sharp at any size.
  *
- * The geometry is the same idea as the app mark: the ball, and a rising line
- * through it. Nothing decorative that a tab bar would throw away anyway.
+ * The rule that decided every one of them: only the strokes that survive at
+ * thirteen points. A basketball is a circle with a meridian, an equator and two
+ * bowed seams — the four lines that make a circle read as *that* ball. Add the
+ * fifth and it turns to mud in the sport chip bar, which is where these are
+ * mostly seen. The stroke thickens on the small sizes for the same reason: a
+ * hairline at 13pt is a smudge, not a line.
  */
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
+import Svg, { Circle, Ellipse, G, Path, Polygon } from 'react-native-svg';
 import { colors } from '@/theme';
 import type { SportId } from '@/sports/types';
 
@@ -24,72 +28,91 @@ interface Props {
   tile?: boolean;
 }
 
+/** Marks are authored on a 24-unit grid and scaled by the Svg viewBox. */
+const BOX = 24;
+
 export function SportGlyph({ sport, size = 22, color = colors.green, tile }: Props) {
-  const s = size;
-  const stroke = Math.max(1, Math.round(s * 0.085));
-  // The ball sits in the upper three-quarters; the rising rule takes the rest.
-  const ball = Math.round(s * 0.64);
-  const inset = (s - ball) / 2;
-  const top = s * 0.04;
+  // Small marks need a heavier line or the strokes disappear between pixels.
+  const w = size <= 16 ? 2.2 : size <= 24 ? 1.9 : 1.7;
+  const line = { stroke: color, strokeWidth: w, strokeLinecap: 'round' as const, strokeLinejoin: 'round' as const, fill: 'none' };
 
   const body = (
-    <View style={{ width: s, height: s }} accessibilityLabel={`${sport} icon`}>
-      {sport === 'football' ? (
-        // A prolate spheroid is an ellipse on its side; borderRadius does the rest.
-        <View style={[
-          styles.abs,
-          {
-            left: (s - ball * 1.34) / 2, top: top + ball * 0.16, width: ball * 1.34, height: ball * 0.72,
-            borderWidth: stroke, borderColor: color, borderRadius: ball * 0.42,
-            transform: [{ rotate: '-19deg' }],
-          },
-        ]}>
-          <View style={{ position: 'absolute', left: '30%', right: '30%', top: '46%', height: stroke, backgroundColor: color, borderRadius: stroke }} />
-        </View>
-      ) : (
-        <View style={[
-          styles.abs,
-          { left: inset, top, width: ball, height: ball, borderWidth: stroke, borderColor: color, borderRadius: ball / 2, overflow: 'hidden' },
-        ]}>
-          {sport === 'basketball' && (
-            <>
-              {/* One meridian and one seam: any more and it turns to mud at 20px. */}
-              <View style={{ position: 'absolute', left: ball / 2 - stroke / 2 - stroke, top: -stroke, bottom: -stroke, width: stroke, backgroundColor: color }} />
-              <View style={{ position: 'absolute', top: ball / 2 - stroke / 2 - stroke, left: -stroke, right: -stroke, height: stroke, backgroundColor: color }} />
-            </>
-          )}
-          {sport === 'baseball' && (
-            <>
-              {/* Two seams, drawn as arcs of a much larger circle. */}
-              <View style={{ position: 'absolute', left: -ball * 0.62, top: -stroke, width: ball, height: ball + stroke * 2, borderWidth: stroke, borderColor: color, borderRadius: ball / 2, backgroundColor: 'transparent' }} />
-              <View style={{ position: 'absolute', right: -ball * 0.62, top: -stroke, width: ball, height: ball + stroke * 2, borderWidth: stroke, borderColor: color, borderRadius: ball / 2, backgroundColor: 'transparent' }} />
-            </>
-          )}
-          {sport === 'soccer' && (
-            <View style={{
-              position: 'absolute', left: ball * 0.22, top: ball * 0.22, width: ball * 0.42, height: ball * 0.42,
-              backgroundColor: color, transform: [{ rotate: '15deg' }],
-            }} />
-          )}
-        </View>
+    <Svg width={size} height={size} viewBox={`0 0 ${BOX} ${BOX}`} accessibilityLabel={`${sport} icon`}>
+      {sport === 'football' && (
+        // A prolate spheroid is an ellipse on its side. The laces are the only
+        // detail that says "football" rather than "egg", so they stay.
+        <G rotation={-22} origin="12, 12">
+          <Ellipse cx={12} cy={12} rx={9} ry={5.6} {...line} />
+          <Path d="M9.3 12 H14.7" {...line} strokeWidth={w * 0.85} />
+          <Path d="M10.4 10.9 V13.1 M12 10.7 V13.3 M13.6 10.9 V13.1" {...line} strokeWidth={w * 0.75} />
+        </G>
       )}
 
-      {/* The rising rule: the market half of the mark, in every sport. */}
-      <View style={[styles.abs, { left: s * 0.12, right: s * 0.12, bottom: 0, height: s * 0.16, flexDirection: 'row', alignItems: 'flex-end', gap: Math.max(1, s * 0.05) }]}>
-        {[0.4, 0.68, 1].map((h) => (
-          <View key={h} style={{ flex: 1, height: `${h * 100}%`, backgroundColor: color, opacity: 0.55 + h * 0.45, borderRadius: stroke / 2 }} />
-        ))}
-      </View>
-    </View>
+      {sport === 'basketball' && (
+        <>
+          <Circle cx={12} cy={12} r={9} {...line} />
+          <Path d="M12 3 V21 M3 12 H21" {...line} />
+          <Path d="M5.1 5.4 C8.3 8.6 8.3 15.4 5.1 18.6" {...line} />
+          <Path d="M18.9 5.4 C15.7 8.6 15.7 15.4 18.9 18.6" {...line} />
+        </>
+      )}
+
+      {sport === 'baseball' && (
+        <>
+          <Circle cx={12} cy={12} r={9} {...line} />
+          {/* Two seams bowed toward the middle, plus the stitches that stop it
+              reading as a volleyball. */}
+          <Path d="M6.3 4.7 C9.1 8.1 9.1 15.9 6.3 19.3" {...line} />
+          <Path d="M17.7 4.7 C14.9 8.1 14.9 15.9 17.7 19.3" {...line} />
+          <Path
+            d="M7.1 8.4 H8.9 M7.5 12 H9.3 M7.1 15.6 H8.9 M15.1 8.4 H16.9 M14.7 12 H16.5 M15.1 15.6 H16.9"
+            {...line}
+            strokeWidth={w * 0.7}
+          />
+        </>
+      )}
+
+      {sport === 'soccer' && (
+        <>
+          <Circle cx={12} cy={12} r={9} {...line} />
+          {/* The centre pentagon is drawn open, not filled, and its seams run
+              all the way to the rim: filled, with five even spokes stopping
+              short, the whole mark reads as a wheel. */}
+          <Polygon points="12,7.8 15.99,10.7 14.47,15.4 9.53,15.4 8.01,10.7" {...line} />
+          <Path
+            d="M12 7.8 V3.2 M15.99 10.7 L20.37 9.28 M14.47 15.4 L17.17 19.12 M9.53 15.4 L6.83 19.12 M8.01 10.7 L3.63 9.28"
+            {...line}
+            strokeWidth={w * 0.85}
+          />
+        </>
+      )}
+
+      {sport === 'hockey' && (
+        <>
+          {/* Stick and puck. Crossed sticks are unreadable below twenty points,
+              and an outlined puck reads as a hoop — so the puck is solid. */}
+          <Path d="M6.6 3.4 L13.2 14.8 C14 16.2 15.2 16.9 16.8 16.9 L20.2 16.9" {...line} />
+          <Ellipse cx={6.4} cy={18.8} rx={3.6} ry={2} fill={color} />
+        </>
+      )}
+
+      {sport === 'golf' && (
+        <>
+          {/* A pin in the cup reads at any size; a dimpled ball does not. */}
+          <Path d="M9 19.6 V3.6" {...line} />
+          <Path d="M9 4.1 L18.4 7.4 L9 10.7 Z" fill={color} />
+          <Ellipse cx={9} cy={20} rx={4.2} ry={1.6} {...line} />
+        </>
+      )}
+    </Svg>
   );
 
   if (!tile) return body;
   return (
-    <View style={[styles.tile, { width: s * 1.5, height: s * 1.5, borderRadius: s * 0.34 }]}>{body}</View>
+    <View style={[styles.tile, { width: size * 1.5, height: size * 1.5, borderRadius: size * 0.34 }]}>{body}</View>
   );
 }
 
 const styles = StyleSheet.create({
-  abs: { position: 'absolute' },
   tile: { alignItems: 'center', justifyContent: 'center', backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
 });

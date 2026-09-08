@@ -12,6 +12,8 @@ import { DataBanner } from '@/cfb/components/DataBanner';
 import { Section } from '@/components/Section';
 import { Chip } from '@/components/Chip';
 import { calibration, pctOf, summarize } from '@/cfb/utils/record';
+import { clvOf } from '@/utils/clv';
+import { ClosingLine } from '@/components/ClosingLine';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { Locked } from '@/components/Pro';
 import { spreadText, oneDp, timeAgo } from '@/cfb/utils/format';
@@ -26,7 +28,7 @@ type View_ = 'final' | 'locked' | 'open';
  */
 export function RecordScreen({ onRun, onUpgrade }: Props) {
   const ent = useEntitlements();
-  const { records, getTeam, predictions, week } = useTeams();
+  const { records, getTeam, predictions, week, lines } = useTeams();
   const [view, setView] = useState<View_>('final');
   const [weekFilter, setWeekFilter] = useState<number | 'all'>('all');
 
@@ -37,6 +39,14 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
   const clipped = records.length - inWindow.length;
   const scoped = weekFilter === 'all' ? inWindow : inWindow.filter((r) => r.week === weekFilter);
   const sum = useMemo(() => summarize(scoped), [scoped]);
+  // The side the model took, scored against the number the game closed at.
+  const clv = useMemo(() => clvOf(scoped.map((r) => {
+    const line = lines?.games?.[r.id]?.opened?.spread ?? r.marketHomeSpread;
+    const side: 'home' | 'away' = line != null
+      ? (line - r.spread >= 0 ? 'home' : 'away')
+      : (r.homeWinPct >= r.awayWinPct ? 'home' : 'away');
+    return { id: r.id, side };
+  }), lines), [scoped, lines]);
   const cal = useMemo(() => calibration(scoped), [scoped]);
   const shown = scoped.filter((r) => r.status === view).sort((a, b) => (view === 'final' ? b.kickoff.localeCompare(a.kickoff) : a.kickoff.localeCompare(b.kickoff)));
   const modelText = predictions ? `Scheme ${predictions.model.weights.scheme} · Personnel ${predictions.model.weights.personnel} · Environment ${predictions.model.weights.environment} · X-Factor ${predictions.model.weights.xfactor} · ${predictions.model.simulations.toLocaleString()} runs · HFA ${predictions.model.homeFieldBase}%` : '';
@@ -57,6 +67,8 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
           <Tile label="Margin error" value={sum.spreadMae === null ? '—' : `±${sum.spreadMae.toFixed(1)}`} sub="avg pts off the projected margin" />
           <Tile label="Total error" value={sum.totalMae === null ? '—' : `±${sum.totalMae.toFixed(1)}`} sub="avg pts off the projected total" />
         </View>
+
+        <ClosingLine clv={clv} unit="point" />
 
         {weeks.length > 1 && (
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.filterBar} contentContainerStyle={styles.filters}>
