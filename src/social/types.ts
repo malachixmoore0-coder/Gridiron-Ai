@@ -140,5 +140,21 @@ export function colorFor(seed: string): string {
   return `hsl(${hues[h % hues.length]} 62% 46%)`;
 }
 
-export const handleFrom = (name: string) =>
-  name.toLowerCase().replace(/[^a-z0-9_]+/g, '').slice(0, 18) || `fan${Math.floor(Math.random() * 9000 + 1000)}`;
+/** What the database will accept: 3-18 of lowercase, digits and underscore. */
+export const HANDLE_RE = /^[a-z0-9_]{3,18}$/;
+
+/**
+ * A handle from a name or an email local part.
+ *
+ * The length floor is not cosmetic — `profiles.handle` is checked against
+ * exactly this pattern, so a two-character result ("ab@example.com") is not a
+ * short handle, it is a failed insert and an account with no profile. Anything
+ * under three characters gets padded rather than rejected, because the person
+ * signing up did nothing wrong.
+ */
+export const handleFrom = (name: string) => {
+  const base = name.toLowerCase().replace(/[^a-z0-9_]+/g, '').slice(0, 18);
+  if (HANDLE_RE.test(base)) return base;
+  const padded = `${base}${Math.floor(Math.random() * 9000 + 1000)}`.slice(0, 18);
+  return HANDLE_RE.test(padded) ? padded : `fan${Math.floor(Math.random() * 9000 + 1000)}`;
+};

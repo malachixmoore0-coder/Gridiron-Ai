@@ -127,20 +127,39 @@ export class SupabaseBackend implements Backend {
     this.me = null;
   }
 
-  /** First sign-in writes the profile row the rest of the app reads. */
+  /**
+   * First sign-in writes the profile row the rest of the app reads.
+   *
+   * Handles are unique, and the obvious source for one — the local part of an
+   * email — is not: john@gmail and john@yahoo both want `john`, and the second
+   * one loses. The insert used to ignore its own error, so that person signed
+   * in successfully, got no profile row, and the app showed them the sign-in
+   * card again with nothing to explain it. A few suffixed retries, then a real
+   * error rather than a silent no-op.
+   */
   private async ensureProfile(user: { id: string; email?: string | null; user_metadata?: Record<string, unknown> }) {
     const { data } = await db().from('profiles').select('id').eq('id', user.id).maybeSingle();
     if (data) return;
     const name = String(user.user_metadata?.full_name ?? user.user_metadata?.name ?? user.email?.split('@')[0] ?? 'fan');
-    const handle = handleFrom(name);
-    await db().from('profiles').insert({
-      id: user.id,
-      handle,
-      display_name: name,
-      bio: '',
-      avatar_color: colorFor(handle),
-      avatar_url: (user.user_metadata?.avatar_url as string | undefined) ?? null,
-    });
+    const base = handleFrom(name);
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      // The first try keeps the name they would recognise; only a clash adds
+      // digits, and the slice keeps it inside the column's 18-character check.
+      const handle = attempt === 0 ? base : `${base.slice(0, 14)}${Math.floor(Math.random() * 9000 + 1000)}`;
+      const { error } = await db().from('profiles').insert({
+        id: user.id,
+        handle,
+        display_name: name,
+        bio: '',
+        avatar_color: colorFor(handle),
+        avatar_url: (user.user_metadata?.avatar_url as string | undefined) ?? null,
+      });
+      if (!error) return;
+      // 23505 is unique_violation — the only error worth another go.
+      if (error.code !== '23505') throw new Error(`Could not create your profile: ${error.message}`);
+    }
+    throw new Error('Could not find a free handle. Try again in a moment.');
   }
 
   async getProfile(userId: string): Promise<Profile | null> {

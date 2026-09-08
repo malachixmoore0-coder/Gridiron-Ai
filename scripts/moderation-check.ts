@@ -7,6 +7,7 @@
  * when somebody adds a fragment to a list.
  */
 import { screen, qualityOf, rateLimited, RATE_LIMIT } from '@/social/moderation';
+import { HANDLE_RE, handleFrom } from '@/social/types';
 
 let fails = 0;
 const t = (name: string, ok: boolean) => { console.log(`${ok ? '  ✓' : '  ✗'} ${name}`); if (!ok) fails += 1; };
@@ -48,6 +49,15 @@ const now = Date.now();
 t('under the limit passes', !rateLimited(Array.from({ length: RATE_LIMIT - 1 }, () => now)));
 t('at the limit blocks', rateLimited(Array.from({ length: RATE_LIMIT }, () => now)));
 t('old posts fall out of the window', !rateLimited(Array.from({ length: RATE_LIMIT }, () => now - 7_200_000)));
+
+console.log('handles');
+{
+  // profiles.handle is checked against exactly this pattern in the database, so
+  // a handle that fails it is not a cosmetic problem — it is a failed insert and
+  // an account with no profile.
+  const cases = ['ab', 'a', '', 'John Smith', '...', '__', 'Zo\u00eb', '12', 'averyveryverylongnamethatkeepsgoing'];
+  for (const c of cases) t(`handleFrom(${JSON.stringify(c)}) is insertable`, HANDLE_RE.test(handleFrom(c)));
+}
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll moderation checks passed.');
 process.exit(fails ? 1 : 0);
