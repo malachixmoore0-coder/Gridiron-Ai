@@ -15,14 +15,20 @@ import { report } from '../pipeline/lib/report';
 const out = report('soccer');
 const log = out.log;
 
+/**
+ * Where each league keeps its clubs. These are the pages themselves, not
+ * guesses at them — three of my own guesses were wrong (the Premier League
+ * moved to /en/clubs, Serie A says /team, and Ligue 1 has no club index at all,
+ * only a standings table that links to every side).
+ */
 const CLUB_INDEX: Record<string, string> = {
-  epl: 'https://www.premierleague.com/clubs',
-  laliga: 'https://www.laliga.com/en-GB/clubs',
+  epl: 'https://www.premierleague.com/en/clubs',
+  laliga: 'https://www.laliga.com/en-US/clubs',
   bundesliga: 'https://www.bundesliga.com/en/bundesliga/clubs',
-  seriea: 'https://www.legaseriea.it/en/serie-a/clubs',
-  ligue1: 'https://www.ligue1.com/clubs',
-  mls: 'https://www.mlssoccer.com/clubs',
-  ligamx: 'https://ligamx.net/cancha/clubes',
+  seriea: 'https://en.legaseriea.it/team',
+  ligue1: 'https://ligue1.com/en/competitions/ligue1mcdonalds/standings',
+  mls: 'https://www.mlssoccer.com/clubs/',
+  ligamx: 'https://ligamx.net',
   ucl: 'https://www.uefa.com/uefachampionsleague/clubs/',
 };
 

@@ -38,6 +38,10 @@ on:
         description: 'Probe the official league sites instead of building, e.g. "clubs"'
         required: false
         default: ''
+      athletics_force:
+        description: 'Set to 1 to re-read every school roster page, ignoring the recheck window'
+        required: false
+        default: ''
 
 permissions:
   contents: write
@@ -116,6 +120,7 @@ jobs:
           # Set the workflow input "debug" to anything to have the roster step
           # print what ESPN's league statistics endpoint actually returned.
           ROSTER_DEBUG: ${{ github.event.inputs.debug }}
+          ATHLETICS_FORCE: ${{ github.event.inputs.athletics_force }}
           LEAGUES: ${{ github.event.inputs.leagues }}
         run: npm run data:sports -- $LEAGUES
 

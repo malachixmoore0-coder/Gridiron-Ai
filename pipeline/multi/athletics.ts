@@ -430,7 +430,9 @@ export async function backfillFromSchools(
   recheckDays = 21,
   concurrency = 4,
 ): Promise<AthleticsRun> {
-  const stale = Date.now() - recheckDays * 86_400_000;
+  // ATHLETICS_FORCE re-reads every mapped school regardless of when it was last
+  // seen, which is what you want the run after fixing how a page is read.
+  const stale = process.env.ATHLETICS_FORCE ? Date.now() + 86_400_000 : Date.now() - recheckDays * 86_400_000;
   const due = teams
     .map((t) => ({ team: t, site: siteFor(t.logoUrl) }))
     .filter((r): r is { team: { id: string; logoUrl?: string | null }; site: SchoolSite } => !!r.site)
