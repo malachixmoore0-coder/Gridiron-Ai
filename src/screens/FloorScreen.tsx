@@ -30,7 +30,7 @@ import { RefMark } from '@/components/RefMark';
 import { Ticker, type TickerItem } from '@/components/Ticker';
 import { TabHeader } from '@/components/TabHeader';
 import { AddToCard } from '@/components/AddToCard';
-import { ConvictionBar, LockChip, Locked, MeterPill } from '@/components/Pro';
+import { ConvictionBar, LockChip, Locked } from '@/components/Pro';
 import { SportGlyph } from '@/components/SportGlyph';
 import { crossSportBoard, freePickIndex, type CrossPick } from '@/utils/board';
 import type { LeagueGame } from '@/league/types';
@@ -43,12 +43,11 @@ interface Props {
   onUpgrade: () => void;
   onOpenCard: () => void;
   onOpenParlay: () => void;
-  onOpenModel: () => void;
 }
 
 const clock = () => new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
 
-export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay, onOpenModel }: Props) {
+export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay }: Props) {
   const view = useActiveLeague();
   const { setLeague } = useLeague();
   const boardViews = useBoardLeagues();
@@ -147,7 +146,6 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
         subtitle={`${clock()} · ${period} · ${openGames} on the board`}
         streak
         onUpgrade={onUpgrade}
-        onSettings={onOpenModel}
       />
 
       <Ticker items={tick} />
@@ -277,7 +275,9 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
             <Text style={styles.sectionTitle}>Edge Board</Text>
             <Text style={styles.sectionSub}>Model against the market, ranked by conviction</Text>
           </View>
-          <MeterPill left={ent.simsLeft} onPress={onUpgrade} />
+          {/* The meter used to sit here too. It is in the header on every tab
+              now, in the same words, so a second copy a few hundred points
+              below the first was just noise. */}
         </View>
 
         {visible.map((r, i) => (

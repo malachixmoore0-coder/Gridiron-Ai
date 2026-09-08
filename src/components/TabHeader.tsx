@@ -2,7 +2,14 @@
  * One header for every tab.
  *
  * Left to right: you, where you are, which league, what a simulation costs you,
- * what you are paying, and the way out to settings. Your avatar sits first and
+ * what you are paying, and the way out to settings — which is the same way out
+ * on every tab, because a control that opens two different screens depending on
+ * where you tapped it is not a control, it is a coin toss. The Floor used to
+ * point its gear at the model weights instead, which is how account deletion
+ * ended up unreachable from the screen people actually start on. Weights live
+ * one tap inside Settings now: they are a tuning surface you visit occasionally,
+ * not a control you need in the top bar, and this row has no room to spare — a
+ * seventh element in it truncates the title to an initial. Your avatar sits first and
  * large because it is the thing people reach for most after the tabs themselves
  * — and because a profile you cannot find is a profile nobody fills in.
  */
@@ -27,11 +34,10 @@ interface Props {
   leagues?: boolean;
   streak?: boolean;
   onUpgrade?: () => void;
-  onSettings?: () => void;
   right?: React.ReactNode;
 }
 
-export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, onSettings, right }: Props) {
+export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, right }: Props) {
   const ent = useEntitlements();
   const eng = useEngagement();
   const social = useSocial();
@@ -58,18 +64,16 @@ export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, 
 
         {right}
         {streak && <StreakPill days={eng.streak} />}
-        {/* What a simulation costs you, wherever you are. Renders nothing at all
-            on a tier with no meter. */}
-        <MeterPill left={ent.simsLeft} compact onPress={() => { haptic('light'); (onUpgrade ?? nav.openUpgrade)(); }} />
         <TierPill
           tier={ent.tier}
           trial={ent.trial.active ? ent.trial.daysLeft : undefined}
           onPress={() => { haptic('light'); (onUpgrade ?? nav.openUpgrade)(); }}
         />
+        {/* The gear means one thing, everywhere: the app's own settings. */}
         <TouchableOpacity
           style={styles.gear}
           activeOpacity={0.8}
-          onPress={() => { haptic('light'); (onSettings ?? nav.openSettings)(); }}
+          onPress={() => { haptic('light'); nav.openSettings(); }}
           accessibilityRole="button"
           accessibilityLabel="Settings"
         >
@@ -80,7 +84,7 @@ export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, 
       {/* The subtitle gets its own line. Sharing the top row with the avatar,
           the tier pill and the gear left it about a hundred and fifty points
           wide, which truncated every subtitle in the app to an ellipsis. */}
-      {(!!subtitle || live.liveCount > 0) && (
+      {(!!subtitle || live.liveCount > 0 || ent.simsLeft !== Infinity) && (
         <View style={styles.subRow}>
           {live.liveCount > 0 && (
             <View style={styles.liveDot}>
@@ -88,6 +92,12 @@ export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, 
               <Text style={styles.liveText}>{live.liveCount} live</Text>
             </View>
           )}
+          {/* What a simulation costs you, wherever you are — and nothing at all
+              on a tier with no meter. It rides down here rather than in the top
+              row: that row was already full, and a seventh element in it
+              truncated "The Floor" to "The …". This line is status, which is
+              what the meter is. */}
+          <MeterPill left={ent.simsLeft} onPress={() => { haptic('light'); (onUpgrade ?? nav.openUpgrade)(); }} />
           {!!subtitle && <Text style={styles.sub} numberOfLines={1}>{subtitle}</Text>}
         </View>
       )}
@@ -103,7 +113,7 @@ const styles = StyleSheet.create({
   avatar: { marginRight: 2 },
   avatarDot: { position: 'absolute', right: -1, bottom: -1, width: 12, height: 12, borderRadius: 6, backgroundColor: colors.gold, borderWidth: 2, borderColor: colors.bg },
   title: { ...T.title, color: colors.ink, fontSize: 23 },
-  subRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 3 },
+  subRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginTop: 5, flexWrap: 'wrap' },
   sub: { color: colors.inkFaint, fontSize: 11, fontWeight: '700', flexShrink: 1 },
   liveDot: { flexDirection: 'row', alignItems: 'center', gap: 4 },
   dot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.live },

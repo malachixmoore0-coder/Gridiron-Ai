@@ -250,7 +250,6 @@ export function RootNavigator() {
             onUpgrade={openUpgrade}
             onOpenCard={() => setTab('record')}
             onOpenParlay={() => push({ kind: 'parlay' })}
-            onOpenModel={() => push({ kind: 'model', league })}
           />)}
 
         {tab === 'slate' && (field
