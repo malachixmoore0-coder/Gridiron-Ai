@@ -132,14 +132,21 @@ create policy tails_read on tails for select using (true);
 
 -- ------------------------------------------------------------------- views --
 -- The client reads these so "who liked what" never ships as a second query.
+--
+-- `security_invoker` is load-bearing, not decoration. A Postgres view runs as
+-- its owner by default, so row-level security on the underlying table is NOT
+-- applied to somebody reading through it — which would have made both of these
+-- a hole straight around `posts_read`: private accounts' posts, and posts
+-- hidden by moderation, readable by anyone who queried the view instead of the
+-- table. With it on, the view is evaluated as the caller and the policy holds.
 
-create or replace view feed_public as
+create or replace view feed_public with (security_invoker = on) as
   select p.*,
          coalesce((select array_agg(l.user_id) from likes l where l.post_id = p.id), '{}') as likes_by,
          coalesce((select array_agg(t.user_id) from tails t where t.post_id = p.id), '{}') as tails_by
   from posts p;
 
-create or replace view feed_following as
+create or replace view feed_following with (security_invoker = on) as
   select f.* from feed_public f
   where f.author_id = auth.uid()
      or exists (select 1 from follows fo where fo.followee_id = f.author_id and fo.follower_id = auth.uid());

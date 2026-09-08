@@ -85,6 +85,14 @@ jobs:
       - name: Export web app
         env:
           EXPO_BASE_URL: /${{ github.event.repository.name }}
+          # The publishable key is meant to ship — it is compiled into the
+          # bundle and every visitor has it. Row-level security is what protects
+          # the data from it, which is why `entitlements` has a read-own policy
+          # and no insert or update policy at all. Repo variables win when set,
+          # so the key can be rotated without a commit.
+          EXPO_PUBLIC_SUPABASE_URL: ${{ vars.SUPABASE_URL || 'https://ndacoxknypbkkhckztub.supabase.co' }}
+          EXPO_PUBLIC_SUPABASE_ANON_KEY: ${{ vars.SUPABASE_ANON_KEY || 'sb_publishable_xeEd1B1yNtIMuDeAL0ft9w_i34_sF6n' }}
+          EXPO_PUBLIC_ENTITLEMENTS_URL: ${{ vars.ENTITLEMENTS_URL }}
         run: npx expo export --platform web
 
       - name: Prepare Pages artifact
