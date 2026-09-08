@@ -25,7 +25,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { sourceLog } from '../lib/fetch';
-import { renderPages } from './render';
+import { extractImages, renderPages, type ImageCandidate } from './render';
 
 export interface SchoolSite {
   /** ESPN's school id — the number in its logo URL, and the same in every sport. */
@@ -319,6 +319,74 @@ export function rosterFromHtml(html: string, pageUrl: string, idPrefix: string):
   return [...out.values()];
 }
 
+/** Words a card carries that are not anybody's name. */
+const NOT_A_NAME = /\b(roster|schedule|tickets|full bio|baseball|softball|basketball|athletics|shop|store|news|video|coach|staff|head|assistant|director|instagram|twitter|facebook)\b/i;
+
+/** Two to four capitalised words in a row, which is what a name looks like. */
+// Each word carries a lowercase letter, which is what keeps RHP, OF and IF out
+// of the name — a position is not a middle name.
+const NAME_RUN = /\b([A-Z][a-z'’.\u00C0-\u024F-]{1,20}(?:\s+(?:[A-Z][a-z'’.\u00C0-\u024F-]{1,20}|[A-Z]\.|Jr\.?|Sr\.?|II|III|IV|de|del|van|von|da|di|la|St\.)){1,3})/;
+
+/**
+ * A squad read from the cards themselves, where the players have no links.
+ *
+ * The newer athletics sites do not give a player a page: his card carries a
+ * photograph, his name, his number, his position and a link to his Instagram,
+ * and that is all. Auburn's roster has twenty-five links on it and every one of
+ * them goes to Twitter. So the picture is the anchor here, and what the page
+ * prints beside it is the name — which is the same thing a reader does.
+ *
+ * A row is kept only when it reads like a player: a name of two to four
+ * capitalised words, and either a number or a position beside it. That is what
+ * keeps the head coach, the sponsor and the news carousel out.
+ */
+export function cardsToPlayers(cards: ImageCandidate[], idPrefix: string): SchoolPlayer[] {
+  const strong = new Map<string, SchoolPlayer>();
+  const weak = new Map<string, SchoolPlayer>();
+
+  for (const card of cards) {
+    if (!card.src || JUNK.test(card.src)) continue;
+    const text = `${card.text}`.replace(/\s+/g, ' ').trim();
+    const label = card.alt.trim();
+    if (NOT_A_NAME.test(text) || NOT_A_NAME.test(label)) continue;
+
+    // The caption first — where a site fills it in, it is exactly the name.
+    let name = '';
+    for (const candidate of [label, text]) {
+      if (!candidate) continue;
+      const hit = NAME_RUN.exec(candidate.replace(/^[\s#]*\d{1,2}\b/, ' '));
+      if (hit && nameKey(hit[1]).length >= 5) { name = hit[1].trim(); break; }
+    }
+    if (!name) continue;
+
+    const key = nameKey(name);
+    if (strong.has(key) || weak.has(key)) continue;
+
+    const before = text.slice(0, Math.max(0, text.indexOf(name)));
+    const jersey = /(?:^|#|\s)(\d{1,2})(?:\s|$)/.exec(before)?.[1] ?? /#\s?(\d{1,2})\b/.exec(text)?.[1] ?? null;
+    const raw = POS.exec(text.replace(name, ' '))?.[1] ?? '';
+
+    const player: SchoolPlayer = {
+      id: `${idPrefix}-${key}`,
+      name,
+      jersey,
+      pos: NORMAL_POS[raw] ?? raw,
+      photo: card.src,
+    };
+    // A number or a position makes this a player. A bare name might be one, and
+    // is taken only if the page has already proved itself a roster.
+    if (jersey || raw) strong.set(key, player); else weak.set(key, player);
+  }
+
+  return strong.size >= A_SQUAD ? [...strong.values(), ...weak.values()] : [...strong.values()];
+}
+
+/** A src as the page wrote it, made absolute against the page it came from. */
+function absolute(src: string | null, base: string): string | null {
+  if (!src) return null;
+  try { const u = new URL(src, base).toString(); return /^https?:/i.test(u) ? u : null; } catch { return null; }
+}
+
 export interface TeamScrape {
   url: string | null;
   players: SchoolPlayer[];
@@ -396,15 +464,25 @@ export async function scrapeTeam(site: SchoolSite, leagueKey: string, idPrefix: 
     if (await read(found) >= A_SQUAD) return { url: best!.url, players: best!.players, tried };
   }
 
-  // A page that answers with almost nothing on it is a page that builds itself
-  // in the browser. Open it in one.
-  const rendered = await renderPages(alive.slice(0, 2), {
+  // A page that answers with almost nothing on it is either built in the
+  // browser or built without links. Open it in a browser and read both ways:
+  // the links if it has any, and otherwise the cards themselves.
+  const targets = alive.slice(0, 2);
+  const rendered = await renderPages(targets, {
     settle: { selector: 'a[href*="/roster/"], a[href*="rp_id="], a[href*="/player/"]', count: A_SQUAD },
   });
   for (const [url, html] of rendered) {
     const players = rosterFromHtml(html, url, idPrefix);
     tried.push({ url: `${url} (rendered)`, status: 200, players: players.length });
     if (!best || players.length > best.players.length) best = { url, players };
+  }
+  if (!best || best.players.length < A_SQUAD) {
+    for (const [url, cards] of await extractImages(targets, { settle: { selector: 'img', count: 20 } })) {
+      const players = cardsToPlayers(cards, idPrefix)
+        .map((p) => ({ ...p, photo: absolute(p.photo, url) }));
+      tried.push({ url: `${url} (cards)`, status: 200, players: players.length });
+      if (!best || players.length > best.players.length) best = { url, players };
+    }
   }
 
   const found: { url: string; players: SchoolPlayer[] } | null = best;
