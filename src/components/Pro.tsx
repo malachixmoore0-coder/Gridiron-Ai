@@ -36,16 +36,29 @@ export function LockChip({ label = 'PRO', onPress }: { label?: string; onPress?:
   );
 }
 
-/** Sims left on the free meter. Disappears entirely once the meter is gone. */
-export function MeterPill({ left, onPress }: { left: number; onPress?: () => void }) {
+/**
+ * Sims left on the free meter. Disappears entirely once the meter is gone, so
+ * paying customers never see a counter for a limit they do not have.
+ *
+ * The compact form is the one that rides in the header on every tab. It is the
+ * number and nothing else, because the alternative — knowing how many you have
+ * left only by navigating back to the Floor — is how you find out you are out
+ * at the moment you wanted one.
+ */
+export function MeterPill({ left, onPress, compact }: { left: number; onPress?: () => void; compact?: boolean }) {
   if (left === Infinity) return null;
   const out = left <= 0;
+  const full = out ? 'Out of sims' : `${left} sim${left === 1 ? '' : 's'} left today`;
   return (
-    <TouchableOpacity style={[styles.meter, out && styles.meterOut]} activeOpacity={0.8} onPress={onPress}>
+    <TouchableOpacity
+      style={[compact ? styles.meterSmall : styles.meter, out && styles.meterOut]}
+      activeOpacity={0.8}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={full}
+    >
       <Ionicons name={out ? 'battery-dead' : 'flash-outline'} size={11} color={out ? colors.negative : colors.inkDim} />
-      <Text style={[styles.meterText, out && { color: colors.negative }]}>
-        {out ? 'Out of sims' : `${left} sim${left === 1 ? '' : 's'} left today`}
-      </Text>
+      <Text style={[styles.meterText, out && { color: colors.negative }]}>{compact ? `${Math.max(0, left)}` : full}</Text>
     </TouchableOpacity>
   );
 }
@@ -136,6 +149,7 @@ const styles = StyleSheet.create({
   lockChipText: { color: colors.gold, fontSize: 9, fontWeight: '900', letterSpacing: 0.8 },
 
   meter: { flexDirection: 'row', alignItems: 'center', gap: 5, paddingHorizontal: 9, paddingVertical: 4, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
+  meterSmall: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 7, paddingVertical: 4, borderRadius: radius.pill, backgroundColor: colors.cardAlt, borderWidth: 1, borderColor: colors.border },
   meterOut: { borderColor: colors.negative, backgroundColor: colors.negativeSoft },
   meterText: { color: colors.inkDim, fontSize: 10, fontWeight: '800' },
 

@@ -1,17 +1,17 @@
 /**
  * One header for every tab.
  *
- * Left to right: you, where you are, which league, what you are paying, and the
- * way out to settings. Your avatar sits first and large because it is the thing
- * people reach for most after the tabs themselves — and because a profile you
- * cannot find is a profile nobody fills in.
+ * Left to right: you, where you are, which league, what a simulation costs you,
+ * what you are paying, and the way out to settings. Your avatar sits first and
+ * large because it is the thing people reach for most after the tabs themselves
+ * — and because a profile you cannot find is a profile nobody fills in.
  */
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, radius, spacing, type as T } from '@/theme';
 import { LeagueSwitch } from '@/components/LeagueSwitch';
-import { TierPill, StreakPill } from '@/components/Pro';
+import { MeterPill, TierPill, StreakPill } from '@/components/Pro';
 import { Avatar } from '@/components/Social';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useEngagement } from '@/context/EngagementContext';
@@ -58,6 +58,9 @@ export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, 
 
         {right}
         {streak && <StreakPill days={eng.streak} />}
+        {/* What a simulation costs you, wherever you are. Renders nothing at all
+            on a tier with no meter. */}
+        <MeterPill left={ent.simsLeft} compact onPress={() => { haptic('light'); (onUpgrade ?? nav.openUpgrade)(); }} />
         <TierPill
           tier={ent.tier}
           trial={ent.trial.active ? ent.trial.daysLeft : undefined}

@@ -7,7 +7,7 @@
  * immediately; the licence check that makes it authoritative is the next
  * roadmap step (docs/GROWTH.md).
  */
-import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Entitlements, RANK, TIER_BY_ID, TIERS, TRIAL_DAYS, TRIAL_TIER, Tier, TierId, Cycle } from '@/monetize/tiers';
@@ -100,6 +100,17 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
 
   const save = useCallback((next: Persisted) => { setS(next); AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {}); }, []);
 
+  /**
+   * The meter, mirrored where a synchronous read can reach it.
+   *
+   * `spendSim` runs on a tap, and two taps inside one render both read the same
+   * `s` — so hammering a Simulate button spent one unit and ran two. The ref is
+   * written before the state is, which makes the second call in a tick see the
+   * first one's spend.
+   */
+  const usage = useRef(s.usage);
+  if (usage.current.day !== s.usage.day || usage.current.sims < s.usage.sims) usage.current = s.usage;
+
   const trialActive = s.trialStartedAt != null && Date.now() - s.trialStartedAt < TRIAL_DAYS * DAY;
   const effectiveId: TierId = trialActive && RANK[TRIAL_TIER] > RANK[s.tier] ? TRIAL_TIER : s.tier;
   const tier = TIER_BY_ID[effectiveId] ?? TIERS[0];
@@ -117,7 +128,9 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
       available: s.trialStartedAt == null && RANK[s.tier] === 0,
       daysLeft: trialActive ? Math.max(0, Math.ceil((s.trialStartedAt! + TRIAL_DAYS * DAY - Date.now()) / DAY)) : 0,
     },
-    simsLeft: ent.simsPerDay === Infinity ? Infinity : Math.max(0, ent.simsPerDay - s.usage.sims),
+    simsLeft: ent.simsPerDay === Infinity
+      ? Infinity
+      : Math.max(0, ent.simsPerDay - (s.usage.day === today() ? s.usage.sims : 0)),
     can: (key) => {
       const v = ent[key];
       return typeof v === 'number' ? v > 0 : typeof v === 'boolean' ? v : v !== 'off';
@@ -125,8 +138,12 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
     limit: (key) => { const v = ent[key]; return typeof v === 'number' ? v : v ? 1 : 0; },
     spendSim: () => {
       if (ent.simsPerDay === Infinity) return true;
-      if (s.usage.sims >= ent.simsPerDay) return false;
-      save({ ...s, usage: { day: today(), sims: s.usage.sims + 1 } });
+      const day = today();
+      const spent = usage.current.day === day ? usage.current.sims : 0;
+      if (spent >= ent.simsPerDay) return false;
+      const next = { day, sims: spent + 1 };
+      usage.current = next;
+      save({ ...s, usage: next });
       return true;
     },
     atLeast: (t) => RANK[effectiveId] >= RANK[t],

@@ -4,9 +4,19 @@
  * The published feed is rebuilt by a scheduled job, which is fine for lines,
  * rosters and finals but is minutes behind a game in progress — and minutes is
  * an eternity when you are watching a number you have money on. So the app also
- * polls ESPN's public scoreboard itself: every 20 seconds while something is
- * live, every five minutes otherwise, and not at all while the app is in the
- * background or the tab is hidden.
+ * polls ESPN's public scoreboard itself, for every league that has games
+ * loaded: every 20 seconds while something is live, every two minutes
+ * otherwise, and not at all while the app is in the background or the tab is
+ * hidden.
+ *
+ * There is a second, slower loop over the published dataset itself, because a
+ * score poll never moves a line. Left open on a desk all evening the app used
+ * to fetch the feed once at startup and then show that same number until it was
+ * restarted. It is re-fetched every fifteen minutes and whenever the app comes
+ * back to the foreground — fifteen rather than two because the job behind it
+ * only rebuilds three times a day, so anything faster is bandwidth spent to
+ * re-download a file that has not changed. Between those, the scoreboard poll
+ * is what actually moves on screen.
  *
  * It is strictly an overlay. Anything it cannot match falls back to the feed,
  * and if the endpoint is unreachable — a network without it, a browser blocking
@@ -40,7 +50,10 @@ const endpointFor = (id: LeagueId): string | null => {
 const ALIAS: Record<string, string> = { WSH: 'WAS', LA: 'LAR', JAX: 'JAX', LV: 'LV', NWE: 'NE', GNB: 'GB', KAN: 'KC', SFO: 'SF', TAM: 'TB', NOR: 'NO' };
 
 const LIVE_MS = 20_000;
-const IDLE_MS = 300_000;
+/** Nothing in progress. Still a floor on how stale the board is allowed to get. */
+const IDLE_MS = 120_000;
+/** How often the published dataset itself is re-fetched. */
+const DATA_MS = 900_000;
 const TIMEOUT_MS = 8_000;
 const MAX_FAILURES = 3;
 
@@ -111,6 +124,8 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
   const disabled = useRef(false);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const active = useRef(true);
+  /** When the published feed was last re-read, so returning does not spam it. */
+  const lastData = useRef(Date.now());
 
   // Only leagues with games loaded are worth polling.
   const views = useMemo(() => all.filter((v) => v.games.length > 0), [all]);
@@ -176,31 +191,51 @@ export function LiveProvider({ children }: { children: React.ReactNode }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [poll, scores.size]);
 
+  /** Re-read the published feed for every league that has one loaded. */
+  const refreshData = useCallback(() => {
+    for (const v of views) if (!v.refreshing) v.refresh().catch(() => {});
+    lastData.current = Date.now();
+  }, [views]);
+
+  /* The feed behind the numbers, on its own slower beat. A score poll updates
+     the scoreboard; only this moves a line, a total or a projection. */
+  useEffect(() => {
+    if (!prefs.livePolling) return;
+    const t = setInterval(() => { if (active.current) refreshData(); }, DATA_MS);
+    return () => clearInterval(t);
+  }, [refreshData, prefs.livePolling]);
+
   /* Pause in the background — a phone in a pocket should not be polling. */
   useEffect(() => {
+    const wake = () => {
+      poll();
+      // Coming back to a tab that has been open for hours: re-read the feed too,
+      // not just the scoreboard, or the lines stay as stale as when you left.
+      if (Date.now() - lastData.current >= DATA_MS) refreshData();
+    };
     const onState = (s: string) => {
       active.current = s === 'active';
-      if (active.current) poll();
+      if (active.current) wake();
     };
     const sub = AppState.addEventListener('change', onState);
     let onVis: (() => void) | null = null;
     if (Platform.OS === 'web' && typeof document !== 'undefined') {
-      onVis = () => { active.current = document.visibilityState === 'visible'; if (active.current) poll(); };
+      onVis = () => { active.current = document.visibilityState === 'visible'; if (active.current) wake(); };
       document.addEventListener('visibilitychange', onVis);
     }
     return () => {
       sub.remove();
       if (onVis && typeof document !== 'undefined') document.removeEventListener('visibilitychange', onVis);
     };
-  }, [poll]);
+  }, [poll, refreshData]);
 
   const value: State = useMemo(() => ({
     scores,
     connected,
     lastPoll,
     liveCount: [...scores.values()].filter((s) => s.status === 'in_progress').length,
-    refresh: () => { disabled.current = false; failures.current = 0; poll(); },
-  }), [scores, connected, lastPoll, poll]);
+    refresh: () => { disabled.current = false; failures.current = 0; poll(); refreshData(); },
+  }), [scores, connected, lastPoll, poll, refreshData]);
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

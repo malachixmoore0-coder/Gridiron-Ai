@@ -4,6 +4,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { colors, radius, shadow, sideColor, spacing } from '@/theme';
 import { spreadText, oneDp } from '@/cfb/utils/format';
+import { useEntitlements } from '@/context/EntitlementsContext';
 import { useSettings } from '@/cfb/context/SettingsContext';
 import { useTeams } from '@/cfb/context/TeamsContext';
 import { RunRequest, useAnalysis } from '@/cfb/hooks/useAnalysis';
@@ -16,12 +17,24 @@ import { NodeCard } from '@/cfb/components/NodeCard';
 import { SleeperCard } from '@/cfb/components/SleeperCard';
 import { ScreenHeader } from '@/components/ScreenHeader';
 
-interface Props { request: RunRequest; onBack: () => void; onOpenTeam: (id: string) => void; }
+interface Props { request: RunRequest; onBack: () => void; onOpenTeam: (id: string) => void; onUpgrade: () => void; }
 
-export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
+export function ResultScreen({ request, onBack, onOpenTeam, onUpgrade }: Props) {
+  const ent = useEntitlements();
   const { pushRecent } = useSettings();
   const { findGame } = useTeams();
   const [reroll, setReroll] = useState(0);
+  /**
+   * A re-roll is a whole new simulation — a fresh seed, a fresh distribution —
+   * so it costs what a simulation costs. It used to be free, which meant one
+   * spend from the meter bought unlimited runs of that matchup and the daily
+   * limit only ever counted how many *matchups* you had opened.
+   */
+  const out = ent.simsLeft !== Infinity && ent.simsLeft <= 0;
+  const onReroll = () => {
+    if (!ent.spendSim()) { onUpgrade(); return; }
+    setReroll((r) => r + 1);
+  };
   const a = useAnalysis(request, reroll);
   const game = findGame(request.awayId, request.homeId);
   const { home, away, simulation: s, matrix, script, sleepers, injuries, nodes } = a;
@@ -39,9 +52,11 @@ export function ResultScreen({ request, onBack, onOpenTeam }: Props) {
         subtitle={`${s.runs.toLocaleString()} simulations · seed ${a.seed.toString(16).slice(0, 6)}`}
         onBack={onBack}
         right={(
-          <TouchableOpacity style={styles.reroll} onPress={() => setReroll((r) => r + 1)} hitSlop={6}>
+          <TouchableOpacity style={[styles.reroll, out && styles.rerollOut]} onPress={onReroll} hitSlop={6} accessibilityRole="button" accessibilityLabel={out ? 'Out of simulations, upgrade' : 'Re-roll this simulation'}>
             <Ionicons name="dice" size={16} color={colors.ink} />
-            <Text style={styles.rerollText}>Re-roll</Text>
+            <Text style={[styles.rerollText, out && { color: colors.gold }]}>
+              {out ? 'Upgrade' : `Re-roll${ent.simsLeft === Infinity ? '' : ` · ${ent.simsLeft}`}`}
+            </Text>
           </TouchableOpacity>
         )}
       />
@@ -184,6 +199,7 @@ function Act({ n, title, text }: { n: string; title: string; text: string }) {
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
   content: { paddingHorizontal: spacing.lg, paddingBottom: spacing.xxl },
+  rerollOut: { borderColor: colors.gold },
   reroll: { flexDirection: 'row', alignItems: 'center', gap: 6, paddingHorizontal: 12, paddingVertical: 8, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   rerollText: { color: colors.ink, fontWeight: '800', fontSize: 12 },
   hero: { backgroundColor: colors.card, borderRadius: radius.xl, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginBottom: spacing.lg, ...shadow.card },

@@ -322,8 +322,8 @@ export function RootNavigator() {
                 isGeneric(o.league)
                   ? <SportResultScreen request={o.request as SportRun} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} />
                   : o.league === 'cfb'
-                    ? <CfbResult request={o.request as never} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} />
-                    : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} />
+                    ? <CfbResult request={o.request as never} onBack={pop} onOpenTeam={(t) => openTeam(t, 'cfb')} onUpgrade={openUpgrade} />
+                    : <ResultScreen request={o.request as RunRequest} onBack={pop} onOpenTeam={(t) => openTeam(t, 'nfl')} onUpgrade={openUpgrade} />
               ) : o.kind === 'team' ? (
                 isGeneric(o.league)
                   ? <SportTeamScreen teamId={o.teamId} onBack={pop} onOpenTeam={(t) => openTeam(t, o.league)} onOpenGame={(t, g) => openGame(t, g, o.league)} onOpenPlayer={(t, pl) => openPlayer(t, pl, o.league)} onUpgrade={openUpgrade} />
