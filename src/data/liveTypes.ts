@@ -21,6 +21,8 @@ export interface LiveGame {
   totalLine: number | null;
   awayMoneyline: number | null;
   homeMoneyline: number | null;
+  /** Soccer's third price. Absent everywhere a draw is not a result. */
+  drawMoneyline?: number | null;
   primetime: boolean;
   weather: (GameWeather & { source: 'forecast' | 'observed' }) | null;
   weatherHint: Weather | null;

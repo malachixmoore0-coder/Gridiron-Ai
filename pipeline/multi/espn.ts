@@ -163,6 +163,25 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       else if (/EVEN|PK/i.test(odds.details)) homeSpread = 0;
     }
 
+    // Soccer has no handicap on its main market, and ESPN fills the same field
+    // with the home side's price instead: Chelsea at home to Hull came back as
+    // spread -425. Read as a handicap that made the model 349 goals better than
+    // the number, and put a side with a 0% chance of winning on the front page
+    // as the lock of the day.
+    //
+    // So a handicap counts only when it is the size of one. Anything bigger is
+    // a price, and is treated as the price it is.
+    const HANDICAP_LIMIT = 30;
+    let priceFromSpread: number | null = null;
+    if (homeSpread != null && Math.abs(homeSpread) > HANDICAP_LIMIT) {
+      priceFromSpread = homeSpread;
+      homeSpread = null;
+    }
+
+    const homeMoneyline = priceOf(odds?.homeTeamOdds) ?? priceFromSpread;
+    const awayMoneyline = priceOf(odds?.awayTeamOdds);
+    const drawMoneyline = priceOf(odds?.drawOdds);
+
     out.push({
       id: String(ev.id),
       date: String(comp.date ?? ev.date ?? ''),
@@ -180,12 +199,31 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       note: ev.name && /bowl|final|championship|classic/i.test(String(ev.name)) ? String(ev.name) : null,
       homeSpread,
       totalLine: num(odds?.overUnder),
-      homeMoneyline: num(odds?.homeTeamOdds?.moneyLine),
-      awayMoneyline: num(odds?.awayTeamOdds?.moneyLine),
-      drawMoneyline: num(odds?.drawOdds?.moneyLine) ?? num((odds as any)?.drawOdds?.odds) ?? null,
+      homeMoneyline,
+      awayMoneyline,
+      drawMoneyline,
     });
   }
   return out;
+}
+
+/**
+ * One side's price, in whichever shape ESPN felt like using.
+ *
+ * The legacy scoreboard says moneyLine: -140. The newer one nests it under
+ * current.moneyLine.american as the string "-140", and some sports fill in only
+ * a summary. All three mean the same thing, and reading only the first is why
+ * soccer arrived with no prices on it at all.
+ */
+function priceOf(side: any): number | null {
+  for (const c of [side?.moneyLine, side?.current?.moneyLine?.american, side?.moneyLine?.american, side?.odds, side?.summary]) {
+    if (typeof c === 'number' && Number.isFinite(c)) return c;
+    if (typeof c === 'string') {
+      const m = /^([+-]?\d{2,5})$/.exec(c.trim().replace(/^EVEN$/i, '100'));
+      if (m) return Number(m[1]);
+    }
+  }
+  return null;
 }
 
 /** A span of days, fetched a chunk at a time so no single request is enormous. */

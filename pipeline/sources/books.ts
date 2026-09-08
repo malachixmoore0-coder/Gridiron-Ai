@@ -72,7 +72,9 @@ export async function loadEventBooks(path: string, eventId: string, timeoutMs = 
     out.push({
       book,
       name: rawName,
-      homeSpread: num(it.spread),
+      // A handicap is the size of a handicap; anything larger is a price that
+      // ESPN has filed in the spread field, which soccer does on every game.
+      homeSpread: (() => { const v = num(it.spread); return v != null && Math.abs(v) > 30 ? null : v; })(),
       spreadHomeOdds: num(it.homeTeamOdds?.spreadOdds) ?? -110,
       spreadAwayOdds: num(it.awayTeamOdds?.spreadOdds) ?? -110,
       totalLine: num(it.overUnder),

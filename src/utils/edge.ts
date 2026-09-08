@@ -17,12 +17,24 @@
  */
 import type { LiveGame, PredictionRecord } from '@/data/liveTypes';
 
+/**
+ * What the edge is measured in.
+ *
+ * Football and basketball have a handicap, so value is points of it. Soccer has
+ * no handicap at all — the market is three prices — so value there is what the
+ * model says minus what the price says, in points of probability. Mixing the
+ * two up is how a 0.6-goal disagreement became "349.1 pts edge" on the front
+ * page.
+ */
+export type EdgeUnit = 'pts' | 'pct';
+
 export interface EdgeRow {
   gameId: string;
   game: LiveGame;
   rec: PredictionRecord;
-  /** Points of value on the side the model likes. Always positive. */
+  /** Value on the side the model likes, in `edgeUnit`. Always positive. */
   spreadEdge: number;
+  edgeUnit: EdgeUnit;
   /** 'home' | 'away' — the side that edge is on. */
   spreadSide: 'home' | 'away';
   /** Points of value on the total, and which way. */
@@ -80,19 +92,92 @@ export const fmtOdds = (n: number) => (n > 0 ? `+${Math.round(n)}` : `${Math.rou
  *   • confidence — how far the model's own probability is from a coin flip (30%)
  *   • settledness — how many refreshes have agreed on this number (15%)
  */
-export function convictionOf(spreadEdge: number, sidePct: number, updates: number): number {
-  const edge = Math.min(Math.abs(spreadEdge) / 7, 1) * 55;
-  const conf = Math.min(Math.abs(sidePct - 50) / 25, 1) * 30;
+export function convictionOf(spreadEdge: number, sidePct: number, updates: number, unit: EdgeUnit = 'pts'): number {
+  // Seven points is a full-mark disagreement on a handicap; on a price, eight
+  // points of probability is. The two scales are not interchangeable.
+  const edge = Math.min(Math.abs(spreadEdge) / (unit === 'pts' ? 7 : 8), 1) * 55;
+  // On a handicap, a lopsided game is a confident one either way. On a price it
+  // is not: backing an 11% outsider is the opposite of confidence, however good
+  // the number is, so only the favourite's side of 50 counts there.
+  const distance = unit === 'pts' ? Math.abs(sidePct - 50) : Math.max(sidePct - 50, 0);
+  const conf = Math.min(distance / 25, 1) * 30;
   const settled = Math.min(updates / 6, 1) * 15;
   return Math.round(edge + conf + settled);
 }
 
 function reasonFor(row: Omit<EdgeRow, 'reason' | 'conviction'>, awayAbbr: string, homeAbbr: string): string {
   const side = row.spreadSide === 'home' ? homeAbbr : awayAbbr;
+  if (row.edgeUnit === 'pct') {
+    const price = row.spreadSide === 'home'
+      ? row.game.homeMoneyline ?? (isPrice(row.game.homeSpread) ? row.game.homeSpread : null)
+      : row.game.awayMoneyline;
+    const at = price == null ? '' : ` at ${fmtOdds(price)}`;
+    return `Model gives ${side} ${row.sidePct.toFixed(0)}% where the price${at} is worth ${(row.sidePct - row.spreadEdge).toFixed(0)}% — ${row.spreadEdge.toFixed(1)} points of value.`;
+  }
   const market = row.game.homeSpread;
   const num = market == null ? null : row.spreadSide === 'home' ? market : -market;
   const at = num == null ? '' : ` at ${num > 0 ? `+${num}` : num}`;
   return `Model makes ${side} ${row.spreadEdge.toFixed(1)} better than the number${at} — ${row.sidePct.toFixed(0)}% to win outright.`;
+}
+
+/**
+ * A handicap is the size of a handicap.
+ *
+ * The published feed has carried soccer prices in the spread field — Chelsea
+ * -425 — and the app has to be right about that on the data already on people's
+ * phones, not only on whatever the next refresh writes. So the check lives on
+ * both sides of the wire.
+ */
+const HANDICAP_LIMIT = 30;
+const isPrice = (v: number | null | undefined) => v != null && Math.abs(v) > HANDICAP_LIMIT;
+const handicapOf = (v: number | null | undefined) => (v == null || isPrice(v) ? null : v);
+
+/**
+ * Value on a market with no handicap.
+ *
+ * A soccer market is three prices, not a line, so value is the model's own
+ * probability minus the one the price implies. Two things make that honest:
+ *
+ * The vig comes off first. A book's three prices add up to more than certainty
+ * — about six per cent more on a three-way market, four and a half on a
+ * two-way — and comparing a model against the raw number credits it with value
+ * that is really the book's margin. Where the whole market is on file the
+ * overround is measured; where only part of it is, the usual figure is used and
+ * said so here.
+ *
+ * And the bar is not zero. A model that disagrees by half a point is a model
+ * with rounding error, not an opinion, and a side it gives less than a one-in-
+ * four chance is not a play however good the number looks.
+ */
+const OVERROUND_THREE_WAY = 1.06;
+const OVERROUND_TWO_WAY = 1.045;
+const MIN_PRICE_EDGE = 3;
+const MIN_PRICE_CHANCE = 25;
+
+function priceEdge(g: LiveGame, rec: PredictionRecord): { edge: number; side: 'home' | 'away'; pct: number } | null {
+  // A price filed under the spread is still the home side's price.
+  const homePrice = g.homeMoneyline ?? (isPrice(g.homeSpread) ? g.homeSpread : null);
+  const awayPrice = g.awayMoneyline;
+  const drawPrice = g.drawMoneyline;
+  if (homePrice == null && awayPrice == null) return null;
+
+  const legs = [homePrice, awayPrice, drawPrice].filter((x): x is number => x != null);
+  const whole = drawPrice != null ? legs.length === 3 : legs.length === 2;
+  const overround = whole
+    ? legs.reduce((sum, x) => sum + impliedProb(x), 0)
+    : drawPrice != null ? OVERROUND_THREE_WAY : OVERROUND_TWO_WAY;
+
+  const sides: { side: 'home' | 'away'; price: number | null; pct: number }[] = [
+    { side: 'home', price: homePrice, pct: rec.homeWinPct },
+    { side: 'away', price: awayPrice, pct: rec.awayWinPct },
+  ];
+  let best: { edge: number; side: 'home' | 'away'; pct: number } | null = null;
+  for (const s of sides) {
+    if (s.price == null || s.pct < MIN_PRICE_CHANCE) continue;
+    const edge = s.pct - (impliedProb(s.price) / overround) * 100;
+    if (!best || edge > best.edge) best = { edge, side: s.side, pct: s.pct };
+  }
+  return best && best.edge >= MIN_PRICE_EDGE ? best : null;
 }
 
 /** Build the Edge Board from the published slate and the published projections. */
@@ -106,31 +191,41 @@ export function buildEdges(
   for (const g of games) {
     const rec = byId.get(g.id);
     if (!rec) continue;
-    const market = g.homeSpread ?? rec.marketHomeSpread;
-    if (market == null) continue;
-    const diff = market - rec.spread; // + = model likes home
-    const spreadSide: 'home' | 'away' = diff >= 0 ? 'home' : 'away';
-    const sidePct = spreadSide === 'home' ? rec.homeWinPct : rec.awayWinPct;
-    const ml = spreadSide === 'home' ? g.homeMoneyline : g.awayMoneyline;
+
+    const market = handicapOf(g.homeSpread) ?? handicapOf(rec.marketHomeSpread);
     const marketTotal = g.totalLine ?? rec.marketTotal;
     const totalDiff = marketTotal == null ? 0 : rec.total - marketTotal;
-    const base = {
+    const common = {
       gameId: g.id,
       game: g,
       rec,
-      spreadEdge: Math.abs(diff),
-      spreadSide,
       totalEdge: Math.abs(totalDiff),
       totalSide: (totalDiff >= 0 ? 'over' : 'under') as 'over' | 'under',
-      sidePct,
-      ev: ml == null ? null : evOf(sidePct / 100, ml),
       kickoff: Date.parse(g.kickoff),
       live: g.status === 'in_progress',
       played: g.status === 'final',
     };
+
+    let base: Omit<EdgeRow, 'reason' | 'conviction'>;
+    if (market != null) {
+      const diff = market - rec.spread; // + = model likes home
+      const spreadSide: 'home' | 'away' = diff >= 0 ? 'home' : 'away';
+      const sidePct = spreadSide === 'home' ? rec.homeWinPct : rec.awayWinPct;
+      const ml = spreadSide === 'home' ? g.homeMoneyline : g.awayMoneyline;
+      base = { ...common, spreadEdge: Math.abs(diff), edgeUnit: 'pts', spreadSide, sidePct, ev: ml == null ? null : evOf(sidePct / 100, ml) };
+    } else {
+      // No handicap on this market — soccer, and any game a book has priced
+      // but not spread. Without a price either there is nothing to compare the
+      // model against, so the game simply has no edge to publish.
+      const hit = priceEdge(g, rec);
+      if (!hit) continue;
+      const ml = hit.side === 'home' ? g.homeMoneyline : g.awayMoneyline;
+      base = { ...common, spreadEdge: hit.edge, edgeUnit: 'pct', spreadSide: hit.side, sidePct: hit.pct, ev: ml == null ? null : evOf(hit.pct / 100, ml) };
+    }
+
     rows.push({
       ...base,
-      conviction: convictionOf(base.spreadEdge, sidePct, rec.updates),
+      conviction: convictionOf(base.spreadEdge, base.sidePct, rec.updates, base.edgeUnit),
       reason: reasonFor(base, abbrOf(g.awayId), abbrOf(g.homeId)),
     });
   }

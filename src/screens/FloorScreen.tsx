@@ -72,6 +72,9 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     [games, view.records],
   );
   const board = useMemo(() => rows.filter((r) => !r.played), [rows]);
+  // Games still to play, which is not the same as plays the model likes. The
+  // header counts the slate; the Edge Board counts the opinions.
+  const openGames = useMemo(() => games.filter((g) => g.status !== 'final').length, [games]);
   const lock = useMemo(() => lockOfDay(board), [board]);
   // Upsets and a poll rail are not a college-football thing, they are a
   // "this sport has an underdog / this league has a poll" thing. Both surfaces
@@ -97,7 +100,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     const edges = board.slice(0, 12).map((r) => ({
       key: `e-${r.gameId}`,
       left: `${view.abbrOf(r.game.awayId)}@${view.abbrOf(r.game.homeId)}`,
-      right: `${view.abbrOf(r.spreadSide === 'home' ? r.game.homeId : r.game.awayId)} +${r.spreadEdge.toFixed(1)}`,
+      right: `${view.abbrOf(r.spreadSide === 'home' ? r.game.homeId : r.game.awayId)} +${r.spreadEdge.toFixed(1)}${r.edgeUnit === 'pct' ? '%' : ''}`,
       tone: 'money' as const,
       onPress: () => onOpenGame(r.game.homeId, r.gameId),
     }));
@@ -122,7 +125,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     <SafeAreaView edges={['top']} style={styles.safe}>
       <TabHeader
         title={view.id === 'cfb' ? 'Saturday' : 'The Floor'}
-        subtitle={`${clock()} · ${period} · ${board.length} on the board`}
+        subtitle={`${clock()} · ${period} · ${openGames} on the board`}
         streak
         onUpgrade={onUpgrade}
         onSettings={onOpenModel}
@@ -253,10 +256,17 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
           />
         )}
 
+        {/* Two different silences. A slate with no games is waiting for the
+            fixtures; a slate the model has nothing to say about is an answer,
+            and saying "no games" about twenty of them reads as a broken page. */}
         {!board.length && (
           <View style={styles.empty}>
             <Ionicons name="moon-outline" size={22} color={colors.inkGhost} />
-            <Text style={styles.emptyText}>No open games on the board. The tape comes back the moment the next slate posts.</Text>
+            <Text style={styles.emptyText}>
+              {openGames > 0
+                ? `The model agrees with the number on all ${openGames} games here. Nothing worth a play — which is itself a result.`
+                : 'No open games on the board. The tape comes back the moment the next slate posts.'}
+            </Text>
           </View>
         )}
 
@@ -368,7 +378,7 @@ function LockCard({ row, onOpen, onRun, onAdd }: {
       </TouchableOpacity>
 
       <View style={styles.lockStats}>
-        <Stat label="EDGE" value={`+${row.spreadEdge.toFixed(1)}`} tone={colors.green} />
+        <Stat label="EDGE" value={`+${row.spreadEdge.toFixed(1)}${row.edgeUnit === 'pct' ? '%' : ''}`} tone={colors.green} />
         <Stat label="WIN" value={`${row.sidePct.toFixed(0)}%`} />
         <Stat label="EV" value={row.ev == null ? '—' : `${(row.ev * 100).toFixed(1)}%`} tone={(row.ev ?? 0) > 0 ? colors.green : colors.inkDim} />
       </View>
@@ -435,8 +445,12 @@ function EdgeRowCard({ row, index, awayAbbr, homeAbbr, onOpen, onRun, onAdd, dog
         <ConvictionBar value={row.conviction} width={96} />
       </View>
       <View style={styles.rowRight}>
-        <Text style={[styles.rowEdge, numeric, dog && { color: colors.gold }]}>+{row.spreadEdge.toFixed(1)}</Text>
-        <Text style={styles.rowEdgeLabel}>pts edge</Text>
+        <Text style={[styles.rowEdge, numeric, dog && { color: colors.gold }]}>
+          +{row.spreadEdge.toFixed(1)}{row.edgeUnit === 'pct' ? '%' : ''}
+        </Text>
+        {/* Points of a handicap and points of probability are different things
+            and the label has to say which. */}
+        <Text style={styles.rowEdgeLabel}>{row.edgeUnit === 'pct' ? 'edge vs price' : 'pts edge'}</Text>
         <View style={styles.rowBtns}>
           <TouchableOpacity
             style={[styles.rowAdd, saved && styles.rowAddOn]}

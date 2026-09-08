@@ -103,12 +103,26 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
   const defend = (input.away.attack ?? 1) * (input.home.defence ?? 1);
   let total = p.baseTotal * ((attack + defend) / 2);
 
+  // A market number is only worth following if it is a market number. A feed
+  // that files a price in the spread field — soccer arrived with Chelsea at
+  // -425 — would otherwise be read as a 425-goal handicap and pull the
+  // projection to 75.9 goals to nil, which is what it did. Nothing about a
+  // sport's own scale allows that, so the scale is what decides.
+  const line = plausible(input.marketHomeSpread, p.baseTotal * 1.5);
+  const marketTotal = input.marketTotal != null && input.marketTotal >= p.baseTotal * 0.3 && input.marketTotal <= p.baseTotal * 3
+    ? input.marketTotal
+    : null;
+
   const w = clamp(input.marketWeight ?? 0, 0, 1);
-  if (w > 0 && input.marketHomeSpread != null) margin = margin * (1 - w) + -input.marketHomeSpread * w;
-  if (w > 0 && input.marketTotal != null) total = total * (1 - w) + input.marketTotal * w;
+  if (w > 0 && line != null) margin = margin * (1 - w) + -line * w;
+  if (w > 0 && marketTotal != null) total = total * (1 - w) + marketTotal * w;
 
   return { margin, total: Math.max(p.baseTotal * 0.35, total) };
 }
+
+/** A market line the sport's own scale can account for, or nothing. */
+const plausible = (v: number | null | undefined, limit: number) =>
+  v != null && Number.isFinite(v) && Math.abs(v) <= limit ? v : null;
 
 /** What counts as a one-score game in each sport. */
 const closeBand = (p: SportProfile) => (p.sport === 'football' ? 3.5 : p.sport === 'basketball' ? 3.5 : 1.5);

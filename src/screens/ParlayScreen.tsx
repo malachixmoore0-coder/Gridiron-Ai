@@ -140,7 +140,7 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
                   <Text style={styles.gameTeams}>{abbr(r.game.awayId)} @ {abbr(r.game.homeId)}</Text>
                   <Text style={styles.gameMeta}>
                     {new Date(r.game.kickoff).toLocaleDateString(undefined, { weekday: 'short', hour: 'numeric', minute: '2-digit' })}
-                    {' · '}model edge +{r.spreadEdge.toFixed(1)}
+                    {' · '}model edge +{r.spreadEdge.toFixed(1)}{r.edgeUnit === 'pct' ? '%' : ''}
                     {' · '}{quote.name}
                   </Text>
                 </View>

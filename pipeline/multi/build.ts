@@ -211,7 +211,16 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
 
   // ---- projections, locked at kickoff, never back-filled ------------------
   const prev = readJson<SportPredictionsFile>(path.join(dir, 'predictions.json'));
-  const records = new Map((prev?.records ?? []).map((r) => [r.id, r]));
+  // A projection the sport cannot produce is not a projection. Soccer briefly
+  // carried 75.9 goals to nil, because a price had been read as a 425-goal
+  // handicap and the market pull followed it. Those are dropped rather than
+  // kept: an open one is simulated again from the corrected line, and a locked
+  // one is better ungraded than graded against a number that was never real.
+  const sane = (r: SportPredictionRecord) => r.projectedHome + r.projectedAway <= p.baseTotal * 3;
+  const kept = (prev?.records ?? []).filter(sane);
+  const dropped = (prev?.records ?? []).length - kept.length;
+  if (dropped) console.log(`  dropped ${dropped} projection${dropped === 1 ? '' : 's'} the sport could not have produced`);
+  const records = new Map(kept.map((r) => [r.id, r]));
   const teamById = new Map(sportTeams.map((t) => [t.id, t]));
   let opened = 0;
   let locked = 0;
