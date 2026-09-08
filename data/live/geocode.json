@@ -11,13 +11,26 @@
   "lat": 47.47156,
   "lng": -0.55202
  },
+ "athens, greece": null,
  "atlanta, georgia": {
+  "lat": 33.749,
+  "lng": -84.38798
+ },
+ "atlanta, georgia, usa": {
   "lat": 33.749,
   "lng": -84.38798
  },
  "aue, germany": {
   "lat": 50.59034,
   "lng": 12.70657
+ },
+ "augsburg, germany": {
+  "lat": 48.37154,
+  "lng": 10.89851
+ },
+ "austin, texas, usa": {
+  "lat": 30.26715,
+  "lng": -97.74306
  },
  "auxerre, france": {
   "lat": 47.7996,
@@ -34,6 +47,10 @@
  "bergamo, italy": {
   "lat": 45.69601,
   "lng": 9.66721
+ },
+ "berlin, germany": {
+  "lat": 52.52437,
+  "lng": 13.41053
  },
  "bilbao, spain": {
   "lat": 43.26271,
@@ -75,7 +92,15 @@
   "lat": 51.20892,
   "lng": 3.22424
  },
+ "chester, pennsylvania, usa": {
+  "lat": 39.84753,
+  "lng": -75.35785
+ },
  "chicago, illinois": {
+  "lat": 41.85003,
+  "lng": -87.65005
+ },
+ "chicago, illinois, usa": {
   "lat": 41.85003,
   "lng": -87.65005
  },
@@ -83,7 +108,7 @@
   "lat": 39.12711,
   "lng": -84.51439
  },
- "ciudad ju\u00e1rez, mexico": {
+ "ciudad juárez, mexico": {
   "lat": 31.72024,
   "lng": -106.46084
  },
@@ -159,7 +184,11 @@
   "lat": 25.67678,
   "lng": -100.25646
  },
- "istanbul, t\u00fcrkiye": {
+ "houston, texas, usa": {
+  "lat": 29.76328,
+  "lng": -95.36327
+ },
+ "istanbul, türkiye": {
   "lat": 41.01384,
   "lng": 28.94966
  },
@@ -167,7 +196,7 @@
   "lat": 39.09973,
   "lng": -94.57857
  },
- "la coru\u00f1a, spain": {
+ "la coruña, spain": {
   "lat": 25.88048,
   "lng": -103.29757
  },
@@ -219,6 +248,10 @@
   "lat": 34.05223,
   "lng": -118.24368
  },
+ "los angeles, california, usa": {
+  "lat": 34.05223,
+  "lng": -118.24368
+ },
  "lyon, france": {
   "lat": 45.74906,
   "lng": 4.84789
@@ -263,21 +296,29 @@
   "lat": 43.73718,
   "lng": 7.42145
  },
+ "mönchengladbach, germany": {
+  "lat": 51.18539,
+  "lng": 6.44172
+ },
+ "montreal, canada": {
+  "lat": 45.50884,
+  "lng": -73.58781
+ },
  "monza, italy": {
   "lat": 45.58005,
   "lng": 9.27246
  },
- "m\u00f6nchengladbach, germany": {
-  "lat": 51.18539,
-  "lng": 6.44172
- },
- "m\u00fcnchen, germany": {
+ "münchen, germany": {
   "lat": 48.13743,
   "lng": 11.57549
  },
  "napoli, italy": {
   "lat": 40.87618,
   "lng": 14.5195
+ },
+ "new york, new york, usa": {
+  "lat": 40.71427,
+  "lng": -74.00597
  },
  "nice, france": {
   "lat": 43.70313,
@@ -315,6 +356,10 @@
   "lat": 40.44062,
   "lng": -79.99589
  },
+ "portland, oregon, usa": {
+  "lat": 45.52345,
+  "lng": -122.67621
+ },
  "porto, portugal": {
   "lat": 41.1485,
   "lng": -8.61097
@@ -347,7 +392,15 @@
   "lat": 38.58157,
   "lng": -121.4944
  },
+ "saint paul, minnesota, usa": {
+  "lat": 44.94441,
+  "lng": -93.09327
+ },
  "san diego, california": {
+  "lat": 32.71571,
+  "lng": -117.16472
+ },
+ "san diego, california, usa": {
   "lat": 32.71571,
   "lng": -117.16472
  },
@@ -367,7 +420,7 @@
   "lat": 43.46589,
   "lng": -3.80493
  },
- "santiago de quer\u00e9taro, mexico": {
+ "santiago de querétaro, mexico": {
   "lat": 20.58806,
   "lng": -100.38806
  },
@@ -411,7 +464,11 @@
   "lat": 45.07049,
   "lng": 7.68682
  },
- "torre\u00f3n, mexico": {
+ "toronto, canada": {
+  "lat": 43.70643,
+  "lng": -79.39864
+ },
+ "torreón, mexico": {
   "lat": 25.54389,
   "lng": -103.41898
  },
@@ -422,6 +479,10 @@
  "udine, italy": {
   "lat": 46.0693,
   "lng": 13.23715
+ },
+ "vancouver, canada": {
+  "lat": 49.24966,
+  "lng": -123.11934
  },
  "venezia, italy": {
   "lat": 44.42329,
@@ -440,6 +501,10 @@
   "lng": -2.67268
  },
  "washington, district of columbia": {
+  "lat": 38.89511,
+  "lng": -77.03637
+ },
+ "washington, district of columbia, usa": {
   "lat": 38.89511,
   "lng": -77.03637
  }
