@@ -1,20 +1,20 @@
-# soccer — 2026-09-08T01:21:23.340Z
+# soccer — 2026-09-08T01:28:08.889Z
 
 
-=== epl https://www.premierleague.com/en/clubs → 382986 bytes
+=== epl https://www.premierleague.com/en/clubs → 391026 bytes
    87  /resources/#/i/svg-output/icons.svg#icn-external-link   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-external-link
    71  /resources/#/i/svg-output/icons.svg#icn-chevron-right   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-chevron-right
    51  /resources/#/i/svg-output/icons.svg#icn-stadium   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-stadium
    13  /resources/#/i/favicon/#   e.g. /resources/v1.52.5/i/favicon/apple-touch-icon-57x57.png
     7  https://www.premierleague.com/en/clubs   e.g. https://www.premierleague.com/en/clubs
+    3  https://www.premierleague.com/en/welcome/the-archive   e.g. https://www.premierleague.com/en/welcome/the-archive
     3  /resources/#/i/svg-output/icons.svg#icn-chevron-down   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-chevron-down
     3  https://www.premierleague.com/en/matches   e.g. https://www.premierleague.com/en/matches
     3  https://www.premierleague.com/en/tables   e.g. https://www.premierleague.com/en/tables
     3  https://www.premierleague.com/en/stats   e.g. https://www.premierleague.com/en/stats
-    3  https://www.premierleague.com/en/fantasy   e.g. https://www.premierleague.com/en/fantasy
   (no club link found)
 
-=== laliga https://www.laliga.com/en-US/clubs → 174061 bytes
+=== laliga https://www.laliga.com/en-US/clubs → 179899 bytes
     3  https://www.laliga.com/informacion-legal/politica-cookies   e.g. https://www.laliga.com/informacion-legal/politica-cookies
     2  /   e.g. /
     2  /_next/static/css/#   e.g. /_next/static/css/3eff8dd1f3e9f76f.css
@@ -38,9 +38,9 @@
     4  {{tos}}   e.g. {{tos}}
     4  {{privacy}}   e.g. {{privacy}}
     3  /en/bundesliga/info/broadcasters   e.g. /en/bundesliga/info/broadcasters
-  (no club link found)
+  → club pages look like /en/bundesliga/clubs/# (6)
 
-=== seriea https://en.legaseriea.it/team → 1600109 bytes
+=== seriea https://en.legaseriea.it/team → 1596772 bytes
    11  /_next/static/chunks/#   e.g. /_next/static/chunks/webpack-e011fb0ebd706d56.js
     8  /_next/static/media/#   e.g. /_next/static/media/2a91a414f28b9df3-s.p.woff
     3  /_next/static/css/#   e.g. /_next/static/css/5c9555c91fd9709e.css
@@ -53,7 +53,7 @@
     1  https://www.googletagservices.com/tag/js/gpt.js   e.g. https://www.googletagservices.com/tag/js/gpt.js
   (no club link found)
 
-=== ligue1 https://ligue1.com/en/competitions/ligue1mcdonalds/standings → 348101 bytes
+=== ligue1 https://ligue1.com/en/competitions/ligue1mcdonalds/standings → 343552 bytes
    18  /en/club-sheet/#/info   e.g. /en/club-sheet/l1_championship_club_2026_9/info
     9  /en/articles/#   e.g. /en/articles/l1_article_5793-matchday-two-what-are-the-key-stats
     8  /fonts/#   e.g. /fonts/GTAmerica-Bold.woff2
@@ -64,9 +64,9 @@
     3  /en/fantasy   e.g. /en/fantasy
     3  /en/competitions/#/news   e.g. /en/competitions/ligue1mcdonalds/news
     3  https://#/   e.g. https://plus.ligue1.com/
-  (no club link found)
+  → club pages look like /en/club-sheet/#/info (18)
 
-=== mls https://www.mlssoccer.com/clubs/ → 425787 bytes
+=== mls https://www.mlssoccer.com/clubs/ → 421002 bytes
     4  /assets/fonts/MLSTifo/#   e.g. /assets/fonts/MLSTifo/MLSTifo--regular.woff2
     4  https://soc.cr/#   e.g. https://soc.cr/4krM2op
     4  /media-resources/   e.g. /media-resources/
@@ -79,7 +79,7 @@
     3  https://www.mlssoccer.com/clubs/index   e.g. https://www.mlssoccer.com/clubs/index
   (no club link found)
 
-=== ligamx https://ligamx.net → 623004 bytes
+=== ligamx https://ligamx.net → 623189 bytes
   100  /estadistica/g/#   e.g. /estadistica/g/eyJ0aXR1bG9UYWJsYSI6IkcgLSBKb3PpIFNhbG9t824gUm9uZPNuIiwic
    99  /estadistica/mj/#   e.g. /estadistica/mj/eyJ0aXR1bG9UYWJsYSI6Ik1KIC0gSm9z6SBTYWxvbfNuIFJvbmTzbiIs
    54  estadistica/tj/#   e.g. estadistica/tj/eyJ0aXR1bG9UYWJsYSI6IlRvdGFsIGRlIEp1ZWdvcyAtIEFt6XJpY2EiL
@@ -92,7 +92,7 @@
    17  http://online.caliente.mx/promoRedirect   e.g. http://online.caliente.mx/promoRedirect?member=ligamx&amp;campaign=DEFAU
   → club pages look like cancha/club/#/america (11)
 
-=== ucl https://www.uefa.com/uefachampionsleague/clubs/ → 309702 bytes
+=== ucl https://www.uefa.com/uefachampionsleague/clubs/ → 309712 bytes
    81  /uefachampionsleague/clubs/#/   e.g. /uefachampionsleague/clubs/50129--aek-athens/
    36  https://www.uefa.com/CompiledAssets/UefaCom/js/../js/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../js/npm-beautiful-react
    12  https://www.uefa.com/CompiledAssets/UefaCom/js/../css/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../css/83021.a838bbde.css
@@ -105,7 +105,95 @@
     2  //img.uefa.com/imgml/favicon/comp/ucl.ico   e.g. //img.uefa.com/imgml/favicon/comp/ucl.ico
   → club pages look like /uefachampionsleague/clubs/#/ (81)
 
---- ligamx https://ligamx.net/cancha/club/1/america → 147 images
+--- bundesliga https://www.bundesliga.com/en/bundesliga/clubs/bayer-04-leverkusen → 145 images
+  alt="DFB Cup" text="BL 2BL VBL" href=/en/dfb-cup/matchday
+      /assets/logos/dfbcup-black.svg
+  alt="DFB Cup" text="BL 2BL VBL" href=/en/dfb-cup/matchday
+      /assets/logos/dfbcup-white.svg
+  alt="world-cup" text="BL 2BL VBL" href=/en/world-cup
+      /assets/logos/wm-2026-alt-positive.svg
+  alt="world-cup" text="BL 2BL VBL" href=/en/world-cup
+      /assets/logos/wm-2026-alt-negative.svg
+  alt="" text="BUNDESLIGA APP" href=https://bundesliga.go.link/3jWrv
+      /assets/header-metanavigation/bundesliga-app-logo.svg
+  alt="" text="FANTASY MANAGER" href=https://bundesliga.go.link/g4Sjm
+      /assets/header-metanavigation/fantasy-app-logo.svg
+  alt="Bundesliga.com" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=/en/bundesliga
+      /assets/logo/bundesliga_pos.svg
+  alt="Bundesliga.com" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=/en/bundesliga
+      /assets/logo/bundesliga_neg.svg
+  alt="USA Networks" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=https://www.usanetwork.com/
+      https://assets.bundesliga.com/contender/2026/7/USASports_Hero_Stacked_large_USAred_rgb.png?fit=240,60
+  alt="" text="More" href=
+      /assets/icons/simple/arrow-simple-down.svg
+
+--- bundesliga https://www.bundesliga.com/en/bundesliga/clubs/bayer-04-leverkusen/squad → 145 images
+  alt="DFB Cup" text="BL 2BL VBL" href=/en/dfb-cup/matchday
+      /assets/logos/dfbcup-black.svg
+  alt="DFB Cup" text="BL 2BL VBL" href=/en/dfb-cup/matchday
+      /assets/logos/dfbcup-white.svg
+  alt="world-cup" text="BL 2BL VBL" href=/en/world-cup
+      /assets/logos/wm-2026-alt-positive.svg
+  alt="world-cup" text="BL 2BL VBL" href=/en/world-cup
+      /assets/logos/wm-2026-alt-negative.svg
+  alt="" text="BUNDESLIGA APP" href=https://bundesliga.go.link/3jWrv
+      /assets/header-metanavigation/bundesliga-app-logo.svg
+  alt="" text="FANTASY MANAGER" href=https://bundesliga.go.link/g4Sjm
+      /assets/header-metanavigation/fantasy-app-logo.svg
+  alt="Bundesliga.com" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=/en/bundesliga
+      /assets/logo/bundesliga_pos.svg
+  alt="Bundesliga.com" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=/en/bundesliga
+      /assets/logo/bundesliga_neg.svg
+  alt="USA Networks" text="OFFICIAL WEBSITE BROUGHT TO YOU BY" href=https://www.usanetwork.com/
+      https://assets.bundesliga.com/contender/2026/7/USASports_Hero_Stacked_large_USAred_rgb.png?fit=240,60
+  alt="" text="More" href=
+      /assets/icons/simple/arrow-simple-down.svg
+
+--- ligue1 https://ligue1.com/en/club-sheet/l1_championship_club_2026_9/info → 66 images
+  alt="ligue1-logo" text="Home Calendar Videos Fantasy Data Zone T" href=/en
+      /images/Logo_Ligue1.webp
+  alt="ligue1-logo" text="Loginen" href=/en
+      /images/Logo_Ligue1.webp
+  alt="AS Monaco" text="AS Monaco 1 st" href=
+      https://s3.eu-west-1.amazonaws.com/image.mpg/assets/clubs/logo/2023_1_9_768x768_0f59d1cadcd741881109da1a49bb7a0d.png
+  alt="AS Monaco" text="AS Monaco 1 st" href=
+      https://s3.eu-west-1.amazonaws.com/image.mpg/assets/clubs/whiteLogo/2023_1_9_768x768_04de42489490b5198687fb9920420661.pn
+  alt="Matchday Two: What are the key sta" text="News" href=/en/articles/l1_article_5793-matchday-two-wh
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/310826_brunner_2_035780d553.webp
+  alt="" text="One To Watch" href=/en/articles/l1_article_5792-filipe-luis-in-
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/31_08_monaco_luis_2_d905e959bc.webp
+  alt="" text="One To Watch" href=/en/articles/l1_article_5791-gessime-yassine
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/Yassine_J2_2627_1_6a8e91a83b.webp
+  alt="" text="17:40" href=
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/large_LIGUE_1_2026_24_J03_highlight_Gameweek_english_vdef_e1d2a2ad18
+  alt="" text="05:04" href=
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/large_LIGUE_1_2026_24_J03_2640581_highlight_Match_english_vdef_45830
+  alt="" text="10:16" href=
+      https://s3.eu-west-3.amazonaws.com/ligue1.image/cms/large_LIGUE_1_2026_24_J03_all_Goals_6fa0f0a9d3.webp
+
+--- ligue1 https://ligue1.com/en/club-sheet/l1_championship_club_2026_9/info/squad → 56 images
+  alt="ligue1-logo" text="Home Calendar Videos Fantasy Data Zone T" href=/en
+      /images/Logo_Ligue1.webp
+  alt="ligue1-logo" text="Loginen" href=/en
+      /images/Logo_Ligue1.webp
+  alt="MacDonald's Logo" text="Namers partner" href=https://www.mcdonalds.fr/
+      /images/partnerships/MCDO.webp
+  alt="BKT Logo" text="Namers partner" href=https://www.bkt-tires.com/fr/fr/
+      /images/partnerships/BKT.webp
+  alt="Essilor Logo" text="Major partner" href=https://www.essilor.com/fr-fr/
+      /images/Logo-Essilor.webp
+  alt="DECATHLON Logo" text="Official partners" href=https://www.decathlon.fr/sport/c0-tous-les-s
+      /images/partnerships/DECATHLON.webp
+  alt="La Poste Logo" text="Official partners" href=https://www.laposte.fr/
+      /images/partnerships/LAPOSTE.webp
+  alt="PointP Logo" text="Official partners" href=https://www.pointp.fr/
+      /images/partnerships/POINTP.webp
+  alt="BEINSPORT Logo" text="Official broadcasters" href=https://sabonner.beinsports.com/
+      /images/partnerships/BEINSPORTS.webp
+  alt="LIGUE1PLUS Logo" text="Official broadcasters" href=https://plus.ligue1.com/
+      /images/partnerships/LIGUE1PLUS.webp
+
+--- ligamx https://ligamx.net/cancha/club/1/america → 150 images
   alt="América" text="" href=/cancha/club/1/america
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/1/1.png?rnd=300622
   alt="Guadalajara" text="" href=/cancha/club/7/guadalajara
@@ -127,7 +215,7 @@
   alt="Monterrey" text="" href=/cancha/club/14/monterrey
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/14/14.png?rnd=300622
 
---- ligamx https://ligamx.net/cancha/club/1/america/squad → 150 images
+--- ligamx https://ligamx.net/cancha/club/1/america/squad → 147 images
   alt="América" text="" href=/cancha/club/1/america
       https://cldrsrcs.apilmx.com/v1/docs/archdgtl/AfldDrct/logos64x64/1/1.png?rnd=300622
   alt="Guadalajara" text="" href=/cancha/club/7/guadalajara
