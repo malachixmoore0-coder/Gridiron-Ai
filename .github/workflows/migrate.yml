@@ -1,0 +1,101 @@
+# Apply the database schema.
+#
+# Claude Code's sandbox cannot reach supabase.co — the egress proxy refuses the
+# CONNECT — so the schema cannot be applied from a session. A runner can, and
+# doing it here rather than by hand in the SQL editor is worth it beyond the
+# first time: the schema in this repo becomes the schema that is actually live,
+# instead of the two drifting apart every time somebody pastes a fix into the
+# dashboard and forgets to bring it back.
+#
+# One-time setup: add the connection string as a repository secret.
+#   Supabase → Project Settings → Database → Connection string → URI
+#   GitHub  → Settings → Secrets and variables → Actions → New secret
+#     Name:  SUPABASE_DB_URL
+#     Value: postgresql://postgres.<ref>:<password>@<host>:5432/postgres
+#
+# That string contains the database password, so it is a secret and never a
+# variable — secrets are masked in logs, variables are printed in plain text.
+#
+# Manual only, on purpose. `docs/social-schema.sql` is written to be safe to run
+# repeatedly (create ... if not exists, create or replace, drop policy if
+# exists), but DDL on a live database should be something a person chose to do,
+# not something a push does on their behalf.
+
+name: Apply database schema
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm:
+        description: 'Type "apply" to run the schema against the live database'
+        required: true
+        default: ''
+
+jobs:
+  migrate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check the confirmation
+        if: ${{ inputs.confirm != 'apply' }}
+        run: |
+          echo "::error::Type 'apply' to confirm. Nothing was run."
+          exit 1
+
+      - uses: actions/checkout@v4
+
+      - name: Check the secret exists
+        env:
+          DB: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -z "$DB" ]; then
+            echo "::error::SUPABASE_DB_URL is not set. See the comment at the top of this workflow."
+            exit 1
+          fi
+
+      - name: Apply the schema
+        env:
+          # ON_ERROR_STOP makes psql exit on the first failure instead of
+          # ploughing on and leaving the database half-migrated.
+          PGOPTIONS: '--client-min-messages=warning'
+          DB: ${{ secrets.SUPABASE_DB_URL }}
+        run: psql "$DB" -v ON_ERROR_STOP=1 -f docs/social-schema.sql
+
+      - name: Report what is live
+        env:
+          DB: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          echo "### Tables" >> "$GITHUB_STEP_SUMMARY"
+          psql "$DB" -At -c "select tablename from pg_tables where schemaname='public' order by 1" \
+            | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Views, and whether they respect row-level security" >> "$GITHUB_STEP_SUMMARY"
+          # security_invoker is the difference between the feed views enforcing
+          # the posts policy and quietly bypassing it, so it is asserted rather
+          # than assumed.
+          psql "$DB" -At -F' ' -c "
+            select c.relname,
+                   coalesce((select option_value from pg_options_to_table(c.reloptions)
+                             where option_name = 'security_invoker'), 'off')
+            from pg_class c join pg_namespace n on n.oid = c.relnamespace
+            where n.nspname = 'public' and c.relkind = 'v' order by 1" \
+            | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+          echo "" >> "$GITHUB_STEP_SUMMARY"
+          echo "### Row-level security" >> "$GITHUB_STEP_SUMMARY"
+          psql "$DB" -At -F' ' -c "
+            select tablename, case when rowsecurity then 'on' else 'OFF' end,
+                   (select count(*) from pg_policies p where p.tablename = t.tablename) || ' policies'
+            from pg_tables t where schemaname='public' order by 1" \
+            | sed 's/^/- /' >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Fail if row-level security is off anywhere
+        env:
+          DB: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          OPEN=$(psql "$DB" -At -c "
+            select string_agg(tablename, ', ')
+            from pg_tables where schemaname='public' and not rowsecurity")
+          if [ -n "$OPEN" ]; then
+            echo "::error::Row-level security is OFF on: $OPEN"
+            exit 1
+          fi
+          echo "Row-level security is on for every public table."
