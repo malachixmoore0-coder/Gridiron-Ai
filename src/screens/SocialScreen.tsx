@@ -9,7 +9,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, RefreshControl, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing, type as T } from '@/theme';
+import { colors, radius, spacing, type as T, clearance } from '@/theme';
 import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLeague } from '@/league/LeagueContext';
@@ -196,7 +196,7 @@ const styles = StyleSheet.create({
   scopeText: { color: colors.inkFaint, fontSize: 12, fontWeight: '800' },
   scopeTextOn: { color: colors.green },
 
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.dock },
   empty: { color: colors.inkFaint, fontSize: 13, textAlign: 'center', marginTop: spacing.xl, lineHeight: 19 },
 
   signCard: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.borderHi, padding: spacing.lg, marginBottom: spacing.lg, gap: spacing.sm },

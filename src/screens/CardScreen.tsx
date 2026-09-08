@@ -14,7 +14,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing, type as T } from '@/theme';
+import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme';
 import { useEngagement, type SavedPick } from '@/context/EngagementContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useTeams } from '@/context/TeamsContext';
@@ -103,7 +103,7 @@ export function CardScreen({ onUpgrade, onOpenGame, onShare, embedded }: Props) 
             blurb="Turn your card into an image built for a group chat — the pick, the model's number, your record. Starter turns it on."
             cta="Unlock share cards"
             onPress={onUpgrade}
-            style={{ height: 150, marginBottom: spacing.lg }}
+            style={{ marginBottom: spacing.lg }}
           />
         ) : (
           <TouchableOpacity style={styles.share} activeOpacity={0.85} onPress={share}>
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
   head: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: spacing.lg, paddingBottom: spacing.md, gap: spacing.sm },
   title: { ...T.title, color: colors.ink },
   sub: { color: colors.inkFaint, fontSize: 11, fontWeight: '700', marginTop: 1 },
-  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: clearance.overlay },
 
   summary: { flexDirection: 'row', gap: spacing.sm, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md },
   cell: { flex: 1 },

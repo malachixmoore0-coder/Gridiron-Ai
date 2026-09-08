@@ -96,11 +96,23 @@ interface LockedProps {
   style?: ViewStyle;
 }
 
+/**
+ * A locked surface.
+ *
+ * The body lays itself out rather than filling a box of a height somebody
+ * guessed: every one of these was written with a fixed height, and the moment a
+ * title or a blurb needed a second line it was clipped in half and its button
+ * landed on top of whatever came next. The card is as tall as what is in it.
+ *
+ * The preview sits behind, and it is deliberately hard to read — the point of a
+ * teaser is that you can tell something is there, not that you can squint at it
+ * and take the pick for free.
+ */
 export function Locked({ title, blurb, cta, onPress, preview, style }: LockedProps) {
   return (
     <View style={[styles.lockedWrap, style]}>
       {!!preview && <View style={styles.lockedPreview} pointerEvents="none">{preview}</View>}
-      <LinearGradient colors={grad.fade} style={StyleSheet.absoluteFill as ViewStyle} pointerEvents="none" />
+      <LinearGradient colors={grad.veil} style={StyleSheet.absoluteFill as ViewStyle} pointerEvents="none" />
       <View style={styles.lockedBody}>
         <View style={styles.lockedIcon}><Ionicons name="lock-closed" size={16} color={colors.gold} /></View>
         <Text style={styles.lockedTitle}>{title}</Text>
@@ -133,9 +145,9 @@ const styles = StyleSheet.create({
   conv: { flexDirection: 'row', gap: 2 },
   convSeg: { flex: 1, height: 5, borderRadius: 2 },
 
-  lockedWrap: { borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
-  lockedPreview: { opacity: 0.16 },
-  lockedBody: { ...StyleSheet.absoluteFillObject, alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: 6 },
+  lockedWrap: { borderRadius: radius.lg, overflow: 'hidden', backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, justifyContent: 'center' },
+  lockedPreview: { ...StyleSheet.absoluteFillObject, opacity: 0.07 },
+  lockedBody: { alignItems: 'center', justifyContent: 'center', padding: spacing.lg, gap: 8, minHeight: 132 },
   lockedIcon: { width: 34, height: 34, borderRadius: 12, backgroundColor: colors.goldSoft, alignItems: 'center', justifyContent: 'center' },
   lockedTitle: { color: colors.ink, fontSize: 15, fontWeight: '800', textAlign: 'center' },
   lockedBlurb: { color: colors.inkDim, fontSize: 12, textAlign: 'center', lineHeight: 17, maxWidth: 300 },

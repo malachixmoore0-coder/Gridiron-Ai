@@ -11,7 +11,7 @@ import React, { useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { PlayerAvatar } from '@/components/PlayerAvatar';
 import { RefMark } from '@/components/RefMark';
 import { useActiveLeague } from '@/league/LeagueContext';
@@ -189,7 +189,7 @@ const ordinal = (n: number) => {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { paddingBottom: 40 },
+  body: { paddingBottom: clearance.overlay },
 
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: colors.bg, padding: spacing.xl },
   missingText: { color: colors.inkFaint, fontSize: 13, textAlign: 'center' },

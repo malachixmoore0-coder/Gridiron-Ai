@@ -14,7 +14,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing, type as T } from '@/theme';
+import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme';
 import { useActiveLeague } from '@/league/LeagueContext';
 import { LeagueSwitch } from '@/components/LeagueSwitch';
 import { useEntitlements } from '@/context/EntitlementsContext';
@@ -261,7 +261,7 @@ const styles = StyleSheet.create({
   clear: { alignSelf: 'flex-start', marginTop: spacing.sm },
   clearText: { color: colors.inkGhost, fontSize: 11, fontWeight: '800' },
 
-  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: clearance.overlay },
   game: { marginBottom: spacing.sm, backgroundColor: colors.card, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, overflow: 'hidden' },
   gameHead: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.md },
   gameTeams: { color: colors.ink, fontSize: 13, fontWeight: '900' },

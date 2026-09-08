@@ -10,7 +10,7 @@ import React, { useEffect, useMemo } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Image, ActivityIndicator } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, grad, numeric, radius, spacing } from '@/theme';
+import { colors, grad, numeric, radius, spacing, clearance } from '@/theme';
 import { useGolf } from '@/sports/GolfContext';
 import { fieldSeed, simulateField } from '@/sports/golf';
 import { sizedHeadshot } from '@/utils/roster';
@@ -139,7 +139,7 @@ function Cell({ label, value, tone }: { label: string; value: string; tone?: str
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { paddingBottom: 40 },
+  body: { paddingBottom: clearance.overlay },
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: colors.bg, padding: spacing.xl },
   missingText: { color: colors.inkFaint, fontSize: 13, textAlign: 'center' },
   missingBtn: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },

@@ -20,7 +20,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, M
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, grad, numeric, radius, shadow, spacing, type as T } from '@/theme';
+import { colors, grad, numeric, radius, shadow, spacing, type as T, clearance } from '@/theme';
 import { useActiveLeague, useBoardLeagues, useLeague } from '@/league/LeagueContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useEngagement } from '@/context/EngagementContext';
@@ -214,7 +214,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
             cta="Unlock the Lock"
             onPress={onUpgrade}
             preview={<LockCard row={lock} onOpen={() => {}} onRun={() => {}} onAdd={() => {}} />}
-            style={{ height: 218, marginBottom: spacing.lg }}
+            style={{ marginBottom: spacing.lg }}
           />
         ))}
 
@@ -302,7 +302,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
             preview={<View>{board.slice(visible.length, visible.length + 3).map((r, i) => (
               <EdgeRowCard key={r.gameId} row={r} index={visible.length + i + 1} awayAbbr="—" homeAbbr="—" onOpen={() => {}} onRun={() => {}} onAdd={() => {}} />
             ))}</View>}
-            style={{ height: 230, marginBottom: spacing.lg }}
+            style={{ marginBottom: spacing.lg }}
           />
         )}
 
@@ -351,7 +351,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
                 preview={<View>{radar.slice(0, 2).map((r) => (
                   <EdgeRowCard key={`p-${r.gameId}`} row={r} dog awayAbbr="—" homeAbbr="—" onOpen={() => {}} onRun={() => {}} onAdd={() => {}} />
                 ))}</View>}
-                style={{ height: 176, marginBottom: spacing.lg }}
+                style={{ marginBottom: spacing.lg }}
               />
             )}
           </>
@@ -574,9 +574,10 @@ function CrossCard({ pick, free, here, onPress }: { pick: CrossPick; free: boole
 /**
  * A sport that is playing, and an opinion you have not paid for.
  *
- * The matchup and the strength of the opinion stay visible; the side and the
- * number do not. That is the honest shape of a paywall on a tip: enough to know
- * something is there, not enough to bet on.
+ * The sport and the strength of the opinion stay legible; the teams and the
+ * pick do not. The matchup is blurred rather than removed, because the shape of
+ * a row that is deliberately withheld reads very differently from an empty one
+ * — and because naming the game gives away half the pick on a two-team board.
  */
 function CrossLocked({ pick, onPress }: { pick: CrossPick; onPress: () => void }) {
   return (
@@ -597,7 +598,7 @@ function CrossLocked({ pick, onPress }: { pick: CrossPick; onPress: () => void }
       <View style={styles.crossMain}>
         <View style={{ flex: 1 }}>
           <View style={styles.crossBlur}><Ionicons name="lock-closed" size={12} color={colors.gold} /><Text style={styles.crossBlurText}>Pick hidden</Text></View>
-          <Text style={styles.crossGameMuted} numberOfLines={1}>{pick.awayAbbr} @ {pick.homeAbbr}</Text>
+          <Text style={[styles.crossGameMuted, styles.blurred]} numberOfLines={1}>{pick.awayAbbr} @ {pick.homeAbbr}</Text>
         </View>
         <Ionicons name="chevron-forward" size={16} color={colors.inkGhost} />
       </View>
@@ -607,7 +608,7 @@ function CrossLocked({ pick, onPress }: { pick: CrossPick; onPress: () => void }
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.dock },
 
   rail: { marginBottom: spacing.lg },
   railLabel: { color: colors.inkFaint, fontSize: 9, fontWeight: '900', letterSpacing: 1.6, marginBottom: spacing.sm },
@@ -662,6 +663,9 @@ const styles = StyleSheet.create({
   crossEdgeLabel: { color: colors.inkFaint, fontSize: 9, fontWeight: '700', letterSpacing: 0.3 },
   crossLocked: { backgroundColor: colors.cardAlt, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md, gap: 6, opacity: 0.92 },
   crossBlur: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  // Text rendered as its own shadow: legible as a shape, unreadable as words,
+  // and it works the same on a phone and in a browser.
+  blurred: { color: 'transparent', textShadowColor: colors.inkDim, textShadowOffset: { width: 0, height: 0 }, textShadowRadius: 7 },
   crossBlurText: { color: colors.gold, fontSize: 13, fontWeight: '800' },
   freeTag: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: radius.sm, backgroundColor: colors.greenSoft },
   freeTagText: { color: colors.green, fontSize: 8.5, fontWeight: '900', letterSpacing: 0.6 },

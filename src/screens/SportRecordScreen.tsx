@@ -9,7 +9,7 @@
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { Chip } from '@/components/Chip';
 import { RefMark } from '@/components/RefMark';
 import { Locked } from '@/components/Pro';
@@ -120,7 +120,7 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
           blurb="When the model says 70%, does it win 70% of the time? The calibration curve is how you tell a model that is right from one that is merely confident."
           cta="Unlock calibration"
           onPress={onUpgrade ?? (() => {})}
-          style={{ height: 150, marginBottom: 16 }}
+          style={{ marginBottom: 16 }}
         />
       ))}
 
@@ -223,7 +223,7 @@ function Badge({ ok, push, label }: { ok: boolean; push?: boolean; label: string
 }
 
 const styles = StyleSheet.create({
-  body: { padding: spacing.lg, paddingTop: spacing.sm, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingTop: spacing.sm, paddingBottom: clearance.dock },
   empty: { alignItems: 'center', gap: 10, margin: spacing.lg, padding: spacing.xl, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border },
   emptyText: { color: colors.inkFaint, fontSize: 12, lineHeight: 17, textAlign: 'center', maxWidth: 300 },
 

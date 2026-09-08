@@ -11,7 +11,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { RefMark } from '@/components/RefMark';
 import { useActiveLeague } from '@/league/LeagueContext';
 import { useSports } from '@/sports/SportsContext';
@@ -250,7 +250,7 @@ function TeamSheet({
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.overlay },
   title: { color: colors.ink, fontSize: 22, fontWeight: '900' },
   sub: { color: colors.inkFaint, fontSize: 11.5, lineHeight: 16, marginTop: 4 },
 
@@ -294,7 +294,7 @@ const styles = StyleSheet.create({
   sheetTitle: { color: colors.ink, fontSize: 16, fontWeight: '900' },
   searchRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginHorizontal: spacing.lg, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   search: { flex: 1, color: colors.ink, fontSize: 13, padding: 0 },
-  sheetBody: { padding: spacing.lg, paddingBottom: 40 },
+  sheetBody: { padding: spacing.lg, paddingBottom: clearance.overlay },
   teamRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, padding: spacing.sm, borderRadius: radius.md, borderWidth: 1, borderColor: colors.border, backgroundColor: colors.card, marginBottom: 6 },
   teamRowOn: { borderColor: colors.green },
   teamName: { color: colors.ink, fontSize: 13, fontWeight: '800' },

@@ -12,7 +12,7 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, Switch, ActivityIndicator, Image } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing, type as T } from '@/theme';
+import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme';
 import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { Avatar, PostCard, SignInRow } from '@/components/Social';
@@ -337,7 +337,7 @@ function Row({ label, hint, value, onChange }: { label: string; hint: string; va
 
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.overlay },
   title: { ...T.title, color: colors.ink, fontSize: 24, marginBottom: spacing.md },
   blurb: { color: colors.inkDim, fontSize: 13, lineHeight: 19 },
   card: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.borderHi, padding: spacing.lg, gap: spacing.md },

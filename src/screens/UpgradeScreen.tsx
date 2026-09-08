@@ -16,7 +16,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, grad, numeric, radius, shadow, spacing, type as T } from '@/theme';
+import { colors, grad, numeric, radius, shadow, spacing, type as T, clearance } from '@/theme';
 import { ScreenHeader } from '@/components/ScreenHeader';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useTeams } from '@/context/TeamsContext';
@@ -201,7 +201,7 @@ function HeroStat({ label, value, tone }: { label: string; value: string; tone?:
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { padding: spacing.lg, paddingBottom: 60 },
+  body: { padding: spacing.lg, paddingBottom: clearance.overlay },
 
   hero: { borderRadius: radius.xl, padding: spacing.lg, borderWidth: 1, borderColor: colors.border, marginBottom: spacing.lg, ...shadow.card },
   heroKicker: { color: colors.green, fontSize: 9, fontWeight: '900', letterSpacing: 2 },

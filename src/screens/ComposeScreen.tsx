@@ -9,7 +9,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { View, Text, ScrollView, TextInput, TouchableOpacity, Image, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, radius, spacing, type as T } from '@/theme';
+import { colors, radius, spacing, type as T, clearance } from '@/theme';
 import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLeague } from '@/league/LeagueContext';
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   sendOff: { opacity: 0.4 },
   sendText: { color: colors.bg, fontSize: 13, fontWeight: '900' },
 
-  body: { padding: spacing.lg, paddingTop: spacing.sm, paddingBottom: 60 },
+  body: { padding: spacing.lg, paddingTop: spacing.sm, paddingBottom: clearance.overlay },
   editor: { flexDirection: 'row', gap: spacing.md },
   input: { flex: 1, color: colors.ink, fontSize: 16, lineHeight: 22, minHeight: 110, textAlignVertical: 'top', padding: 0 },
 

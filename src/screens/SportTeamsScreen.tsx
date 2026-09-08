@@ -8,7 +8,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet, ActivityIndicator } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { TabHeader } from '@/components/TabHeader';
 import { RefMark } from '@/components/RefMark';
 import { useActiveLeague } from '@/league/LeagueContext';
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   searchRow: { flexDirection: 'row', alignItems: 'center', gap: 8, marginHorizontal: spacing.lg, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.pill, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   search: { flex: 1, color: colors.ink, fontSize: 13, padding: 0 },
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.dock },
   empty: { color: colors.inkFaint, fontSize: 12, lineHeight: 18, textAlign: 'center', marginTop: spacing.xl },
   group: { marginBottom: spacing.lg },
   groupTitle: { color: colors.inkFaint, fontSize: 10, fontWeight: '900', letterSpacing: 1.2, textTransform: 'uppercase', marginBottom: spacing.sm },

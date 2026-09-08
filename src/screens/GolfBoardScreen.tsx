@@ -11,7 +11,7 @@ import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, A
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, grad, numeric, radius, spacing } from '@/theme';
+import { colors, grad, numeric, radius, spacing, clearance } from '@/theme';
 import { TabHeader } from '@/components/TabHeader';
 import { useGolf } from '@/sports/GolfContext';
 import { fieldSeed, simulateField, type FieldOdds, type GolfFile, type GolfTournament } from '@/sports/golf';
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
   tabName: { color: colors.ink, fontSize: 12, fontWeight: '800' },
   tabMeta: { color: colors.inkFaint, fontSize: 10, marginTop: 2 },
 
-  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: clearance.dock },
   error: { color: colors.negative, fontSize: 12, lineHeight: 17, marginBottom: spacing.md },
 
   hero: { padding: spacing.md, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border },

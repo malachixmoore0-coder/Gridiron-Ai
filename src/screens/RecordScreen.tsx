@@ -71,7 +71,7 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
             blurb="When the model says 70%, does it win 70% of the time? The calibration curve is how you tell a model that is right from one that is merely confident."
             cta="Unlock calibration"
             onPress={onUpgrade ?? (() => {})}
-            style={{ height: 150, marginBottom: 16 }}
+            style={{ marginBottom: 16 }}
           />
         )}
 

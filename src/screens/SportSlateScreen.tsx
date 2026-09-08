@@ -13,7 +13,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, RefreshControl, ActivityIndicator, Modal } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { TabHeader } from '@/components/TabHeader';
 import { RefMark } from '@/components/RefMark';
 import { BookOdds } from '@/components/BookOdds';
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   weekLabel: { color: colors.ink, fontSize: 12.5, fontWeight: '800' },
   weekMeta: { color: colors.inkFaint, fontSize: 10, marginTop: 2 },
 
-  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingTop: 0, paddingBottom: clearance.dock },
   error: { color: colors.negative, fontSize: 12, lineHeight: 17, marginBottom: spacing.md },
 
   section: { marginBottom: spacing.lg },

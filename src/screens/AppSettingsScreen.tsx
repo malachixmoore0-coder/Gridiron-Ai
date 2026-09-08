@@ -13,7 +13,7 @@ import React, { useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, Switch, StyleSheet, Linking } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing, type as T } from '@/theme';
+import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme';
 import { BrandLockup } from '@/components/Brand';
 import { Avatar } from '@/components/Social';
 import { TierPill } from '@/components/Pro';
@@ -200,7 +200,7 @@ function Toggle({ icon, label, hint, value, onChange, disabled }: {
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { padding: spacing.lg, paddingBottom: 40 },
+  body: { padding: spacing.lg, paddingBottom: clearance.overlay },
   brandRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: spacing.lg },
 
   account: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md },

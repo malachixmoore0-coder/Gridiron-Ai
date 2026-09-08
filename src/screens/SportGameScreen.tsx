@@ -14,7 +14,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, numeric, radius, spacing } from '@/theme';
+import { colors, numeric, radius, spacing, clearance } from '@/theme';
 import { RefMark } from '@/components/RefMark';
 import { ProbBar } from '@/components/ProbBar';
 import { BookOdds } from '@/components/BookOdds';
@@ -292,7 +292,7 @@ function FormRow({ abbr, rows }: { abbr: string; rows: { id: string; won: boolea
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { paddingBottom: 40 },
+  body: { paddingBottom: clearance.overlay },
 
   missing: { flex: 1, alignItems: 'center', justifyContent: 'center', gap: 10, backgroundColor: colors.bg, padding: spacing.xl },
   missingText: { color: colors.inkFaint, fontSize: 13, textAlign: 'center' },

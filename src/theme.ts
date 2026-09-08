@@ -76,6 +76,9 @@ export const grad = {
   gold: ['#FFD37A', '#FFC64D', '#D9A032'] as const,
   edge: ['rgba(18,217,146,0.22)', 'rgba(18,217,146,0.02)'] as const,
   fade: ['rgba(5,8,12,0)', '#05080C'] as const,
+  // What sits over a locked preview. Nearly opaque at both ends, because a
+  // teaser you can read is not a teaser.
+  veil: ['rgba(5,8,12,0.86)', 'rgba(5,8,12,0.94)', 'rgba(5,8,12,0.86)'] as const,
   tier: ['#132030', '#0B1420'] as const,
   /* Aliases kept so the college screens speak the same token language. */
   night: ['#0B1720', '#071018', '#05080C'] as const,
@@ -114,6 +117,20 @@ export const type = {
 
 export const radius = { sm: 10, md: 14, lg: 20, xl: 26, xxl: 32, pill: 999 };
 export const spacing = { xs: 4, sm: 8, md: 12, lg: 16, xl: 24, xxl: 32 };
+
+/**
+ * What a scrolling screen has to leave clear at the bottom.
+ *
+ * Every screen ended with forty points of padding, which was less than the
+ * furniture standing over it: the dock is about sixty-four points tall and the
+ * floating Simulate button reaches a hundred and twenty. The last rows of every
+ * list were unreachable — you could scroll to the end and still be reading
+ * through a button.
+ *
+ *   dock    — a tab screen, under the dock and the floating action
+ *   overlay — a pushed screen, under its own back bar
+ */
+export const clearance = { dock: 136, overlay: 84 };
 
 export const shadow = {
   card: { shadowColor: '#000', shadowOffset: { width: 0, height: 10 }, shadowOpacity: 0.45, shadowRadius: 20, elevation: 6 },

@@ -157,7 +157,7 @@ export function PlayerProfileScreen({ teamId, playerId, onBack, onOpenTeam, onUp
             blurb="A projection and a range for every counting stat this player produces, scaled to the game the model is projecting."
             cta="Unlock props"
             onPress={onUpgrade ?? (() => {})}
-            style={{ height: 158, marginBottom: 16 }}
+            style={{ marginBottom: 16 }}
           />
         ))}
 

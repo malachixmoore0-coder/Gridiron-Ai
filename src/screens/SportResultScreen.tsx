@@ -10,7 +10,7 @@ import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { colors, grad, numeric, radius, spacing } from '@/theme';
+import { colors, grad, numeric, radius, spacing, clearance } from '@/theme';
 import { RefMark } from '@/components/RefMark';
 import { ProbBar } from '@/components/ProbBar';
 import { Histogram } from '@/components/Histogram';
@@ -197,7 +197,7 @@ function Cell({ label, value, sub }: { label: string; value: string; sub: string
 
 const styles = StyleSheet.create({
   root: { flex: 1, backgroundColor: colors.bg },
-  body: { paddingBottom: 40 },
+  body: { paddingBottom: clearance.overlay },
 
   hero: { paddingHorizontal: spacing.lg, paddingTop: spacing.lg, paddingBottom: spacing.lg },
   kicker: { color: colors.inkFaint, fontSize: 9.5, fontWeight: '900', letterSpacing: 1.3 },
