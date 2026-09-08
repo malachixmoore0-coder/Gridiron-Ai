@@ -1,0 +1,130 @@
+# soccer — 2026-09-08T01:16:33.444Z
+
+
+=== epl https://www.premierleague.com/en/clubs → 217236 bytes
+   16  /resources/#/i/svg-output/icons.svg#icn-external-link   e.g. /resources/v1.52.5/i/svg-output/icons.svg#icn-external-link
+   13  /resources/#/i/favicon/#   e.g. /resources/v1.52.5/i/favicon/apple-touch-icon-57x57.png
+    7  https://www.premierleague.com/en/clubs   e.g. https://www.premierleague.com/en/clubs
+    3  https://www.premierleague.com/en/matches   e.g. https://www.premierleague.com/en/matches
+    3  https://www.premierleague.com/en/tables   e.g. https://www.premierleague.com/en/tables
+    3  https://www.premierleague.com/en/stats   e.g. https://www.premierleague.com/en/stats
+    3  https://www.premierleague.com/en/fantasy   e.g. https://www.premierleague.com/en/fantasy
+    3  https://www.premierleague.com/en/news   e.g. https://www.premierleague.com/en/news
+    3  https://www.premierleague.com/en/players   e.g. https://www.premierleague.com/en/players
+    3  https://www.premierleague.com/en/video   e.g. https://www.premierleague.com/en/video
+    3  https://www.premierleague.com/en/cookie-policy   e.g. https://www.premierleague.com/en/cookie-policy
+    2  https://www.premierleague.com/es/clubs   e.g. https://www.premierleague.com/es/clubs
+    2  https://www.premierleague.com/ar/clubs   e.g. https://www.premierleague.com/ar/clubs
+    2  https://shop.premierleague.com/gb/en/home/   e.g. https://shop.premierleague.com/gb/en/home/
+
+=== laliga https://www.laliga.com/en-US/clubs → 17503 bytes
+    2  /   e.g. /
+    2  /_next/static/css/#   e.g. /_next/static/css/3eff8dd1f3e9f76f.css
+    1  https://assets.laliga.com/assets/sprites/shield-sprite.css   e.g. https://assets.laliga.com/assets/sprites/shield-sprite.css?undefined
+    1  https://assets.laliga.com/assets/public/fonts/fonts.css   e.g. https://assets.laliga.com/assets/public/fonts/fonts.css?undefined
+    1  https://apim.laliga.com/public-service   e.g. https://apim.laliga.com/public-service
+    1  https://assets.laliga.com/assets/public/logos/favicon.ico   e.g. https://assets.laliga.com/assets/public/logos/favicon.ico
+    1  https://cdnjs.cloudflare.com   e.g. https://cdnjs.cloudflare.com
+    1  https://display.popt.in   e.g. https://display.popt.in
+    1  https://www.laliga.com/laliga-easports   e.g. https://www.laliga.com/laliga-easports
+    1  https://www.laliga.com/laliga-hypermotion   e.g. https://www.laliga.com/laliga-hypermotion
+    1  https://www.laliga.com/futbol-femenino   e.g. https://www.laliga.com/futbol-femenino
+    1  https://www.laliga.com/videos   e.g. https://www.laliga.com/videos
+    1  https://www.laliga.com/noticias   e.g. https://www.laliga.com/noticias
+    1  https://www.laliga.com/estadisticas/laliga-easports/goleadores   e.g. https://www.laliga.com/estadisticas/laliga-easports/goleadores
+
+=== bundesliga https://www.bundesliga.com/en/bundesliga/clubs → 739640 bytes
+   12  #   e.g. styles-M7PAVYCE.css
+    8  https://bundesliga.go.link/#   e.g. https://bundesliga.go.link/jss6p
+    6  /assets/favicons/#   e.g. /assets/favicons/favicon-16x16.png
+    6  /en/bundesliga/clubs/#   e.g. /en/bundesliga/clubs/bayer-04-leverkusen
+    4  /assets/fonts/#   e.g. /assets/fonts/DFLCnWeb-Rg.woff2
+    4  /en/bundesliga   e.g. /en/bundesliga
+    4  /en/bundesliga/player   e.g. /en/bundesliga/player
+    4  {{tos}}   e.g. {{tos}}
+    4  {{privacy}}   e.g. {{privacy}}
+    3  /en/bundesliga/info/broadcasters   e.g. /en/bundesliga/info/broadcasters
+    3  /en/bundesliga/awards   e.g. /en/bundesliga/awards
+    3  /en/faq   e.g. /en/faq
+    2  /assets/logos/#   e.g. /assets/logos/wm-2026-alt-positive.svg
+    2  https://www.bundesliga.com/en/bundesliga/clubs   e.g. https://www.bundesliga.com/en/bundesliga/clubs
+
+=== seriea https://en.legaseriea.it/team → 1514393 bytes
+   11  /_next/static/chunks/#   e.g. /_next/static/chunks/webpack-e011fb0ebd706d56.js
+    8  /_next/static/media/#   e.g. /_next/static/media/2a91a414f28b9df3-s.p.woff
+    3  /_next/static/css/#   e.g. /_next/static/css/5c9555c91fd9709e.css
+    3  /search   e.g. /search
+    2  /lega-serie-a/documentazione   e.g. /lega-serie-a/documentazione
+    1  https://images.legaseriea.it/image/private/t_q_good/#/prd/assets/icons/#   e.g. https://images.legaseriea.it/image/private/t_q_good/v1766422496/prd/assets/icons
+    1  https://www.googletagmanager.com/gtag/js   e.g. https://www.googletagmanager.com/gtag/js?id=G-C9786Q6TZQ
+    1  https://embeds.iubenda.com/widgets/#   e.g. https://embeds.iubenda.com/widgets/14520df5-37c0-4ddf-abe4-787b46264c01.js
+    1  https://www.googletagservices.com/tag/js/gpt.js   e.g. https://www.googletagservices.com/tag/js/gpt.js
+    1  https://en.legaseriea.it/   e.g. https://en.legaseriea.it/
+    1  /manifest.webmanifest   e.g. /manifest.webmanifest
+    1  https://en.legaseriea.it/team   e.g. https://en.legaseriea.it/team
+    1  /favicon.ico   e.g. /favicon.ico
+    1  /apple-icon.png   e.g. /apple-icon.png?7d5fc4b566dd7623
+
+=== ligue1 https://ligue1.com/en/competitions/ligue1mcdonalds/standings → 255068 bytes
+    9  /en/articles/#   e.g. /en/articles/l1_article_5793-matchday-two-what-are-the-key-stats
+    8  /fonts/#   e.g. /fonts/GTAmerica-Bold.woff2
+    5  /en   e.g. /en
+    4  https://sdk.privacy-center.org/   e.g. https://sdk.privacy-center.org/
+    3  /_next/static/chunks/#   e.g. /_next/static/chunks/1n1zfs7b2drv0.css
+    3  /en/videos   e.g. /en/videos
+    3  /en/fantasy   e.g. /en/fantasy
+    3  /en/competitions/#/news   e.g. /en/competitions/ligue1mcdonalds/news
+    3  https://#/   e.g. https://plus.ligue1.com/
+    2  https://#/fr/competitions/#/standings   e.g. https://ligue1.com/fr/competitions/ligue1mcdonalds/standings
+    2  https://#/en/competitions/#/standings   e.g. https://ligue1.com/en/competitions/ligue1mcdonalds/standings
+    2  /en/calendar   e.g. /en/calendar
+    2  /en/data-zone/#   e.g. /en/data-zone/ligue1mcdonalds
+    2  /en/articles/mercato   e.g. /en/articles/mercato
+
+=== mls https://www.mlssoccer.com/clubs/ → 364857 bytes
+    4  /assets/fonts/MLSTifo/#   e.g. /assets/fonts/MLSTifo/MLSTifo--regular.woff2
+    4  https://soc.cr/#   e.g. https://soc.cr/4krM2op
+    4  /media-resources/   e.g. /media-resources/
+    3  https://www.mlssoccer.com/schedule/scores   e.g. https://www.mlssoccer.com/schedule/scores
+    3  https://www.mlssoccer.com/how-to-watch/index   e.g. https://www.mlssoccer.com/how-to-watch/index
+    3  https://www.mlssoccer.com/news/index   e.g. https://www.mlssoccer.com/news/index
+    3  https://www.mlssoccer.com/video/index   e.g. https://www.mlssoccer.com/video/index
+    3  https://www.mlssoccer.com/standings/#   e.g. https://www.mlssoccer.com/standings/#season=MLS-SEA-0001KA&amp;live=false
+    3  https://www.mlssoccer.com/stats/index   e.g. https://www.mlssoccer.com/stats/index
+    3  https://www.mlssoccer.com/clubs/index   e.g. https://www.mlssoccer.com/clubs/index
+    3  https://www.mlssoccer.com/competitions/index   e.g. https://www.mlssoccer.com/competitions/index
+    3  https://www.mlssoccer.com/players/index   e.g. https://www.mlssoccer.com/players/index
+    3  https://www.mlssoccer.com/mlsquest/index   e.g. https://www.mlssoccer.com/mlsquest/index
+    3  https://www.mlssoccer.com/gaming/index   e.g. https://www.mlssoccer.com/gaming/index
+
+=== ligamx https://ligamx.net → 624352 bytes
+  101  /estadistica/g/#   e.g. /estadistica/g/eyJ0aXR1bG9UYWJsYSI6IkcgLSBKb3PpIFNhbG9t824gUm9uZPNuIiwicHNUaXBvR
+   99  /estadistica/mj/#   e.g. /estadistica/mj/eyJ0aXR1bG9UYWJsYSI6Ik1KIC0gSm9z6SBTYWxvbfNuIFJvbmTzbiIsInBzVGlw
+   54  estadistica/tj/#   e.g. estadistica/tj/eyJ0aXR1bG9UYWJsYSI6IlRvdGFsIGRlIEp1ZWdvcyAtIEFt6XJpY2EiLCJpZENsd
+   53  estadistica/gf/#   e.g. estadistica/gf/eyJ0aXR1bG9UYWJsYSI6IkdvbGVzIGEgRmF2b3IgLSBBbelyaWNhIiwiaWRDbHViI
+   53  estadistica/gc/#   e.g. estadistica/gc/eyJ0aXR1bG9UYWJsYSI6IkdvbGVzIGVuIENvbnRyYSAtIEFt6XJpY2EiLCJpZENsd
+   43  estadistica/jp/#   e.g. estadistica/jp/eyJ0aXR1bG9UYWJsYSI6Ikp1ZWdvcyBQZXJkaWRvcyAtIEd1YWRhbGFqYXJhIiwia
+   41  estadistica/jg/#   e.g. estadistica/jg/eyJ0aXR1bG9UYWJsYSI6Ikp1ZWdvcyBHYW5hZG9zIC0gQW3pcmljYSIsImlkQ2x1Y
+   34  estadistica/je/#   e.g. estadistica/je/eyJ0aXR1bG9UYWJsYSI6Ikp1ZWdvcyBFbXBhdGFkb3MgLSBBbelyaWNhIiwiaWRDb
+   20  http://#   e.g. http://sub21.ligamx.net
+   17  http://online.caliente.mx/promoRedirect   e.g. http://online.caliente.mx/promoRedirect?member=ligamx&amp;campaign=DEFAULT&amp;c
+   13  https://cldrsrcs.apilmx.com/#/images/favicons_liga/#   e.g. https://cldrsrcs.apilmx.com/v1/images/favicons_liga/apple-touch-icon-57x57.png
+   11  cancha/club/#/america   e.g. cancha/club/1/america
+   10  cancha/informeArbitral/#/#/#   e.g. cancha/informeArbitral/155067/eyJpZENsdWJsb2NhbCI6IjExNzkwIiwiaWRDbHVidmlzaXRhIj
+   10  cancha/club/#/toluca   e.g. cancha/club/17/toluca
+
+=== ucl https://www.uefa.com/uefachampionsleague/clubs/ → 244685 bytes
+   81  /uefachampionsleague/clubs/#/   e.g. /uefachampionsleague/clubs/50129--aek-athens/
+   36  https://www.uefa.com/CompiledAssets/UefaCom/js/../js/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../js/npm-beautiful-react-hooks.c
+    8  https://img.uefa.com/imgml/favicon/#   e.g. https://img.uefa.com/imgml/favicon/apple-touch-icon-57x57.png
+    7  https://www.uefa.com/CompiledAssets/UefaCom/js/../css/#   e.g. https://www.uefa.com/CompiledAssets/UefaCom/js/../css/83021.a838bbde.css
+    3  https://panenka.uefa.com/panenka/fonts/manrope/#   e.g. https://panenka.uefa.com/panenka/fonts/manrope/manrope-regular.woff2
+    3  /CompiledAssets/UefaCom/css/modules/template/footer.css   e.g. /CompiledAssets/UefaCom/css/modules/template/footer.css?_t=c20a77259062ff2bc2489
+    3  /CompiledAssets/UefaCom/css/modules/teams/teams-overview.css   e.g. /CompiledAssets/UefaCom/css/modules/teams/teams-overview.css?_t=3ac2cc09569d21dc
+    2  //img.uefa.com/imgml/favicon/comp/ucl.ico   e.g. //img.uefa.com/imgml/favicon/comp/ucl.ico
+    2  https://panenka.uefa.com/panenka/fonts/champions/#   e.g. https://panenka.uefa.com/panenka/fonts/champions/champions-bold.woff2
+    2  /CompiledAssets/UefaCom/css/modules/template/header-preload.css   e.g. /CompiledAssets/UefaCom/css/modules/template/header-preload.css?_t=1c8d2f4fa97db
+    2  /CompiledAssets/UefaCom/css/modules/template/sticky-nav-preload.css   e.g. /CompiledAssets/UefaCom/css/modules/template/sticky-nav-preload.css?_t=447db0de5
+    2  /CompiledAssets/UefaCom/css/fonts/global.css   e.g. /CompiledAssets/UefaCom/css/fonts/global.css?_t=d752637a4cc4230fecf23a273a392daf
+    2  /CompiledAssets/UefaCom/css/competitions/uefachampionsleague/base.css   e.g. /CompiledAssets/UefaCom/css/competitions/uefachampionsleague/base.css?_t=76b91af
+    2  /uefachampionsleague/   e.g. /uefachampionsleague/
