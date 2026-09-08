@@ -274,6 +274,35 @@ The anon key is meant to be public; everything that matters is enforced by the
 policies, not by the client. Without a GIPHY key the picker still accepts a
 pasted GIF link rather than showing a dead button.
 
+## Its own domain
+
+The app ships to GitHub's project pages, which means it lives at
+`https://<user>.github.io/Gridiron-Ai/` and a shared profile link is
+`https://<user>.github.io/Gridiron-Ai/@coldnumbers`. That address is the single
+biggest tax on the thing the social layer is for: a link somebody would actually
+send. It also blocks Resend, which needs DNS records on a domain you control,
+and Apple sign-in, which needs a return URL on one.
+
+Moving is one repo variable. Set **SITE_DOMAIN** (Settings → Secrets and
+variables → Actions → Variables) to a bare hostname — `gridironai.com`, no
+scheme, no trailing slash — and the next deploy:
+
+* builds at the domain root instead of the `/Gridiron-Ai` subpath,
+* writes `dist/CNAME` so Pages keeps the domain across every deploy rather than
+  depending on a dashboard setting somebody has to remember to re-apply,
+* sets `EXPO_PUBLIC_SITE_ORIGIN`, which is what stops `profileUrl` from prefixing
+  shared links with a subpath that no longer exists.
+
+DNS, at the registrar: an `ALIAS`/`ANAME` (or `CNAME` on a subdomain) pointing
+the apex at `<user>.github.io`, or the four A records GitHub documents if the
+registrar cannot do apex aliasing. Then tick **Enforce HTTPS** under
+Settings → Pages once the certificate is issued.
+
+Two things have to move with it, or sign-in breaks: **Supabase → Authentication →
+URL Configuration** needs the new Site URL and redirect pattern, and any OAuth
+provider's redirect list needs the new callback. Both still accept the old
+github.io entries, so add the new ones before switching rather than after.
+
 ## Sportsbooks
 
 The refresh job pulls each game's provider list from ESPN's core API and

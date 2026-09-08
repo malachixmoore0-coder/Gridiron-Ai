@@ -46,12 +46,30 @@ const BASE = (() => {
   return path.replace(HANDLE, '').replace(/\/$/, '');
 })();
 
+/**
+ * The site's own public address, when it has one.
+ *
+ * `EXPO_PUBLIC_SITE_ORIGIN` is set by the build once a custom domain is
+ * configured, and its presence is also what says the app now lives at the root
+ * of that domain rather than under a project-pages subpath.
+ */
+const SITE_ORIGIN = ((process.env.EXPO_PUBLIC_SITE_ORIGIN as string | undefined) ?? '').trim().replace(/\/$/, '');
+
 /** The public origin used when a link has to survive leaving the device. */
 const ORIGIN = hasWindow()
   ? window.location.origin
-  : 'https://malachixmoore0-coder.github.io';
+  : SITE_ORIGIN || 'https://malachixmoore0-coder.github.io';
 
-const FALLBACK_BASE = '/Gridiron-Ai';
+/**
+ * The prefix to assume when the path gives none.
+ *
+ * On GitHub's project pages the app is served under `/Gridiron-Ai`, so an empty
+ * path means something went wrong and the repository name is the better guess.
+ * On its own domain an empty path is simply correct — the app is the site — and
+ * guessing a prefix there would produce a shareable link to a page that does
+ * not exist, which is worse than no link at all.
+ */
+const FALLBACK_BASE = SITE_ORIGIN ? '' : '/Gridiron-Ai';
 
 export const profilePath = (handle: string) => `${BASE}/@${handle}`;
 

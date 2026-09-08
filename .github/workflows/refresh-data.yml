@@ -82,9 +82,25 @@ jobs:
             echo "changed=true" >> "$GITHUB_OUTPUT"
           fi
 
+      # Where the site actually lives. Set the repo variable SITE_DOMAIN to a
+      # bare hostname (gridironai.com) and the build moves off the project-pages
+      # subpath to the root of that domain, writes the CNAME that GitHub Pages
+      # needs, and tells the app its own public origin so shared profile links
+      # carry the real address. Unset, everything stays on github.io.
+      - name: Resolve where the site lives
+        env:
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
+          REPO: ${{ github.event.repository.name }}
+        run: |
+          if [ -n "$SITE_DOMAIN" ]; then
+            echo "EXPO_BASE_URL=" >> "$GITHUB_ENV"
+            echo "EXPO_PUBLIC_SITE_ORIGIN=https://$SITE_DOMAIN" >> "$GITHUB_ENV"
+          else
+            echo "EXPO_BASE_URL=/$REPO" >> "$GITHUB_ENV"
+            echo "EXPO_PUBLIC_SITE_ORIGIN=" >> "$GITHUB_ENV"
+          fi
       - name: Export web app
         env:
-          EXPO_BASE_URL: /${{ github.event.repository.name }}
           # The publishable key is meant to ship — it is compiled into the
           # bundle and every visitor has it. Row-level security is what protects
           # the data from it, which is why `entitlements` has a read-own policy
@@ -98,8 +114,14 @@ jobs:
         run: npx expo export --platform web
 
       - name: Prepare Pages artifact
+        env:
+          SITE_DOMAIN: ${{ vars.SITE_DOMAIN }}
         run: |
           cp dist/index.html dist/404.html
+          # GitHub Pages reads the custom domain from this file, so it survives
+          # every deploy rather than depending on a setting somebody has to
+          # remember to re-apply.
+          if [ -n "$SITE_DOMAIN" ]; then echo "$SITE_DOMAIN" > dist/CNAME; fi
 
       - uses: actions/configure-pages@v5
         with:
