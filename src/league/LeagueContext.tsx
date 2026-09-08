@@ -16,6 +16,7 @@ import { useTeams as useNflTeams } from '@/context/TeamsContext';
 import { useTeams as useCfbTeams } from '@/cfb/context/TeamsContext';
 import { useSports } from '@/sports/SportsContext';
 import { LEAGUES, LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
+import { boardLeagues } from '@/utils/board';
 import type { LeagueGame, LeagueId, LeagueTeamRef, LeagueView, WeekRef } from '@/league/types';
 
 const KEY = 'gridiron-ai.league.v1';
@@ -172,3 +173,25 @@ export function useLeague(): State {
 }
 
 export const useActiveLeague = (): LeagueView => useLeague().active;
+
+/**
+ * The leagues the front page's cross-sport board is built from: one per sport,
+ * whichever is in season.
+ *
+ * They are fetched quietly after the active league, because this is the one
+ * place the app asks for feeds nobody has opened yet. It is a few hundred
+ * kilobytes for most sports and rather more for baseball, so it happens once
+ * and is then served from the device's cache — and a league that has not
+ * arrived simply is not on the board until it does.
+ */
+export function useBoardLeagues(): LeagueView[] {
+  const { viewFor } = useLeague();
+  const sports = useSports();
+  const keys = useMemo(() => boardLeagues().map((l) => l.key), []);
+
+  useEffect(() => {
+    for (const key of keys) if (!LEAGUE_BY_KEY[key].bespoke) sports.ensure(key);
+  }, [keys, sports]);
+
+  return keys.map(viewFor);
+}

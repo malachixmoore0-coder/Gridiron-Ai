@@ -21,7 +21,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, grad, numeric, radius, shadow, spacing, type as T } from '@/theme';
-import { useActiveLeague } from '@/league/LeagueContext';
+import { useActiveLeague, useBoardLeagues, useLeague } from '@/league/LeagueContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { useLiveGames } from '@/live/LiveContext';
@@ -30,8 +30,11 @@ import { RefMark } from '@/components/RefMark';
 import { Ticker, type TickerItem } from '@/components/Ticker';
 import { TabHeader } from '@/components/TabHeader';
 import { AddToCard } from '@/components/AddToCard';
-import { ConvictionBar, Locked, MeterPill } from '@/components/Pro';
+import { ConvictionBar, LockChip, Locked, MeterPill } from '@/components/Pro';
+import { SportGlyph } from '@/components/SportGlyph';
+import { crossSportBoard, freePickIndex, type CrossPick } from '@/utils/board';
 import type { LeagueGame } from '@/league/types';
+import { haptic } from '@/utils/haptics';
 
 interface Props {
   onRun: (r: { awayId: string; homeId: string; ctx: { neutralSite: boolean; primetime: boolean; weather: 'auto' } }) => void;
@@ -47,6 +50,8 @@ const clock = () => new Date().toLocaleDateString(undefined, { weekday: 'long', 
 
 export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay, onOpenModel }: Props) {
   const view = useActiveLeague();
+  const { setLeague } = useLeague();
+  const boardViews = useBoardLeagues();
   const ent = useEntitlements();
   const eng = useEngagement();
   const [now, setNow] = useState(Date.now());
@@ -84,6 +89,20 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
     () => view.teams.filter((t) => t.rank && t.rank <= 25).sort((a, b) => (a.rank ?? 99) - (b.rank ?? 99)),
     [view.teams],
   );
+
+  // One pick per sport, best first. Rebuilt when a feed lands, so the board
+  // fills in rather than waiting for the slowest league.
+  const cross = useMemo(() => crossSportBoard(boardViews), [boardViews]);
+  const allowance = ent.ent.crossSportPicks;
+  const freeIdx = useMemo(() => freePickIndex(cross.length), [cross.length]);
+  // A single allowance is the free account's one pick a day, and it is never
+  // the top of the board — that one is what Starter is for. More than one is a
+  // subscription, and a subscription takes them in order.
+  const openPicks = useMemo(() => {
+    if (allowance >= cross.length) return new Set(cross.map((_, i) => i));
+    if (allowance <= 1) return new Set(cross.length ? [freeIdx] : []);
+    return new Set(cross.slice(0, allowance).map((_, i) => i));
+  }, [cross, allowance, freeIdx]);
 
   const depth = ent.ent.edgeBoardDepth;
   const visible = depth === Infinity ? board : board.slice(0, depth);
@@ -151,6 +170,37 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
                 </TouchableOpacity>
               ))}
             </ScrollView>
+          </View>
+        )}
+
+        {/* ---- one pick per sport, gated by what you pay for ---- */}
+        {cross.length > 0 && (
+          <View style={styles.crossWrap}>
+            <View style={styles.sectionHead}>
+              <View style={styles.sectionTitleWrap}>
+                <Text style={styles.sectionTitle}>Across the board</Text>
+                <Text style={styles.sectionSub}>
+                  {openPicks.size >= cross.length
+                    ? `The best play in each of ${cross.length} sports`
+                    : `${openPicks.size} of ${cross.length} sports unlocked`}
+                </Text>
+              </View>
+              {openPicks.size < cross.length && (
+                <LockChip label={`+${cross.length - openPicks.size} MORE`} onPress={onUpgrade} />
+              )}
+            </View>
+
+            {cross.map((p, i) => (openPicks.has(i) ? (
+              <CrossCard
+                key={p.league}
+                pick={p}
+                free={allowance <= 1}
+                here={p.league === view.id}
+                onPress={() => { haptic('select'); setLeague(p.league as never); }}
+              />
+            ) : (
+              <CrossLocked key={p.league} pick={p} onPress={onUpgrade} />
+            )))}
           </View>
         )}
 
@@ -471,6 +521,90 @@ function EdgeRowCard({ row, index, awayAbbr, homeAbbr, onOpen, onRun, onAdd, dog
   );
 }
 
+/**
+ * One sport's best play, in full.
+ *
+ * Everything a reader needs to act on it is here — the side, the number, what
+ * the model makes it and how sure it is — because a pick you have paid for
+ * should not need a second tap to be legible. The tap it does have moves the
+ * whole app to that league, which is the only thing left to want from it.
+ */
+function CrossCard({ pick, free, here, onPress }: { pick: CrossPick; free: boolean; here: boolean; onPress: () => void }) {
+  const { row } = pick;
+  const unit = row.edgeUnit === 'pct' ? '%' : '';
+  return (
+    <TouchableOpacity
+      style={[styles.cross, here && { borderColor: pick.accent }]}
+      activeOpacity={0.85}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${pick.short}: ${pick.pick}, ${row.conviction} conviction`}
+    >
+      <View style={styles.crossTop}>
+        <View style={styles.crossLeague}>
+          <SportGlyph sport={pick.sport} size={13} color={pick.accent} />
+          <Text style={[styles.crossLeagueText, { color: pick.accent }]} numberOfLines={1}>{pick.short}</Text>
+        </View>
+        {free && <View style={styles.freeTag}><Text style={styles.freeTagText}>TODAY&apos;S FREE PICK</Text></View>}
+        <Text style={[styles.crossConv, numeric]}>{row.conviction}<Text style={styles.crossConvSmall}> conv</Text></Text>
+      </View>
+
+      <View style={styles.crossMain}>
+        <View style={{ flex: 1 }}>
+          <Text style={styles.crossPick} numberOfLines={1}>{pick.pick}</Text>
+          <Text style={styles.crossGame} numberOfLines={1}>
+            {pick.awayAbbr} <Text style={{ color: colors.inkGhost }}>@</Text> {pick.homeAbbr}
+            <Text style={{ color: colors.inkFaint }}>
+              {'  ·  '}{new Date(row.kickoff).toLocaleDateString(undefined, { weekday: 'short' })}{' '}
+              {new Date(row.kickoff).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
+            </Text>
+          </Text>
+        </View>
+        <View style={styles.crossRight}>
+          <Text style={[styles.crossEdge, numeric]}>+{row.spreadEdge.toFixed(1)}{unit}</Text>
+          <Text style={styles.crossEdgeLabel}>{row.edgeUnit === 'pct' ? 'vs price' : 'pts edge'}</Text>
+        </View>
+      </View>
+
+      <ConvictionBar value={row.conviction} width={120} />
+    </TouchableOpacity>
+  );
+}
+
+/**
+ * A sport that is playing, and an opinion you have not paid for.
+ *
+ * The matchup and the strength of the opinion stay visible; the side and the
+ * number do not. That is the honest shape of a paywall on a tip: enough to know
+ * something is there, not enough to bet on.
+ */
+function CrossLocked({ pick, onPress }: { pick: CrossPick; onPress: () => void }) {
+  return (
+    <TouchableOpacity
+      style={styles.crossLocked}
+      activeOpacity={0.85}
+      onPress={onPress}
+      accessibilityRole="button"
+      accessibilityLabel={`${pick.short} pick, locked. Upgrade to see it.`}
+    >
+      <View style={styles.crossTop}>
+        <View style={styles.crossLeague}>
+          <SportGlyph sport={pick.sport} size={13} color={colors.inkDim} />
+          <Text style={styles.crossLeagueMuted} numberOfLines={1}>{pick.short}</Text>
+        </View>
+        <Text style={[styles.crossConvMuted, numeric]}>{pick.row.conviction}<Text style={styles.crossConvSmall}> conv</Text></Text>
+      </View>
+      <View style={styles.crossMain}>
+        <View style={{ flex: 1 }}>
+          <View style={styles.crossBlur}><Ionicons name="lock-closed" size={12} color={colors.gold} /><Text style={styles.crossBlurText}>Pick hidden</Text></View>
+          <Text style={styles.crossGameMuted} numberOfLines={1}>{pick.awayAbbr} @ {pick.homeAbbr}</Text>
+        </View>
+        <Ionicons name="chevron-forward" size={16} color={colors.inkGhost} />
+      </View>
+    </TouchableOpacity>
+  );
+}
+
 const styles = StyleSheet.create({
   safe: { flex: 1, backgroundColor: colors.bg },
   body: { padding: spacing.lg, paddingBottom: 40 },
@@ -509,6 +643,28 @@ const styles = StyleSheet.create({
   pnlDivider: { width: 1, height: 26, backgroundColor: colors.divider },
   pnlLabel: { color: colors.inkFaint, fontSize: 9, fontWeight: '900', letterSpacing: 1 },
   pnlBig: { color: colors.ink, fontSize: 18, fontWeight: '900', marginTop: 2 },
+
+  crossWrap: { marginBottom: spacing.lg, gap: spacing.sm },
+  cross: { backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md, gap: 8 },
+  crossTop: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  crossLeague: { flexDirection: 'row', alignItems: 'center', gap: 5, flexShrink: 1 },
+  crossLeagueText: { fontSize: 11, fontWeight: '900', letterSpacing: 0.4 },
+  crossLeagueMuted: { color: colors.inkDim, fontSize: 11, fontWeight: '900', letterSpacing: 0.4 },
+  crossConv: { color: colors.green, fontSize: 15, fontWeight: '900', marginLeft: 'auto' },
+  crossConvMuted: { color: colors.inkDim, fontSize: 15, fontWeight: '900', marginLeft: 'auto' },
+  crossConvSmall: { color: colors.inkFaint, fontSize: 9, fontWeight: '700' },
+  crossMain: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm },
+  crossPick: { color: colors.ink, fontSize: 19, fontWeight: '900' },
+  crossGame: { color: colors.ink, fontSize: 12, fontWeight: '700', marginTop: 2 },
+  crossGameMuted: { color: colors.inkDim, fontSize: 12, fontWeight: '700', marginTop: 4 },
+  crossRight: { alignItems: 'flex-end' },
+  crossEdge: { color: colors.green, fontSize: 17, fontWeight: '900' },
+  crossEdgeLabel: { color: colors.inkFaint, fontSize: 9, fontWeight: '700', letterSpacing: 0.3 },
+  crossLocked: { backgroundColor: colors.cardAlt, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.md, gap: 6, opacity: 0.92 },
+  crossBlur: { flexDirection: 'row', alignItems: 'center', gap: 5 },
+  crossBlurText: { color: colors.gold, fontSize: 13, fontWeight: '800' },
+  freeTag: { paddingHorizontal: 7, paddingVertical: 3, borderRadius: radius.sm, backgroundColor: colors.greenSoft },
+  freeTagText: { color: colors.green, fontSize: 8.5, fontWeight: '900', letterSpacing: 0.6 },
 
   sectionHead: { flexDirection: 'row', alignItems: 'flex-end', justifyContent: 'space-between', marginBottom: spacing.md, gap: spacing.sm },
   sectionTitleWrap: { flexShrink: 1 },

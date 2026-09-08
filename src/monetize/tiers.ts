@@ -24,6 +24,15 @@ export interface Entitlements {
   simDepth: number;
   /** How far down the Edge Board you can see. */
   edgeBoardDepth: number;
+  /**
+   * Picks on the opening screen's cross-sport board, in full.
+   *
+   * This is the shop window. A free account sees one complete pick a day —
+   * side, number, reasoning and all — because a teaser proves nothing; what it
+   * does not see is the rest of the sports playing today, which is the thing
+   * being sold.
+   */
+  crossSportPicks: number;
   /** The single highest-conviction play of the day, with the reasoning. */
   lockOfDay: boolean;
   /** Days of track record you can page back through. */
@@ -67,6 +76,7 @@ const FREE: Entitlements = {
   simsPerDay: 3,
   simDepth: 2000,
   edgeBoardDepth: 3,
+  crossSportPicks: 1,
   lockOfDay: false,
   historyDays: 7,
   calibration: false,
@@ -89,7 +99,8 @@ export const TIERS: Tier[] = [
     annual: 0,
     hook: 'See the model work before you pay a cent.',
     bullets: [
-      'Nine leagues in one app',
+      'Eighteen leagues in one app',
+      'A free pick every day, a different sport each time',
       '3 simulations a day at 2,000 runs',
       'Top 3 of the Edge Board',
       'Full slate, live scores and box scores',
@@ -107,6 +118,7 @@ export const TIERS: Tier[] = [
     hook: 'Unlimited 10,000-run simulations across every league. No meter.',
     bullets: [
       'Unlimited sims at 10,000 runs, every league',
+      "Four sports' best play every day, not one",
       'The whole Edge Board — Sunday and Saturday',
       'Lock of the Day with the reasoning',
       'Full season track record + calibration',
@@ -117,6 +129,7 @@ export const TIERS: Tier[] = [
       simsPerDay: Infinity,
       simDepth: 10000,
       edgeBoardDepth: 10,
+      crossSportPicks: 4,
       lockOfDay: true,
       historyDays: 400,
       calibration: true,
@@ -134,6 +147,7 @@ export const TIERS: Tier[] = [
     hook: 'Line shopping, props and the tools that turn a number into a bet.',
     bullets: [
       'Everything in Starter, at 25,000 runs',
+      'Every sport on the board, every day',
       'Line shopping: every book on every game',
       'Correlated parlay builder (up to 4 legs)',
       'Player prop projections on every starter',
@@ -146,6 +160,7 @@ export const TIERS: Tier[] = [
       simsPerDay: Infinity,
       simDepth: 25000,
       edgeBoardDepth: Infinity,
+      crossSportPicks: Infinity,
       lockOfDay: true,
       historyDays: 3650,
       calibration: true,
@@ -177,6 +192,7 @@ export const TIERS: Tier[] = [
       simsPerDay: Infinity,
       simDepth: 50000,
       edgeBoardDepth: Infinity,
+      crossSportPicks: Infinity,
       lockOfDay: true,
       historyDays: 3650,
       calibration: true,
