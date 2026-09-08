@@ -19,6 +19,8 @@ import { useSports } from '@/sports/SportsContext';
 import { SportGlyph } from '@/components/SportGlyph';
 import { LEAGUE_BY_KEY, profileFor, type LeagueKey } from '@/sports/types';
 import { calibration, pctOf, summarize } from '@/utils/record';
+import { clvOf } from '@/utils/clv';
+import { ClosingLine } from '@/components/ClosingLine';
 import { haptic } from '@/utils/haptics';
 import type { PredictionRecord } from '@/league/types';
 
@@ -41,6 +43,7 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
   const [bucket, setBucket] = useState<Bucket>('final');
 
   const model = feeds[view.id as LeagueKey]?.predictions?.model;
+  const lines = feeds[view.id as LeagueKey]?.lines;
   const records = view.records as PredictionRecord[];
 
   // Free accounts see a rolling window; paid accounts see the whole archive.
@@ -49,6 +52,18 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
   const clipped = records.length - inWindow.length;
 
   const sum = useMemo(() => summarize(inWindow), [inWindow]);
+
+  // Which side the model took, by the same rule the Edge Board uses: the market
+  // number minus the model's own line, positive meaning it likes the home side.
+  // Scored against the number that game closed at.
+  const clv = useMemo(() => clvOf(inWindow.map((r) => {
+    const open = lines?.games?.[r.id]?.opened;
+    const line = open?.spread ?? r.marketHomeSpread;
+    const side: 'home' | 'away' = line != null
+      ? (line - r.spread >= 0 ? 'home' : 'away')
+      : (r.homeWinPct >= r.awayWinPct ? 'home' : 'away');
+    return { id: r.id, side };
+  }), lines), [inWindow, lines]);
   const cal = useMemo(() => calibration(inWindow), [inWindow]);
   const shown = useMemo(
     () => inWindow.filter((r) => r.status === bucket)
@@ -85,6 +100,8 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
         <Tile label="Margin error" value={sum.spreadMae === null ? '—' : `±${sum.spreadMae.toFixed(1)}`} sub={`avg ${profile.unit}s off the margin`} />
         <Tile label="Total error" value={sum.totalMae === null ? '—' : `±${sum.totalMae.toFixed(1)}`} sub={`avg ${profile.unit}s off the total`} />
       </View>
+
+      <ClosingLine clv={clv} unit={profile.unit} />
 
       {sum.finals < 20 && (
         <Text style={styles.thin}>

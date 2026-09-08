@@ -24,6 +24,7 @@ import { buildSchedule, currentWeek, mergeResults, records, weekByDate, weekInde
 import { summarize, updatePredictions } from './compute/predictions';
 import type { LivePredictionsFile } from '../src/data/liveTypes';
 import { blendWeight, gamesPlayed } from './compute/context';
+import { readLines, recordLines, writeLines } from './multi/lines';
 
 const OUT_DIR = path.resolve(__dirname, '../data/live');
 const withWeather = !process.argv.includes('--no-weather');
@@ -165,6 +166,20 @@ async function main() {
   };
   fs.writeFileSync(path.join(OUT_DIR, 'teams.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, teams }, null, 1));
   fs.writeFileSync(path.join(OUT_DIR, 'schedule.json'), JSON.stringify({ generatedAt: meta.generatedAt, season, week, phase, weeks, games: schedule }));
+
+  // What the number was, every time we looked. Same append-only history the
+  // other seventeen leagues keep, so closing line value is measured the same
+  // way here as everywhere else.
+  {
+    const lines = readLines(OUT_DIR, 'nfl');
+    const run = recordLines(lines, schedule.map((g) => ({
+      id: g.id, kickoff: g.kickoff, status: g.status,
+      homeSpread: g.homeSpread ?? null, totalLine: g.totalLine ?? null,
+      homeMoneyline: g.homeMoneyline ?? null, awayMoneyline: g.awayMoneyline ?? null,
+    })));
+    writeLines(OUT_DIR, lines);
+    console.log(`lines: ${run.tracked} tracked · ${run.opened} opened · ${run.moved} moved · ${run.closed} closed`);
+  }
   fs.writeFileSync(path.join(OUT_DIR, 'meta.json'), JSON.stringify(meta, null, 1));
   fs.writeFileSync(predPath, JSON.stringify(predictions, null, 1));
   const rosterDir = path.join(OUT_DIR, 'rosters');

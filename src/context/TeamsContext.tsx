@@ -10,6 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { Team } from '@/engine/types';
 import { TEAMS as SAMPLE_TEAMS } from '@/data/teams';
 import type { LiveGame, LiveMetaFile, LivePredictionsFile, LiveScheduleFile, LiveTeamsFile, Phase, PredictionRecord } from '@/data/liveTypes';
+import type { LinesFile } from '@/utils/clv';
 import bundledTeams from '../../data/live/teams.json';
 import bundledSchedule from '../../data/live/schedule.json';
 import bundledMeta from '../../data/live/meta.json';
@@ -24,7 +25,7 @@ const FETCH_TIMEOUT_MS = 15_000;
 
 export type DataSource = 'remote' | 'cache' | 'bundled' | 'sample';
 
-interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; predictions: LivePredictionsFile | null; weeks: NonNullable<LiveScheduleFile['weeks']>; generatedAt: string; season: number; week: number; phase: Phase; }
+interface Dataset { teams: Team[]; games: LiveGame[]; meta: LiveMetaFile | null; predictions: LivePredictionsFile | null; lines?: LinesFile | null; weeks: NonNullable<LiveScheduleFile['weeks']>; generatedAt: string; season: number; week: number; phase: Phase; }
 
 /** Older feeds shipped only two weeks and no index — derive one so the app still works. */
 function weeksOf(file: Partial<LiveScheduleFile> | null | undefined, games: LiveGame[]): NonNullable<LiveScheduleFile['weeks']> {
@@ -112,13 +113,16 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
   const refresh = useCallback(async () => {
     setRefreshing(true);
     try {
-      const [t, s, m, p] = await Promise.all([
+      const [t, s, m, p, l] = await Promise.all([
         fetchJson<LiveTeamsFile>(`${DATA_URL}/teams.json`),
         fetchJson<LiveScheduleFile>(`${DATA_URL}/schedule.json`),
         fetchJson<LiveMetaFile>(`${DATA_URL}/meta.json`).catch(() => null),
         fetchJson<LivePredictionsFile>(`${DATA_URL}/predictions.json`).catch(() => null),
+        // Written from the first build that carries it; absent until then, and
+        // a missing history simply means no closing line value is shown.
+        fetchJson<LinesFile>(`${DATA_URL}/lines.json`).catch(() => null),
       ]);
-      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, predictions: p && Array.isArray(p.records) ? p : null, weeks: weeksOf(s, s.games ?? []), generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
+      const next: Dataset = { teams: t.teams, games: s.games ?? [], meta: m, predictions: p && Array.isArray(p.records) ? p : null, lines: l, weeks: weeksOf(s, s.games ?? []), generatedAt: t.generatedAt, season: t.season, week: t.week, phase: t.phase };
       if (!validDataset(next)) throw new Error('Unexpected dataset shape');
       if (!mounted.current) return;
       setData((cur) => (next.generatedAt >= cur.generatedAt ? next : cur));

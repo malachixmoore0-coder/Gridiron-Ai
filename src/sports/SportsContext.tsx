@@ -10,6 +10,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useR
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { GENERIC_LEAGUES, LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
 import { feedUrl, type SportPredictionsFile, type SportScheduleFile, type SportTeamsFile } from '@/sports/feed';
+import type { LinesFile } from '@/utils/clv';
 
 const CACHE = 'gridiron-ai.sports.v1.';
 const TIMEOUT_MS = 15_000;
@@ -20,6 +21,8 @@ export interface SportFeed {
   teams: SportTeamsFile | null;
   schedule: SportScheduleFile | null;
   predictions: SportPredictionsFile | null;
+  /** Every number this league's market has shown us. Absent until a build writes one. */
+  lines: LinesFile | null;
   loading: boolean;
   error: string | null;
   /** When this copy was fetched, not when it was generated. */
@@ -28,7 +31,7 @@ export interface SportFeed {
 }
 
 const EMPTY = (key: LeagueKey): SportFeed =>
-  ({ key, teams: null, schedule: null, predictions: null, loading: false, error: null, fetchedAt: null, source: 'empty' });
+  ({ key, teams: null, schedule: null, predictions: null, lines: null, loading: false, error: null, fetchedAt: null, source: 'empty' });
 
 interface State {
   feeds: Record<string, SportFeed>;
@@ -71,7 +74,7 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
       try {
         const raw = await AsyncStorage.getItem(CACHE + key);
         if (raw) {
-          const cached = JSON.parse(raw) as { at: number; teams: SportTeamsFile; schedule: SportScheduleFile; predictions: SportPredictionsFile };
+          const cached = JSON.parse(raw) as { at: number; teams: SportTeamsFile; schedule: SportScheduleFile; predictions: SportPredictionsFile; lines?: LinesFile };
           patch(key, { ...cached, fetchedAt: cached.at, source: 'cache', loading: true });
           if (Date.now() - cached.at < STALE_MS) { patch(key, { loading: false }); inflight.current.delete(key); return; }
         }
@@ -79,16 +82,19 @@ export function SportsProvider({ children }: { children: React.ReactNode }) {
     }
 
     try {
-      const [teams, schedule, predictions] = await Promise.all([
+      const [teams, schedule, predictions, lines] = await Promise.all([
         getJson<SportTeamsFile>(feedUrl(meta.slug, 'teams.json')),
         // A league between seasons publishes teams and no board; that is a
         // state to render, not an error to swallow the whole feed for.
         getJson<SportScheduleFile>(feedUrl(meta.slug, 'schedule.json')).catch(() => null),
         getJson<SportPredictionsFile>(feedUrl(meta.slug, 'predictions.json')).catch(() => null),
+        // The line history only exists once a build has written one, and a
+        // league without it simply shows no closing line value.
+        getJson<LinesFile>(feedUrl(meta.slug, 'lines.json')).catch(() => null),
       ]);
       const at = Date.now();
-      patch(key, { teams, schedule, predictions, fetchedAt: at, source: 'network', loading: false, error: null });
-      AsyncStorage.setItem(CACHE + key, JSON.stringify({ at, teams, schedule, predictions })).catch(() => {});
+      patch(key, { teams, schedule, predictions, lines, fetchedAt: at, source: 'network', loading: false, error: null });
+      AsyncStorage.setItem(CACHE + key, JSON.stringify({ at, teams, schedule, predictions, lines })).catch(() => {});
     } catch (e) {
       patch(key, { loading: false, error: (e as Error).message });
     } finally {

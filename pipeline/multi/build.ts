@@ -27,6 +27,7 @@ import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster,
 import { backfillHeadshots, readCache, writeCache } from './headshots';
 import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
 import { closeBrowser } from './render';
+import { readLines, recordLines, writeLines } from './lines';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -208,6 +209,20 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     if (books.length) { g.books = books; booked += 1; }
   }
   console.log(`  ${booked}/${soon.length} games with per-book prices`);
+
+  // ---- what the number was, every time we looked -------------------------
+  // Written before the projections, so a game's opening line is on file from
+  // the same run that first priced it.
+  {
+    const lines = readLines(dir, meta.key);
+    const run = recordLines(lines, games.map((g) => ({
+      id: g.id, kickoff: g.kickoff, status: g.status,
+      homeSpread: g.homeSpread, totalLine: g.totalLine,
+      homeMoneyline: g.homeMoneyline, awayMoneyline: g.awayMoneyline,
+    })));
+    writeLines(dir, lines);
+    console.log(`  lines: ${run.tracked} tracked · ${run.opened} opened · ${run.moved} moved · ${run.closed} closed${run.dropped ? ` · ${run.dropped} aged out` : ''}`);
+  }
 
   // ---- projections, locked at kickoff, never back-filled ------------------
   const prev = readJson<SportPredictionsFile>(path.join(dir, 'predictions.json'));
