@@ -50,6 +50,45 @@
         touch-action: pan-x pan-y;
         -webkit-text-size-adjust: 100%;
       }
+      /*
+       * The focus ring on a text field.
+       *
+       * React Native Web renders every TextInput as a real <input>, so the
+       * browser draws its own focus ring over the app's dark chrome — a bright
+       * blue rectangle from a palette nothing else here uses. Removing it
+       * outright would be worse: a keyboard user needs to see where they are.
+       * So it is replaced rather than deleted, with the app's own accent at the
+       * app's own corner radius.
+       */
+      input,
+      textarea,
+      select,
+      [contenteditable] {
+        outline: none;
+      }
+      input:focus-visible,
+      textarea:focus-visible,
+      select:focus-visible,
+      [contenteditable]:focus-visible {
+        outline: 2px solid rgba(18, 217, 146, 0.55);
+        outline-offset: 1px;
+        border-radius: 8px;
+      }
+      /* iOS also paints its own inner shadow on inputs, which reads as a second
+         border inside the one the app drew. */
+      input,
+      textarea {
+        -webkit-appearance: none;
+        appearance: none;
+      }
+      /* And the yellow autofill wash, which is unreadable on a dark ground. */
+      input:-webkit-autofill,
+      input:-webkit-autofill:focus {
+        -webkit-text-fill-color: #EEF4F8;
+        -webkit-box-shadow: 0 0 0 1000px #0E1620 inset;
+        caret-color: #EEF4F8;
+      }
+
       /* These styles make the root element full-height */
       #root {
         display: flex;

@@ -18,6 +18,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
 import { colors, grad, numeric, radius, shadow, spacing, type as T, clearance } from '@/theme';
 import { ScreenHeader } from '@/components/ScreenHeader';
+import { useSocial } from '@/social/SocialContext';
 import { useEntitlements } from '@/context/EntitlementsContext';
 import { useTeams } from '@/context/TeamsContext';
 import { summarize } from '@/utils/record';
@@ -28,8 +29,9 @@ import { FULL_NOTICE } from '@/legal/notices';
 const accentOf = (a: Tier['accent']) =>
   a === 'green' ? colors.green : a === 'gold' ? colors.gold : a === 'platinum' ? '#D9E2EC' : colors.inkDim;
 
-export function UpgradeScreen({ onBack }: { onBack: () => void }) {
+export function UpgradeScreen({ onBack, onSignIn }: { onBack: () => void; onSignIn: () => void }) {
   const ent = useEntitlements();
+  const social = useSocial();
   const { records } = useTeams();
   const [cycle, setCycle] = useState<Cycle>(ent.cycle);
   const [code, setCode] = useState('');
@@ -75,11 +77,25 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
 
         {/* ---- trial ---- */}
         {ent.trial.available && (
-          <TouchableOpacity style={styles.trial} activeOpacity={0.88} onPress={() => { ent.startTrial(); setNote(`${TRIAL_DAYS} days of Quant, on the house. No card taken.`); }}>
+          <TouchableOpacity
+            style={[styles.trial, !social.signedIn && styles.trialLocked]}
+            activeOpacity={0.88}
+            onPress={() => {
+              // A trial that asks for nothing is a trial anybody can take
+              // again by clearing their browser. Tying it to an account does
+              // not make it airtight — that needs the entitlements function —
+              // but it stops the free version of the loop.
+              if (!social.signedIn) { onSignIn(); return; }
+              ent.startTrial();
+              setNote(`${TRIAL_DAYS} days of Quant, on the house. No card taken.`);
+            }}
+          >
             <LinearGradient colors={grad.money} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.trialBg}>
               <Ionicons name="gift" size={18} color={colors.bg} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.trialTitle}>Take {TRIAL_DAYS} days of Quant free</Text>
+                <Text style={styles.trialTitle}>
+              {social.signedIn ? `Take ${TRIAL_DAYS} days of Quant free` : `Sign in for ${TRIAL_DAYS} days of Quant free`}
+            </Text>
                 <Text style={styles.trialBlurb}>No card. No auto-charge. It simply ends.</Text>
               </View>
               <Ionicons name="arrow-forward" size={16} color={colors.bg} />
@@ -92,6 +108,11 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
             <Text style={styles.trialActiveText}>Trial running · {ent.trial.daysLeft} day{ent.trial.daysLeft === 1 ? '' : 's'} of Quant left</Text>
           </View>
         )}
+
+        {/* Whatever just happened, said where it happened. This used to sit
+            below every tier card, so a tap near the top set a message four
+            screens down and read as a button that did nothing. */}
+        {!!note && <View style={styles.note}><Ionicons name="information-circle" size={14} color={colors.green} /><Text style={styles.noteText}>{note}</Text></View>}
 
         {/* ---- cycle ---- */}
         <View style={styles.cycle}>
@@ -114,7 +135,15 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
           const amount = cycle === 'annual' ? t.annual : t.monthly;
           const per = cycle === 'annual' ? '/yr' : '/mo';
           return (
-            <View key={t.id} style={[styles.tier, mine && { borderColor: c }, t.id === 'allpro' && styles.tierFeatured]}>
+            <TouchableOpacity
+              key={t.id}
+              style={[styles.tier, mine && { borderColor: c }, t.id === 'allpro' && styles.tierFeatured]}
+              activeOpacity={mine || t.monthly === 0 ? 1 : 0.9}
+              disabled={mine || t.monthly === 0}
+              onPress={() => buy(t)}
+              accessibilityRole="button"
+              accessibilityLabel={`${t.name}, ${amount === 0 ? 'free' : `$${amount}${per}`}`}
+            >
               {t.id === 'allpro' && <View style={[styles.ribbon, { backgroundColor: c }]}><Text style={styles.ribbonText}>MOST POPULAR</Text></View>}
               <View style={styles.tierHead}>
                 <View style={{ flex: 1 }}>
@@ -151,7 +180,9 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
               </View>
               {mine ? (
                 <View style={[styles.cta, styles.ctaCurrent]}><Text style={styles.ctaCurrentText}>Your plan</Text></View>
-              ) : t.monthly === 0 ? null : (
+              ) : t.monthly === 0 ? (
+                <View style={[styles.cta, styles.ctaCurrent]}><Text style={styles.ctaCurrentText}>Always free</Text></View>
+              ) : (
                 <TouchableOpacity style={styles.cta} activeOpacity={0.88} onPress={() => buy(t)}>
                   <LinearGradient colors={t.accent === 'gold' ? grad.gold : grad.money} start={{ x: 0, y: 0 }} end={{ x: 1, y: 0 }} style={styles.ctaBg}>
                     <Text style={styles.ctaText}>{paymentsLive ? `Get ${t.name}` : `Join the ${t.name} list`}</Text>
@@ -159,11 +190,11 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
                   </LinearGradient>
                 </TouchableOpacity>
               )}
-            </View>
+            </TouchableOpacity>
           );
         })}
 
-        {!!note && <View style={styles.note}><Ionicons name="information-circle" size={14} color={colors.green} /><Text style={styles.noteText}>{note}</Text></View>}
+
 
         {/* ---- codes and housekeeping ---- */}
         <View style={styles.redeem}>
@@ -227,6 +258,7 @@ const styles = StyleSheet.create({
   heroFoot: { color: colors.inkGhost, fontSize: 10, lineHeight: 14, marginTop: spacing.md },
 
   trial: { borderRadius: radius.lg, overflow: 'hidden', marginBottom: spacing.lg },
+  trialLocked: { opacity: 0.9 },
   trialBg: { flexDirection: 'row', alignItems: 'center', gap: spacing.md, padding: spacing.md },
   trialTitle: { color: colors.bg, fontSize: 15, fontWeight: '900' },
   trialBlurb: { color: 'rgba(5,8,12,0.75)', fontSize: 11, fontWeight: '700', marginTop: 1 },

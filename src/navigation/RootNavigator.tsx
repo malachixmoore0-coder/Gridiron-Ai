@@ -377,7 +377,7 @@ export function RootNavigator() {
               ) : o.kind === 'parlay' ? (
                 <ParlayScreen onBack={pop} onUpgrade={openUpgrade} />
               ) : o.kind === 'upgrade' ? (
-                <UpgradeScreen onBack={pop} />
+                <UpgradeScreen onBack={pop} onSignIn={() => { pop(); openProfile('me'); }} />
               ) : o.kind === 'privacy' ? (
                 <PrivacyScreen onDone={pop} />
               ) : o.kind === 'people' ? (

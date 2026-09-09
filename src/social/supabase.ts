@@ -16,7 +16,7 @@
 import { createClient, type SupabaseClient } from '@supabase/supabase-js';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Backend, FeedScope, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
+import { Backend, FeedScope, HANDLE_RE, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
 import { screen } from './moderation';
 import { sortFeed } from './local';
 // Imported for its side effect as much as its value: reading the URL happens at
@@ -284,14 +284,37 @@ export class SupabaseBackend implements Backend {
     return data ? rowToProfile(data) : null;
   }
 
+  /**
+   * Save a profile, and say something human when the handle is refused.
+   *
+   * Two handles cannot collide — `profiles.handle` is `unique` with a
+   * `^[a-z0-9_]{3,18}$` check, so the database is the thing actually enforcing
+   * it and no client mistake can get around that. What the client owes is the
+   * message: an editor that answers "duplicate key value violates unique
+   * constraint profiles_handle_key" has technically told the truth and
+   * practically told the user nothing.
+   *
+   * The handle is also normalised on the way in, because the check constraint
+   * rejects capitals and a person typing their own name is not doing anything
+   * unreasonable.
+   */
   async upsertProfile(p: Profile): Promise<Profile> {
+    const handle = p.handle.trim().toLowerCase().replace(/^@/, '');
+    if (!HANDLE_RE.test(handle)) {
+      throw new Error('Handles are 3 to 18 characters — letters, numbers and underscores only.');
+    }
     const { data, error } = await db().from('profiles').update({
-      handle: p.handle, display_name: p.displayName, bio: p.bio,
+      handle, display_name: p.displayName, bio: p.bio,
       avatar_url: p.avatarUrl ?? null, banner_url: p.bannerUrl ?? null,
       is_private: p.isPrivate, show_record: p.showRecord, show_picks: p.showPicks,
       record: p.record ?? null,
     }).eq('id', p.id).select().single();
-    if (error) throw new Error(error.message);
+    if (error) {
+      // 23505 is unique_violation, 23514 a failed check constraint.
+      if (error.code === '23505') throw new Error(`@${handle} is taken. Try another.`);
+      if (error.code === '23514') throw new Error('Handles are 3 to 18 characters — letters, numbers and underscores only.');
+      throw new Error(error.message);
+    }
     return rowToProfile(data);
   }
 
