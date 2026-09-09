@@ -3,7 +3,7 @@
  *
  * The wording had drifted into claiming to be something it is not. Five
  * surfaces carried some version of "21+ where sports betting is legal", which
- * reads as the notice a sportsbook prints — and Gridiron AI is not one. It
+ * reads as the notice a sportsbook prints — and Simtoad is not one. It
  * takes no wager, holds no balance, settles nothing and pays nobody. It
  * publishes model projections and grades them in the open.
  *
@@ -25,7 +25,7 @@
 export const NOT_ADVICE = 'Projections are information, not advice.';
 
 /** What this product is not. The line that replaced the 21+ boilerplate. */
-export const NOT_A_BOOK = 'Gridiron AI does not take bets, hold funds or settle wagers.';
+export const NOT_A_BOOK = 'Simtoad does not take bets, hold funds or settle wagers.';
 
 /** The honesty clause. No guaranteed-profit language, ever. */
 export const NO_GUARANTEE = 'No model beats a sportsbook every week, and nothing here is a guarantee of profit.';
@@ -38,4 +38,4 @@ export const HELP_NOTE = `If gambling is affecting your life, the National Counc
 export const SHORT_NOTICE = `${NOT_ADVICE} ${NOT_A_BOOK}`;
 
 /** The full disclosure, for Settings, the paywall and the landing page. */
-export const FULL_NOTICE = `Gridiron AI publishes model projections and grades every one of them in the open. It is an information and analytics product: it does not accept wagers, hold funds or settle bets, and nothing here is a recommendation to place one. ${NO_GUARANTEE} ${HELP_NOTE}`;
+export const FULL_NOTICE = `Simtoad publishes model projections and grades every one of them in the open. It is an information and analytics product: it does not accept wagers, hold funds or settle bets, and nothing here is a recommendation to place one. ${NO_GUARANTEE} ${HELP_NOTE}`;

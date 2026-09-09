@@ -12,6 +12,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import { useTeams as useNflTeams } from '@/context/TeamsContext';
 import { useTeams as useCfbTeams } from '@/cfb/context/TeamsContext';
 import { useSports } from '@/sports/SportsContext';
@@ -19,7 +20,7 @@ import { LEAGUES, LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
 import { boardLeagues } from '@/utils/board';
 import type { LeagueGame, LeagueId, LeagueTeamRef, LeagueView, WeekRef } from '@/league/types';
 
-const KEY = 'gridiron-ai.league.v1';
+const KEY = 'league.v1';
 
 interface State {
   league: LeagueId;
@@ -53,7 +54,7 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
   const [league, setLeagueState] = useState<LeagueId>('nfl');
 
   useEffect(() => {
-    AsyncStorage.getItem(KEY)
+    getMigrated(KEY)
       .then((v) => { if (v && LEAGUE_BY_KEY[v as LeagueKey]) setLeagueState(v as LeagueId); })
       .catch(() => {});
   }, []);
@@ -65,7 +66,7 @@ export function LeagueProvider({ children }: { children: React.ReactNode }) {
 
   const setLeague = useCallback((l: LeagueId) => {
     setLeagueState(l);
-    AsyncStorage.setItem(KEY, l).catch(() => {});
+    AsyncStorage.setItem(key(KEY), l).catch(() => {});
     const meta = LEAGUE_BY_KEY[l as LeagueKey];
     if (meta && !meta.bespoke) sports.ensure(l as LeagueKey);
     if (l === 'cfb' && cfbRaw.source === 'sample' && !cfbRaw.refreshing) cfbRaw.refresh();

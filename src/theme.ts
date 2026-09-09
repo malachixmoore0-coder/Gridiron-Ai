@@ -1,5 +1,5 @@
 /**
- * Gridiron AI — "The Vault" design system.
+ * Simtoad — "The Vault" design system.
  *
  * The look is a night-shift trading desk, not a broadcast graphic. Three
  * deliberate choices, all of them load-bearing:

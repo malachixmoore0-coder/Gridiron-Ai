@@ -25,7 +25,7 @@ export interface TeamNewsFile { teamId: string; generatedAt: string; items: News
 
 const MEM = new Map<string, { at: number; items: NewsItem[] }>();
 const FRESH_MS = 5 * 60_000;
-const PREFIX = 'gridiron-ai.news.v1.';
+const PREFIX = 'simtoad.news.v1.';
 
 export function useTeamNews(teamId: string | null | undefined, baseUrl: string = DATA_URL) {
   const [items, setItems] = useState<NewsItem[]>(() => (teamId && MEM.get(`${baseUrl}${teamId}`)?.items) || []);

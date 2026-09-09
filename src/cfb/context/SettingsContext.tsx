@@ -1,9 +1,10 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import type { InjuryStatus, NodeWeights, Player, Weather } from '@/cfb/engine/types';
 import { DEFAULT_WEIGHTS, HFA_DEFAULT, HFA_MAX, HFA_MIN } from '@/cfb/engine/weights';
 
-const KEY = 'cfb-gridiron-ai.settings.v1';
+const KEY = 'cfb.settings.v1';
 
 export type SimCount = 2000 | 5000 | 10000 | 25000;
 
@@ -63,7 +64,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     (async () => {
       try {
-        const raw = await AsyncStorage.getItem(KEY);
+        const raw = await getMigrated(KEY);
         if (raw) {
           const parsed = JSON.parse(raw) as Partial<Persisted>;
           setState({ ...DEFAULTS, ...parsed, weights: { ...DEFAULT_WEIGHTS, ...(parsed.weights ?? {}) }, overrides: parsed.overrides ?? {} });
@@ -78,7 +79,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (!loaded) return;
-    AsyncStorage.setItem(KEY, JSON.stringify(state)).catch(() => {});
+    AsyncStorage.setItem(key(KEY), JSON.stringify(state)).catch(() => {});
   }, [state, loaded]);
 
   const patch = useCallback((p: Partial<Persisted> | ((s: Persisted) => Partial<Persisted>)) => {

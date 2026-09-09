@@ -12,7 +12,7 @@ import { GENERIC_LEAGUES, LEAGUE_BY_KEY, type LeagueKey } from '@/sports/types';
 import { feedUrl, type SportPredictionsFile, type SportScheduleFile, type SportTeamsFile } from '@/sports/feed';
 import type { LinesFile } from '@/utils/clv';
 
-const CACHE = 'gridiron-ai.sports.v1.';
+const CACHE = 'simtoad.sports.v1.';
 const TIMEOUT_MS = 15_000;
 const STALE_MS = 8 * 60_000;
 

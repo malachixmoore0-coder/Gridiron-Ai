@@ -7,6 +7,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import type { Conference, Team } from '@/cfb/engine/types';
 import { TEAMS as SAMPLE_TEAMS, groupByConference, type ConferenceGroup } from '@/cfb/data/teams';
 import { FBS_SEASON } from '@/cfb/data/fbs';
@@ -17,7 +18,7 @@ export const DATA_URL: string =
   (process.env.EXPO_PUBLIC_DATA_URL as string | undefined)?.replace(/\/$/, '') ??
   'https://raw.githubusercontent.com/malachixmoore0-coder/CFB-Gridiron-AI/main/data/live';
 
-const CACHE_KEY = 'cfb-gridiron-ai.live-data.v1';
+const CACHE_KEY = 'cfb.live-data.v1';
 /** A dataset must cover (nearly) all of FBS to be trusted. */
 const MIN_TEAMS = 100;
 const FETCH_TIMEOUT_MS = 15_000;
@@ -130,7 +131,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
       setData((cur) => (next.generatedAt >= cur.generatedAt ? next : cur));
       setSource('remote');
       setLastError(null);
-      AsyncStorage.setItem(CACHE_KEY, JSON.stringify(next)).catch(() => {});
+      AsyncStorage.setItem(key(CACHE_KEY), JSON.stringify(next)).catch(() => {});
     } catch (e) {
       if (mounted.current) setLastError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -142,7 +143,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
     mounted.current = true;
     (async () => {
       try {
-        const raw = await AsyncStorage.getItem(CACHE_KEY);
+        const raw = await getMigrated(CACHE_KEY);
         if (raw) {
           const cached = JSON.parse(raw) as Dataset;
           if (validDataset(cached) && cached.generatedAt > initial.data.generatedAt && mounted.current) { setData(cached); setSource('cache'); }

@@ -10,10 +10,11 @@
  * shared one and the same screens keep working unchanged.
  */
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import { Backend, FeedScope, Post, PostPick, Profile, ReportInput, Session, colorFor, handleFrom, hashtagsIn } from './types';
 import { RATE_WINDOW_MS, qualityOf, rateLimited, screen } from './moderation';
 
-const KEY = 'gridiron-ai.social.local.v1';
+const KEY = 'social.local.v1';
 
 interface Store {
   session: Session | null;
@@ -67,7 +68,7 @@ export class LocalBackend implements Backend {
   private async load(): Promise<Store> {
     if (this.loaded) return this.s;
     try {
-      const raw = await AsyncStorage.getItem(KEY);
+      const raw = await getMigrated(KEY);
       this.s = raw ? { ...EMPTY, ...(JSON.parse(raw) as Partial<Store>) } : EMPTY;
     } catch { this.s = EMPTY; }
     if (!this.s.posts.length) this.s.posts = SAMPLE_POSTS();
@@ -76,7 +77,7 @@ export class LocalBackend implements Backend {
     return this.s;
   }
 
-  private async save() { try { await AsyncStorage.setItem(KEY, JSON.stringify(this.s)); } catch { /* full disk */ } }
+  private async save() { try { await AsyncStorage.setItem(key(KEY), JSON.stringify(this.s)); } catch { /* full disk */ } }
 
   private hydrate(p: Post): Post {
     return { ...p, author: this.s.profiles[p.authorId], likedByMe: this.s.likes.includes(p.id), tailedByMe: this.s.tails.includes(p.id) };

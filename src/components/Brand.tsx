@@ -19,16 +19,18 @@ export function BrandMark({ size = 32, radius }: { size?: number; radius?: numbe
       source={MARK}
       style={{ width: size, height: size, borderRadius: radius ?? size * 0.225 }}
       resizeMode="contain"
-      accessibilityLabel="Gridiron AI"
+      accessibilityLabel="Simtoad"
     />
   );
 }
 
-/** GRIDIRON in ink, AI in money. The two-tone split is the whole wordmark. */
+/** SIM in ink, TOAD in money. The two-tone split is the whole wordmark — and
+ *  it lands better here than it did before, because the seam is inside a single
+ *  word rather than between a name and an initialism. */
 export function Wordmark({ size = 20, style }: { size?: number; style?: object }) {
   return (
     <Text style={[styles.word, { fontSize: size, letterSpacing: -size * 0.02 }, style]} accessibilityRole="header">
-      GRIDIRON<Text style={{ color: colors.green }}> AI</Text>
+      SIM<Text style={{ color: colors.green }}>TOAD</Text>
     </Text>
   );
 }

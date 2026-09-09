@@ -1,19 +1,30 @@
 /**
- * Gridiron AI subscription ladder.
+ * The Simtoad subscription ladder.
  *
  * One subscription, every league. That is deliberate and it is the offer: the
- * NFL runs September to February and college August to January, so a single
- * price that covers both is worth more to the buyer than two that each go dead
- * for half the year — and it removes the churn cliff that kills seasonal
+ * Football runs September to February, basketball November to April, baseball
+ * March to October: a single price that covers all of them is worth more to the
+ * buyer than any one that goes dead for half the year — and it removes the churn cliff that kills seasonal
  * products.
  *
- * Four rungs, priced on the one thing a bettor actually buys: conviction per
- * minute. Free proves the model is real, Starter removes the meter, All-Pro
- * sells the tools that turn a number into a bet, Franchise sells the model
- * itself. Every paid rung has to be worth its price on a single feature, not
+ * Four rungs, named for how deep into the work each one lets you go rather than
+ * for a place on a roster — the old ladder (Walk-On, Starter, All-Pro,
+ * Franchise) described a football team, which stopped being true at sixteen
+ * leagues and never covered golf at all. Scout proves the model is real,
+ * Analyst removes the meter, Quant sells the tools that turn a number into a
+ * position, Desk sells the model itself. Every paid rung has to be worth its price on a single feature, not
  * on a bundle — that is the test each entitlement below has to pass.
  */
 
+/**
+ * The stored identity of a tier, which is deliberately not its name.
+ *
+ * These strings are written into the entitlements record on every device and
+ * are what the promo codes resolve to, so renaming them to match the new
+ * display names would orphan every saved subscription and every code already
+ * issued — somebody paying for Quant would come back as free. They are never
+ * rendered; `name` below is what a person sees. Leave them alone.
+ */
 export type TierId = 'walkon' | 'starter' | 'allpro' | 'franchise';
 export type Cycle = 'monthly' | 'annual';
 
@@ -108,7 +119,7 @@ const FREE: Entitlements = {
 export const TIERS: Tier[] = [
   {
     id: 'walkon',
-    name: 'Walk-On',
+    name: 'Scout',
     tagline: 'Free forever',
     monthly: 0,
     annual: 0,
@@ -127,8 +138,8 @@ export const TIERS: Tier[] = [
   },
   {
     id: 'starter',
-    name: 'Starter',
-    tagline: 'For Sundays and Saturdays',
+    name: 'Analyst',
+    tagline: 'For the whole board, every night',
     monthly: 1299,
     annual: 9900,
     hook: 'Unlimited 10,000-run simulations across every league. No meter.',
@@ -156,13 +167,13 @@ export const TIERS: Tier[] = [
   },
   {
     id: 'allpro',
-    name: 'All-Pro',
-    tagline: 'For the bettor with a bankroll',
+    name: 'Quant',
+    tagline: 'For the one who checks the numbers',
     monthly: 2999,
     annual: 24900,
     hook: 'Every sport on the board, the props, and the parlay maths behind them.',
     bullets: [
-      'Everything in Starter, at 25,000 runs',
+      'Everything in Analyst, at 25,000 runs',
       'Conviction on every game on the board — no cap',
       'Every sport on the board, every day',
       'Correlated parlay builder (up to 4 legs)',
@@ -196,13 +207,13 @@ export const TIERS: Tier[] = [
   },
   {
     id: 'franchise',
-    name: 'Franchise',
-    tagline: 'For the syndicate',
+    name: 'Desk',
+    tagline: 'For the whole operation',
     monthly: 9900,
     annual: 89900,
     hook: 'The deepest simulations, the longest parlays, and a direct line to the build.',
     bullets: [
-      'Everything in All-Pro, at 50,000 runs',
+      'Everything in Quant, at 50,000 runs',
       '8-leg parlay engine with the correlation haircut',
       'Direct line to the build',
     ],
@@ -236,7 +247,7 @@ export const FREE_TIER = TIERS[0];
 export const TIER_BY_ID = Object.fromEntries(TIERS.map((t) => [t.id, t])) as Record<TierId, Tier>;
 export const RANK: Record<TierId, number> = { walkon: 0, starter: 1, allpro: 2, franchise: 3 };
 
-/** Days of full All-Pro on the house, once, no card. */
+/** Days of full Quant on the house, once, no card. */
 export const TRIAL_DAYS = 7;
 export const TRIAL_TIER: TierId = 'allpro';
 

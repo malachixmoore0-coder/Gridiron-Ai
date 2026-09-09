@@ -6,7 +6,7 @@
  * never to be its own authority. Two rules follow from that:
  *
  *   • the address bar is not evidence. `?upgraded=<tier>` used to be enough to
- *     hand out Franchise to anybody who typed it. It is now only honoured when
+ *     hand out Desk to anybody who typed it. It is now only honoured when
  *     no verifier is configured, and even then the grant is stamped
  *     `provisional` and the app says so;
  *   • a server's answer wins in both directions. When the check function is
@@ -20,11 +20,12 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import { Platform } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import { Entitlements, RANK, TIER_BY_ID, TIERS, TRIAL_DAYS, TRIAL_TIER, Tier, TierId, Cycle } from '@/monetize/tiers';
 import { checkoutUrl, openLink, paymentsLive } from '@/monetize/checkout';
 import { redeemOnServer, serverEntitlement, verifyCheckout, verificationLive, type GrantSource } from '@/monetize/verify';
 
-const KEY = 'gridiron-ai.entitlements.v1';
+const KEY = 'entitlements.v1';
 const DAY = 86_400_000;
 
 interface Persisted {
@@ -52,7 +53,7 @@ const DEFAULTS: Persisted = { tier: 'walkon', cycle: 'monthly', since: null, tri
  * Beta codes, for the offline path only.
  *
  * These used to be plain strings in the bundle, which meant every code shipped
- * to every visitor — the longest-lived one was ten years of Franchise to anyone who ran
+ * to every visitor — the longest-lived one was ten years of Desk to anyone who ran
  * `strings` over the JavaScript, no devtools required. They are stored as
  * digests now so reading the bundle does not hand them over.
  *
@@ -122,7 +123,7 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
   useEffect(() => {
     (async () => {
       try {
-        const raw = await AsyncStorage.getItem(KEY);
+        const raw = await getMigrated(KEY);
         let next = raw ? { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Persisted>) } : DEFAULTS;
         if (next.usage?.day !== today()) next = { ...next, usage: { day: today(), sims: 0 } };
         // A grant that has run out is not a grant. Nothing used to check this,
@@ -156,7 +157,7 @@ export function EntitlementsProvider({ children }: { children: React.ReactNode }
     })();
   }, []);
 
-  const save = useCallback((next: Persisted) => { setS(next); AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {}); }, []);
+  const save = useCallback((next: Persisted) => { setS(next); AsyncStorage.setItem(key(KEY), JSON.stringify(next)).catch(() => {}); }, []);
 
   /**
    * The meter, mirrored where a synchronous read can reach it.

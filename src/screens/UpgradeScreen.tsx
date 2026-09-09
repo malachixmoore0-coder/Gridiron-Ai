@@ -6,11 +6,11 @@
  *      the same predictions file the Record tab grades. If the model is having
  *      a bad month the wall says so — a paywall that lies is a refund with a
  *      delay.
- *   2. The trial. Seven days of All-Pro, no card. The cost of a trial is a
+ *   2. The trial. Seven days of Quant, no card. The cost of a trial is a
  *      rounding error next to the cost of a user who never sees the good part.
  *   3. The ladder. Priced so the middle tier is the obvious one: Starter
- *      removes the meter, All-Pro is the one with the tools, and Franchise
- *      exists mostly to make All-Pro look reasonable.
+ *      removes the meter, Quant is the one with the tools, and Desk
+ *      exists mostly to make Quant look reasonable.
  */
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, TextInput, StyleSheet } from 'react-native';
@@ -75,11 +75,11 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
 
         {/* ---- trial ---- */}
         {ent.trial.available && (
-          <TouchableOpacity style={styles.trial} activeOpacity={0.88} onPress={() => { ent.startTrial(); setNote(`${TRIAL_DAYS} days of All-Pro, on the house. No card taken.`); }}>
+          <TouchableOpacity style={styles.trial} activeOpacity={0.88} onPress={() => { ent.startTrial(); setNote(`${TRIAL_DAYS} days of Quant, on the house. No card taken.`); }}>
             <LinearGradient colors={grad.money} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.trialBg}>
               <Ionicons name="gift" size={18} color={colors.bg} />
               <View style={{ flex: 1 }}>
-                <Text style={styles.trialTitle}>Take {TRIAL_DAYS} days of All-Pro free</Text>
+                <Text style={styles.trialTitle}>Take {TRIAL_DAYS} days of Quant free</Text>
                 <Text style={styles.trialBlurb}>No card. No auto-charge. It simply ends.</Text>
               </View>
               <Ionicons name="arrow-forward" size={16} color={colors.bg} />
@@ -89,7 +89,7 @@ export function UpgradeScreen({ onBack }: { onBack: () => void }) {
         {ent.trial.active && (
           <View style={styles.trialActive}>
             <Ionicons name="time" size={14} color={colors.green} />
-            <Text style={styles.trialActiveText}>Trial running · {ent.trial.daysLeft} day{ent.trial.daysLeft === 1 ? '' : 's'} of All-Pro left</Text>
+            <Text style={styles.trialActiveText}>Trial running · {ent.trial.daysLeft} day{ent.trial.daysLeft === 1 ? '' : 's'} of Quant left</Text>
           </View>
         )}
 

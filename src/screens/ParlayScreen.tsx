@@ -64,7 +64,7 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
         <View style={{ padding: spacing.lg }}>
           <Locked
             title="Parlay Lab"
-            blurb="Price any parlay against the model, with a correlation haircut on same-game legs, and see whether the book's number is worth taking. All-Pro opens it at four legs; Franchise at eight."
+            blurb="Price any parlay against the model, with a correlation haircut on same-game legs, and see whether the book's number is worth taking. Quant opens it at four legs; Desk at eight."
             cta="Unlock the Lab"
             onPress={onUpgrade}
             style={{ height: 210 }}

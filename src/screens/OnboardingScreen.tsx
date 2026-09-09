@@ -7,11 +7,41 @@ import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { NOT_ADVICE } from '@/legal/notices';
 
-const NODES: { icon: keyof typeof Ionicons.glyphMap; title: string; weight: string; text: string }[] = [
-  { icon: 'flag', title: 'Scheme & Tactical Bias', weight: '25%', text: 'Offense vs the specific front and coverage it will see, play-action leverage, 3rd-down and red-zone tendencies, in-game adjustments.' },
-  { icon: 'people', title: 'Personnel & Matchup Edge', weight: '35%', text: 'Quarterback, pass-block vs pass-rush win rates, slot vs nickel, TE speed vs linebackers, and an injury degradation metric.' },
-  { icon: 'home', title: 'Environmental & Rivalry', weight: '15%', text: 'Home field scaled by noise, travel and altitude, weather effects on totals, and division-game variance.' },
-  { icon: 'eye', title: 'Sleeper & X-Factor', weight: '25%', text: 'Target share and TPRR projections, rotational pass-rusher snap rates, and the mismatches that swing a spread.' },
+/**
+ * What the app actually is, on the one screen where a stranger decides.
+ *
+ * This used to open with "pick any two NFL teams" and then list the four nodes
+ * of the football engine — a faithful description of the app when football was
+ * all of it, and a wrong one for eighteen leagues. Worse, it opened by telling
+ * a basketball fan the product was not for them, which is the single most
+ * expensive sentence in the app.
+ *
+ * So it describes the method rather than one sport's inputs, and it leads with
+ * the two things nobody else in the category will say out loud: that the
+ * projection is frozen before the game and graded afterwards whatever happens,
+ * and that a single night proves nothing either way.
+ */
+const POINTS: { icon: keyof typeof Ionicons.glyphMap; title: string; text: string }[] = [
+  {
+    icon: 'shuffle',
+    title: 'Ten thousand times, every game',
+    text: 'Football, basketball, baseball, hockey, soccer and golf — eighteen leagues on one engine. Every matchup is simulated ten thousand times, and you get the whole distribution: win probability, a projected score, and the range either side of it.',
+  },
+  {
+    icon: 'lock-closed',
+    title: 'Locked before it starts',
+    text: 'Every projection is written down before first pitch and never touched again. A game first seen after it began is not scored at all — which is the only way a track record means anything.',
+  },
+  {
+    icon: 'stats-chart',
+    title: 'Graded in the open, error bars and all',
+    text: 'Wins and losses both, with the confidence interval next to the number. A 10-1 night and a 1-10 night are each about as common as the other, and the app will say so rather than sell you the good one.',
+  },
+  {
+    icon: 'snow',
+    title: 'It knows what moves a number',
+    text: 'Tonight\'s starting pitcher, the forecast at kick-off, travel and altitude, the market itself. What it refuses to price is a hot streak, because the evidence says a streak is a symptom of a good team rather than information on top of one.',
+  },
 ];
 
 export function OnboardingScreen({ onDone }: { onDone: () => void }) {
@@ -20,20 +50,18 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.badge}><Ionicons name="american-football" size={30} color={colors.bg} /></View>
-        <Text style={styles.title}>Gridiron AI</Text>
+        <View style={styles.badge}><Ionicons name="stats-chart" size={28} color={colors.bg} /></View>
+        <Text style={styles.title}>Simtoad</Text>
         <Text style={styles.subtitle}>
-          Pick any two NFL teams. The engine grades the matchup through four weighted nodes, simulates the game
-          10,000 times, and hands you win probability, a projected score, an advantage matrix, a three-act game script
-          and a sleeper report.
+          Eighteen leagues, one model. It sits still, ignores almost everything, and tells you when a number is
+          actually worth taking.
         </Text>
-        {NODES.map((n) => (
+        {POINTS.map((n) => (
           <View key={n.title} style={styles.node}>
             <View style={styles.nodeIcon}><Ionicons name={n.icon} size={16} color={colors.gold} /></View>
             <View style={{ flex: 1 }}>
               <View style={styles.nodeHead}>
                 <Text style={styles.nodeTitle}>{n.title}</Text>
-                <Text style={styles.nodeWeight}>{n.weight}</Text>
               </View>
               <Text style={styles.nodeText}>{n.text}</Text>
             </View>
@@ -41,7 +69,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
         ))}
         <View style={styles.note}>
           <Ionicons name="information-circle" size={16} color={colors.inkDim} />
-          <Text style={styles.noteText}>Ships on an editable sample dataset (preseason-2026 estimates). {NOT_ADVICE}</Text>
+          <Text style={styles.noteText}>Football ships on an editable sample dataset (preseason-2026 estimates); every other league is built from live results. {NOT_ADVICE}</Text>
         </View>
         <TouchableOpacity
           style={styles.trial}
@@ -49,7 +77,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
           onPress={() => { ent.startTrial(); setOnboarded(true); onDone(); }}
         >
           <Ionicons name="gift" size={16} color={colors.bg} />
-          <Text style={styles.trialText}>Start with 7 days of All-Pro free</Text>
+          <Text style={styles.trialText}>Start with 7 days of Quant free</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.cta} activeOpacity={0.85} onPress={() => { setOnboarded(true); onDone(); }}>
           <Text style={styles.ctaText}>Maybe later — just start</Text>

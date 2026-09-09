@@ -12,9 +12,10 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import type { LeagueId } from '@/league/types';
 
-const KEY = 'gridiron-ai.engagement.v1';
+const KEY = 'engagement.v1';
 
 export type Market = 'ml' | 'spread' | 'total';
 export type PickSide = 'home' | 'away' | 'over' | 'under';
@@ -122,20 +123,20 @@ export function EngagementProvider({ children }: { children: React.ReactNode }) 
   const [s, setS] = useState<Persisted>(DEFAULTS);
   const [loaded, setLoaded] = useState(false);
 
-  const save = useCallback((next: Persisted) => { setS(next); AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {}); }, []);
+  const save = useCallback((next: Persisted) => { setS(next); AsyncStorage.setItem(key(KEY), JSON.stringify(next)).catch(() => {}); }, []);
 
   useEffect(() => {
     (async () => {
       let next = DEFAULTS;
       try {
-        const raw = await AsyncStorage.getItem(KEY);
+        const raw = await getMigrated(KEY);
         if (raw) next = { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Persisted>) };
       } catch { /* first run */ }
       // Attendance is counted once a day: continue the run, or start a new one.
       if (next.lastOpen !== today()) {
         const streak = next.lastOpen === yesterday() ? next.streak + 1 : 1;
         next = { ...next, streak, best: Math.max(next.best, streak), lastOpen: today(), opens: next.opens + 1 };
-        AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {});
+        AsyncStorage.setItem(key(KEY), JSON.stringify(next)).catch(() => {});
       }
       setS(next);
       setLoaded(true);

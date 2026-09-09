@@ -9,7 +9,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { golfUrl, type GolfFile } from '@/sports/golf';
 
-const CACHE = 'gridiron-ai.golf.v1';
+const CACHE = 'simtoad.golf.v1';
 const STALE_MS = 8 * 60_000;
 
 interface State {

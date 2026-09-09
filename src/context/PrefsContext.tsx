@@ -6,9 +6,10 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import { setHapticsEnabled } from '@/utils/haptics';
 
-const KEY = 'gridiron-ai.prefs.v1';
+const KEY = 'prefs.v1';
 
 interface Persisted {
   haptics: boolean;
@@ -35,7 +36,7 @@ export function PrefsProvider({ children }: { children: React.ReactNode }) {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    AsyncStorage.getItem(KEY)
+    getMigrated(KEY)
       .then((raw) => {
         const next = raw ? { ...DEFAULTS, ...(JSON.parse(raw) as Partial<Persisted>) } : DEFAULTS;
         setS(next);
@@ -48,7 +49,7 @@ export function PrefsProvider({ children }: { children: React.ReactNode }) {
   const save = useCallback((patch: Partial<Persisted>) => {
     setS((cur) => {
       const next = { ...cur, ...patch };
-      AsyncStorage.setItem(KEY, JSON.stringify(next)).catch(() => {});
+      AsyncStorage.setItem(key(KEY), JSON.stringify(next)).catch(() => {});
       if (patch.haptics !== undefined) setHapticsEnabled(patch.haptics);
       return next;
     });

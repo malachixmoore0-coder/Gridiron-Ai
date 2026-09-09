@@ -29,17 +29,25 @@ import { HELP_NOTE, SHORT_NOTICE } from '@/legal/notices';
 interface Props { onDone: () => void; }
 
 /**
- * Every key this app writes. Deletion clears all of them, not just the social
- * one — a "deleted" account that leaves your card, your streak and your tier on
- * the device has not been deleted, it has been signed out.
+ * Everything this app has ever written on this device.
+ *
+ * This used to be a hand-written list of five keys, and the app writes about a
+ * dozen — so a "deleted" account kept its settings, its preferences, its cached
+ * rosters and its league choice, which is not deletion, it is signing out. A
+ * list that has to be updated by hand every time a key is added will fall
+ * behind again, and on a privacy promise that is the wrong way to fail.
+ *
+ * So the keys are discovered rather than declared. Both prefixes are swept: the
+ * current one, and the one used before the app was renamed, because a device
+ * part-way through the migration still holds data under the old name and a
+ * deletion that leaves it there has not done what it said.
  */
-const LOCAL_KEYS = [
-  'gridiron-ai.social.local.v1',
-  'gridiron-ai.engagement.v1',
-  'gridiron-ai.entitlements.v1',
-  'gridiron-ai.live-data.v1',
-  'cfb-gridiron-ai.live-data.v1',
-];
+const OWNED_PREFIXES = ['simtoad.', 'gridiron-ai.', 'cfb-gridiron-ai.'];
+
+const ownedKeys = async (): Promise<string[]> => {
+  const all = await AsyncStorage.getAllKeys();
+  return all.filter((k) => OWNED_PREFIXES.some((p) => k.startsWith(p)));
+};
 
 export function PrivacyScreen({ onDone }: Props) {
   const s = useSocial();
@@ -93,7 +101,7 @@ export function PrivacyScreen({ onDone }: Props) {
     haptic('warning');
     try {
       await s.deleteAccount();
-      await AsyncStorage.multiRemove(LOCAL_KEYS);
+      await AsyncStorage.multiRemove(await ownedKeys());
       onDone();
     } catch (e) {
       setError(e instanceof Error ? e.message : 'That did not go through. Try again.');

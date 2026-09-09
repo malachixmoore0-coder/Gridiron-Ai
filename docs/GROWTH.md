@@ -1,4 +1,4 @@
-# Gridiron AI — the plan to $10k a month
+# Simtoad — the plan to $10k a month
 
 One app, eighteen leagues across six sports, a calendar with no dead months,
 and a social layer that turns every subscriber into a distribution channel. This document is
@@ -58,10 +58,10 @@ The three things a bettor pays for, in the order they will pay for them:
 | They want | The feature | Tier |
 |---|---|---|
 | To stop guessing | Unlimited 10,000-run sims, the whole Edge Board, every league | Starter |
-| To turn a number into a bet | Parlay Lab, props (football), Upset Radar in every league | All-Pro |
+| To turn a number into a bet | Parlay Lab, props (football), Upset Radar in every league | Quant |
 | Line shopping across books | In build — the odds feed carries one book today, so it is not sold yet | — |
 | To be seen being right | A profile, a public record, followers and tails | Free, and it sells the tiers |
-| To run it themselves | Raw feed, backtests, editable weights | Franchise |
+| To run it themselves | Raw feed, backtests, editable weights | Desk |
 
 ---
 
@@ -127,14 +127,14 @@ are the worst-performing step, not the top of the funnel. Instrument all four.
 - **Free is metered, not crippled.** Three simulations a day at 2,000 runs, the
   top three of the Edge Board, the whole slate, every box score. A free user can
   see that the model works, which is the only argument that converts.
-- **The middle rung is the target.** All-Pro at $29.99 is where the tools live.
+- **The middle rung is the target.** Quant at $29.99 is where the tools live.
   Starter exists to make the meter go away for $12.99 — the easy yes — and
-  Franchise at $99 exists mostly so All-Pro reads as reasonable. That is a
-  decoy, and it is a legitimate one: Franchise is a real product for someone
+  Desk at $99 exists mostly so Quant reads as reasonable. That is a
+  decoy, and it is a legitimate one: Desk is a real product for someone
   running a syndicate.
 - **Annual is framed as months free, not a percentage.** "Two months free"
   outperforms "save 17%" because it is a unit people already own.
-- **The trial takes no card.** Seven days of All-Pro, and it simply ends. A
+- **The trial takes no card.** Seven days of Quant, and it simply ends. A
   card-required trial converts better on paper and worse on refunds, reviews,
   and the one thing this product sells, which is trust.
 - **The bundle.** Both apps for $39.99/mo or $299/yr. NFL runs September to
@@ -206,7 +206,7 @@ either clears 5%, this becomes channel one and the paid section below stays
 permanently unnecessary.
 
 **5. Podcasts and beat writers (paid in access, not cash).** `BEATWRITER` codes
-give a year of All-Pro. A regional podcast with 4,000 listeners converts better
+give a year of Quant. A regional podcast with 4,000 listeners converts better
 than a national one with 400,000 because the audience actually bets that team.
 Offer 30% recurring on a referral code before offering cash.
 

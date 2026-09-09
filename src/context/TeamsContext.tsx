@@ -7,6 +7,7 @@
  */
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getMigrated, key } from '@/utils/storageKey';
 import type { Team } from '@/engine/types';
 import { TEAMS as SAMPLE_TEAMS } from '@/data/teams';
 import type { LiveGame, LiveMetaFile, LivePredictionsFile, LiveScheduleFile, LiveTeamsFile, Phase, PredictionRecord } from '@/data/liveTypes';
@@ -20,7 +21,7 @@ export const DATA_URL: string =
   (process.env.EXPO_PUBLIC_DATA_URL as string | undefined)?.replace(/\/$/, '') ??
   'https://raw.githubusercontent.com/malachixmoore0-coder/Gridiron-Ai/main/data/live';
 
-const CACHE_KEY = 'gridiron-ai.live-data.v1';
+const CACHE_KEY = 'live-data.v1';
 const FETCH_TIMEOUT_MS = 15_000;
 
 export type DataSource = 'remote' | 'cache' | 'bundled' | 'sample';
@@ -128,7 +129,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
       setData((cur) => (next.generatedAt >= cur.generatedAt ? next : cur));
       setSource('remote');
       setLastError(null);
-      AsyncStorage.setItem(CACHE_KEY, JSON.stringify(next)).catch(() => {});
+      AsyncStorage.setItem(key(CACHE_KEY), JSON.stringify(next)).catch(() => {});
     } catch (e) {
       if (mounted.current) setLastError(e instanceof Error ? e.message : String(e));
     } finally {
@@ -140,7 +141,7 @@ export function TeamsProvider({ children }: { children: React.ReactNode }) {
     mounted.current = true;
     (async () => {
       try {
-        const raw = await AsyncStorage.getItem(CACHE_KEY);
+        const raw = await getMigrated(CACHE_KEY);
         if (raw) {
           const cached = JSON.parse(raw) as Dataset;
           if (validDataset(cached) && cached.generatedAt > initial.data.generatedAt && mounted.current) { setData(cached); setSource('cache'); }

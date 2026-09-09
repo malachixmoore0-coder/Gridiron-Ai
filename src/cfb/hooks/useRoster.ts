@@ -3,7 +3,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import type { TeamRosterFile } from '@/cfb/data/liveTypes';
 import { DATA_URL } from '@/cfb/context/TeamsContext';
 
-const CACHE_PREFIX = 'cfb-gridiron-ai.roster.v1.';
+const CACHE_PREFIX = 'simtoad.cfb.roster.v1.';
 const TIMEOUT_MS = 15_000;
 const memory = new Map<string, TeamRosterFile>();
 

@@ -1,10 +1,10 @@
-# Gridiron AI 🏈
+# Simtoad 🐸
 
 **Eighteen leagues, six sports, graded in public.** The NFL on Sunday, all 134
 FBS programs on Saturday, and the NBA, WNBA, men's and women's college
 basketball, MLB, college baseball, the NHL, eight soccer leagues and the PGA
 Tour the rest of the week — one app, one subscription. Pick any two teams and
-Gridiron AI simulates the game 10,000 times and returns win probability, a
+Simtoad simulates the game 10,000 times and returns win probability, a
 projected score and total, a margin distribution and the market's number beside
 its own, with every sportsbook's line laid out next to it.
 

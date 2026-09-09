@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Gridiron AI",
-    "slug": "gridiron-ai",
+    "name": "Simtoad",
+    "slug": "simtoad",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -13,10 +13,10 @@
     },
     "ios": {
       "supportsTablet": false,
-      "bundleIdentifier": "com.gridironai.app"
+      "bundleIdentifier": "com.simtoad.app"
     },
     "android": {
-      "package": "com.gridironai.app",
+      "package": "com.simtoad.app",
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#05080C"
@@ -27,6 +27,6 @@
       "output": "single",
       "favicon": "./public/favicon.png"
     },
-    "scheme": "gridironai"
+    "scheme": "simtoad"
   }
 }

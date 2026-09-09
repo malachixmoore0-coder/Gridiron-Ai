@@ -53,7 +53,7 @@ export function MatchupScreen({ onRun, onOpenTeam }: Props) {
   return (
     <SafeAreaView style={styles.root} edges={['top']}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <ScreenHeader title="Gridiron AI" subtitle="NFL bias & predictive analytics engine" />
+        <ScreenHeader title="Simtoad" subtitle="NFL bias & predictive analytics engine" />
         <DataBanner />
 
         <View style={styles.hero}>

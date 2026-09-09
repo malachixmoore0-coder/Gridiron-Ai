@@ -64,7 +64,7 @@ export const UNIT_ORDER: Record<SportId, string[]> = {
   football: ['Offense', 'Defense', 'Special teams'],
 };
 
-const CACHE = 'gridiron-ai.roster.v1.';
+const CACHE = 'simtoad.roster.v1.';
 const STALE_MS = 12 * 3_600_000;
 const memory = new Map<string, SportRosterFile>();
 

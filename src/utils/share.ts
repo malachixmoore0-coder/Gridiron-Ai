@@ -28,10 +28,10 @@ const INK = '#EEF4F8';
 const DIM = '#93A6B8';
 const MONEY = '#12D992';
 const GOLD = '#FFC64D';
-const WORDMARK = 'GRIDIRON AI';
+const WORDMARK = 'SIMTOAD';
 
 /** Draw and hand back a PNG. Returns false when the platform cannot draw one. */
-export async function shareCard(spec: CardSpec, filename = 'gridiron-card.png'): Promise<boolean> {
+export async function shareCard(spec: CardSpec, filename = 'simtoad-card.png'): Promise<boolean> {
   if (Platform.OS !== 'web' || typeof document === 'undefined') return false;
   const W = 1080;
   const H = 1350;

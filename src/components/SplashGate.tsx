@@ -80,7 +80,7 @@ export function SplashGate({ children }: { children: React.ReactNode }) {
               marginTop: 22,
             }}
           >
-            <Text style={styles.word}>GRIDIRON<Text style={{ color: colors.green }}> AI</Text></Text>
+            <Text style={styles.word}>SIM<Text style={{ color: colors.green }}>TOAD</Text></Text>
           </Animated.View>
 
           <View style={styles.ruleTrack}>
