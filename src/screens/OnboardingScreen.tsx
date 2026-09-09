@@ -6,6 +6,7 @@ import { useEntitlements } from '@/context/EntitlementsContext';
 import { colors, radius, spacing } from '@/theme';
 import { useSettings } from '@/context/SettingsContext';
 import { NOT_ADVICE } from '@/legal/notices';
+import { BrandMark } from '@/components/Brand';
 
 /**
  * What the app actually is, on the one screen where a stranger decides.
@@ -50,7 +51,7 @@ export function OnboardingScreen({ onDone }: { onDone: () => void }) {
   return (
     <SafeAreaView style={styles.root}>
       <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
-        <View style={styles.badge}><Ionicons name="stats-chart" size={28} color={colors.bg} /></View>
+        <View style={styles.mark}><BrandMark size={72} radius={20} /></View>
         <Text style={styles.title}>Simtoad</Text>
         <Text style={styles.subtitle}>
           Eighteen leagues, one model. It sits still, ignores almost everything, and tells you when a number is
@@ -93,7 +94,8 @@ const styles = StyleSheet.create({
   trialText: { color: colors.bg, fontSize: 15, fontWeight: '900' },
   root: { flex: 1, backgroundColor: colors.bg },
   content: { padding: spacing.xl, paddingBottom: spacing.xxl },
-  badge: { width: 64, height: 64, borderRadius: 20, backgroundColor: colors.gold, alignItems: 'center', justifyContent: 'center', marginBottom: spacing.lg },
+
+  mark: { marginBottom: spacing.lg },
   title: { color: colors.ink, fontSize: 32, fontWeight: '900', letterSpacing: -0.5 },
   subtitle: { color: colors.inkDim, fontSize: 14, lineHeight: 21, marginTop: spacing.sm, marginBottom: spacing.xl },
   node: { flexDirection: 'row', gap: 12, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border, padding: spacing.lg, marginBottom: spacing.sm },

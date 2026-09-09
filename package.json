@@ -19,7 +19,8 @@
     "data:schools": "tsx scripts/athletics-probe.ts",
     "data:soccer": "tsx scripts/soccer-probe.ts",
     "data:golf": "tsx pipeline/multi/golf.ts",
-    "test:moderation": "tsx scripts/moderation-check.ts"
+    "test:moderation": "tsx scripts/moderation-check.ts",
+    "brand": "node scripts/brand-assets.mjs"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

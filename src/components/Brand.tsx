@@ -1,10 +1,15 @@
 /**
  * The brand, in one place.
  *
- * The mark is a tilted football with a rising bar chart for laces — football
- * and market in one glyph — on an emerald tile. It is deliberately flat and
- * two-colour so it survives being 20 pixels tall on a tab bar, which is where a
- * logo actually has to work.
+ * The mark is a toad's head reduced to the two things that make one
+ * recognisable at any size: eyes that sit on top of the head rather than in it,
+ * and a wide, level, unimpressed mouth. Everything else about a toad is noise
+ * below thirty-two pixels.
+ *
+ * It is flat and two-colour on purpose, and the mouth is deliberately straight.
+ * An earlier pass curved it and the whole thing read as a cartoon frog, which
+ * is the wrong promise for a product whose argument is that it will show you
+ * the error bar rather than the good night.
  */
 import React from 'react';
 import { View, Text, Image, StyleSheet } from 'react-native';
