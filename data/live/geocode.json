@@ -108,6 +108,10 @@
   "lat": 39.12711,
   "lng": -84.51439
  },
+ "cincinnati, ohio, usa": {
+  "lat": 39.12711,
+  "lng": -84.51439
+ },
  "ciudad juárez, mexico": {
   "lat": 31.72024,
   "lng": -106.46084
@@ -119,6 +123,10 @@
  "cologne, germany": {
   "lat": 50.93333,
   "lng": 6.95
+ },
+ "columbus, ohio, usa": {
+  "lat": 39.96118,
+  "lng": -82.99879
  },
  "como, italy": {
   "lat": 45.80819,
@@ -284,6 +292,10 @@
   "lat": 19.42847,
   "lng": -99.12766
  },
+ "miami, florida, usa": {
+  "lat": 25.77427,
+  "lng": -80.19366
+ },
  "milano, italy": {
   "lat": 42.78235,
   "lng": 12.59836
@@ -327,6 +339,10 @@
  "nottingham, england": {
   "lat": 52.9536,
   "lng": -1.15047
+ },
+ "orlando, florida, usa": {
+  "lat": 28.53834,
+  "lng": -81.37924
  },
  "pachuca, mexico": {
   "lat": 20.11697,
