@@ -301,11 +301,24 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
         <Text style={styles.emailBtnText}>{sending ? 'Sending…' : sent ? 'Send another' : 'Email me a link'}</Text>
       </TouchableOpacity>
       {!!note && <Text style={styles.signNote}>{note}</Text>}
+      {social.canVerifyCode && sent && (
+        <Text style={styles.signFine}>
+          Only the newest email works — sending another one replaces the code in the last.
+        </Text>
+      )}
 
       {/* A code cannot be spent by a link scanner, so it is the way in that
           always works — offered second because tapping a link is easier when
-          the link survives the trip. */}
-      {sent && social.canVerifyCode && (
+          the link survives the trip.
+          
+          Shown as soon as there is an address to check it against, NOT only
+          after a send. Gating it on `sent` forced a sequence that could not
+          succeed: somebody holding a perfectly good code had to request a new
+          email to reveal the box, and requesting one invalidates the code they
+          were holding. They then typed a dead code into a box that had just
+          killed it, and got "token is expired or invalid" — which was true, and
+          entirely our doing. */}
+      {social.canVerifyCode && /@/.test(email) && (
         <View style={styles.codeRow}>
           <TextInput
             style={styles.codeInput}
@@ -407,6 +420,7 @@ const styles = StyleSheet.create({
   codeBtn: { alignItems: 'center', paddingHorizontal: spacing.lg, paddingVertical: 12, borderRadius: radius.pill, backgroundColor: colors.green },
   emailBtnText: { color: colors.bg, fontSize: 14, fontWeight: '900' },
   signNote: { color: colors.inkDim, fontSize: 11.5, lineHeight: 16 },
+  signFine: { color: colors.inkGhost, fontSize: 10.5, lineHeight: 15 },
   signError: { color: colors.negative, fontSize: 11.5, lineHeight: 16, fontWeight: '600' },
   signOr: { color: colors.inkGhost, fontSize: 11, fontWeight: '700', textAlign: 'center', marginTop: 2 },
   signRow: { flexDirection: 'row', gap: spacing.sm },
