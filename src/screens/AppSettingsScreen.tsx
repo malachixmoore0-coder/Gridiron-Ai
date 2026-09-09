@@ -45,6 +45,23 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard, onPri
   const prefs = usePrefs();
   const [note, setNote] = useState<string | null>(null);
 
+  /**
+   * Signing out, said out loud.
+   *
+   * It is not destructive — everything is still there when you come back — so
+   * there is no confirmation to click through. But it should say that it
+   * happened, because a screen that silently changes one row is indistinguishable
+   * from a button that did nothing.
+   */
+  const signOut = async () => {
+    try {
+      await social.signOut();
+      setNote('Signed out. Your card, streak and plan stay on this device.');
+    } catch (e) {
+      setNote(e instanceof Error ? e.message : 'That did not go through. Try again.');
+    }
+  };
+
   return (
     <SafeAreaView edges={['top']} style={styles.root}>
       <ScrollView contentContainerStyle={styles.body}>
@@ -134,6 +151,27 @@ export function AppSettingsScreen({ onProfile, onUpgrade, onModel, onCard, onPri
           <Row icon="options" label="Model weights" value={`${active.short} engine`} onPress={onModel} />
         </Group>
 
+        {/* ---- account ----
+             Sign out lived at the bottom of the Record tab of your own profile,
+             in twelve-point ghost grey, four taps from anywhere. People
+             reasonably concluded the app did not have one. It belongs here,
+             where every other app puts it, next to the account it acts on. */}
+        {social.live && (
+          <Group title="Account">
+            {social.signedIn ? (
+              <Row
+                icon="log-out"
+                label="Sign out"
+                value={social.me ? `@${social.me.handle}` : undefined}
+                onPress={signOut}
+                tone="quiet"
+              />
+            ) : (
+              <Row icon="log-in" label="Sign in" value="Email link or code" onPress={onProfile} />
+            )}
+          </Group>
+        )}
+
         {/* ---- legal ---- */}
         <Group title="The small print">
           <Row icon="shield-checkmark" label="How the model is graded" value="Record tab" onPress={onCard} />
@@ -178,10 +216,14 @@ function Group({ title, note, children }: { title: string; note?: string; childr
   );
 }
 
-function Row({ icon, label, value, onPress }: { icon: keyof typeof Ionicons.glyphMap; label: string; value?: string; onPress?: () => void }) {
+function Row({ icon, label, value, onPress, tone }: {
+  icon: keyof typeof Ionicons.glyphMap; label: string; value?: string; onPress?: () => void;
+  /** "quiet" reserves the accent for things you want people to do. Leaving is not one. */
+  tone?: 'quiet';
+}) {
   return (
     <TouchableOpacity style={styles.row} activeOpacity={onPress ? 0.8 : 1} disabled={!onPress} onPress={() => { haptic('light'); onPress?.(); }} accessibilityRole={onPress ? 'button' : 'text'} accessibilityLabel={label}>
-      <View style={styles.rowIcon}><Ionicons name={icon} size={15} color={colors.green} /></View>
+      <View style={styles.rowIcon}><Ionicons name={icon} size={15} color={tone === 'quiet' ? colors.inkFaint : colors.green} /></View>
       <Text style={styles.rowLabel}>{label}</Text>
       {!!value && <Text style={styles.rowValue} numberOfLines={1}>{value}</Text>}
       <Ionicons name="chevron-forward" size={15} color={colors.inkGhost} />
