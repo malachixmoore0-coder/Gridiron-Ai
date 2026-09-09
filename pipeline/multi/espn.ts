@@ -24,6 +24,21 @@ export interface EspnTeamRow {
   rank: number | null;
 }
 
+export interface EspnProbable {
+  id: string;
+  name: string;
+  /**
+   * Season ERA as the scoreboard prints it, when it prints one.
+   *
+   * Worth reading here rather than relying on the roster files alone: the
+   * league statistics feed only carries the arms deep enough into the
+   * leaderboard to be ranked — fewer than fifty across all thirty clubs — while
+   * the game payload tends to carry a line for whoever is actually starting,
+   * which is exactly the population that matters.
+   */
+  era: number | null;
+}
+
 export interface EspnEvent {
   id: string;
   date: string;
@@ -45,6 +60,13 @@ export interface EspnEvent {
   note: string | null;
   homeSpread: number | null;
   totalLine: number | null;
+  /**
+   * Tonight's listed starter, baseball only and only once ESPN posts one.
+   * Null everywhere else, and null for a game whose probables are not up yet —
+   * which is most of the board more than a day out.
+   */
+  homeProbable: EspnProbable | null;
+  awayProbable: EspnProbable | null;
   homeMoneyline: number | null;
   awayMoneyline: number | null;
   drawMoneyline: number | null;
@@ -142,6 +164,49 @@ const num = (v: unknown): number | null => {
  * One day (or date range) of a league's scoreboard. `dates` takes ESPN's own
  * format: YYYYMMDD, or YYYYMMDD-YYYYMMDD for a span.
  */
+/**
+ * The probable starter on one competitor.
+ *
+ * ESPN has moved this around: it has lived on the competitor as `probables`, on
+ * the competition as a whole, and the athlete has appeared both nested under
+ * `athlete` and flattened onto the entry itself. None of those shapes is
+ * documented and any of them can turn up, so this reads whichever is present
+ * and returns null rather than guessing when none is — an unknown pitcher is a
+ * no-op downstream, which is the right failure.
+ */
+/** ERA off whichever statistics list the payload happens to carry. */
+function eraOf(entry: any, athlete: any): number | null {
+  for (const list of [entry?.statistics, athlete?.statistics]) {
+    for (const st of Array.isArray(list) ? list : []) {
+      const key = String(st?.abbreviation ?? st?.name ?? st?.shortDisplayName ?? '');
+      if (!/^era$/i.test(key) && !/earnedRunAverage/i.test(key)) continue;
+      const v = Number(st?.displayValue ?? st?.value);
+      if (Number.isFinite(v) && v > 0 && v < 12) return v;
+    }
+  }
+  return null;
+}
+
+export function probableOf(competitor: any, comp: any, side: 'home' | 'away'): EspnProbable | null {
+  const lists = [
+    competitor?.probables,
+    comp?.probables?.filter?.((x: any) => String(x?.homeAway ?? '') === side),
+  ];
+  for (const list of lists) {
+    for (const entry of Array.isArray(list) ? list : []) {
+      // "probableStartingPitcher" is the only one worth reading; when ESPN
+      // omits the name field entirely, any single entry is the starter.
+      const kind = String(entry?.name ?? entry?.abbreviation ?? '');
+      if (kind && !/starting\s*pitcher|^SP$/i.test(kind)) continue;
+      const a = entry?.athlete ?? entry;
+      const id = a?.id ?? entry?.playerId;
+      const name = a?.displayName ?? a?.fullName ?? a?.shortName;
+      if (id != null && name) return { id: String(id), name: String(name), era: eraOf(entry, a) };
+    }
+  }
+  return null;
+}
+
 export async function loadScoreboard(path: string, dates: string, limit = 400): Promise<EspnEvent[]> {
   const url = `${SITE}/${path}/scoreboard?limit=${limit}&dates=${dates}`;
   const json = await fetchJson<any>(url, `${path} scoreboard ${dates}`, 22000).catch(() => null);
@@ -209,6 +274,8 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       note: ev.name && /bowl|final|championship|classic/i.test(String(ev.name)) ? String(ev.name) : null,
       homeSpread,
       totalLine: num(odds?.overUnder),
+      homeProbable: probableOf(home, comp, 'home'),
+      awayProbable: probableOf(away, comp, 'away'),
       homeMoneyline,
       awayMoneyline,
       drawMoneyline,

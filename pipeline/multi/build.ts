@@ -30,6 +30,7 @@ import { forecastAt } from '../sources/weather';
 import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
 import { closeBrowser } from './render';
 import { readLines, recordLines, writeLines } from './lines';
+import { leagueEraOf, loadEraIndex, pitcherFactor, type ProbableArm } from './pitchers';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
@@ -195,6 +196,8 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       primetime: false,
       weather: null,
       weatherHint: null,
+      homeProbable: e.homeProbable,
+      awayProbable: e.awayProbable,
       awayScore: e.awayScore,
       homeScore: e.homeScore,
       status: e.status,
@@ -301,6 +304,29 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   if (dropped) console.log(`  dropped ${dropped} projection${dropped === 1 ? '' : 's'} the sport could not have produced`);
   const records = new Map(kept.map((r) => [r.id, r]));
   const teamById = new Map(sportTeams.map((t) => [t.id, t]));
+
+  /*
+   * Tonight's arms, and what the league's average one looks like.
+   *
+   * Only baseball has a starter who decides this much of a game, so only
+   * baseball gets the treatment; every other league passes nothing and the
+   * engine's pitcher term is inert for them. The ERA on the scoreboard entry
+   * wins where there is one, because it covers whoever is actually starting;
+   * the roster index fills the gaps, because the league leaderboard only ranks
+   * the arms deep enough into the season to be ranked.
+   */
+  const usesPitchers = p.sport === 'baseball';
+  const eraIndex = usesPitchers ? loadEraIndex(path.join(dir, 'rosters'), fs, path) : new Map<string, number>();
+  const armOf = (pr: { id: string; name: string; era: number | null } | null | undefined): ProbableArm | null =>
+    pr ? { id: pr.id, name: pr.name, era: pr.era ?? eraIndex.get(pr.id) ?? null } : null;
+  const allArms = usesPitchers
+    ? games.flatMap((g) => [armOf(g.homeProbable), armOf(g.awayProbable)]).filter((a): a is ProbableArm => !!a)
+    : [];
+  const leagueEra = leagueEraOf(allArms);
+  const withEra = allArms.filter((a) => a.era != null).length;
+  if (usesPitchers) {
+    console.log(`  probables: ${allArms.length} listed · ${withEra} with an ERA · league ${leagueEra.toFixed(2)}`);
+  }
   let opened = 0;
   let locked = 0;
   let graded = 0;
@@ -327,6 +353,8 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
             away: { id: away.id, rating: away.rating, attack: away.attack, defence: away.defence },
             neutral: g.neutralSite,
             weather: g.weatherHint,
+            homePitcher: usesPitchers ? pitcherFactor(armOf(g.homeProbable), leagueEra) : null,
+            awayPitcher: usesPitchers ? pitcherFactor(armOf(g.awayProbable), leagueEra) : null,
             marketHomeSpread: g.homeSpread,
             marketTotal: g.totalLine,
             marketWeight: MARKET_WEIGHT,

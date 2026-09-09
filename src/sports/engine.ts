@@ -41,6 +41,17 @@ export interface SimInput {
   neutral?: boolean;
   /** Forecast at first pitch or kick-off. Ignored for sports played indoors. */
   weather?: Weather | null;
+  /**
+   * Starting-pitcher factors, baseball only.
+   *
+   * `homePitcher` scales the runs the *away* side scores, because that is who
+   * the home starter has to get out, and vice versa. 1 is a league-average
+   * arm; below 1 suppresses scoring. Absent everywhere else — no other sport in
+   * the feed has one player who decides this much of a game, and inventing an
+   * equivalent for them would be fake precision.
+   */
+  homePitcher?: number | null;
+  awayPitcher?: number | null;
   /** Market home line, when one exists, used only for the blended projection. */
   marketHomeSpread?: number | null;
   marketTotal?: number | null;
@@ -149,6 +160,40 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
   // has already priced the forecast, so letting the market pull afterwards is
   // what stops the adjustment being counted twice.
   let total = p.baseTotal * ((attack + defend) / 2) * conditions(input, p).total;
+
+  /*
+   * The starting pitcher, where there is one.
+   *
+   * Team ratings describe a season; a baseball game is decided in large part by
+   * which arm happens to take the ball tonight, and two clubs of identical
+   * strength can be a run apart on that alone. Ignoring it does not make the
+   * projection neutral, it makes it wrong in a direction the market already
+   * knows about.
+   *
+   * Both halves of the scoreline are shifted separately, which is what lets the
+   * effect land on the margin as well as the total — an ace does not merely
+   * make a game lower-scoring, he makes his own side more likely to win. The
+   * two shifts are then combined the way runs actually combine: their sum moves
+   * the total, their difference moves the margin.
+   *
+   * Applied before the market blend for the same reason as the weather: a book
+   * has priced the probables already, so pulling toward it afterwards is what
+   * keeps the adjustment from being counted twice.
+   */
+  // Guarded on the sport, not merely on the caller passing nothing. A pitcher
+  // factor that arrived on a basketball game would be a bug upstream, and the
+  // engine silently honouring it would turn that bug into a wrong number.
+  const hp = p.sport === 'baseball' ? input.homePitcher ?? 1 : 1;
+  const ap = p.sport === 'baseball' ? input.awayPitcher ?? 1 : 1;
+  if (hp !== 1 || ap !== 1) {
+    const half = p.baseTotal / 2;
+    const homeRuns = half * attack;   // what the home side scores
+    const awayRuns = half * defend;   // what the away side scores
+    const homeShift = homeRuns * (ap - 1); // the away starter suppresses them
+    const awayShift = awayRuns * (hp - 1); // the home starter suppresses them
+    total += homeShift + awayShift;
+    margin += homeShift - awayShift;
+  }
 
   // A market number is only worth following if it is a market number. A feed
   // that files a price in the spread field — soccer arrived with Chelsea at

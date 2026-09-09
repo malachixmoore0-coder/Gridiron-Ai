@@ -1,3 +1,4 @@
+import type { GameProbable } from '@/sports/feed';
 /**
  * The league-neutral shapes the shared surfaces speak.
  *
@@ -67,6 +68,9 @@ export interface LeagueGame {
   lineSource?: string | null;
   /** Per-sportsbook numbers, when the feed carries them. */
   books?: BookLine[] | null;
+  /** Listed starting pitchers. Baseball only, and only once they are posted. */
+  awayProbable?: GameProbable | null;
+  homeProbable?: GameProbable | null;
 }
 
 export type { PredictionRecord };

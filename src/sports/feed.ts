@@ -39,6 +39,13 @@ export interface SportTeam {
   played: number;
 }
 
+/** A listed starting pitcher, as shown on a card. */
+export interface GameProbable {
+  id: string;
+  name: string;
+  era: number | null;
+}
+
 export interface SportGame {
   id: string;
   season: number;
@@ -66,6 +73,14 @@ export interface SportGame {
    */
   weather: GameWeather | null;
   weatherHint: Weather | null;
+  /**
+   * Tonight's listed starters, baseball only. Present once ESPN posts the
+   * probables — usually a day out — and absent before that, which is honest:
+   * a baseball projection made before the arms are named is a different, and
+   * worse, projection than one made after.
+   */
+  homeProbable?: GameProbable | null;
+  awayProbable?: GameProbable | null;
   awayScore: number | null;
   homeScore: number | null;
   status: GameStatus;

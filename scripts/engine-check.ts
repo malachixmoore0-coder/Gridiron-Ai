@@ -9,6 +9,8 @@ import { TEAMS, getTeam } from '../src/data/teams';
 import type { Team } from '../src/engine/types';
 import { coverProbability, project, seedFor, simulate } from '../src/sports/engine';
 import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
+import { probableOf } from '../pipeline/multi/espn';
+import { pitcherFactor } from '../pipeline/multi/pitchers';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -324,6 +326,88 @@ console.log('\n— Multi-sport engine');
   const nbaClear = runFor('basketball', null);
   const nbaCold = runFor('basketball', 'cold');
   check(nbaClear.total === nbaCold.total, 'generic: weather never reaches an indoor sport');
+}
+
+/* ---- starting pitchers ------------------------------------------------- */
+{
+  const mlb = profileFor('mlb');
+  const side = (rating: number) => ({ id: `t${rating}`, rating, attack: 1, defence: 1 });
+  const evenly = { home: side(1500), away: side(1500), marketWeight: 0 };
+  const run = (homePitcher: number, awayPitcher: number) =>
+    simulate({ ...evenly, homePitcher, awayPitcher }, mlb, 30000, seedFor('h', 'a'));
+
+  const none = run(1, 1);
+
+  // An ace at home has to do two things at once: cut the total, because the
+  // visitors score less, and move the margin, because his own side is now more
+  // likely to win. A version that only lowered the total would be describing a
+  // pitchers' duel rather than an advantage.
+  const homeAce = run(0.85, 1);
+  check(homeAce.total < none.total - 0.05,
+    `pitchers: a home ace lowers the total (${none.total.toFixed(2)} → ${homeAce.total.toFixed(2)})`);
+  check(homeAce.homeWinPct > none.homeWinPct + 0.5,
+    `pitchers: a home ace lifts the home side (${none.homeWinPct.toFixed(1)}% → ${homeAce.homeWinPct.toFixed(1)}%)`);
+
+  // Two aces cancel on the margin and compound on the total.
+  const bothAces = run(0.85, 0.85);
+  check(Math.abs(bothAces.homeWinPct - none.homeWinPct) < 1.5,
+    'pitchers: matched aces leave the margin where it was');
+  check(bothAces.total < homeAce.total,
+    `pitchers: matched aces cut the total further (${homeAce.total.toFixed(2)} → ${bothAces.total.toFixed(2)})`);
+
+  // Symmetry: the same arm on the other side must be the mirror image, or the
+  // adjustment is smuggling in a home-field effect of its own.
+  const awayAce = run(1, 0.85);
+  check(Math.abs((homeAce.homeWinPct - none.homeWinPct) + (awayAce.homeWinPct - none.homeWinPct)) < 1.5,
+    'pitchers: an away ace is the mirror of a home ace');
+
+  // And the term must stay out of every sport that has no starting pitcher.
+  const nba = profileFor('nba');
+  const nbaPlain = simulate(evenly, nba, 20000, seedFor('h', 'a'));
+  const nbaWith = simulate({ ...evenly, homePitcher: 0.85, awayPitcher: 1.1 }, nba, 20000, seedFor('h', 'a'));
+  check(nbaPlain.total === nbaWith.total && nbaPlain.homeWinPct === nbaWith.homeWinPct,
+    'pitchers: never reach a sport without one');
+}
+
+/* ---- reading the probables off ESPN ------------------------------------ */
+{
+  // ESPN has never documented this and has moved it more than once, so the
+  // parser is checked against every shape it is expected to survive rather than
+  // against one captured response.
+  const arm = (id: string, name: string, era?: string) => ({
+    name: 'probableStartingPitcher',
+    playerId: id,
+    athlete: { id, displayName: name },
+    statistics: era ? [{ abbreviation: 'ERA', displayValue: era }] : [],
+  });
+
+  const onCompetitor = probableOf({ probables: [arm('1', 'Tarik Skubal', '2.14')] }, {}, 'home');
+  check(onCompetitor?.name === 'Tarik Skubal' && onCompetitor?.era === 2.14, 'probables: read off the competitor');
+
+  const onCompetition = probableOf({}, { probables: [{ ...arm('2', 'Logan Gilbert', '3.60'), homeAway: 'away' }] }, 'away');
+  check(onCompetition?.era === 3.60, 'probables: read off the competition, filtered by side');
+
+  // The athlete flattened onto the entry, with no nested `athlete` object.
+  const flat = probableOf({ probables: [{ name: 'probableStartingPitcher', id: '3', displayName: 'Flat Arm' }] }, {}, 'home');
+  check(flat?.id === '3' && flat?.era === null, 'probables: a flattened athlete still resolves, with no ERA');
+
+  // Anything that is not a starting pitcher must be ignored.
+  const other = probableOf({ probables: [{ name: 'probableGoalie', athlete: { id: '9', displayName: 'Not A Pitcher' } }] }, {}, 'home');
+  check(other === null, 'probables: a non-pitcher entry is ignored');
+
+  // And absence is absence, not a guess.
+  check(probableOf({}, {}, 'home') === null, 'probables: nothing listed yields nothing');
+  check(probableOf({ probables: [] }, {}, 'home') === null, 'probables: an empty list yields nothing');
+
+  // A nonsense ERA must not reach the model.
+  const silly = probableOf({ probables: [arm('4', 'Blowup', '99.00')] }, {}, 'home');
+  check(silly?.era === null, 'probables: an implausible ERA is dropped rather than used');
+
+  // The factor itself: unknown arms are a no-op, and the cap holds.
+  check(pitcherFactor(null, 4.1) === 1, 'probables: an unknown arm changes nothing');
+  check(pitcherFactor({ id: 'x', name: 'x', era: 4.1 }, 4.1) === 1, 'probables: a league-average arm changes nothing');
+  check(pitcherFactor({ id: 'x', name: 'x', era: 0.5 }, 4.1) > 0.8, 'probables: even an unhittable ERA stays inside the cap');
+  check(pitcherFactor({ id: 'x', name: 'x', era: 11.9 }, 4.1) < 1.2, 'probables: even a disastrous ERA stays inside the cap');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

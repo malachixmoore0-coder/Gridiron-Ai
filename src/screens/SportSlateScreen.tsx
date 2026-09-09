@@ -228,6 +228,17 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                               : null,
                           ].filter(Boolean).join(' · ')}
                         </Text>
+                        {/* The starters, for the same reason as the weather and
+                            more so: in baseball they are the largest single
+                            input to the number on this row, and a projection
+                            that turns on who is throwing should name them. */}
+                        {st === 'scheduled' && !!(g.awayProbable || g.homeProbable) && (
+                          <Text style={styles.probables} numberOfLines={1}>
+                            {[g.awayProbable, g.homeProbable]
+                              .map((pr) => (pr ? (pr.era != null ? `${pr.name} ${pr.era.toFixed(2)}` : pr.name) : 'TBD'))
+                              .join('  vs  ')}
+                          </Text>
+                        )}
                       </View>
                       <View style={styles.team}>
                         <RefMark team={home} size={34} disc />
@@ -386,6 +397,7 @@ const styles = StyleSheet.create({
   mid: { flex: 1.4, alignItems: 'center', gap: 2 },
   when: { color: colors.ink, fontSize: 12.5, fontWeight: '800' },
   venue: { color: colors.inkFaint, fontSize: 10 },
+  probables: { color: colors.inkGhost, fontSize: 9.5, marginTop: 2 },
   liveRow: { flexDirection: 'row', alignItems: 'center', gap: 5 },
   liveDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: colors.live },
   liveText: { color: colors.live, fontSize: 11, fontWeight: '900' },
