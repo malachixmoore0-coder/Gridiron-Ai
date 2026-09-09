@@ -104,7 +104,7 @@ rest. `docs/social-schema.sql` carries the migration for an existing database.
 
 ### Getting around
 
-Five tabs — Floor, Slate, Record, Teams, Social — with a league switch in
+Five tabs — Pond, Slate, Record, Teams, Social — with a league switch in
 every header and Simulate as a floating action rather than a destination. Every
 screen pushed on top of a tab carries a full-width **Back bar at the bottom** of
 the screen, where a thumb actually reaches, and on the web the browser and phone

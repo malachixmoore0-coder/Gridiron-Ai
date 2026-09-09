@@ -1,7 +1,7 @@
 /**
  * The front page's cross-sport board.
  *
- * The Floor used to open on one league's single best play, which is a strange
+ * The Pond used to open on one league's single best play, which is a strange
  * first impression for an app that carries eighteen of them: a Tuesday in
  * September has baseball, two football codes and half of Europe playing, and
  * showing only whichever league you happened to leave selected hides all of it.

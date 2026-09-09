@@ -1,5 +1,5 @@
 /**
- * The Floor — one layout, every league.
+ * The Pond — one layout, every league.
  *
  * The college side used to have its own home screen built around kickoff
  * windows, which read as a second slate rather than a home. Now all nine
@@ -48,7 +48,7 @@ interface Props {
 
 const clock = () => new Date().toLocaleDateString(undefined, { weekday: 'long', month: 'short', day: 'numeric' });
 
-export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay }: Props) {
+export function PondScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCard, onOpenParlay }: Props) {
   const view = useActiveLeague();
   const { setLeague } = useLeague();
   const boardViews = useBoardLeagues();
@@ -147,7 +147,7 @@ export function FloorScreen({ onRun, onOpenGame, onOpenTeam, onUpgrade, onOpenCa
   return (
     <SafeAreaView edges={['top']} style={styles.safe}>
       <TabHeader
-        title={view.id === 'cfb' ? 'Saturday' : 'The Floor'}
+        title={view.id === 'cfb' ? 'Saturday' : 'The Pond'}
         subtitle={`${clock()} · ${period} · ${openGames} on the board`}
         streak
         onUpgrade={onUpgrade}

@@ -4,7 +4,7 @@
  * Left to right: you, where you are, which league, what a simulation costs you,
  * what you are paying, and the way out to settings — which is the same way out
  * on every tab, because a control that opens two different screens depending on
- * where you tapped it is not a control, it is a coin toss. The Floor used to
+ * where you tapped it is not a control, it is a coin toss. The Pond used to
  * point its gear at the model weights instead, which is how account deletion
  * ended up unreachable from the screen people actually start on. Weights live
  * one tap inside Settings now: they are a tuning surface you visit occasionally,
@@ -95,7 +95,7 @@ export function TabHeader({ title, subtitle, leagues = true, streak, onUpgrade, 
           {/* What a simulation costs you, wherever you are — and nothing at all
               on a tier with no meter. It rides down here rather than in the top
               row: that row was already full, and a seventh element in it
-              truncated "The Floor" to "The …". This line is status, which is
+              truncated "The Pond" to "The …". This line is status, which is
               what the meter is. */}
           <MeterPill left={ent.simsLeft} onPress={() => { haptic('light'); (onUpgrade ?? nav.openUpgrade)(); }} />
           {!!subtitle && <Text style={styles.sub} numberOfLines={1}>{subtitle}</Text>}

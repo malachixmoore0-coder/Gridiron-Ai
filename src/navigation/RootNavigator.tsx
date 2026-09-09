@@ -38,7 +38,7 @@ import { haptic } from '@/utils/haptics';
 import { withForecast } from '@/utils/forecast';
 
 /* NFL */
-import { FloorScreen } from '@/screens/FloorScreen';
+import { PondScreen } from '@/screens/PondScreen';
 import { MatchupScreen } from '@/screens/MatchupScreen';
 import { ResultScreen } from '@/screens/ResultScreen';
 import { SlateScreen } from '@/screens/SlateScreen';
@@ -158,7 +158,7 @@ export function RootNavigator() {
    * A profile link is an entry point, not just an exit.
    *
    * Somebody opening `/@coldnumbers` has arrived at that account, so the app
-   * boots and then pushes the profile on top of the Floor — which also means
+   * boots and then pushes the profile on top of the Pond — which also means
    * Back lands them in the app rather than bouncing them off the site. The
    * handle is resolved once, and only once the social layer has finished
    * restoring, or a signed-in user's own profile would miss.
@@ -174,7 +174,7 @@ export function RootNavigator() {
       // Push even when the handle resolves to nothing: the profile screen's own
       // "no account at that address" state is the right answer to a dead link,
       // and it keeps the address bar honest instead of silently landing on the
-      // Floor as if nothing had been asked for.
+      // Pond as if nothing had been asked for.
       if (live) setStack((cur) => (cur.length ? cur : [{ kind: 'profile', userId: p?.id ?? `@${handle}`, handle }]));
     }).catch(() => {});
     return () => { live = false; };
@@ -250,7 +250,7 @@ export function RootNavigator() {
       <View style={styles.content}>
         {tab === 'home' && (field
           ? <GolfBoardScreen onOpenPlayer={openGolfer} />
-          : <FloorScreen
+          : <PondScreen
             onRun={(r) => run(r as AnyRun, league)}
             onOpenGame={(t, g) => openGame(t, g, league)}
             onOpenTeam={(t) => openTeam(t, league)}
@@ -295,7 +295,7 @@ export function RootNavigator() {
 
       {/* Simulate is an action, not a destination, so it floats above the dock —
           and only on Teams, which is the one tab whose rows do not already run
-          one. On the Floor every edge row carries its own Simulate button and on
+          one. On the Pond every edge row carries its own Simulate button and on
           Record the whole card runs one, so there the floating button was pure
           overlap: it sat on top of the controls it duplicated. Its offset is the
           dock's measured height rather than a guess, because the dock grows by

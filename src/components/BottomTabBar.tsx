@@ -15,7 +15,7 @@ import { colors, spacing } from '@/theme';
 export type TabKey = 'home' | 'slate' | 'record' | 'teams' | 'social';
 
 const TABS: { key: TabKey; label: string; icon: keyof typeof Ionicons.glyphMap; on: keyof typeof Ionicons.glyphMap }[] = [
-  { key: 'home', label: 'Floor', icon: 'pulse-outline', on: 'pulse' },
+  { key: 'home', label: 'Pond', icon: 'water-outline', on: 'water' },
   { key: 'slate', label: 'Slate', icon: 'calendar-outline', on: 'calendar' },
   { key: 'record', label: 'Record', icon: 'ribbon-outline', on: 'ribbon' },
   { key: 'teams', label: 'Teams', icon: 'shield-outline', on: 'shield' },

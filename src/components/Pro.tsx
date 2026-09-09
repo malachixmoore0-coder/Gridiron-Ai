@@ -42,7 +42,7 @@ export function LockChip({ label = 'PRO', onPress }: { label?: string; onPress?:
  *
  * The compact form is the one that rides in the header on every tab. It is the
  * number and nothing else, because the alternative — knowing how many you have
- * left only by navigating back to the Floor — is how you find out you are out
+ * left only by navigating back to the Pond — is how you find out you are out
  * at the moment you wanted one.
  */
 export function MeterPill({ left, onPress, compact }: { left: number; onPress?: () => void; compact?: boolean }) {
