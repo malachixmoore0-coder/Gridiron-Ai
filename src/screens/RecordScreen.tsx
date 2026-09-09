@@ -11,7 +11,7 @@ import { ScreenHeader } from '@/components/ScreenHeader';
 import { DataBanner } from '@/components/DataBanner';
 import { Section } from '@/components/Section';
 import { Chip } from '@/components/Chip';
-import { calibration, pctOf, summarize } from '@/utils/record';
+import { calibration, confidenceOf, intervalLabel, pctOf, sampleNote, summarize } from '@/utils/record';
 import { clvOf } from '@/utils/clv';
 import { ClosingLine } from '@/components/ClosingLine';
 import { useEntitlements } from '@/context/EntitlementsContext';
@@ -60,15 +60,20 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
         <DataBanner compact />
 
         <View style={styles.tiles}>
-          <Tile label="Straight up" value={pctOf(sum.su, sum.finals)} sub={`${sum.su}-${sum.finals - sum.su} · winner picked`} />
-          <Tile label="vs spread" value={pctOf(sum.ats, sum.ats + sum.atsL)} sub={`${sum.ats}-${sum.atsL}${sum.atsP ? `-${sum.atsP}` : ''} · model side vs market`} />
-          <Tile label="Over / under" value={pctOf(sum.ou, sum.ou + sum.ouL)} sub={`${sum.ou}-${sum.ouL}${sum.ouP ? `-${sum.ouP}` : ''} · model total vs market`} />
+          <Tile label="Straight up" value={pctOf(sum.su, sum.finals)} sub={`${sum.su}-${sum.finals - sum.su} · winner picked`} ci={intervalLabel(sum.su, sum.finals)} />
+          <Tile label="vs spread" value={pctOf(sum.ats, sum.ats + sum.atsL)} sub={`${sum.ats}-${sum.atsL}${sum.atsP ? `-${sum.atsP}` : ''} · model side vs market`} ci={intervalLabel(sum.ats, sum.ats + sum.atsL)} />
+          <Tile label="Over / under" value={pctOf(sum.ou, sum.ou + sum.ouL)} sub={`${sum.ou}-${sum.ouL}${sum.ouP ? `-${sum.ouP}` : ''} · model total vs market`} ci={intervalLabel(sum.ou, sum.ou + sum.ouL)} />
         </View>
         <View style={styles.tiles}>
           <Tile label="Brier score" value={sum.brier === null ? '—' : sum.brier.toFixed(3)} sub="0 = perfect · 0.25 = coin flip" />
           <Tile label="Margin error" value={sum.spreadMae === null ? '—' : `±${sum.spreadMae.toFixed(1)}`} sub="avg pts off the projected margin" />
           <Tile label="Total error" value={sum.totalMae === null ? '—' : `±${sum.totalMae.toFixed(1)}`} sub="avg pts off the projected total" />
         </View>
+
+        {/* What this sample can and cannot support, said at every size. */}
+        <Text style={[styles.sample, confidenceOf(sum.finals) === 'noise' && styles.sampleWarn]}>
+          {sampleNote(sum.finals)}
+        </Text>
 
         <ClosingLine clv={clv} unit="point" />
 
@@ -144,7 +149,7 @@ export function RecordScreen({ onRun, onUpgrade }: Props) {
   );
 }
 
-function Tile({ label, value, sub }: { label: string; value: string; sub: string }) {
+function Tile({ label, value, sub, ci }: { label: string; value: string; sub: string; ci?: string | null }) {
   return (
     <View style={styles.tile}>
       <Text style={styles.tileLabel}>{label}</Text>
@@ -208,6 +213,9 @@ const styles = StyleSheet.create({
   tileLabel: { color: colors.inkFaint, fontSize: 10, fontWeight: '900', letterSpacing: 1, textTransform: 'uppercase' },
   tileValue: { color: colors.gold, fontSize: 20, fontWeight: '900', marginTop: 4 },
   tileSub: { color: colors.inkFaint, fontSize: 9, marginTop: 2, textAlign: 'center' },
+  tileCi: { color: colors.inkGhost, fontSize: 8.5, marginTop: 2, textAlign: 'center' },
+  sample: { color: colors.inkDim, fontSize: 11, lineHeight: 16, marginTop: spacing.sm },
+  sampleWarn: { color: colors.gold },
   filterBar: { flexGrow: 0, flexShrink: 0, height: 40, marginTop: spacing.sm },
   filters: { gap: spacing.sm, alignItems: 'center' },
   calHead: { flexDirection: 'row', paddingBottom: 6, borderBottomWidth: 1, borderBottomColor: colors.border },

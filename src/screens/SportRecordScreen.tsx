@@ -18,7 +18,7 @@ import { useEntitlements } from '@/context/EntitlementsContext';
 import { useSports } from '@/sports/SportsContext';
 import { SportGlyph } from '@/components/SportGlyph';
 import { LEAGUE_BY_KEY, profileFor, type LeagueKey } from '@/sports/types';
-import { calibration, pctOf, summarize } from '@/utils/record';
+import { calibration, confidenceOf, intervalLabel, pctOf, sampleNote, summarize } from '@/utils/record';
 import { clvOf } from '@/utils/clv';
 import { ClosingLine } from '@/components/ClosingLine';
 import { haptic } from '@/utils/haptics';
@@ -91,9 +91,24 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
   return (
     <ScrollView contentContainerStyle={styles.body}>
       <View style={styles.tiles}>
-        <Tile label="Straight up" value={pctOf(sum.su, sum.finals)} sub={`${sum.su}-${sum.finals - sum.su} · winner picked`} />
-        <Tile label="vs spread" value={pctOf(sum.ats, sum.ats + sum.atsL)} sub={`${sum.ats}-${sum.atsL}${sum.atsP ? `-${sum.atsP}` : ''} · model side`} />
-        <Tile label="Over / under" value={pctOf(sum.ou, sum.ou + sum.ouL)} sub={`${sum.ou}-${sum.ouL}${sum.ouP ? `-${sum.ouP}` : ''} · model total`} />
+        <Tile
+          label="Straight up"
+          value={pctOf(sum.su, sum.finals)}
+          sub={`${sum.su}-${sum.finals - sum.su} · winner picked`}
+          ci={intervalLabel(sum.su, sum.finals)}
+        />
+        <Tile
+          label="vs spread"
+          value={pctOf(sum.ats, sum.ats + sum.atsL)}
+          sub={`${sum.ats}-${sum.atsL}${sum.atsP ? `-${sum.atsP}` : ''} · model side`}
+          ci={intervalLabel(sum.ats, sum.ats + sum.atsL)}
+        />
+        <Tile
+          label="Over / under"
+          value={pctOf(sum.ou, sum.ou + sum.ouL)}
+          sub={`${sum.ou}-${sum.ouL}${sum.ouP ? `-${sum.ouP}` : ''} · model total`}
+          ci={intervalLabel(sum.ou, sum.ou + sum.ouL)}
+        />
       </View>
       <View style={styles.tiles}>
         <Tile label="Brier score" value={sum.brier === null ? '—' : sum.brier.toFixed(3)} sub="0 = perfect · 0.25 = coin flip" />
@@ -103,12 +118,11 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
 
       <ClosingLine clv={clv} unit={profile.unit} />
 
-      {sum.finals < 20 && (
-        <Text style={styles.thin}>
-          {sum.finals} graded {sum.finals === 1 ? 'game' : 'games'} so far. Anything under a couple of dozen is noise —
-          read these numbers as a start, not a verdict.
-        </Text>
-      )}
+      {/* Said at every sample size, because the sample size never stops
+          mattering — only what it supports changes. */}
+      <Text style={[styles.thin, confidenceOf(sum.finals) === 'noise' && styles.thinWarn]}>
+        {sampleNote(sum.finals)}
+      </Text>
 
       {sum.finals >= 5 && (ent.ent.calibration ? (
         <View style={styles.card}>
@@ -220,12 +234,15 @@ export function SportRecordScreen({ onOpenGame, onUpgrade }: Props) {
   );
 }
 
-function Tile({ label, value, sub }: { label: string; value: string; sub: string }) {
+function Tile({ label, value, sub, ci }: { label: string; value: string; sub: string; ci?: string | null }) {
   return (
     <View style={styles.tile}>
       <Text style={styles.tileLabel}>{label}</Text>
       <Text style={[styles.tileValue, numeric]} numberOfLines={1}>{value}</Text>
       <Text style={styles.tileSub} numberOfLines={1}>{sub}</Text>
+      {/* The error bar sits with the number it qualifies. A rate on its own is
+          a claim; a rate with its interval is a measurement. */}
+      {!!ci && <Text style={[styles.tileCi, numeric]} numberOfLines={1}>{ci}</Text>}
     </View>
   );
 }
@@ -250,7 +267,9 @@ const styles = StyleSheet.create({
   tileValue: { color: colors.ink, fontSize: 17, fontWeight: '900', marginTop: 3 },
   tileSub: { color: colors.inkGhost, fontSize: 9, marginTop: 2 },
 
-  thin: { color: colors.gold, fontSize: 11, lineHeight: 16, marginTop: spacing.sm, marginBottom: spacing.sm },
+  thin: { color: colors.inkDim, fontSize: 11, lineHeight: 16, marginTop: spacing.sm, marginBottom: spacing.sm },
+  thinWarn: { color: colors.gold },
+  tileCi: { color: colors.inkGhost, fontSize: 9.5, marginTop: 2 },
 
   card: { padding: spacing.md, borderRadius: radius.lg, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border, marginBottom: spacing.md },
   cardTitle: { color: colors.ink, fontSize: 13, fontWeight: '900', marginBottom: 4 },
