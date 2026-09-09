@@ -92,6 +92,10 @@
   "lat": 51.20892,
   "lng": 3.22424
  },
+ "carson, california, usa": {
+  "lat": 33.83141,
+  "lng": -118.28202
+ },
  "chester, pennsylvania, usa": {
   "lat": 39.84753,
   "lng": -75.35785
@@ -127,6 +131,10 @@
  "columbus, ohio, usa": {
   "lat": 39.96118,
   "lng": -82.99879
+ },
+ "commerce city, colorado, usa": {
+  "lat": 39.80832,
+  "lng": -104.93387
  },
  "como, italy": {
   "lat": 45.80819,
@@ -199,6 +207,10 @@
  "istanbul, türkiye": {
   "lat": 41.01384,
   "lng": 28.94966
+ },
+ "kansas city, kansas, usa": {
+  "lat": 39.11417,
+  "lng": -94.62746
  },
  "kansas city, missouri": {
   "lat": 39.09973,
@@ -424,6 +436,10 @@
   "lat": 37.77493,
   "lng": -122.41942
  },
+ "san jose, california, usa": {
+  "lat": 37.33939,
+  "lng": -121.89496
+ },
  "san luis potosi, mexico": {
   "lat": 22.15234,
   "lng": -100.97135
@@ -431,6 +447,10 @@
  "san sebastian, spain": {
   "lat": 28.09163,
   "lng": -17.11331
+ },
+ "sandy, utah, usa": {
+  "lat": 40.59161,
+  "lng": -111.8841
  },
  "santander, spain": {
   "lat": 43.46589,
@@ -453,6 +473,10 @@
   "lng": 7.13333
  },
  "st. louis, missouri": {
+  "lat": 38.62727,
+  "lng": -90.19789
+ },
+ "st. louis, missouri, usa": {
   "lat": 38.62727,
   "lng": -90.19789
  },
@@ -492,6 +516,7 @@
   "lat": 43.60426,
   "lng": 1.44367
  },
+ "toyota stadium, usa": null,
  "udine, italy": {
   "lat": 46.0693,
   "lng": 13.23715
