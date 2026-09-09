@@ -245,6 +245,22 @@ function renderText(text: string, onHandle: (handle: string) => void) {
  * also the better account — a link in an inbox is proof of an address, and
  * there is no password on our side to store, reset or leak.
  */
+/*
+ * How long a sign-in code is, which is not something this app gets to decide.
+ *
+ * Supabase's OTP length is a project setting and can be anywhere from six to
+ * ten digits. This box hard-coded six and truncated on input, so a project
+ * issuing eight-digit codes had the last two silently cut off every time — the
+ * server then reported, correctly, that the token was invalid. It looked like
+ * an expiry problem for a day.
+ *
+ * Six is the floor because that is Supabase's minimum; ten is the ceiling for
+ * the same reason. Between them the client takes what it is given and lets the
+ * server be the judge of it.
+ */
+const CODE_MIN = 6;
+const CODE_MAX = 10;
+
 export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; onApple: () => void; busy?: boolean }) {
   const social = useSocial();
   const [email, setEmail] = useState('');
@@ -266,7 +282,7 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
   };
 
   const verify = async () => {
-    if (code.replace(/\D/g, '').length < 6 || sending) return;
+    if (code.replace(/\D/g, '').length < CODE_MIN || sending) return;
     setSending(true);
     const ok = await social.verifyEmailCode(email, code);
     if (!ok) setCode('');
@@ -323,18 +339,18 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
           <TextInput
             style={styles.codeInput}
             value={code}
-            onChangeText={(t) => setCode(t.replace(/\D/g, '').slice(0, 6))}
-            placeholder="6-digit code"
+            onChangeText={(t) => setCode(t.replace(/\D/g, '').slice(0, CODE_MAX))}
+            placeholder="Code from the email"
             placeholderTextColor={colors.inkGhost}
             keyboardType="number-pad"
             onSubmitEditing={verify}
-            accessibilityLabel="Six-digit code from the email"
+            accessibilityLabel="Code from the email"
           />
           <TouchableOpacity
-            style={[styles.codeBtn, code.length < 6 && styles.emailBtnOff]}
+            style={[styles.codeBtn, code.length < CODE_MIN && styles.emailBtnOff]}
             activeOpacity={0.85}
             onPress={verify}
-            disabled={code.length < 6 || sending}
+            disabled={code.length < CODE_MIN || sending}
             accessibilityRole="button"
             accessibilityLabel="Sign in with this code"
           >

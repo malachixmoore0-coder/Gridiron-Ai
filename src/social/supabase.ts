@@ -189,7 +189,9 @@ export class SupabaseBackend implements Backend {
    */
   async verifyEmailCode(email: string, code: string): Promise<Session | null> {
     const token = code.replace(/\D/g, '');
-    if (token.length < 6) throw new Error('That code is six digits.');
+    // Six is Supabase's shortest OTP; the length beyond that is a project
+    // setting, so anything longer is passed through rather than trimmed.
+    if (token.length < 6) throw new Error('That code looks too short — check you have all of it.');
     const to = email.trim().toLowerCase();
 
     /*
