@@ -22,6 +22,7 @@ import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme'
 import { useSocial } from '@/social/SocialContext';
 import { useEngagement } from '@/context/EngagementContext';
 import { Avatar, PostCard, SignInRow } from '@/components/Social';
+import { ToadAvatar } from '@/components/ToadAvatar';
 import { AVATAR_SPEC, BANNER_SPEC, PickError, pickImage } from '@/utils/imagePicker';
 import { copyLink, profileUrl } from '@/social/links';
 import { haptic } from '@/utils/haptics';
@@ -75,6 +76,7 @@ export function ProfileScreen({ userId, onOpenProfile, onCompose, onOpenPeople, 
   const [followed, setFollowed] = useState(false);
   const [loading, setLoading] = useState(true);
   const [editing, setEditing] = useState(false);
+  const [showSignIn, setShowSignIn] = useState(false);
   const [tab, setTab] = useState<Tab>('picks');
   /** Picks lead, unless there are none — an empty first tab reads as a dead account. */
   const [tabPicked, setTabPicked] = useState(false);
@@ -160,17 +162,83 @@ export function ProfileScreen({ userId, onOpenProfile, onCompose, onOpenPeople, 
 
   const picksOnly = useMemo(() => posts.filter((p) => !!p.pick), [posts]);
 
+  /*
+   * Signed out, this is still your profile — just an empty one.
+   *
+   * It used to be a bare email box under a heading, which answers "how do I
+   * sign in" and nothing else. Somebody tapping their own avatar is asking what
+   * is behind it, and the honest answer is the page they would have: a banner,
+   * a face, a handle, a record, tabs. Showing that page with nothing in it
+   * makes the offer concrete — this is the shape of the thing you get — in a
+   * way a form never can, and it means the layout does not jump when they
+   * finally do sign in.
+   */
   if (isMe && (!s.signedIn || (!loading && !profile))) {
     return (
       <SafeAreaView edges={['top']} style={styles.safe}>
         <ScrollView contentContainerStyle={styles.body}>
-          <Text style={styles.title}>Your profile</Text>
-          <View style={styles.card}>
-            <Text style={styles.blurb}>
-              Sign in to claim a handle, write a bio, and put your card behind a name people can follow.
-            </Text>
-            <SignInRow onGoogle={() => s.signIn('google')} onApple={() => s.signIn('apple')} busy={s.busy} />
+          <View style={styles.bannerWrap}>
+            <View style={[styles.banner, styles.bannerEmpty, { backgroundColor: colors.card }]} />
           </View>
+
+          <View style={styles.identityRow}>
+            <View style={styles.avatarWrap}><ToadAvatar size={72} /></View>
+            <View style={{ flex: 1 }} />
+            <TouchableOpacity
+              style={styles.signInBtn}
+              activeOpacity={0.88}
+              onPress={() => setShowSignIn(true)}
+              accessibilityRole="button"
+              accessibilityLabel="Sign in"
+            >
+              <Text style={styles.signInBtnText}>Sign in</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={[styles.name, styles.emptyInk]}>Not signed in</Text>
+          <Text style={styles.handle}>@yourhandle</Text>
+          <Text style={styles.joined}>Your card, your record, your name on it</Text>
+
+          <View style={styles.counts}>
+            <View style={styles.countBtn}>
+              <Text style={[styles.countNum, numeric, styles.emptyInk]}>0</Text>
+              <Text style={styles.countLabel}>Following</Text>
+            </View>
+            <View style={styles.countBtn}>
+              <Text style={[styles.countNum, numeric, styles.emptyInk]}>0</Text>
+              <Text style={styles.countLabel}>Followers</Text>
+            </View>
+          </View>
+
+          <View style={styles.strip}>
+            <Stat label="RECORD" value="—" />
+            <Stat label="HIT RATE" value="—" />
+            <Stat label="UNITS" value="—" />
+            <Stat label="OPEN" value="—" />
+          </View>
+
+          <View style={styles.tabs}>
+            {TABS.map((t) => (
+              <View key={t.key} style={[styles.tab, t.key === 'picks' && styles.tabOn]}>
+                <Text style={[styles.tabText, t.key === 'picks' && styles.tabTextOn]}>{t.label}</Text>
+              </View>
+            ))}
+          </View>
+
+          {/* The form itself waits until it is asked for, so the page reads as
+              a profile first and a login second. */}
+          {showSignIn ? (
+            <View style={styles.card}>
+              <Text style={styles.blurb}>
+                Sign in to claim a handle, write a bio, and put your card behind a name people can follow.
+              </Text>
+              <SignInRow onGoogle={() => s.signIn('google')} onApple={() => s.signIn('apple')} busy={s.busy} />
+            </View>
+          ) : (
+            <Text style={styles.stripNote}>
+              Nothing here yet. Sign in and your picks, your record and the people who follow you all live on this page.
+            </Text>
+          )}
         </ScrollView>
       </SafeAreaView>
     );
@@ -628,6 +696,11 @@ const styles = StyleSheet.create({
 
   strip: { flexDirection: 'row', gap: spacing.sm, marginTop: spacing.md, padding: spacing.md, borderRadius: radius.lg, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   stripNote: { color: colors.inkGhost, fontSize: 11.5, lineHeight: 16, marginTop: spacing.sm },
+  /* The empty profile: same layout, values dimmed so it reads as a shape
+     waiting to be filled rather than a record of zero. */
+  emptyInk: { color: colors.inkFaint },
+  signInBtn: { paddingHorizontal: spacing.lg, paddingVertical: 9, borderRadius: radius.pill, backgroundColor: colors.green },
+  signInBtnText: { color: colors.bg, fontSize: 14, fontWeight: '900' },
   statLabel: { color: colors.inkFaint, fontSize: 8, fontWeight: '900', letterSpacing: 0.8 },
   statValue: { color: colors.ink, fontSize: 17, fontWeight: '900', marginTop: 3 },
 

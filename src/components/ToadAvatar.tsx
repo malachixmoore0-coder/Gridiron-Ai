@@ -11,12 +11,16 @@
  * shown most often to somebody who has simply not signed in yet, which is not a
  * problem and should not look like one.
  *
+ * One flat colour, no features. A silhouette is an outline with nothing inside
+ * it, and cutting eyes into one turns the absence of a person into a
+ * particular person — which is the opposite of the job.
+ *
  * Drawn rather than shipped, on the same 100-unit grid as the icon, so the
  * face in the header and the face on the home screen are provably the same
  * shape and stay that way when either changes.
  */
 import React from 'react';
-import Svg, { Circle, Ellipse, G, Path, Defs, ClipPath } from 'react-native-svg';
+import Svg, { Circle, Ellipse, G, Defs, ClipPath } from 'react-native-svg';
 import { colors } from '@/theme';
 
 interface Props {
@@ -50,23 +54,18 @@ export function ToadAvatar({ size = 40, background = colors.cardAlt, tint = colo
         <Ellipse cx="50" cy="94" rx="50" ry="28" fill={tint} />
         {/* The head, at the icon's own proportions — eye domes on a wide jaw.
             Large enough that the toad is legible at 28px, which is the size it
-            is actually shown at in the header. */}
+            is actually shown at in the header.
+
+            No eyes, no mouth. A silhouette is an outline with nothing inside
+            it; the moment features are cut into it, it stops being the absence
+            of a person and becomes a particular one. The domes on top of the
+            head are what makes this a toad rather than anybody, and they do it
+            from the outline alone. */}
         <G transform="translate(50 38) scale(0.62) translate(-50 -50)">
           <Circle cx="30" cy="41" r="19" fill={tint} />
           <Circle cx="70" cy="41" r="19" fill={tint} />
           <Ellipse cx="50" cy="60" rx="41" ry="27" fill={tint} />
         </G>
-        {/* Eyes and mouth are cut back to the disc colour rather than drawn in
-            a third one, so the mark holds on any background it is placed on. */}
-        <Circle cx="38.4" cy="51.5" r="4.6" fill={background} />
-        <Circle cx="61.6" cy="51.5" r="4.6" fill={background} />
-        <Path
-          d="M31 68 Q50 70.8 69 68"
-          fill="none"
-          stroke={background}
-          strokeWidth="3.4"
-          strokeLinecap="round"
-        />
       </G>
     </Svg>
   );
