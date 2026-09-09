@@ -190,10 +190,37 @@ export class SupabaseBackend implements Backend {
   async verifyEmailCode(email: string, code: string): Promise<Session | null> {
     const token = code.replace(/\D/g, '');
     if (token.length < 6) throw new Error('That code is six digits.');
-    const { data, error } = await db().auth.verifyOtp({ email: email.trim().toLowerCase(), token, type: 'email' });
-    if (error) throw new Error(error.message);
-    if (!data.session) return null;
-    return this.adopt(data.session.user as AuthUser, data.session.access_token);
+    const to = email.trim().toLowerCase();
+
+    /*
+     * A one-time code has a *type*, and the client does not know which one it
+     * just asked for.
+     *
+     * `signInWithOtp` sends the "Confirm signup" mail to an address Supabase
+     * has never seen and the "Magic Link" mail to one it has, and the token it
+     * mints carries that distinction. Verifying with the wrong type is refused
+     * exactly like a wrong code — which is what happened here: the link in the
+     * very same email worked, and the code beside it came back invalid, because
+     * this asked for 'email' and the token was a 'signup'.
+     *
+     * There is no way to know whether an address is new without asking, and
+     * asking would leak which addresses have accounts. So all three plausible
+     * types are tried. A rejected attempt does not spend the token, so this
+     * costs a round trip and nothing else, and the error surfaced is the last
+     * real one rather than a mismatch we caused.
+     */
+    const TYPES = ['email', 'signup', 'magiclink'] as const;
+    let last: string | null = null;
+
+    for (const type of TYPES) {
+      const { data, error } = await db().auth.verifyOtp({ email: to, token, type });
+      if (!error) {
+        if (!data.session) return null;
+        return this.adopt(data.session.user as AuthUser, data.session.access_token);
+      }
+      last = error.message;
+    }
+    throw new Error(last ?? 'That code did not work.');
   }
 
   async signOut(): Promise<void> { await db().auth.signOut(); this.me = null; }
