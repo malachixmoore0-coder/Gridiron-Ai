@@ -3,7 +3,7 @@
  * row. The post card is the important one — it is the unit that travels, so it
  * has to carry the model's numbers, the tail button, and nothing else.
  */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { ToadAvatar } from '@/components/ToadAvatar';
@@ -12,6 +12,7 @@ import type { Post, Profile } from '@/social/types';
 import { REPORT_REASONS } from '@/social/moderation';
 import { OAUTH_PROVIDERS, oauthEnabled } from '@/social/oauth';
 import { useSocial } from '@/social/SocialContext';
+import { clearPending, readPending, rememberPending } from '@/social/pendingSignIn';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
 export function Avatar({ profile, size = 40, onPress }: { profile?: Profile | null; size?: number; onPress?: () => void }) {
@@ -271,13 +272,22 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
   const [sent, setSent] = useState(false);
   const [code, setCode] = useState('');
 
+  /* Come back from the mail app and the address is already there, with the
+     code box under it. Without this the field is empty on return, the box has
+     nothing to attach to, and the link is the only way in after all. */
+  useEffect(() => {
+    let live = true;
+    readPending().then((e) => { if (live && e) { setEmail(e); setSent(true); } });
+    return () => { live = false; };
+  }, []);
+
   const send = async () => {
     if (!email.trim() || sending) return;
     setSending(true);
     setNote(null);
     const r = await social.signInWithEmail(email);
     setNote(r.message);
-    if (r.sent) setSent(true);
+    if (r.sent) { setSent(true); void rememberPending(email.trim().toLowerCase()); }
     setSending(false);
   };
 
@@ -285,7 +295,8 @@ export function SignInRow({ onGoogle, onApple, busy }: { onGoogle: () => void; o
     if (code.replace(/\D/g, '').length < CODE_MIN || sending) return;
     setSending(true);
     const ok = await social.verifyEmailCode(email, code);
-    if (!ok) setCode('');
+    if (ok) void clearPending();
+    else setCode('');
     setSending(false);
   };
 
