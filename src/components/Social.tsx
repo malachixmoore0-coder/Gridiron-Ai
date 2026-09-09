@@ -6,6 +6,7 @@
 import React, { useState } from 'react';
 import { View, Text, Image, TouchableOpacity, StyleSheet, Modal, TextInput } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { ToadAvatar } from '@/components/ToadAvatar';
 import { colors, numeric, radius, spacing } from '@/theme';
 import type { Post, Profile } from '@/social/types';
 import { REPORT_REASONS } from '@/social/moderation';
@@ -14,10 +15,25 @@ import { useSocial } from '@/social/SocialContext';
 import { LEAGUE_BY_KEY } from '@/sports/types';
 
 export function Avatar({ profile, size = 40, onPress }: { profile?: Profile | null; size?: number; onPress?: () => void }) {
-  const initials = (profile?.displayName || profile?.handle || '?')
-    .split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+  /*
+   * Three states, and the third one used to be wrong.
+   *
+   * A picture if they set one; otherwise their initials on their own colour.
+   * With no profile at all there is no name to take initials from, and the
+   * fallback resolved to "?" — which reads as an error, the app either asking
+   * you who you are or admitting it has lost track. That is shown mostly to
+   * someone who simply has not signed in, which is not a problem and should not
+   * look like one. It is the toad silhouette now, doing the job a contact
+   * silhouette does everywhere else: a person, unspecified.
+   */
+  const name = profile?.displayName || profile?.handle || '';
+  const initials = name
+    .split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+
   const body = profile?.avatarUrl ? (
     <Image source={{ uri: profile.avatarUrl }} style={{ width: size, height: size, borderRadius: size / 2 }} />
+  ) : !initials ? (
+    <ToadAvatar size={size} />
   ) : (
     <View style={[styles.avatar, { width: size, height: size, borderRadius: size / 2, backgroundColor: profile?.avatarColor ?? colors.cardAlt }]}>
       <Text style={[styles.avatarText, { fontSize: size * 0.36 }]}>{initials}</Text>
