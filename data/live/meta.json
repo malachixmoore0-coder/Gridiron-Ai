@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-11T04:46:59.938Z",
+ "generatedAt": "2026-09-11T11:28:32.675Z",
  "season": 2026,
  "priorSeason": 2025,
  "currentWeek": 1,
@@ -28,206 +28,206 @@
    "name": "nflverse schedule & results (nfldata games.csv)",
    "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:00.059Z"
+   "fetchedAt": "2026-09-11T11:28:32.780Z"
   },
   {
    "name": "nflverse injury reports 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:00.595Z"
+   "fetchedAt": "2026-09-11T11:28:33.234Z"
   },
   {
    "name": "nflverse snap counts 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:00.600Z"
+   "fetchedAt": "2026-09-11T11:28:33.253Z"
   },
   {
    "name": "nflverse rosters 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:00.644Z"
+   "fetchedAt": "2026-09-11T11:28:33.264Z"
   },
   {
    "name": "nflverse snap counts 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:00.677Z"
+   "fetchedAt": "2026-09-11T11:28:33.639Z"
   },
   {
    "name": "nflverse depth charts 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:01.645Z"
+   "fetchedAt": "2026-09-11T11:28:33.669Z"
   },
   {
    "name": "nflverse depth charts 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:03.119Z"
+   "fetchedAt": "2026-09-11T11:28:34.215Z"
   },
   {
    "name": "nflverse play-by-play 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:10.918Z"
+   "fetchedAt": "2026-09-11T11:28:43.107Z"
   },
   {
    "name": "nflverse play-by-play 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:11.200Z"
+   "fetchedAt": "2026-09-11T11:28:43.334Z"
   },
   {
    "name": "FTN charting 2026 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2026.csv",
    "ok": false,
-   "fetchedAt": "2026-09-11T04:47:19.394Z",
+   "fetchedAt": "2026-09-11T11:28:50.850Z",
    "note": "HTTP 404"
   },
   {
    "name": "FTN charting 2025 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:19.670Z"
-  },
-  {
-   "name": "ESPN scoreboard week 1 (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=1",
-   "ok": true,
-   "fetchedAt": "2026-09-11T04:47:20.523Z"
-  },
-  {
-   "name": "ESPN injuries (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
-   "ok": true,
-   "fetchedAt": "2026-09-11T04:47:20.561Z"
-  },
-  {
-   "name": "ESPN scoreboard week 2 (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=2",
-   "ok": true,
-   "fetchedAt": "2026-09-11T04:47:20.564Z"
+   "fetchedAt": "2026-09-11T11:28:50.989Z"
   },
   {
    "name": "PFR advanced passing (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_pass.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:20.635Z"
+   "fetchedAt": "2026-09-11T11:28:51.825Z"
   },
   {
    "name": "PFR advanced defense (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_def.csv",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:20.660Z"
+   "fetchedAt": "2026-09-11T11:28:51.850Z"
+  },
+  {
+   "name": "ESPN scoreboard week 1 (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=1",
+   "ok": true,
+   "fetchedAt": "2026-09-11T11:28:52.000Z"
+  },
+  {
+   "name": "ESPN scoreboard week 2 (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=2",
+   "ok": true,
+   "fetchedAt": "2026-09-11T11:28:52.002Z"
+  },
+  {
+   "name": "ESPN injuries (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
+   "ok": true,
+   "fetchedAt": "2026-09-11T11:28:52.083Z"
   },
   {
    "name": "Open-Meteo forecast 35.23,-80.85",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=35.226&longitude=-80.853&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:21.708Z"
+   "fetchedAt": "2026-09-11T11:28:52.808Z"
   },
   {
    "name": "Open-Meteo forecast 39.09,-84.52",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.095&longitude=-84.516&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:21.862Z"
+   "fetchedAt": "2026-09-11T11:28:52.908Z"
   },
   {
    "name": "Open-Meteo forecast 30.32,-81.64",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=30.324&longitude=-81.637&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.017Z"
+   "fetchedAt": "2026-09-11T11:28:53.008Z"
   },
   {
    "name": "Open-Meteo forecast 40.45,-80.02",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.447&longitude=-80.016&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.171Z"
+   "fetchedAt": "2026-09-11T11:28:53.108Z"
   },
   {
    "name": "Open-Meteo forecast 36.17,-86.77",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.166&longitude=-86.771&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.325Z"
+   "fetchedAt": "2026-09-11T11:28:53.209Z"
   },
   {
    "name": "Open-Meteo forecast 39.90,-75.17",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.901&longitude=-75.168&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.480Z"
+   "fetchedAt": "2026-09-11T11:28:53.309Z"
   },
   {
    "name": "Open-Meteo forecast 40.81,-74.07",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.813&longitude=-74.074&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.634Z"
+   "fetchedAt": "2026-09-11T11:28:53.408Z"
   },
   {
    "name": "Open-Meteo forecast 39.05,-94.48",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.049&longitude=-94.484&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.788Z"
+   "fetchedAt": "2026-09-11T11:28:53.508Z"
   },
   {
    "name": "Open-Meteo forecast 42.77,-78.79",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=42.774&longitude=-78.787&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:22.942Z"
+   "fetchedAt": "2026-09-11T11:28:53.607Z"
   },
   {
    "name": "Open-Meteo forecast 39.28,-76.62",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.278&longitude=-76.623&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.097Z"
+   "fetchedAt": "2026-09-11T11:28:53.707Z"
   },
   {
    "name": "Open-Meteo forecast 41.86,-87.62",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.862&longitude=-87.617&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.250Z"
+   "fetchedAt": "2026-09-11T11:28:53.807Z"
   },
   {
    "name": "Open-Meteo forecast 42.09,-71.26",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=42.091&longitude=-71.264&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.405Z"
+   "fetchedAt": "2026-09-11T11:28:53.906Z"
   },
   {
    "name": "Open-Meteo forecast 40.81,-74.07",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.813&longitude=-74.074&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.558Z"
+   "fetchedAt": "2026-09-11T11:28:54.006Z"
   },
   {
    "name": "Open-Meteo forecast 27.98,-82.50",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=27.976&longitude=-82.503&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.712Z"
+   "fetchedAt": "2026-09-11T11:28:54.106Z"
   },
   {
    "name": "Open-Meteo forecast 36.17,-86.77",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.166&longitude=-86.771&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:23.866Z"
+   "fetchedAt": "2026-09-11T11:28:54.206Z"
   },
   {
    "name": "Open-Meteo forecast 39.74,-105.02",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.744&longitude=-105.02&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:24.020Z"
+   "fetchedAt": "2026-09-11T11:28:54.306Z"
   },
   {
    "name": "Open-Meteo forecast 37.40,-121.97",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=37.403&longitude=-121.97&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:24.174Z"
+   "fetchedAt": "2026-09-11T11:28:54.405Z"
   },
   {
    "name": "Open-Meteo forecast 39.05,-94.48",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.049&longitude=-94.484&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-09-11T04:47:24.329Z"
+   "fetchedAt": "2026-09-11T11:28:54.505Z"
   }
  ],
  "notes": [],
@@ -1269,41 +1269,41 @@
    "vs34": 0.018
   },
   "sf": {
-   "gamesPlayed": 0,
-   "epaPlay": 0.09,
-   "passEpa": 0.173,
-   "rushEpa": -0.033,
-   "success": 0.485,
-   "explosive": 0.082,
-   "earlyPass": 0.544,
-   "thirdConv": 0.507,
+   "gamesPlayed": 1,
+   "epaPlay": 0.104,
+   "passEpa": 0.18,
+   "rushEpa": -0.008,
+   "success": 0.497,
+   "explosive": 0.081,
+   "earlyPass": 0.546,
+   "thirdConv": 0.518,
    "fourthGo": 0.75,
-   "fourthOpp": 16,
-   "rzTd": 0.694,
-   "pace": 64.706,
-   "pressureAllowed": 0.134,
-   "shotgun": 0.539,
-   "adot": 7.524,
-   "shortTgtEpa": 0.181,
-   "scramble": 0.043,
-   "offAdjust": -0.01,
-   "dEpa": 0.066,
-   "dPassEpa": 0.149,
-   "dRushEpa": -0.071,
-   "dExplosive": 0.073,
-   "dThirdStop": 0.593,
-   "pressure": 0.093,
-   "takeaways": 0.824,
-   "dTeRbEpa": 0.054,
-   "dShortWrEpa": 0.13,
-   "defAdjust": 0.068,
+   "fourthOpp": 13.714,
+   "rzTd": 0.69,
+   "pace": 64.748,
+   "pressureAllowed": 0.122,
+   "shotgun": 0.524,
+   "adot": 7.075,
+   "shortTgtEpa": 0.167,
+   "scramble": 0.045,
+   "offAdjust": 0.03,
+   "dEpa": 0.024,
+   "dPassEpa": 0.089,
+   "dRushEpa": -0.085,
+   "dExplosive": 0.072,
+   "dThirdStop": 0.619,
+   "pressure": 0.119,
+   "takeaways": 0.992,
+   "dTeRbEpa": -0.036,
+   "dShortWrEpa": 0.095,
+   "defAdjust": 0.084,
    "paRate": 0.225,
-   "motionRate": 0.688,
-   "rpoRate": 0.006,
+   "motionRate": 0.59,
+   "rpoRate": 0.005,
    "screenRate": 0.061,
    "dBlitz": 0.222,
    "vs43": 0.129,
-   "vs34": 0.057
+   "vs34": 0.076
   },
   "sea": {
    "gamesPlayed": 1,
@@ -1343,40 +1343,40 @@
    "vs34": 0.048
   },
   "lar": {
-   "gamesPlayed": 0,
-   "epaPlay": 0.149,
-   "passEpa": 0.235,
-   "rushEpa": 0.021,
-   "success": 0.522,
-   "explosive": 0.113,
-   "earlyPass": 0.587,
-   "thirdConv": 0.406,
+   "gamesPlayed": 1,
+   "epaPlay": 0.096,
+   "passEpa": 0.163,
+   "rushEpa": -0.006,
+   "success": 0.509,
+   "explosive": 0.106,
+   "earlyPass": 0.56,
+   "thirdConv": 0.38,
    "fourthGo": 0.875,
-   "fourthOpp": 16,
-   "rzTd": 0.632,
-   "pace": 65,
-   "pressureAllowed": 0.125,
-   "shotgun": 0.413,
-   "adot": 9.306,
-   "shortTgtEpa": 0.175,
-   "scramble": 0.011,
-   "offAdjust": -0.017,
-   "dEpa": -0.067,
-   "dPassEpa": -0.049,
-   "dRushEpa": -0.098,
+   "fourthOpp": 13.714,
+   "rzTd": 0.589,
+   "pace": 64.286,
+   "pressureAllowed": 0.147,
+   "shotgun": 0.425,
+   "adot": 9.278,
+   "shortTgtEpa": 0.118,
+   "scramble": 0.015,
+   "offAdjust": -0.041,
+   "dEpa": -0.03,
+   "dPassEpa": -0.01,
+   "dRushEpa": -0.063,
    "dExplosive": 0.078,
-   "dThirdStop": 0.636,
-   "pressure": 0.178,
-   "takeaways": 1.529,
-   "dTeRbEpa": 0.059,
-   "dShortWrEpa": -0.01,
-   "defAdjust": 0.097,
+   "dThirdStop": 0.604,
+   "pressure": 0.161,
+   "takeaways": 1.454,
+   "dTeRbEpa": -0.028,
+   "dShortWrEpa": 0.063,
+   "defAdjust": 0.045,
    "paRate": 0.347,
-   "motionRate": 0.644,
-   "rpoRate": 0.005,
+   "motionRate": 0.552,
+   "rpoRate": 0.004,
    "screenRate": 0.07,
    "dBlitz": 0.199,
-   "vs43": 0.201,
+   "vs43": 0.14,
    "vs34": 0.112
   },
   "ari": {
