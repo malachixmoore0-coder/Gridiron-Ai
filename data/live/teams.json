@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-13T04:54:02.409Z",
+ "generatedAt": "2026-09-13T16:23:58.943Z",
  "season": 2026,
  "week": 1,
  "phase": "regular",
@@ -158,17 +158,17 @@
      "jersey": "0"
     },
     {
-     "id": "buf-00-0036988",
-     "name": "Josh Palmer",
+     "id": "buf-00-0035500",
+     "name": "Greg Dortch",
      "pos": "WR",
      "role": "rotational",
-     "rating": 62,
-     "snapPct": 0.48,
-     "targetShare": 0.06,
-     "tprr": 0.13,
-     "note": "0.18 EPA/target on 37 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/woswdfrtxnsfgzsjvsxx",
-     "jersey": "5"
+     "rating": 59,
+     "snapPct": 0.34,
+     "targetShare": 0.053,
+     "tprr": 0.164,
+     "note": "0.13 EPA/target on 33 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pylafoddjiqh4rhjlhpf",
+     "jersey": "19"
     },
     {
      "id": "buf-00-0038933",
@@ -728,17 +728,17 @@
      "jersey": "44"
     },
     {
-     "id": "ne-00-0035676",
-     "name": "A.J. Brown",
+     "id": "ne-00-0037816",
+     "name": "Romeo Doubs",
      "pos": "WR",
      "role": "starter",
-     "rating": 80,
-     "snapPct": 0.91,
-     "targetShare": 0.186,
-     "tprr": 0.217,
-     "note": "0.28 EPA/target on 63 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qfhvjyssf0lwsh0kienp",
-     "jersey": "1"
+     "rating": 75,
+     "snapPct": 0.77,
+     "targetShare": 0.132,
+     "tprr": 0.182,
+     "note": "0.32 EPA/target on 45 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yxvzijmgwyyigljxfmyb",
+     "jersey": "87"
     },
     {
      "id": "ne-00-0040131",
@@ -754,23 +754,10 @@
      "jersey": "18"
     },
     {
-     "id": "ne-00-0037816",
-     "name": "Romeo Doubs",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 75,
-     "snapPct": 0.77,
-     "targetShare": 0.132,
-     "tprr": 0.182,
-     "note": "0.32 EPA/target on 45 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yxvzijmgwyyigljxfmyb",
-     "jersey": "87"
-    },
-    {
      "id": "ne-00-0038621",
      "name": "DeMario Douglas",
      "pos": "WR",
-     "role": "rotational",
+     "role": "starter",
      "rating": 79,
      "snapPct": 0.27,
      "targetShare": 0.071,
@@ -778,6 +765,18 @@
      "note": "0.54 EPA/target on 27 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cm9vnzqu5phlmsocjwgc",
      "jersey": "3"
+    },
+    {
+     "id": "ne-00-0040563",
+     "name": "Efton Chism III",
+     "pos": "WR",
+     "role": "rotational",
+     "rating": 56,
+     "snapPct": 0.2,
+     "targetShare": 0.005,
+     "tprr": 0.04,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zbnf3ujmwprzgjnwdtlo",
+     "jersey": "86"
     },
     {
      "id": "ne-00-0033090",
@@ -1215,15 +1214,14 @@
      "jersey": "29"
     },
     {
-     "id": "nyj-00-0038905",
-     "name": "Blake Grupe",
+     "id": "nyj-00-0034794",
+     "name": "Jason Sanders",
      "pos": "K",
      "role": "starter",
-     "rating": 49,
-     "snapPct": 0.03,
-     "note": "29/37 FG",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/de3vz6xjjo9paba6encd",
-     "jersey": "39"
+     "rating": 60,
+     "snapPct": 1,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/k3ldptfygihmqgl2eir6",
+     "jersey": "19"
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
@@ -3899,15 +3897,15 @@
      "jersey": "83"
     },
     {
-     "id": "kc-00-0040116",
-     "name": "Josh Simmons",
+     "id": "kc-00-0036557",
+     "name": "Jaylon Moore",
      "pos": "LT",
      "role": "starter",
      "rating": 67,
      "snapPct": 0.95,
      "pbwr": 0.807,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/r2dq0mc7dzhf0spg9iw6",
-     "jersey": "71"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpsudx7fxgxdjmtfvahj",
+     "jersey": "77"
     },
     {
      "id": "kc-00-0036623",
@@ -4567,28 +4565,28 @@
      "jersey": "15"
     },
     {
-     "id": "den-00-0035763",
-     "name": "Malcolm Roach",
-     "pos": "DT",
-     "role": "starter",
-     "rating": 82,
-     "snapPct": 0.51,
-     "prwr": 0.075,
-     "note": "0.80 sacks/g · 5 QB hits in 5 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/oxcd8veodm7hkiualglu",
-     "jersey": "97"
-    },
-    {
      "id": "den-00-0033297",
      "name": "D.J. Jones",
      "pos": "DT",
-     "role": "rotational",
+     "role": "starter",
      "rating": 79,
      "snapPct": 0.42,
      "prwr": 0.076,
      "note": "0.60 sacks/g · 6 QB hits in 5 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ft4g8bxpn85mshqvp4lj",
      "jersey": "93"
+    },
+    {
+     "id": "den-00-0035763",
+     "name": "Malcolm Roach",
+     "pos": "DT",
+     "role": "rotational",
+     "rating": 82,
+     "snapPct": 0.51,
+     "prwr": 0.075,
+     "note": "0.80 sacks/g · 5 QB hits in 5 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/oxcd8veodm7hkiualglu",
+     "jersey": "97"
     },
     {
      "id": "den-00-0031898",
@@ -5099,17 +5097,16 @@
      "jersey": "13"
     },
     {
-     "id": "phi-00-0036980",
-     "name": "Elijah Moore",
+     "id": "phi-00-0037132",
+     "name": "Britain Covey",
      "pos": "WR",
      "role": "rotational",
-     "rating": 48,
-     "snapPct": 0.3,
-     "targetShare": 0.028,
-     "tprr": 0.099,
-     "note": "-0.23 EPA/target on 17 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wax90oyx9vs0x9j4nt5n",
-     "jersey": "19"
+     "rating": 56,
+     "snapPct": 0.09,
+     "targetShare": 0.007,
+     "tprr": 0.077,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jgvgr3prtme8ua28bfxi",
+     "jersey": "85"
     },
     {
      "id": "phi-00-0034351",
@@ -5703,19 +5700,16 @@
      "jersey": "1"
     },
     {
-     "id": "nyg-00-0037837",
-     "name": "Calvin Austin III",
+     "id": "nyg-00-0034419",
+     "name": "Braxton Berrios",
      "pos": "WR",
      "role": "starter",
-     "rating": 49,
-     "snapPct": 0.54,
-     "targetShare": 0.081,
-     "tprr": 0.162,
-     "note": "-0.08 EPA/target on 55 tgt/season",
-     "reported": "out",
-     "reportNote": "Reserve list (IR)",
-     "headshotUrl": "https://static.www.nfl.com/image/private/f_auto,q_auto/league/qlt6ztqcbu0uzad6aavt",
-     "jersey": "82"
+     "rating": 60,
+     "snapPct": 0.17,
+     "targetShare": 0.012,
+     "tprr": 0.075,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/striwxmn9t0ixherw7l8",
+     "jersey": "87"
     },
     {
      "id": "nyg-00-0041042",
@@ -6448,14 +6442,16 @@
      "jersey": "54"
     },
     {
-     "id": "det-00-0041447",
-     "name": "Skyler Gill-Howard",
+     "id": "det-00-0040672",
+     "name": "Tyleik Williams",
      "pos": "DT",
      "role": "rotational",
-     "rating": 64,
-     "snapPct": 0.6,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/noftllzrysprcx9tktdb",
-     "jersey": "50"
+     "rating": 48,
+     "snapPct": 0.41,
+     "prwr": 0.064,
+     "note": "0.17 sacks/g · 3 QB hits in 6 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/emppyzljgfew4i1qmdhb",
+     "jersey": "91"
     },
     {
      "id": "det-00-0039018",
@@ -7074,14 +7070,14 @@
      "jersey": "50"
     },
     {
-     "id": "min-00-0041046",
-     "name": "Domonique Orange",
+     "id": "min-00-0040624",
+     "name": "Elijah Williams",
      "pos": "DT",
      "role": "rotational",
-     "rating": 67,
-     "snapPct": 0.6,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/o2druy2qqi3nkcbj9ns6",
-     "jersey": "97"
+     "rating": 60,
+     "snapPct": 0.1,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jdad4ub2ljy6hynzxmb4",
+     "jersey": "99"
     },
     {
      "id": "min-00-0035276",
