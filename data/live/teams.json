@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-13T23:12:21.344Z",
+ "generatedAt": "2026-09-13T23:37:53.119Z",
  "season": 2026,
  "week": 1,
  "phase": "regular",
@@ -612,7 +612,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/mia.png",
-   "record": "0-0"
+   "record": "0-1"
   },
   {
    "id": "ne",
@@ -4322,7 +4322,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lac.png",
-   "record": "0-0"
+   "record": "0-1"
   },
   {
    "id": "den",
@@ -4941,7 +4941,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
-   "record": "0-0"
+   "record": "1-0"
   },
   {
    "id": "phi",
@@ -5253,7 +5253,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/phi.png",
-   "record": "0-0"
+   "record": "1-0"
   },
   {
    "id": "dal",
@@ -6190,7 +6190,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png",
-   "record": "0-0"
+   "record": "0-1"
   },
   {
    "id": "det",
@@ -9926,7 +9926,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ari.png",
-   "record": "0-0"
+   "record": "1-0"
   }
  ]
 }
