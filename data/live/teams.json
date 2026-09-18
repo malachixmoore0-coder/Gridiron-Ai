@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T04:50:14.239Z",
+ "generatedAt": "2026-09-18T11:22:54.059Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -132,6 +132,19 @@
      "jersey": "2"
     },
     {
+     "id": "buf-00-0035500",
+     "name": "Greg Dortch",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 61,
+     "snapPct": 0.34,
+     "targetShare": 0.053,
+     "tprr": 0.164,
+     "note": "0.13 EPA/target on 33 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pylafoddjiqh4rhjlhpf",
+     "jersey": "19"
+    },
+    {
      "id": "buf-00-0037261",
      "name": "Khalil Shakir",
      "pos": "WR",
@@ -148,7 +161,7 @@
      "id": "buf-00-0039901",
      "name": "Keon Coleman",
      "pos": "WR",
-     "role": "starter",
+     "role": "rotational",
      "rating": 71,
      "snapPct": 0.62,
      "targetShare": 0.1,
@@ -156,19 +169,6 @@
      "note": "0.26 EPA/target on 35 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cm7g87waetksjouyjgvg",
      "jersey": "0"
-    },
-    {
-     "id": "buf-00-0036988",
-     "name": "Josh Palmer",
-     "pos": "WR",
-     "role": "rotational",
-     "rating": 70,
-     "snapPct": 0.48,
-     "targetShare": 0.06,
-     "tprr": 0.13,
-     "note": "0.37 EPA/target on 21 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/woswdfrtxnsfgzsjvsxx",
-     "jersey": "5"
     },
     {
      "id": "buf-00-0038933",
@@ -593,14 +593,14 @@
      "jersey": "4"
     },
     {
-     "id": "mia-00-0040182",
-     "name": "Dante Trader Jr.",
+     "id": "mia-00-0036677",
+     "name": "Zayne Anderson",
      "pos": "S",
      "role": "starter",
      "rating": 60,
-     "snapPct": 0.4,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nffbi3a32ngmczzvxcz0",
-     "jersey": "11"
+     "snapPct": 0.03,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/j8agcdgo4ezgvn4vhw7u",
+     "jersey": "23"
     },
     {
      "id": "mia-00-0036816",
@@ -1026,16 +1026,16 @@
      "jersey": "20"
     },
     {
-     "id": "nyj-00-0034959",
-     "name": "Andrew Beck",
+     "id": "nyj-00-0036842",
+     "name": "Kene Nwangwu",
      "pos": "RB",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.11,
-     "targetShare": 0.014,
-     "tprr": 0.133,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zv8xb3nfxamq7sqa1xqt",
-     "jersey": "47"
+     "snapPct": 0.04,
+     "targetShare": 0.002,
+     "tprr": 0.041,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rlnqgz517fsohrndgjrb",
+     "jersey": "3"
     },
     {
      "id": "nyj-00-0037740",
@@ -9703,17 +9703,17 @@
      "jersey": "22"
     },
     {
-     "id": "ari-00-0039849",
-     "name": "Marvin Harrison Jr.",
+     "id": "ari-00-0038559",
+     "name": "Michael Wilson",
      "pos": "WR",
      "role": "starter",
-     "rating": 86,
-     "snapPct": 0.71,
-     "targetShare": 0.094,
-     "tprr": 0.139,
-     "note": "0.42 EPA/target on 39 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hwpoo1icpnh8emjvqaii",
-     "jersey": "18"
+     "rating": 82,
+     "snapPct": 0.81,
+     "targetShare": 0.161,
+     "tprr": 0.21,
+     "note": "0.21 EPA/target on 67 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hm2b9z4zujjmbiyldh8n",
+     "jersey": "14"
     },
     {
      "id": "ari-00-0036331",
@@ -9728,17 +9728,17 @@
      "jersey": "81"
     },
     {
-     "id": "ari-00-0038559",
-     "name": "Michael Wilson",
+     "id": "ari-00-0039849",
+     "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "role": "starter",
-     "rating": 82,
-     "snapPct": 0.81,
-     "targetShare": 0.161,
-     "tprr": 0.21,
-     "note": "0.21 EPA/target on 67 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hm2b9z4zujjmbiyldh8n",
-     "jersey": "14"
+     "rating": 86,
+     "snapPct": 0.71,
+     "targetShare": 0.094,
+     "tprr": 0.139,
+     "note": "0.42 EPA/target on 39 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hwpoo1icpnh8emjvqaii",
+     "jersey": "18"
     },
     {
      "id": "ari-00-0033307",
