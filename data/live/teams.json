@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-18T23:20:39.526Z",
+ "generatedAt": "2026-09-19T04:43:01.476Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -35,7 +35,7 @@
     "redZoneTd": 0.698,
     "redZoneAggression": 7.1,
     "halftimeAdjust": 6,
-    "playActionRate": 0.234,
+    "playActionRate": 0.209,
     "passRate": 0.531,
     "pace": 64.7
    },
@@ -67,7 +67,7 @@
     "nickelCorner": 6.4,
     "lbCoverage": 6.3,
     "secondaryAdjust": 6.6,
-    "blitzRate": 0.268,
+    "blitzRate": 0.229,
     "takeaways": 5.6
    },
    "players": [
@@ -6206,7 +6206,7 @@
    },
    "coaching": {
     "headCoach": "Dan Campbell",
-    "offScheme": "Wide Zone",
+    "offScheme": "Power Run",
     "defFront": "4-3",
     "baseCoverage": "Cover-1",
     "thirdDownOff": 0.386,
@@ -6215,7 +6215,7 @@
     "redZoneTd": 0.699,
     "redZoneAggression": 6.7,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.273,
+    "playActionRate": 0.228,
     "passRate": 0.515,
     "pace": 65.8
    },
@@ -6233,11 +6233,11 @@
      "Multiple": 6.2
     },
     "vsCoverage": {
-     "Cover-1": 7.1,
-     "Cover-2": 6.7,
-     "Cover-3": 7.2,
-     "Quarters": 6.6,
-     "Cover-2 Man": 6.9
+     "Cover-1": 6.8,
+     "Cover-2": 7.3,
+     "Cover-3": 6.9,
+     "Quarters": 7.2,
+     "Cover-2 Man": 7.1
     }
    },
    "defense": {
@@ -6247,7 +6247,7 @@
     "nickelCorner": 3.9,
     "lbCoverage": 7.4,
     "secondaryAdjust": 4.5,
-    "blitzRate": 0.3,
+    "blitzRate": 0.268,
     "takeaways": 6
    },
    "players": [
