@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T11:31:40.953Z",
+ "generatedAt": "2026-09-20T04:58:40.559Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -2932,18 +2932,6 @@
      "jersey": "14"
     },
     {
-     "id": "ind-00-0039816",
-     "name": "Anthony Gould",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 60,
-     "snapPct": 0.09,
-     "targetShare": 0.003,
-     "tprr": 0.04,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/irctulz9pij3tzpokih0",
-     "jersey": "6"
-    },
-    {
      "id": "ind-00-0038997",
      "name": "Josh Downs",
      "pos": "WR",
@@ -2960,8 +2948,8 @@
      "id": "ind-00-0035021",
      "name": "Ashton Dulin",
      "pos": "WR",
-     "role": "rotational",
-     "rating": 56,
+     "role": "starter",
+     "rating": 60,
      "snapPct": 0.21,
      "targetShare": 0.016,
      "tprr": 0.079,
@@ -2969,6 +2957,19 @@
      "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ux55cx0r9iwqwmfmaip6",
      "jersey": "16"
+    },
+    {
+     "id": "ind-00-0030279",
+     "name": "Keenan Allen",
+     "pos": "WR",
+     "role": "rotational",
+     "rating": 87,
+     "snapPct": 0.56,
+     "targetShare": 0.191,
+     "tprr": 0.36,
+     "note": "0.27 EPA/target on 64 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ri267r6lzfwarh89hsn6",
+     "jersey": "10"
     },
     {
      "id": "ind-00-0040128",
@@ -3193,14 +3194,15 @@
      "jersey": "16"
     },
     {
-     "id": "jax-00-0033319",
-     "name": "Nick Mullens",
+     "id": "jax-00-0040234",
+     "name": "Quinn Ewers",
      "pos": "QB",
      "role": "depth",
-     "rating": 56,
-     "snapPct": 0.11,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/haxwyajgngz6quuyqg19",
-     "jersey": "14"
+     "rating": 63,
+     "snapPct": 0.79,
+     "note": "-0.06 EPA/dropback · 1.0 CPOE · 91 dropbacks",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bbcwyjuhyijtqe7jo274",
+     "jersey": "10"
     },
     {
      "id": "jax-00-0040719",
@@ -4457,16 +4459,19 @@
      "jersey": "27"
     },
     {
-     "id": "den-00-0036727",
-     "name": "Adam Prentice",
+     "id": "den-00-0040730",
+     "name": "RJ Harvey",
      "pos": "RB",
      "role": "rotational",
-     "rating": 56,
-     "snapPct": 0.18,
-     "targetShare": 0.011,
-     "tprr": 0.066,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuvyqidnso9ga1dfefoy",
-     "jersey": "46"
+     "rating": 68,
+     "snapPct": 0.44,
+     "targetShare": 0.082,
+     "tprr": 0.195,
+     "note": "3.7 YPC · -1.37 EPA/season",
+     "reported": "questionable",
+     "reportNote": "Hamstring · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/szxmro5enrxlscvv67xg",
+     "jersey": "12"
     },
     {
      "id": "den-00-0036613",
@@ -9478,8 +9483,6 @@
      "targetShare": 0.252,
      "tprr": 0.375,
      "note": "0.65 EPA/target on 88 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Hip · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ipy6qw7hdygdfc8k86ba",
      "jersey": "12"
     },
@@ -9493,8 +9496,6 @@
      "targetShare": 0.038,
      "tprr": 0.1,
      "note": "0.11 EPA/target on 13 tgt/season",
-     "reported": "out",
-     "reportNote": "Quadricep · Doubtful",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/enqcg1lgjkuk0hqz3qjc",
      "jersey": "88"
     },
