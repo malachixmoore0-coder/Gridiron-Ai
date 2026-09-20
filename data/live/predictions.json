@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T23:16:35.121Z",
+ "generatedAt": "2026-09-20T23:35:00.651Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -1011,9 +1011,21 @@
    "marketTotal": 40.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-20T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 7,
+    "awayScore": 31,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": -26,
+    "totalError": -5.4,
+    "brier": 0.2916
+   }
   },
   {
    "id": "2026_02_WAS_DAL",
@@ -1034,9 +1046,21 @@
    "marketTotal": 50.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-20T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 37,
+    "awayScore": 20,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 10,
+    "totalError": 3.1,
+    "brier": 0.1089
+   }
   },
   {
    "id": "2026_02_IND_KC",

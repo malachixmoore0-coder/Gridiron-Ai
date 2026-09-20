@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T23:16:35.121Z",
+ "generatedAt": "2026-09-20T23:35:00.651Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -5602,7 +5602,7 @@
     "sf"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
-   "record": "0-1"
+   "record": "1-1"
   },
   {
    "id": "nyg",
@@ -6231,7 +6231,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/wsh.png",
-   "record": "0-1"
+   "record": "0-2"
   },
   {
    "id": "det",
@@ -9355,7 +9355,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/sea.png",
-   "record": "1-0"
+   "record": "2-0"
   },
   {
    "id": "lar",
@@ -9982,7 +9982,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ari.png",
-   "record": "1-0"
+   "record": "1-1"
   }
  ]
 }
