@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T16:12:17.849Z",
+ "generatedAt": "2026-09-20T17:02:46.273Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -626,8 +626,8 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -649,8 +649,8 @@
    "marketTotal": 45.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -672,8 +672,8 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -695,8 +695,8 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -718,8 +718,8 @@
    "marketTotal": 47.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -741,8 +741,8 @@
    "marketTotal": 45.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -764,8 +764,8 @@
    "marketTotal": 39.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
@@ -787,8 +787,8 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-09-20T16:12:17.849Z",
    "updates": 62,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-20T13:00:00-04:00",
    "result": null
   },
   {
