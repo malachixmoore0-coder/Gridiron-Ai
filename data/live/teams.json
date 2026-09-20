@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-20T16:12:17.849Z",
+ "generatedAt": "2026-09-20T20:53:05.380Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -926,7 +926,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ne.png",
-   "record": "0-1"
+   "record": "1-1"
   },
   {
    "id": "nyj",
@@ -1239,7 +1239,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
-   "record": "1-0"
+   "record": "1-1"
   },
   {
    "id": "bal",
@@ -1558,7 +1558,7 @@
     "pit"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/bal.png",
-   "record": "1-0"
+   "record": "1-1"
   },
   {
    "id": "cin",
@@ -1869,7 +1869,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
-   "record": "1-0"
+   "record": "2-0"
   },
   {
    "id": "cle",
@@ -2491,7 +2491,7 @@
     "bal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/pit.png",
-   "record": "1-0"
+   "record": "1-1"
   },
   {
    "id": "hou",
@@ -2803,7 +2803,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/hou.png",
-   "record": "0-1"
+   "record": "0-2"
   },
   {
    "id": "ind",
@@ -3728,7 +3728,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ten.png",
-   "record": "0-1"
+   "record": "0-2"
   },
   {
    "id": "kc",
@@ -5287,7 +5287,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/phi.png",
-   "record": "1-0"
+   "record": "2-0"
   },
   {
    "id": "dal",
@@ -6861,7 +6861,7 @@
     "chi"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/gb.png",
-   "record": "0-1"
+   "record": "1-1"
   },
   {
    "id": "min",
@@ -7171,7 +7171,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/min.png",
-   "record": "1-0"
+   "record": "2-0"
   },
   {
    "id": "chi",
@@ -7483,7 +7483,7 @@
     "gb"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
-   "record": "1-0"
+   "record": "1-1"
   },
   {
    "id": "atl",
@@ -7800,7 +7800,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
-   "record": "0-1"
+   "record": "0-2"
   },
   {
    "id": "car",
@@ -8109,7 +8109,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/car.png",
-   "record": "0-1"
+   "record": "1-1"
   },
   {
    "id": "no",
@@ -8424,7 +8424,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/no.png",
-   "record": "0-1"
+   "record": "1-1"
   },
   {
    "id": "tb",
