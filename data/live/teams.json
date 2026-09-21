@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-21T05:03:20.810Z",
+ "generatedAt": "2026-09-21T20:00:28.245Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -26,7 +26,7 @@
    },
    "coaching": {
     "headCoach": "Sean McDermott",
-    "offScheme": "West Coast",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.494,
@@ -35,7 +35,7 @@
     "redZoneTd": 0.698,
     "redZoneAggression": 7.1,
     "halftimeAdjust": 6,
-    "playActionRate": 0.209,
+    "playActionRate": 0.263,
     "passRate": 0.531,
     "pace": 64.7
    },
@@ -53,11 +53,11 @@
      "Multiple": 8.1
     },
     "vsCoverage": {
-     "Cover-1": 9,
-     "Cover-2": 9.5,
-     "Cover-3": 9.5,
+     "Cover-1": 9.7,
+     "Cover-2": 9.2,
+     "Cover-3": 9.3,
      "Quarters": 9.2,
-     "Cover-2 Man": 8.9
+     "Cover-2 Man": 9.6
     }
    },
    "defense": {
@@ -67,7 +67,7 @@
     "nickelCorner": 6.4,
     "lbCoverage": 6.2,
     "secondaryAdjust": 6.5,
-    "blitzRate": 0.229,
+    "blitzRate": 0.267,
     "takeaways": 5.7
    },
    "players": [
@@ -1169,16 +1169,16 @@
      "jersey": "52"
     },
     {
-     "id": "nyj-00-0034782",
-     "name": "Harrison Phillips",
+     "id": "nyj-00-0033051",
+     "name": "David Onyemata",
      "pos": "DT",
      "role": "starter",
-     "rating": 47,
-     "snapPct": 0.61,
-     "prwr": 0.064,
-     "note": "0.10 sacks/g · 2 QB hits in 5 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/znophhdzukalwuwsx6vx",
-     "jersey": "97"
+     "rating": 63,
+     "snapPct": 0.57,
+     "prwr": 0.069,
+     "note": "0.33 sacks/g · 3 QB hits in 3 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tl0jr4mxarpbmvu3tho9",
+     "jersey": "93"
     },
     {
      "id": "nyj-00-0039886",
@@ -3138,7 +3138,7 @@
    },
    "coaching": {
     "headCoach": "Liam Coen",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Vertical",
     "defFront": "4-3",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.421,
@@ -3162,14 +3162,14 @@
     "vsFront": {
      "4-3": 6.6,
      "3-4": 5.9,
-     "Multiple": 6
+     "Multiple": 6.1
     },
     "vsCoverage": {
-     "Cover-1": 6.7,
-     "Cover-2": 6.2,
-     "Cover-3": 6.3,
-     "Quarters": 6.2,
-     "Cover-2 Man": 6.6
+     "Cover-1": 6.6,
+     "Cover-2": 5.8,
+     "Cover-3": 6.5,
+     "Quarters": 5.8,
+     "Cover-2 Man": 6.1
     }
    },
    "defense": {
@@ -3231,19 +3231,6 @@
      "jersey": "20"
     },
     {
-     "id": "jax-00-0039893",
-     "name": "Brian Thomas Jr.",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 71,
-     "snapPct": 0.78,
-     "targetShare": 0.133,
-     "tprr": 0.181,
-     "note": "0.19 EPA/target on 51 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/plnekkriys4cm11rnxwl",
-     "jersey": "7"
-    },
-    {
      "id": "jax-00-0038606",
      "name": "Parker Washington",
      "pos": "WR",
@@ -3268,6 +3255,19 @@
      "note": "-0.04 EPA/target on 23 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/absw1gfqoiztajjagmf6",
      "jersey": "12"
+    },
+    {
+     "id": "jax-00-0039893",
+     "name": "Brian Thomas Jr.",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 71,
+     "snapPct": 0.78,
+     "targetShare": 0.133,
+     "tprr": 0.181,
+     "note": "0.19 EPA/target on 51 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/plnekkriys4cm11rnxwl",
+     "jersey": "7"
     },
     {
      "id": "jax-00-0041106",
@@ -5315,7 +5315,7 @@
    },
    "coaching": {
     "headCoach": "Brian Schottenheimer",
-    "offScheme": "Motion Heavy",
+    "offScheme": "West Coast",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.485,
@@ -5342,11 +5342,11 @@
      "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 8.5,
-     "Cover-2": 8,
-     "Cover-3": 8.1,
+     "Cover-1": 7.8,
+     "Cover-2": 8.3,
+     "Cover-3": 8.3,
      "Quarters": 8,
-     "Cover-2 Man": 8.4
+     "Cover-2 Man": 7.7
     }
    },
    "defense": {
@@ -6259,7 +6259,7 @@
    },
    "coaching": {
     "headCoach": "Dan Campbell",
-    "offScheme": "Power Run",
+    "offScheme": "Motion Heavy",
     "defFront": "4-3",
     "baseCoverage": "Cover-1",
     "thirdDownOff": 0.386,
@@ -6268,7 +6268,7 @@
     "redZoneTd": 0.699,
     "redZoneAggression": 6.7,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.228,
+    "playActionRate": 0.266,
     "passRate": 0.515,
     "pace": 65.8
    },
@@ -6283,14 +6283,14 @@
     "vsFront": {
      "4-3": 7.2,
      "3-4": 6.6,
-     "Multiple": 6.3
+     "Multiple": 6.1
     },
     "vsCoverage": {
-     "Cover-1": 7,
-     "Cover-2": 7.5,
-     "Cover-3": 7.1,
-     "Quarters": 7.4,
-     "Cover-2 Man": 7.3
+     "Cover-1": 7.6,
+     "Cover-2": 7.1,
+     "Cover-3": 7.2,
+     "Quarters": 7.1,
+     "Cover-2 Man": 7.5
     }
    },
    "defense": {
@@ -6300,7 +6300,7 @@
     "nickelCorner": 3.6,
     "lbCoverage": 7.3,
     "secondaryAdjust": 4.6,
-    "blitzRate": 0.268,
+    "blitzRate": 0.321,
     "takeaways": 6
    },
    "players": [
@@ -6571,7 +6571,7 @@
    },
    "coaching": {
     "headCoach": "Matt LaFleur",
-    "offScheme": "Wide Zone",
+    "offScheme": "Power Run",
     "defFront": "3-4",
     "baseCoverage": "Quarters",
     "thirdDownOff": 0.413,
@@ -6598,11 +6598,11 @@
      "Multiple": 5.6
     },
     "vsCoverage": {
-     "Cover-1": 6.9,
-     "Cover-2": 6.5,
-     "Cover-3": 7,
-     "Quarters": 6.4,
-     "Cover-2 Man": 6.7
+     "Cover-1": 6.6,
+     "Cover-2": 7.1,
+     "Cover-3": 6.7,
+     "Quarters": 7,
+     "Cover-2 Man": 6.9
     }
    },
    "defense": {
@@ -8363,27 +8363,26 @@
      "jersey": "96"
     },
     {
-     "id": "no-00-0038387",
-     "name": "Colby Wooden",
+     "id": "no-00-0034760",
+     "name": "Nathan Shepherd",
      "pos": "DT",
      "role": "starter",
-     "rating": 45,
-     "snapPct": 0.52,
-     "prwr": 0.066,
-     "note": "0.00 sacks/g · 3 QB hits in 4 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vexyqlme1a5f74sqktzs",
-     "jersey": "50"
+     "rating": 76,
+     "snapPct": 0.67,
+     "prwr": 0.082,
+     "note": "0.35 sacks/g · 15 QB hits in 10 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sl9b2jgyvmo5yn0vglok",
+     "jersey": "93"
     },
     {
-     "id": "no-00-0033860",
-     "name": "Davon Godchaux",
+     "id": "no-00-0040642",
+     "name": "Vernon Broughton",
      "pos": "DT",
      "role": "rotational",
-     "rating": 60,
-     "snapPct": 0.42,
-     "prwr": 0.066,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mldp5xpbggcf9iacij1s",
-     "jersey": "92"
+     "rating": 63,
+     "snapPct": 0.6,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jij1yqsdhelakkptqz9k",
+     "jersey": "91"
     },
     {
      "id": "no-00-0035316",
