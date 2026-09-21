@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-21T05:03:20.810Z",
+ "generatedAt": "2026-09-21T12:56:00.803Z",
  "season": 2026,
  "week": 2,
  "phase": "regular",
@@ -1169,16 +1169,16 @@
      "jersey": "52"
     },
     {
-     "id": "nyj-00-0034782",
-     "name": "Harrison Phillips",
+     "id": "nyj-00-0033051",
+     "name": "David Onyemata",
      "pos": "DT",
      "role": "starter",
-     "rating": 47,
-     "snapPct": 0.61,
-     "prwr": 0.064,
-     "note": "0.10 sacks/g · 2 QB hits in 5 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/znophhdzukalwuwsx6vx",
-     "jersey": "97"
+     "rating": 63,
+     "snapPct": 0.57,
+     "prwr": 0.069,
+     "note": "0.33 sacks/g · 3 QB hits in 3 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tl0jr4mxarpbmvu3tho9",
+     "jersey": "93"
     },
     {
      "id": "nyj-00-0039886",
@@ -8363,27 +8363,26 @@
      "jersey": "96"
     },
     {
-     "id": "no-00-0038387",
-     "name": "Colby Wooden",
+     "id": "no-00-0034760",
+     "name": "Nathan Shepherd",
      "pos": "DT",
      "role": "starter",
-     "rating": 45,
-     "snapPct": 0.52,
-     "prwr": 0.066,
-     "note": "0.00 sacks/g · 3 QB hits in 4 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vexyqlme1a5f74sqktzs",
-     "jersey": "50"
+     "rating": 76,
+     "snapPct": 0.67,
+     "prwr": 0.082,
+     "note": "0.35 sacks/g · 15 QB hits in 10 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sl9b2jgyvmo5yn0vglok",
+     "jersey": "93"
     },
     {
-     "id": "no-00-0033860",
-     "name": "Davon Godchaux",
+     "id": "no-00-0040642",
+     "name": "Vernon Broughton",
      "pos": "DT",
      "role": "rotational",
-     "rating": 60,
-     "snapPct": 0.42,
-     "prwr": 0.066,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mldp5xpbggcf9iacij1s",
-     "jersey": "92"
+     "rating": 63,
+     "snapPct": 0.6,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jij1yqsdhelakkptqz9k",
+     "jersey": "91"
     },
     {
      "id": "no-00-0035316",
