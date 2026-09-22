@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-22T11:45:32.339Z",
+ "generatedAt": "2026-09-22T05:04:38.767Z",
  "season": 2026,
  "week": 3,
  "phase": "regular",
@@ -356,7 +356,7 @@
     "qb": 9.3,
     "pbwr": 0.611,
     "slotEfficiency": 5,
-    "teSpeed": 6.05,
+    "teSpeed": 6.25,
     "vsFront": {
      "4-3": 3.9,
      "3-4": 4.5,
@@ -1603,7 +1603,7 @@
     "qb": 7.19,
     "pbwr": 0.592,
     "slotEfficiency": 2.5,
-    "teSpeed": 4.42,
+    "teSpeed": 4.63,
     "vsFront": {
      "4-3": 6.2,
      "3-4": 4.2,
@@ -1987,6 +1987,19 @@
      "jersey": "34"
     },
     {
+     "id": "cle-00-0036407",
+     "name": "Jerry Jeudy",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 42,
+     "snapPct": 0.85,
+     "targetShare": 0.156,
+     "tprr": 0.195,
+     "note": "-0.35 EPA/target on 56 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/szca1v9butuqkjs7ekpm",
+     "jersey": "3"
+    },
+    {
      "id": "cle-00-0039920",
      "name": "Malachi Corley",
      "pos": "WR",
@@ -1997,18 +2010,6 @@
      "tprr": 0.087,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lay1p8pvwrglmqorc6ev",
      "jersey": "11"
-    },
-    {
-     "id": "cle-00-0041037",
-     "name": "Denzel Boston",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 71,
-     "snapPct": 0.75,
-     "targetShare": 0.16,
-     "tprr": 0.19,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ybkny6eh5eegq3bqmony",
-     "jersey": "12"
     },
     {
      "id": "cle-00-0041547",
@@ -2222,7 +2223,7 @@
     "qb": 3.91,
     "pbwr": 0.664,
     "slotEfficiency": 5.4,
-    "teSpeed": 6.45,
+    "teSpeed": 5.64,
     "vsFront": {
      "4-3": 6.6,
      "3-4": 3.4,
@@ -2349,17 +2350,17 @@
      "jersey": "14"
     },
     {
-     "id": "pit-00-0036894",
-     "name": "Pat Freiermuth",
+     "id": "pit-00-0038558",
+     "name": "Darnell Washington",
      "pos": "TE",
      "role": "starter",
-     "rating": 84,
-     "snapPct": 0.51,
-     "targetShare": 0.086,
-     "tprr": 0.179,
-     "note": "0.42 EPA/target on 32 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pyrdsypgggjshiaygkr7",
-     "jersey": "88"
+     "rating": 74,
+     "snapPct": 0.57,
+     "targetShare": 0.07,
+     "tprr": 0.13,
+     "note": "0.32 EPA/target on 24 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/inwx7uipfktapaump5pj",
+     "jersey": "80"
     },
     {
      "id": "pit-00-0041398",
@@ -2848,7 +2849,7 @@
     "qb": 6.95,
     "pbwr": 0.594,
     "slotEfficiency": 3.8,
-    "teSpeed": 5.03,
+    "teSpeed": 5.23,
     "vsFront": {
      "4-3": 6.9,
      "3-4": 5.6,
@@ -2933,6 +2934,18 @@
      "jersey": "14"
     },
     {
+     "id": "ind-00-0039816",
+     "name": "Anthony Gould",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 60,
+     "snapPct": 0.09,
+     "targetShare": 0.003,
+     "tprr": 0.04,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/irctulz9pij3tzpokih0",
+     "jersey": "6"
+    },
+    {
      "id": "ind-00-0038997",
      "name": "Josh Downs",
      "pos": "WR",
@@ -2949,8 +2962,8 @@
      "id": "ind-00-0035021",
      "name": "Ashton Dulin",
      "pos": "WR",
-     "role": "starter",
-     "rating": 60,
+     "role": "rotational",
+     "rating": 56,
      "snapPct": 0.21,
      "targetShare": 0.016,
      "tprr": 0.079,
@@ -2958,19 +2971,6 @@
      "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ux55cx0r9iwqwmfmaip6",
      "jersey": "16"
-    },
-    {
-     "id": "ind-00-0030279",
-     "name": "Keenan Allen",
-     "pos": "WR",
-     "role": "rotational",
-     "rating": 81,
-     "snapPct": 0.56,
-     "targetShare": 0.191,
-     "tprr": 0.36,
-     "note": "0.21 EPA/target on 67 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ri267r6lzfwarh89hsn6",
-     "jersey": "10"
     },
     {
      "id": "ind-00-0040128",
@@ -3195,15 +3195,14 @@
      "jersey": "16"
     },
     {
-     "id": "jax-00-0040234",
-     "name": "Quinn Ewers",
+     "id": "jax-00-0033319",
+     "name": "Nick Mullens",
      "pos": "QB",
      "role": "depth",
-     "rating": 64,
-     "snapPct": 0.79,
-     "note": "-0.06 EPA/dropback · 1.0 CPOE · 91 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bbcwyjuhyijtqe7jo274",
-     "jersey": "10"
+     "rating": 56,
+     "snapPct": 0.11,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/haxwyajgngz6quuyqg19",
+     "jersey": "14"
     },
     {
      "id": "jax-00-0040719",
@@ -4092,7 +4091,7 @@
     "qb": 4.61,
     "pbwr": 0.528,
     "slotEfficiency": 6.4,
-    "teSpeed": 5.64,
+    "teSpeed": 4.02,
     "vsFront": {
      "4-3": 4.5,
      "3-4": 3.6,
@@ -4217,23 +4216,10 @@
      "jersey": "89"
     },
     {
-     "id": "lac-00-0040189",
-     "name": "Oronde Gadsden II",
-     "pos": "TE",
-     "role": "starter",
-     "rating": 77,
-     "snapPct": 0.62,
-     "targetShare": 0.097,
-     "tprr": 0.163,
-     "note": "0.26 EPA/target on 37 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/r8b4oghjwhw8x9nv1wbs",
-     "jersey": "86"
-    },
-    {
      "id": "lac-00-0038046",
      "name": "Charlie Kolar",
      "pos": "TE",
-     "role": "rotational",
+     "role": "starter",
      "rating": 64,
      "snapPct": 0.4,
      "targetShare": 0.021,
@@ -4241,6 +4227,19 @@
      "note": "0.36 EPA/target on 9 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/g75ws8vkqz9cqwifhcy7",
      "jersey": "88"
+    },
+    {
+     "id": "lac-00-0033885",
+     "name": "David Njoku",
+     "pos": "TE",
+     "role": "rotational",
+     "rating": 44,
+     "snapPct": 0.64,
+     "targetShare": 0.067,
+     "tprr": 0.11,
+     "note": "-0.15 EPA/target on 28 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/y4g1iayqrbrhdvkqywpx",
+     "jersey": "83"
     },
     {
      "id": "lac-00-0037009",
@@ -4402,7 +4401,7 @@
     "qb": 5.55,
     "pbwr": 0.66,
     "slotEfficiency": 5.3,
-    "teSpeed": 4.22,
+    "teSpeed": 4.42,
     "vsFront": {
      "4-3": 4.9,
      "3-4": 6.4,
@@ -4462,19 +4461,16 @@
      "jersey": "27"
     },
     {
-     "id": "den-00-0040730",
-     "name": "RJ Harvey",
+     "id": "den-00-0036727",
+     "name": "Adam Prentice",
      "pos": "RB",
      "role": "rotational",
-     "rating": 68,
-     "snapPct": 0.44,
-     "targetShare": 0.082,
-     "tprr": 0.195,
-     "note": "3.7 YPC · -1.37 EPA/season",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/szxmro5enrxlscvv67xg",
-     "jersey": "12"
+     "rating": 56,
+     "snapPct": 0.18,
+     "targetShare": 0.011,
+     "tprr": 0.066,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuvyqidnso9ga1dfefoy",
+     "jersey": "46"
     },
     {
      "id": "den-00-0036613",
@@ -5339,7 +5335,7 @@
     "qb": 8.83,
     "pbwr": 0.632,
     "slotEfficiency": 7.4,
-    "teSpeed": 6.25,
+    "teSpeed": 6.45,
     "vsFront": {
      "4-3": 6.1,
      "3-4": 8.4,
@@ -5653,7 +5649,7 @@
     "qb": 5.78,
     "pbwr": 0.55,
     "slotEfficiency": 3.8,
-    "teSpeed": 5.44,
+    "teSpeed": 5.84,
     "vsFront": {
      "4-3": 5.2,
      "3-4": 6.3,
@@ -5739,16 +5735,19 @@
      "jersey": "1"
     },
     {
-     "id": "nyg-00-0034419",
-     "name": "Braxton Berrios",
+     "id": "nyg-00-0037837",
+     "name": "Calvin Austin III",
      "pos": "WR",
      "role": "starter",
-     "rating": 60,
-     "snapPct": 0.17,
-     "targetShare": 0.012,
-     "tprr": 0.075,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/striwxmn9t0ixherw7l8",
-     "jersey": "87"
+     "rating": 49,
+     "snapPct": 0.54,
+     "targetShare": 0.081,
+     "tprr": 0.162,
+     "note": "-0.08 EPA/target on 55 tgt/season",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/private/f_auto,q_auto/league/qlt6ztqcbu0uzad6aavt",
+     "jersey": "82"
     },
     {
      "id": "nyg-00-0041042",
@@ -5960,7 +5959,7 @@
     "qb": 3.44,
     "pbwr": 0.641,
     "slotEfficiency": 5.3,
-    "teSpeed": 4.63,
+    "teSpeed": 4.83,
     "vsFront": {
      "4-3": 5.6,
      "3-4": 6.1,
@@ -6101,16 +6100,17 @@
      "jersey": "85"
     },
     {
-     "id": "was-00-0039912",
-     "name": "Ben Sinnott",
+     "id": "was-00-0036628",
+     "name": "John Bates",
      "pos": "TE",
      "role": "rotational",
-     "rating": 63,
-     "snapPct": 0.36,
-     "targetShare": 0.021,
-     "tprr": 0.064,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ilkrv6dqajndnlsbmv8f",
-     "jersey": "82"
+     "rating": 62,
+     "snapPct": 0.51,
+     "targetShare": 0.026,
+     "tprr": 0.055,
+     "note": "0.31 EPA/target on 10 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sqaiwpind6kk4ns4acql",
+     "jersey": "87"
     },
     {
      "id": "was-00-0039913",
@@ -6521,15 +6521,15 @@
      "jersey": "4"
     },
     {
-     "id": "det-00-0039660",
-     "name": "Thomas Harper",
+     "id": "det-00-0033294",
+     "name": "Chuck Clark",
      "pos": "S",
      "role": "starter",
-     "rating": 75,
-     "snapPct": 0.59,
-     "note": "7 PBU · 1 INT in 6 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gndkodhyidctgvcqy1bk",
-     "jersey": "12"
+     "rating": 65,
+     "snapPct": 0.43,
+     "note": "4 PBU · 1 INT in 5 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zysqspeckaavbcyduzmz",
+     "jersey": "36"
     },
     {
      "id": "det-00-0039172",
@@ -6912,7 +6912,7 @@
     "qb": 4.14,
     "pbwr": 0.526,
     "slotEfficiency": 5.3,
-    "teSpeed": 5.84,
+    "teSpeed": 6.05,
     "vsFront": {
      "4-3": 4.1,
      "3-4": 4.2,
@@ -7534,7 +7534,7 @@
     "qb": 2.73,
     "pbwr": 0.629,
     "slotEfficiency": 4.9,
-    "teSpeed": 5.23,
+    "teSpeed": 5.44,
     "vsFront": {
      "4-3": 5.3,
      "3-4": 3.4,
@@ -7851,7 +7851,7 @@
     "qb": 5.08,
     "pbwr": 0.618,
     "slotEfficiency": 5,
-    "teSpeed": 4.02,
+    "teSpeed": 4.22,
     "vsFront": {
      "4-3": 5.5,
      "3-4": 5.2,
@@ -8315,15 +8315,15 @@
      "jersey": "87"
     },
     {
-     "id": "no-00-0038601",
-     "name": "Asim Richards",
+     "id": "no-00-0039339",
+     "name": "Taliese Fuaga",
      "pos": "LT",
      "role": "starter",
      "rating": 78,
      "snapPct": 0.95,
      "pbwr": 0.901,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/i1lfvb8gnw3kfnz3cdyb",
-     "jersey": "72"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/syucyosjtbmjzwqjuemd",
+     "jersey": "75"
     },
     {
      "id": "no-00-0035668",
@@ -9403,7 +9403,7 @@
     "qb": 8.59,
     "pbwr": 0.634,
     "slotEfficiency": 6.9,
-    "teSpeed": 4.83,
+    "teSpeed": 5.03,
     "vsFront": {
      "4-3": 6.6,
      "3-4": 8.1,
