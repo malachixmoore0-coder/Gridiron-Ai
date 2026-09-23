@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-22T21:23:37.187Z",
+ "generatedAt": "2026-09-23T04:50:37.168Z",
  "season": 2026,
  "week": 3,
  "phase": "regular",
@@ -5319,7 +5319,7 @@
    },
    "coaching": {
     "headCoach": "Brian Schottenheimer",
-    "offScheme": "Motion Heavy",
+    "offScheme": "West Coast",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.485,
@@ -5346,11 +5346,11 @@
      "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 8.5,
-     "Cover-2": 8,
-     "Cover-3": 8.1,
+     "Cover-1": 7.8,
+     "Cover-2": 8.3,
+     "Cover-3": 8.3,
      "Quarters": 8,
-     "Cover-2 Man": 8.4
+     "Cover-2 Man": 7.7
     }
    },
    "defense": {
@@ -5642,7 +5642,7 @@
     "redZoneTd": 0.542,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 4.9,
-    "playActionRate": 0.246,
+    "playActionRate": 0.232,
     "passRate": 0.511,
     "pace": 65.8
    },
@@ -5674,7 +5674,7 @@
     "nickelCorner": 4.4,
     "lbCoverage": 5.5,
     "secondaryAdjust": 4.4,
-    "blitzRate": 0.271,
+    "blitzRate": 0.293,
     "takeaways": 5.2
    },
    "players": [
@@ -9383,7 +9383,7 @@
    },
    "coaching": {
     "headCoach": "Sean McVay",
-    "offScheme": "Vertical",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.408,
@@ -9392,7 +9392,7 @@
     "redZoneTd": 0.64,
     "redZoneAggression": 6.2,
     "halftimeAdjust": 5.6,
-    "playActionRate": 0.306,
+    "playActionRate": 0.328,
     "passRate": 0.572,
     "pace": 63.5
    },
@@ -9407,14 +9407,14 @@
     "vsFront": {
      "4-3": 6.6,
      "3-4": 8.1,
-     "Multiple": 6.9
+     "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 8.4,
-     "Cover-2": 7.6,
-     "Cover-3": 8.3,
-     "Quarters": 7.6,
-     "Cover-2 Man": 7.9
+     "Cover-1": 8.5,
+     "Cover-2": 8,
+     "Cover-3": 8.1,
+     "Quarters": 8,
+     "Cover-2 Man": 8.4
     }
    },
    "defense": {
@@ -9424,7 +9424,7 @@
     "nickelCorner": 6.1,
     "lbCoverage": 7.8,
     "secondaryAdjust": 5.7,
-    "blitzRate": 0.183,
+    "blitzRate": 0.226,
     "takeaways": 6.9
    },
    "players": [
