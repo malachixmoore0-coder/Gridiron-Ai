@@ -22,7 +22,8 @@
     "test:moderation": "tsx scripts/moderation-check.ts",
     "brand": "node scripts/brand-assets.mjs",
     "ledger": "tsx scripts/ledger.ts",
-    "test:feed": "tsx scripts/feed-check.ts"
+    "test:feed": "tsx scripts/feed-check.ts",
+    "parks:check": "tsx scripts/parks-check.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

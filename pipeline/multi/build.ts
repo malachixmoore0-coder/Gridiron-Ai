@@ -31,12 +31,39 @@ import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAt
 import { closeBrowser } from './render';
 import { readLines, recordLines, writeLines } from './lines';
 import { leagueEraOf, loadEraIndex, pitcherFactor, type ProbableArm } from './pitchers';
+import { computeParkFactors } from './parks';
 import { sourceLog } from '../lib/fetch';
 
 const OUT = path.resolve(__dirname, '../../data/live/sports');
 const SIMS = 10_000;
 /** How much the market is allowed to pull a projection. */
 const MARKET_WEIGHT = 0.35;
+
+/**
+ * Park factors are measured and published every run; this decides whether a
+ * projection is allowed to use them. It is off, and that is a result rather than
+ * an oversight.
+ *
+ * Run `npm run parks:check`. Walking forward through 1,686 MLB games -- fitting
+ * the factors only on games already played, which is the only fair way to ask --
+ * applying them moves total MAE by +0.13%. Wrong direction, and far inside the
+ * noise. Sweeping the shrinkage and keeping whichever value scored best on the
+ * very games it was scored against, which is cheating and still the friendliest
+ * possible test, picks zero: no park term at all.
+ *
+ * The effect itself is not in doubt. The measurement is: a season is about ninety
+ * home dates and runs per game has a standard deviation near five, so two thirds
+ * of the spread across thirty parks is sampling noise, and shrinking by the two
+ * thirds that is noise leaves too little to beat doing nothing.
+ *
+ * Two things would change the answer, and the file is written on every run so
+ * both stay open. A second season roughly halves the noise. Better, closing
+ * lines price parks correctly and a line is a far quieter measurement than a
+ * realised score -- once enough games carry one, the park effect can be read off
+ * the market instead of off the scoreboard. Flip this to true when
+ * `npm run parks:check` earns it, not before.
+ */
+const APPLY_PARKS = false;
 /** Only price games this far ahead — a rating snapshot a month out says nothing. */
 /**
  * How far ahead a forecast is worth fetching.
@@ -314,6 +341,18 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     console.log(`  lines: ${run.tracked} tracked · ${run.opened} opened · ${run.moved} moved · ${run.closed} closed${run.dropped ? ` · ${run.dropped} aged out` : ''}`);
   }
 
+  // ---- how much the building is worth ------------------------------------
+  // Measured over the whole season on file, not the games in front of us: a
+  // fortnight cannot tell a ballpark from a warm week. Written out so the
+  // number stays inspectable, and so it accumulates for the day it is usable.
+  const parks = computeParkFactors(games, now.toISOString());
+  writeJson(dir, 'parks.json', parks);
+  if (parks.reliability > 0) {
+    console.log(`  parks: ${Object.keys(parks.factors).length} venues · ${(100 * parks.reliability).toFixed(0)}% of the spread is real · ${parks.rawSpread.toFixed(2)} raw narrowed to ${parks.spread.toFixed(2)}`);
+  } else if (parks.games) {
+    console.log(`  parks: no venue effect this data can distinguish from noise (${parks.games} games) — every park left at 1.00`);
+  }
+
   // ---- projections, locked at kickoff, never back-filled ------------------
   const prev = readJson<SportPredictionsFile>(path.join(dir, 'predictions.json'));
   // A projection the sport cannot produce is not a projection. Soccer briefly
@@ -378,6 +417,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
             weather: g.weatherHint,
             homePitcher: usesPitchers ? pitcherFactor(armOf(g.homeProbable), leagueEra) : null,
             awayPitcher: usesPitchers ? pitcherFactor(armOf(g.awayProbable), leagueEra) : null,
+            parkFactor: APPLY_PARKS ? parks.factors[g.homeId] ?? null : null,
             marketHomeSpread: g.homeSpread,
             marketTotal: g.totalLine,
             marketWeight: MARKET_WEIGHT,

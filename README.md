@@ -375,7 +375,19 @@ empty board over a good one.
 ```bash
 npm run typecheck         # app + pipeline
 npm run test:engine       # engine assertions, incl. the generated dataset
+npm run test:feed         # pins dead feed vs quiet day vs a server refusing a date range
 npm run data:build:offline   # skip Open-Meteo calls
+
+# What the graded record actually says: hit rates with intervals, bias with a
+# t-statistic, and the model scored against the closing line. Every comparison
+# names the games it covers, because the subset carrying a line is not the same
+# population as the subset that has been graded.
+npm run ledger            # every league; `-- mlb` for one
+
+# Whether park factors are worth applying yet. Walks forward, fitting only on
+# games already played. Currently they are not; see APPLY_PARKS in
+# pipeline/multi/build.ts for the numbers behind that.
+npm run parks:check
 
 # Fixture datasets for the seven generic leagues, for working without ESPN.
 # It refuses to write into data/live, so fixture numbers can never be mistaken

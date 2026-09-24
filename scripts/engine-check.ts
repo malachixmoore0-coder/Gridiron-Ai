@@ -12,6 +12,7 @@ import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/spor
 import { probableOf } from '../pipeline/multi/espn';
 import { pitcherFactor } from '../pipeline/multi/pitchers';
 import { impliedProb, marketHomeProb } from './ledger';
+import { computeParkFactors, type ParkGame } from '../pipeline/multi/parks';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -432,6 +433,86 @@ check(marketHomeProb(null, null) === null, 'odds: no prices yields nothing');
   const h = marketHomeProb(150, 180, 220) ?? 0, a = marketHomeProb(180, 150, 220) ?? 0;
   const d = 1 - h - a;
   check(Math.abs(h + a + d - 1) < 1e-9 && d > 0.2 && d < 0.32, 'odds: a three-way market sums to one with a plausible draw');
+}
+
+// ---- park factors ----------------------------------------------------------
+console.log('\n— Park factors');
+{
+  const NOW = '2026-09-24T00:00:00.000Z';
+  const ids = Array.from({ length: 12 }, (_, i) => `t${i}`);
+  /**
+   * A season where one park is genuinely worth +15% and the rest are level.
+   * Scores are fixed rather than random so the check cannot flake, which also
+   * means the noise estimate sees no noise and should keep nearly all of it.
+   */
+  const season: ParkGame[] = [];
+  for (const h of ids) for (const a of ids) {
+    if (h === a) continue;
+    for (let k = 0; k < 4; k++) {
+      const runs = h === 't0' ? 11.5 : 10;
+      season.push({ homeId: h, awayId: a, homeScore: runs / 2, awayScore: runs / 2 });
+    }
+  }
+  const pf = computeParkFactors(season, NOW);
+  check(pf.reliability > 0.9, `parks: a clean signal is mostly kept (reliability ${pf.reliability.toFixed(2)})`);
+  check(pf.factors.t0 > 1.1 && pf.factors.t0 < 1.2, `parks: the loud park is found at about its real size (${pf.factors.t0})`);
+  const avg = Object.values(pf.factors).reduce((s, x) => s + x, 0) / Object.keys(pf.factors).length;
+  check(Math.abs(avg - 1) < 0.002, `parks: the league averages 1.00 (${avg.toFixed(4)})`);
+  check(Object.values(pf.factors).every((f) => f >= 0.65 && f <= 1.35), 'parks: nothing escapes the cap');
+
+  // A park "worth" triple is bad data, not a discovery: the guard has to hold
+  // even though the centring step runs before it.
+  const absurd: ParkGame[] = [];
+  for (const h of ids) for (const a of ids) {
+    if (h === a) continue;
+    for (let k = 0; k < 4; k++) {
+      const runs = h === 't0' ? 30 : 10;
+      absurd.push({ homeId: h, awayId: a, homeScore: runs / 2, awayScore: runs / 2 });
+    }
+  }
+  const cap = computeParkFactors(absurd, NOW);
+  check(Object.values(cap.factors).every((f) => f >= 0.65 && f <= 1.35), `parks: the cap holds after centring (max ${Math.max(...Object.values(cap.factors))})`);
+
+  // Coin-flip scoring: every park identical, so any spread found is noise and
+  // the shrink has to take essentially all of it away.
+  let seed = 7;
+  const rnd = () => { seed = (seed * 1103515245 + 12345) % 2147483648; return seed / 2147483648; };
+  const noisy: ParkGame[] = [];
+  for (const h of ids) for (const a of ids) {
+    if (h === a) continue;
+    for (let k = 0; k < 4; k++) noisy.push({ homeId: h, awayId: a, homeScore: Math.round(rnd() * 9), awayScore: Math.round(rnd() * 9) });
+  }
+  const np = computeParkFactors(noisy, NOW);
+  check(np.spread < np.rawSpread, `parks: pure noise is narrowed (${np.rawSpread.toFixed(2)} -> ${np.spread.toFixed(2)})`);
+  check(np.spread < 0.12, `parks: pure noise ends up near neutral (spread ${np.spread.toFixed(3)})`);
+
+  // Too little to measure, and an unplayed season.
+  check(computeParkFactors(season.slice(0, 40), NOW).reliability === 0, 'parks: a short sample measures nothing rather than guessing');
+  check(computeParkFactors(season.map((g) => ({ ...g, homeScore: null, awayScore: null })), NOW).reliability === 0, 'parks: no results yields no factors');
+  // A neutral-site game is in neither club's building.
+  const neutral = computeParkFactors(season.map((g) => ({ ...g, neutralSite: true })), NOW);
+  check(Object.keys(neutral.factors).length === 0, 'parks: neutral-site games are not credited to a park');
+}
+
+console.log('\n— The engine applying one');
+{
+  const p = profileFor('mlb');
+  const base = {
+    home: { id: 'h', rating: 1500, attack: 1, defence: 1 },
+    away: { id: 'a', rating: 1500, attack: 1, defence: 1 },
+    neutral: false, weather: null, marketWeight: 0,
+  };
+  const flat = project(base, p).total;
+  const hot = project({ ...base, parkFactor: 1.1 }, p).total;
+  const cold = project({ ...base, parkFactor: 0.9 }, p).total;
+  check(hot > flat && flat > cold, `parks: the engine moves the total with the venue (${cold.toFixed(2)} / ${flat.toFixed(2)} / ${hot.toFixed(2)})`);
+  check(Math.abs(hot / flat - 1.1) < 0.01, 'parks: the multiplier lands at its stated size');
+  check(project({ ...base, parkFactor: 1 }, p).total === flat, 'parks: a neutral park changes nothing');
+  check(project({ ...base, parkFactor: null }, p).total === flat, 'parks: an unmeasured park changes nothing');
+  check(project({ ...base, neutral: true, parkFactor: 1.3 }, p).total === project({ ...base, neutral: true }, p).total, 'parks: a neutral site ignores the home park');
+  // The guard: a run total mistakenly filed as a factor must not multiply.
+  check(project({ ...base, parkFactor: 8.6 }, p).total === flat, 'parks: a nonsense factor is refused, not applied');
+  check(project({ ...base, parkFactor: 0 }, p).total === flat, 'parks: a zero factor is refused');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

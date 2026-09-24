@@ -52,6 +52,13 @@ export interface SimInput {
    */
   homePitcher?: number | null;
   awayPitcher?: number | null;
+  /**
+   * The venue's multiplier on scoring, 1 being a league-average building. It is
+   * measured and shrunk in the pipeline, not here: what reaches the engine is
+   * already the part of the measurement that survived a noise estimate, so the
+   * engine applies it as given and does no second-guessing.
+   */
+  parkFactor?: number | null;
   /** Market home line, when one exists, used only for the blended projection. */
   marketHomeSpread?: number | null;
   marketTotal?: number | null;
@@ -159,7 +166,7 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
   // Weather lands on the model's own total, before the market blend — a book
   // has already priced the forecast, so letting the market pull afterwards is
   // what stops the adjustment being counted twice.
-  let total = p.baseTotal * ((attack + defend) / 2) * conditions(input, p).total;
+  let total = p.baseTotal * ((attack + defend) / 2) * conditions(input, p).total * park(input);
 
   /*
    * The starting pitcher, where there is one.
@@ -210,6 +217,18 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
   if (w > 0 && marketTotal != null) total = total * (1 - w) + marketTotal * w;
 
   return { margin, total: Math.max(p.baseTotal * 0.35, total) };
+}
+
+/**
+ * The venue multiplier, or 1. Bounded here as well as in the pipeline: this is
+ * the last point before it multiplies a score, and a feed or a hand-edited file
+ * that put a run total in this field would otherwise sail straight through. A
+ * neutral-site game is played in neither club's building, so it gets nothing.
+ */
+function park(input: SimInput): number {
+  const f = input.parkFactor;
+  if (input.neutral || f == null || !Number.isFinite(f) || f <= 0.5 || f >= 1.5) return 1;
+  return f;
 }
 
 /** A market line the sport's own scale can account for, or nothing. */
