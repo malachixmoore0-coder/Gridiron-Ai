@@ -150,6 +150,17 @@ export interface SportPredictionRecord {
   total: number;
   marketHomeSpread: number | null;
   marketTotal: number | null;
+  /*
+   * The prices, kept so the market can be scored against us. The spread alone
+   * is not enough: baseball and hockey sell a fixed 1.5 runline, so a stored
+   * spread there is a constant and says nothing about who the market expected
+   * to win or by how much. That lives in the moneyline. Optional because
+   * records written before this existed genuinely do not carry it.
+   */
+  marketHomeMoneyline?: number | null;
+  marketAwayMoneyline?: number | null;
+  /** Soccer only. */
+  marketDrawMoneyline?: number | null;
   predictedAt: string;
   updates: number;
   status: 'open' | 'locked' | 'final';

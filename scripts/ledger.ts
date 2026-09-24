@@ -37,6 +37,28 @@ const rate = (k: number, n: number) => {
   return n ? `${((100 * k) / n).toFixed(1)}% [${(100 * ci![0]).toFixed(0)}–${(100 * ci![1]).toFixed(0)}]` : '—';
 };
 
+/** American odds to the probability they imply, vig and all. */
+export const impliedProb = (m: number) => (m < 0 ? -m / (100 - m) : 100 / (m + 100));
+
+/**
+ * The market's honest win probability for the home side, with the hold removed.
+ * Both prices are needed: one alone carries the whole vig and reads several
+ * points too confident.
+ */
+export function marketHomeProb(home: number | null | undefined, away: number | null | undefined, draw?: number | null): number | null {
+  if (home == null || away == null) return null;
+  const h = impliedProb(home), a = impliedProb(away);
+  const d = draw != null ? impliedProb(draw) : 0;
+  const sum = h + a + d;
+  return sum > 0 ? h / sum : null;
+}
+
+/** The days a subset covers, so a sample crowded into one week is visible. */
+function span(rows: { kickoff: string }[]): string {
+  const d = [...new Set(rows.map((r) => r.kickoff.slice(0, 10)))].sort();
+  return d.length ? `${d[0]} to ${d[d.length - 1]}, ${d.length} day${d.length === 1 ? '' : 's'}` : '—';
+}
+
 function report(slug: string, short: string): boolean {
   const file = path.join(DIR, slug, 'predictions.json');
   if (!fs.existsSync(file)) return false;
@@ -59,7 +81,8 @@ function report(slug: string, short: string): boolean {
   // Bias. A mean error far from zero is the model leaning one way every night.
   const se = g.map((r) => r.result.spreadError), te = g.map((r) => r.result.totalError);
   const flag = (t: number) => (t > 2 ? '  <-- worth a look' : '');
-  console.log(`\n  margin  bias ${mean(se).toFixed(2).padStart(6)}  MAE ${mean(se.map(Math.abs)).toFixed(2)}  |t| ${tStat(se).toFixed(2)}${flag(tStat(se))}`);
+  console.log(`\n  over all ${n} graded games:`);
+  console.log(`  margin  bias ${mean(se).toFixed(2).padStart(6)}  MAE ${mean(se.map(Math.abs)).toFixed(2)}  |t| ${tStat(se).toFixed(2)}${flag(tStat(se))}`);
   console.log(`  total   bias ${mean(te).toFixed(2).padStart(6)}  MAE ${mean(te.map(Math.abs)).toFixed(2)}  |t| ${tStat(te).toFixed(2)}${flag(tStat(te))}`);
 
   /*
@@ -71,7 +94,17 @@ function report(slug: string, short: string): boolean {
     const actual = mean(wt.map((r) => r.result.homeScore + r.result.awayScore));
     const market = mean(wt.map((r) => r.marketTotal as number));
     const model = mean(wt.map((r) => r.projectedHome + r.projectedAway));
-    console.log(`\n  totals   actual ${actual.toFixed(2)} · market ${market.toFixed(2)} (${(market - actual).toFixed(2)}) · model ${model.toFixed(2)} (${(model - actual).toFixed(2)})`);
+    /*
+     * Say which games these are. Only some carry a closing line, and that
+     * subset is not the whole ledger — on the first run of this the
+     * market-priced games averaged 9.47 runs against 8.79 across everything
+     * graded, so the same model read as 0.9 runs low here and 0.2 low above.
+     * Two numbers from two populations printed side by side invite exactly the
+     * wrong conclusion, which is the conclusion this tool exists to prevent.
+     */
+    console.log(`\n  totals over the ${wt.length} game${wt.length === 1 ? '' : 's'} with a closing line (of ${n} graded)`);
+    console.log(`           those games: ${span(wt)}   |   all graded: ${span(g)}`);
+    console.log(`           actual ${actual.toFixed(2)} · market ${market.toFixed(2)} (${(market - actual).toFixed(2)}) · model ${model.toFixed(2)} (${(model - actual).toFixed(2)})`);
     const mMae = mean(wt.map((r) => Math.abs((r.marketTotal as number) - (r.result.homeScore + r.result.awayScore))));
     const oMae = mean(wt.map((r) => Math.abs(r.projectedHome + r.projectedAway - (r.result.homeScore + r.result.awayScore))));
     console.log(`           MAE market ${mMae.toFixed(2)} vs model ${oMae.toFixed(2)}  →  ${oMae < mMae ? 'model closer' : 'market closer'}`);
@@ -80,11 +113,42 @@ function report(slug: string, short: string): boolean {
     }
   }
 
+  /*
+   * Margins, but only where the spread is a forecast. Baseball and hockey sell
+   * one fixed line -- every game is -1.5 or +1.5 -- so scoring the model
+   * against it measures nothing but how often a home team wins by two, and the
+   * model "beats" it every time by simply not guessing 1.5 every night. What
+   * the market actually expected is in the moneyline, below.
+   */
   const wl = g.filter((r) => r.marketHomeSpread != null);
-  if (wl.length > 10) {
+  const fixedLine = new Set(wl.map((r) => Math.abs(r.marketHomeSpread as number))).size === 1;
+  if (wl.length > 10 && !fixedLine) {
     const mMae = mean(wl.map((r) => Math.abs(-(r.marketHomeSpread as number) - (r.result.homeScore - r.result.awayScore))));
     const oMae = mean(wl.map((r) => Math.abs(-r.spread - (r.result.homeScore - r.result.awayScore))));
     console.log(`  margins  MAE market ${mMae.toFixed(2)} vs model ${oMae.toFixed(2)}  →  ${oMae < mMae ? 'model closer' : 'market closer'}`);
+  } else if (wl.length > 10) {
+    console.log(`  margins  no comparison: this league's spread is a fixed ±${Math.abs(wl[0].marketHomeSpread as number)} line, not a forecast`);
+  }
+
+  /*
+   * The comparison that counts. Brier against the market's own de-vigged
+   * probability, on the same games, is the only one of these that says whether
+   * the model knows something the price does not.
+   */
+  const wm = g
+    .map((r) => ({ r, p: marketHomeProb(r.marketHomeMoneyline, r.marketAwayMoneyline, r.marketDrawMoneyline) }))
+    .filter((x): x is { r: typeof g[number]; p: number } => x.p != null);
+  if (wm.length > 10) {
+    const won = (r: typeof g[number]) => (r.result.homeScore > r.result.awayScore ? 1 : r.result.homeScore < r.result.awayScore ? 0 : 0.5);
+    const mBrier = mean(wm.map((x) => (x.p - won(x.r)) ** 2));
+    const oBrier = mean(wm.map((x) => (x.r.homeWinPct / 100 - won(x.r)) ** 2));
+    const gap = oBrier - mBrier;
+    console.log(`\n  win probability over the ${wm.length} game${wm.length === 1 ? '' : 's'} with both moneylines  (${span(wm.map((x) => x.r))})`);
+    console.log(`           Brier market ${mBrier.toFixed(4)} vs model ${oBrier.toFixed(4)}  →  ${gap < 0 ? 'model sharper' : 'market sharper'} by ${Math.abs(gap).toFixed(4)}`);
+    const agree = mean(wm.map((x) => Math.abs(x.r.homeWinPct / 100 - x.p)));
+    console.log(`           the model sits ${(100 * agree).toFixed(1)} points from the price on an average game`);
+  } else if (g.some((r) => r.marketTotal != null)) {
+    console.log('\n  win probability  no moneylines stored on these games — the market cannot be scored yet');
   }
 
   // Calibration. Does a number the model says mean what it says?
@@ -106,10 +170,13 @@ function report(slug: string, short: string): boolean {
   return true;
 }
 
-const want = process.argv.slice(2).map((s) => s.toLowerCase());
-let any = false;
-for (const l of GENERIC_LEAGUES) {
-  if (want.length && !want.includes(l.key)) continue;
-  if (report(l.slug, l.short)) any = true;
+/** Guarded so the odds helpers above can be imported by the engine checks. */
+if (require.main === module) {
+  const want = process.argv.slice(2).map((s) => s.toLowerCase());
+  let any = false;
+  for (const l of GENERIC_LEAGUES) {
+    if (want.length && !want.includes(l.key)) continue;
+    if (report(l.slug, l.short)) any = true;
+  }
+  if (!any) console.log('Nothing graded yet' + (want.length ? ` for ${want.join(', ')}` : '') + '.');
 }
-if (!any) console.log('Nothing graded yet' + (want.length ? ` for ${want.join(', ')}` : '') + '.');

@@ -11,6 +11,7 @@ import { coverProbability, project, seedFor, simulate } from '../src/sports/engi
 import { FIELD_LEAGUES, GENERIC_LEAGUES, LEAGUES, profileFor } from '../src/sports/types';
 import { probableOf } from '../pipeline/multi/espn';
 import { pitcherFactor } from '../pipeline/multi/pitchers';
+import { impliedProb, marketHomeProb } from './ledger';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -408,6 +409,29 @@ console.log('\n— Multi-sport engine');
   check(pitcherFactor({ id: 'x', name: 'x', era: 4.1 }, 4.1) === 1, 'probables: a league-average arm changes nothing');
   check(pitcherFactor({ id: 'x', name: 'x', era: 0.5 }, 4.1) > 0.8, 'probables: even an unhittable ERA stays inside the cap');
   check(pitcherFactor({ id: 'x', name: 'x', era: 11.9 }, 4.1) < 1.2, 'probables: even a disastrous ERA stays inside the cap');
+}
+
+// ---- reading a price -------------------------------------------------------
+// The ledger scores the market against the model, so a sign error here would
+// not crash anything: it would quietly hand back a confident wrong answer
+// about whether the model beats the price.
+console.log('\n— Moneylines');
+check(Math.abs(impliedProb(-150) - 0.6) < 1e-9, 'odds: -150 implies 60%');
+check(Math.abs(impliedProb(150) - 0.4) < 1e-9, 'odds: +150 implies 40%');
+check(Math.abs(impliedProb(100) - 0.5) < 1e-9, 'odds: even money implies 50%');
+check(impliedProb(-110) > 0.5, 'odds: the favourite side of a -110/-110 pair holds vig');
+check(Math.abs((marketHomeProb(-110, -110) ?? 0) - 0.5) < 1e-9, 'odds: de-vigging a -110/-110 pair gives 50/50');
+check((marketHomeProb(-200, 170) ?? 0) > 0.6 && (marketHomeProb(-200, 170) ?? 1) < 0.68, 'odds: a -200 home favourite de-vigs into the low sixties');
+check(marketHomeProb(-200, null) === null, 'odds: one price alone is refused, not guessed at');
+check(marketHomeProb(null, null) === null, 'odds: no prices yields nothing');
+{
+  // Soccer: the draw is a third outcome and has to be in the denominator.
+  const twoWay = marketHomeProb(150, 180) ?? 0;
+  const threeWay = marketHomeProb(150, 180, 220) ?? 0;
+  check(threeWay < twoWay, 'odds: a draw price lowers the home probability');
+  const h = marketHomeProb(150, 180, 220) ?? 0, a = marketHomeProb(180, 150, 220) ?? 0;
+  const d = 1 - h - a;
+  check(Math.abs(h + a + d - 1) < 1e-9 && d > 0.2 && d < 0.32, 'odds: a three-way market sums to one with a plausible draw');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');
