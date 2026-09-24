@@ -152,8 +152,9 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
 
   const from = new Date(now); from.setUTCDate(from.getUTCDate() - LOOKBACK_DAYS);
   const to = new Date(now); to.setUTCDate(to.getUTCDate() + HORIZON_DAYS + 8);
-  const events = await loadRange(meta.espn as string, from, to);
-  console.log(`  ${teams.length} teams · ${events.length} events`);
+  const range = await loadRange(meta.espn as string, from, to);
+  const events = range.events;
+  console.log(`  ${teams.length} teams · ${events.length} events${range.failed ? ` · ${range.failed}/${range.chunks} scoreboard reads FAILED` : ''}`);
 
   // Ratings carry forward from the last run, regressed toward the mean.
   const prevTeams = readJson<SportTeamsFile>(path.join(dir, 'teams.json'));
@@ -462,9 +463,13 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
    */
   if (events.length) {
     console.log(`  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`);
+  } else if (range.failed) {
+    // The feed refused. Whatever the calendar says, this is a broken read.
+    console.error(`  NO GAMES for ${meta.short} — ${range.failed} of ${range.chunks} scoreboard reads failed. Board left as it was.`);
+    silentlyEmpty.push(`${meta.short} (feed)`);
   } else if (inSeason(meta)) {
-    console.error(`  NO GAMES for ${meta.short}, which is in season — the feed returned nothing. Board left as it was.`);
-    silentlyEmpty.push(meta.short);
+    console.error(`  NO GAMES for ${meta.short}, which is in season and whose feed answered. Board left as it was.`);
+    silentlyEmpty.push(`${meta.short} (in season)`);
   } else {
     console.log('  out of season — teams published, board left as it was');
   }
@@ -598,6 +603,28 @@ async function main() {
   await closeBrowser();
   const ok = sourceLog.filter((s) => s.ok).length;
   console.log(`\n${ok}/${sourceLog.length} sources OK`);
+
+  /*
+   * Name the failures. Every reason was already recorded here and none of it
+   * was ever printed, so "6030/7267 sources OK" was the entire account of a
+   * feed that had stopped answering — a number nobody can act on, in front of
+   * the one fact that would have explained nine days of missing data. Grouped
+   * by reason, worst first, because 1200 identical timeouts are one problem.
+   */
+  const bad = sourceLog.filter((s) => !s.ok);
+  if (bad.length) {
+    const byReason = new Map<string, { n: number; example: string }>();
+    for (const f of bad) {
+      const reason = (f.note ?? 'unknown').replace(/\d{8}-\d{8}/g, '<dates>').slice(0, 80);
+      const e = byReason.get(reason) ?? { n: 0, example: f.name };
+      e.n += 1;
+      byReason.set(reason, e);
+    }
+    console.log(`\n${bad.length} source${bad.length === 1 ? '' : 's'} failed:`);
+    for (const [reason, { n, example }] of [...byReason.entries()].sort((a, b) => b[1].n - a[1].n).slice(0, 8)) {
+      console.log(`  ${String(n).padStart(5)} x  ${reason}   e.g. ${example}`);
+    }
+  }
 }
 
 main()

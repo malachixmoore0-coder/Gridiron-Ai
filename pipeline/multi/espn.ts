@@ -207,9 +207,20 @@ export function probableOf(competitor: any, comp: any, side: 'home' | 'away'): E
   return null;
 }
 
+/**
+ * Thrown when the scoreboard could not be read at all.
+ *
+ * Distinct from a scoreboard that loads and lists no games, which is what an
+ * off day looks like. Both used to arrive here as an empty array, so a dead
+ * feed and a quiet Tuesday were the same value and the build guessed — wrongly,
+ * for nine days — that it was the Tuesday.
+ */
+export class ScoreboardUnavailable extends Error {}
+
 export async function loadScoreboard(path: string, dates: string, limit = 400): Promise<EspnEvent[]> {
   const url = `${SITE}/${path}/scoreboard?limit=${limit}&dates=${dates}`;
-  const json = await fetchJson<any>(url, `${path} scoreboard ${dates}`, 22000).catch(() => null);
+  const json = await fetchJson<any>(url, `${path} scoreboard ${dates}`, 22000);
+  if (json == null) throw new ScoreboardUnavailable(`${path} scoreboard ${dates} could not be read`);
   const out: EspnEvent[] = [];
   for (const ev of json?.events ?? []) {
     const comp = ev?.competitions?.[0];
@@ -304,18 +315,36 @@ function priceOf(side: any): number | null {
 }
 
 /** A span of days, fetched a chunk at a time so no single request is enormous. */
-export async function loadRange(path: string, from: Date, to: Date, chunkDays = 14): Promise<EspnEvent[]> {
+/**
+ * Every game in a window, and whether the feed actually answered.
+ *
+ * `failed` counts chunks the scoreboard refused. A caller that finds no games
+ * needs to know which kind of nothing it is looking at before deciding the
+ * season is over.
+ */
+export interface Range { events: EspnEvent[]; failed: number; chunks: number }
+
+export async function loadRange(path: string, from: Date, to: Date, chunkDays = 14): Promise<Range> {
   const fmt = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}`;
   const out: EspnEvent[] = [];
   const seen = new Set<string>();
   const cursor = new Date(from);
+  let failed = 0;
+  let chunks = 0;
   while (cursor <= to) {
     const end = new Date(cursor);
     end.setUTCDate(end.getUTCDate() + chunkDays - 1);
     const stop = end > to ? to : end;
-    const events = await loadScoreboard(path, `${fmt(cursor)}-${fmt(stop)}`);
-    for (const e of events) if (!seen.has(e.id)) { seen.add(e.id); out.push(e); }
+    chunks += 1;
+    try {
+      const events = await loadScoreboard(path, `${fmt(cursor)}-${fmt(stop)}`);
+      for (const e of events) if (!seen.has(e.id)) { seen.add(e.id); out.push(e); }
+    } catch (e) {
+      // One bad chunk must not lose the others; it must not be invisible either.
+      failed += 1;
+      console.warn(`    scoreboard ${fmt(cursor)}-${fmt(stop)}: ${(e as Error).message}`);
+    }
     cursor.setUTCDate(cursor.getUTCDate() + chunkDays);
   }
-  return out.sort((a, b) => a.date.localeCompare(b.date));
+  return { events: out.sort((a, b) => a.date.localeCompare(b.date)), failed, chunks };
 }

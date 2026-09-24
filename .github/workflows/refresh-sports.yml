@@ -114,6 +114,13 @@ jobs:
           ARGS: ${{ github.event.inputs.soccer }}
         run: npm run data:soccer -- $ARGS
 
+      # The distinction that cost nine days of data: a feed that refused versus
+      # a league genuinely out of season. Cheap, and it fails the build rather
+      # than the data.
+      - name: Check the feed still answers
+        if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' }}
+        run: npm run test:feed
+
       - name: Build sport datasets
         if: ${{ github.event.inputs.probe == '' && github.event.inputs.schools == '' && github.event.inputs.soccer == '' }}
         env:

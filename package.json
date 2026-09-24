@@ -21,7 +21,8 @@
     "data:golf": "tsx pipeline/multi/golf.ts",
     "test:moderation": "tsx scripts/moderation-check.ts",
     "brand": "node scripts/brand-assets.mjs",
-    "ledger": "tsx scripts/ledger.ts"
+    "ledger": "tsx scripts/ledger.ts",
+    "test:feed": "tsx scripts/feed-check.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",
