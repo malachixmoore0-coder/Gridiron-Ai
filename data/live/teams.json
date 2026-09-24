@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-24T17:16:32.003Z",
+ "generatedAt": "2026-09-24T21:34:33.742Z",
  "season": 2026,
  "week": 3,
  "phase": "regular",
@@ -6658,6 +6658,8 @@
      "targetShare": 0.038,
      "tprr": 0.088,
      "note": "0.34 EPA/target on 15 tgt/season",
+     "reported": "out",
+     "reportNote": "Neck · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uhb95fij1uo92ymqxpmg",
      "jersey": "11"
     },
@@ -6754,6 +6756,8 @@
      "snapPct": 0.53,
      "prwr": 0.076,
      "note": "0.58 sacks/g · 6 QB hits in 6 g",
+     "reported": "questionable",
+     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lfk4hghl74egnyztqxbn",
      "jersey": "98"
     },
@@ -7649,6 +7653,8 @@
      "snapPct": 0.44,
      "prwr": 0.076,
      "note": "0.36 sacks/g · 12 QB hits in 7 g",
+     "reported": "out",
+     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cmoytuhhkqslhcpulq5e",
      "jersey": "52"
     },
