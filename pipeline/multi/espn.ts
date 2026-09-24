@@ -10,7 +10,7 @@
  * scoreboard rather than an error, and a missing field is left null instead of
  * being invented.
  */
-import { fetchJson } from '../lib/fetch';
+import { fetchJson, sourceLog } from '../lib/fetch';
 
 export interface EspnTeamRow {
   id: string;
@@ -220,7 +220,15 @@ export class ScoreboardUnavailable extends Error {}
 export async function loadScoreboard(path: string, dates: string, limit = 400): Promise<EspnEvent[]> {
   const url = `${SITE}/${path}/scoreboard?limit=${limit}&dates=${dates}`;
   const json = await fetchJson<any>(url, `${path} scoreboard ${dates}`, 22000);
-  if (json == null) throw new ScoreboardUnavailable(`${path} scoreboard ${dates} could not be read`);
+  if (json == null) {
+    // fetchJson has just recorded why, against this exact url. Reading it back
+    // is how the caller learns a 400 (this date syntax is not accepted) from a
+    // timeout (it is, and the network had a bad moment) — the two need
+    // completely different responses and both arrive here as null.
+    const last = sourceLog[sourceLog.length - 1];
+    const why = last && last.url === url ? (last.note ?? 'unknown') : 'unknown';
+    throw new ScoreboardUnavailable(`${path} scoreboard ${dates}: ${why}`);
+  }
   const out: EspnEvent[] = [];
   for (const ev of json?.events ?? []) {
     const comp = ev?.competitions?.[0];
@@ -324,27 +332,90 @@ function priceOf(side: any): number | null {
  */
 export interface Range { events: EspnEvent[]; failed: number; chunks: number }
 
+/**
+ * How a window of dates is asked for.
+ *
+ * ESPN accepted `dates=20260922-20261005` for years and began answering it with
+ * HTTP 400 in mid-September, which is the whole reason nine days of games went
+ * missing: every scoreboard read failed, every league looked empty, and the
+ * build called it an off-season. The undocumented API had moved and nothing
+ * here noticed.
+ *
+ * Rather than hard-code whichever syntax happens to work this month, the
+ * granularity degrades on its own. A range is one request per fortnight; a
+ * month is one per month; a day is one per day and always works. The first 400
+ * drops to the next rung for the rest of the process, so the cost of being
+ * wrong is one wasted request, not a silent outage — and when ESPN moves again
+ * this survives it.
+ */
+type Granularity = 'range' | 'month' | 'day';
+const NEXT: Record<Granularity, Granularity | null> = { range: 'month', month: 'day', day: null };
+
+/** Degrades once per process, never recovers — ESPN will not change back mid-run. */
+let granularity: Granularity = 'range';
+
+const yyyymmdd = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}`;
+const yyyymm = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}`;
+
+/** The windows to ask for, and the `dates=` value for each, at a given granularity. */
+function chunksFor(from: Date, to: Date, g: Granularity, chunkDays: number): string[] {
+  const out: string[] = [];
+  const cursor = new Date(from);
+  if (g === 'month') {
+    cursor.setUTCDate(1);
+    while (cursor <= to) {
+      out.push(yyyymm(cursor));
+      cursor.setUTCMonth(cursor.getUTCMonth() + 1);
+    }
+    return out;
+  }
+  const step = g === 'day' ? 1 : chunkDays;
+  while (cursor <= to) {
+    if (g === 'day') out.push(yyyymmdd(cursor));
+    else {
+      const end = new Date(cursor);
+      end.setUTCDate(end.getUTCDate() + step - 1);
+      out.push(`${yyyymmdd(cursor)}-${yyyymmdd(end > to ? to : end)}`);
+    }
+    cursor.setUTCDate(cursor.getUTCDate() + step);
+  }
+  return out;
+}
+
 export async function loadRange(path: string, from: Date, to: Date, chunkDays = 14): Promise<Range> {
-  const fmt = (d: Date) => `${d.getUTCFullYear()}${String(d.getUTCMonth() + 1).padStart(2, '0')}${String(d.getUTCDate()).padStart(2, '0')}`;
   const out: EspnEvent[] = [];
   const seen = new Set<string>();
-  const cursor = new Date(from);
   let failed = 0;
   let chunks = 0;
-  while (cursor <= to) {
-    const end = new Date(cursor);
-    end.setUTCDate(end.getUTCDate() + chunkDays - 1);
-    const stop = end > to ? to : end;
-    chunks += 1;
-    try {
-      const events = await loadScoreboard(path, `${fmt(cursor)}-${fmt(stop)}`);
-      for (const e of events) if (!seen.has(e.id)) { seen.add(e.id); out.push(e); }
-    } catch (e) {
-      // One bad chunk must not lose the others; it must not be invisible either.
-      failed += 1;
-      console.warn(`    scoreboard ${fmt(cursor)}-${fmt(stop)}: ${(e as Error).message}`);
+
+  for (;;) {
+    const dates = chunksFor(from, to, granularity, chunkDays);
+    let rejected = false;
+    failed = 0;
+    chunks = dates.length;
+
+    for (const d of dates) {
+      try {
+        for (const e of await loadScoreboard(path, d)) {
+          if (!seen.has(e.id)) { seen.add(e.id); out.push(e); }
+        }
+      } catch (e) {
+        const msg = (e as Error).message;
+        // A 400 means the syntax is refused, not that the day was bad. Stop
+        // burning requests on a format ESPN will reject every time.
+        if (/HTTP 4[01]0/.test(msg) && NEXT[granularity]) { rejected = true; break; }
+        failed += 1;
+        console.warn(`    scoreboard ${d}: ${msg}`);
+      }
     }
-    cursor.setUTCDate(cursor.getUTCDate() + chunkDays);
+
+    if (!rejected) break;
+    const next = NEXT[granularity]!;
+    console.warn(`    ESPN refused ${granularity} date syntax — falling back to ${next}`);
+    granularity = next;
+    out.length = 0;
+    seen.clear();
   }
+
   return { events: out.sort((a, b) => a.date.localeCompare(b.date)), failed, chunks };
 }
