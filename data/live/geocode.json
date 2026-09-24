@@ -96,6 +96,10 @@
   "lat": 33.83141,
   "lng": -118.28202
  },
+ "charlotte, north carolina, usa": {
+  "lat": 35.22709,
+  "lng": -80.84313
+ },
  "chester, pennsylvania, usa": {
   "lat": 39.84753,
   "lng": -75.35785
@@ -199,6 +203,10 @@
  "guadalupe, mexico": {
   "lat": 25.67678,
   "lng": -100.25646
+ },
+ "harrison, new jersey, usa": {
+  "lat": 40.74649,
+  "lng": -74.15626
  },
  "houston, texas, usa": {
   "lat": 29.76328,
@@ -345,6 +353,10 @@
   "lat": 40.87618,
   "lng": 14.5195
  },
+ "nashville, tennessee, usa": {
+  "lat": 36.16589,
+  "lng": -86.78444
+ },
  "new york city, usa": {
   "lat": 40.71427,
   "lng": -74.00597
@@ -453,6 +465,10 @@
   "lat": 22.15234,
   "lng": -100.97135
  },
+ "san nicolás de los garza, mexico": {
+  "lat": 25.74167,
+  "lng": -100.30222
+ },
  "san sebastian, spain": {
   "lat": 28.09163,
   "lng": -17.11331
@@ -468,6 +484,10 @@
  "santiago de querétaro, mexico": {
   "lat": 20.58806,
   "lng": -100.38806
+ },
+ "seattle, washington, usa": {
+  "lat": 47.60621,
+  "lng": -122.33207
  },
  "sevilla, spain": {
   "lat": 37.38283,
