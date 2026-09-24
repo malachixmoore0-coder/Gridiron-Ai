@@ -119,6 +119,28 @@ function gradeRecord(rec: SportPredictionRecord, home: number, away: number): Sp
   };
 }
 
+/** Leagues that should have had games and did not. A build with any is a failed build. */
+const silentlyEmpty: string[] = [];
+
+/**
+ * Whether a league is inside its own season window today.
+ *
+ * `months` is [start, end] and wraps the new year: the NHL's [10, 6] is October
+ * through June. Liga MX's [1, 12] is every month there is, and an earlier
+ * version of this added a month of slack at each end — which turned a
+ * year-round window inside out and reported the league as permanently out of
+ * season. No slack now: the window is taken exactly as written, which costs at
+ * most one noisy day at a season's true edge and never mistakes a whole league
+ * for a dormant one.
+ */
+function inSeason(meta: LeagueMeta, now = new Date()): boolean {
+  const [from, to] = meta.months;
+  const spanned = from <= to ? to - from + 1 : 12 - from + 1 + to;
+  if (spanned >= 12) return true;
+  const m = now.getUTCMonth() + 1;
+  return from <= to ? m >= from && m <= to : m >= from || m <= to;
+}
+
 async function buildLeague(meta: LeagueMeta): Promise<void> {
   const p = profileFor(meta.key);
   const dir = path.join(OUT, meta.slug);
@@ -421,9 +443,31 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     writeJson(dir, 'schedule.json', scheduleFile);
     writeJson(dir, 'predictions.json', predictionsFile);
   }
-  console.log(events.length
-    ? `  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`
-    : '  out of season — teams published, board left as it was');
+  /*
+   * An empty board is two completely different facts wearing one message.
+   *
+   * In February the NBA has games and MLB does not, and "out of season" is the
+   * truth. But ESPN returning nothing for a league that is mid-season is a
+   * broken feed, and this printed the same calm sentence for both, at info
+   * level, with a zero exit. Every league went quiet on 15 September and the
+   * workflow stayed green three times a day for nine days while the app served
+   * a stale board and the prediction ledger — the one instrument that says
+   * whether any of this works — stopped recording entirely.
+   *
+   * The board is still never overwritten by an empty one; that guard was
+   * right. What changes is that a league which should have games and does not
+   * now fails loudly and takes the build's exit code with it, because a silent
+   * failure in the thing that measures you is worse than a noisy one anywhere
+   * else.
+   */
+  if (events.length) {
+    console.log(`  ${games.length} games · ${groups.length} days · ${opened} opened · ${locked} locked · ${graded} graded`);
+  } else if (inSeason(meta)) {
+    console.error(`  NO GAMES for ${meta.short}, which is in season — the feed returned nothing. Board left as it was.`);
+    silentlyEmpty.push(meta.short);
+  } else {
+    console.log('  out of season — teams published, board left as it was');
+  }
 
   // ---- rosters, one file per team so the app fetches only what it opens ---
   // Every league gets them, college included. Four hundred sequential requests
@@ -556,4 +600,12 @@ async function main() {
   console.log(`\n${ok}/${sourceLog.length} sources OK`);
 }
 
-main().catch((e) => { console.error(e); process.exitCode = 1; });
+main()
+  .then(() => {
+    if (silentlyEmpty.length) {
+      console.error(`\nFAILED: ${silentlyEmpty.length} in-season league(s) returned no games — ${silentlyEmpty.join(', ')}.`);
+      console.error('Nothing was overwritten, but nothing was recorded either. The feed needs looking at.');
+      process.exitCode = 1;
+    }
+  })
+  .catch((e) => { console.error(e); process.exitCode = 1; });
