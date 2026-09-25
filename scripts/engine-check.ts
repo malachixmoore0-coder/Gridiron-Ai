@@ -724,5 +724,44 @@ console.log('\n— Live win probability');
   check(bad === 0, `live: every state across six leagues is finite, in range and sums to 100 (${bad} bad)`);
 }
 
+// ---- temperature, continuously ---------------------------------------------
+console.log('\n— Temperature');
+{
+  const mlbP = profileFor('mlb'), nbaP = profileFor('nba');
+  const base = {
+    home: { id: 'h', rating: 1500, attack: 1, defence: 1 },
+    away: { id: 'a', rating: 1500, attack: 1, defence: 1 },
+    neutral: false, weather: null as any, marketWeight: 0,
+  };
+  const at = (tempF: number | null, weather: any = null) => project({ ...base, weather, tempF }, mlbP).total;
+  const flat = at(null);
+
+  check(Math.abs(at(72) - flat) < 0.01, `temp: the reference temperature is a no-op (${at(72).toFixed(2)} vs ${flat.toFixed(2)})`);
+  check(at(90) > at(72) && at(72) > at(55), `temp: hotter scores more, monotonically (${at(55).toFixed(2)} / ${at(72).toFixed(2)} / ${at(90).toFixed(2)})`);
+  /*
+   * The defect this replaces: the bucket table gave every temperature from 33F to
+   * 87F the same number, so these two games were identical.
+   */
+  check(at(85) - at(60) > 0.3, `temp: 60F and 85F are no longer the same game (${(at(85) - at(60)).toFixed(2)} runs apart)`);
+  // Sized to close the measured gap without reaching past it.
+  const perDegree = (at(90) - at(60)) / 30;
+  check(perDegree > 0.015 && perDegree < 0.029, `temp: the slope sits under what the model still gets wrong (${perDegree.toFixed(4)} runs/F)`);
+
+  // Bounded, and no double counting with the buckets it supersedes.
+  check(at(130) < flat * 1.13 && at(-40) > flat * 0.85, 'temp: absurd readings are clamped');
+  check(Math.abs(at(200) - flat) < 0.01 && Math.abs(at(-100) - flat) < 0.01, 'temp: an impossible reading is ignored, not clamped into a big effect');
+  const hotBucketOnly = project({ ...base, weather: 'heat' }, mlbP).total;
+  const hotWithTemp = project({ ...base, weather: 'heat', tempF: 92 }, mlbP).total;
+  check(Math.abs(hotWithTemp - at(92)) < 0.01, 'temp: with a reading in hand the heat bucket stands down, so no degree counts twice');
+  check(hotBucketOnly > flat, 'temp: without a reading the old bucket still does its job');
+  // Rain and wind are separate effects and must survive alongside it.
+  const rainy = project({ ...base, weather: 'rain', tempF: 72 }, mlbP).total;
+  check(rainy < at(72), 'temp: rain still suppresses scoring when a temperature is known');
+
+  // Unmeasured sports get nothing, which is the point.
+  const nbaBase = { ...base, home: { id: 'h', rating: 1500, attack: 1, defence: 1 } };
+  check(project({ ...nbaBase, tempF: 95 }, nbaP).total === project({ ...nbaBase, tempF: 40 }, nbaP).total, 'temp: a sport nobody measured gets no temperature effect');
+}
+
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');
 if (failures) throw new Error(`${failures} engine check(s) failed`);

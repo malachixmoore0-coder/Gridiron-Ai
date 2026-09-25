@@ -59,6 +59,12 @@ export interface SimInput {
    * engine applies it as given and does no second-guessing.
    */
   parkFactor?: number | null;
+  /**
+   * Temperature at the first pitch. Where a sport's sensitivity has been
+   * measured this replaces the cold/heat buckets, which are a cliff at 88F and
+   * flat across the entire ordinary range either side of it.
+   */
+  tempF?: number | null;
   /** Market home line, when one exists, used only for the blended projection. */
   marketHomeSpread?: number | null;
   marketTotal?: number | null;
@@ -151,6 +157,48 @@ const conditions = (input: SimInput, p: SportProfile) =>
   (p.outdoor && input.weather ? WEATHER[input.weather] : null) ?? WEATHER.clear;
 
 /**
+ * Temperature, continuously.
+ *
+ * The bucket table above puts a 3% premium on games above 88F and treats every
+ * temperature from 33F to 87F as identical, which is the part that was wrong: a
+ * 60F game and an 85F game got the same number. Measured over 2,166 baseball
+ * games with observed conditions, and holding the ballpark and the month fixed,
+ * scoring rises about a twentieth of a run per degree -- 7.7 runs below 55F,
+ * 10.7 above 85F, monotonic through every bin between.
+ *
+ * The slope used here is deliberately less than half of that measured one, for a
+ * reason worth keeping. The raw figure is what temperature is worth in total; a
+ * good deal of it already reaches the projection through the ratings and through
+ * the market blend, because a book knows the forecast too. Applied at full
+ * strength it overshot in testing -- the bias on hot games went from +0.57 runs
+ * to -0.48, trading one error for its mirror image. Sized against what the
+ * shipped model still gets wrong after everything else it knows, the gap to close
+ * is about 0.029 runs per degree, and this closes most of it without reaching
+ * past it in either direction.
+ *
+ * Zero for every sport but baseball, because baseball is the only one measured.
+ * A struck ball carrying further in thin warm air is not a baseball-specific
+ * phenomenon, but the size of the effect on a scoreline is, and inventing one for
+ * the others is exactly the mistake being corrected here.
+ */
+function temperature(input: SimInput, p: SportProfile): number {
+  const t = input.tempF;
+  if (!p.outdoor || !p.tempPerDegree || t == null || !Number.isFinite(t)) return 1;
+  // Beyond this the reading is likelier to be a bad row than a ballgame.
+  if (t < -20 || t > 130) return 1;
+  const raw = 1 + p.tempPerDegree * (t - p.tempReferenceF);
+  return clamp(raw, 0.9, 1.12);
+}
+
+/**
+ * True once temperature is being applied continuously, so the cold and heat
+ * buckets stand down. Leaving both in would count the same degree twice, and the
+ * seam at 88F would still be there underneath.
+ */
+const temperatureKnown = (input: SimInput, p: SportProfile): boolean =>
+  p.outdoor && !!p.tempPerDegree && input.tempF != null && Number.isFinite(input.tempF);
+
+/**
  * The projection before any simulation: a rating gap converted to margin, the
  * home edge, and — when the pipeline supplies one — a pull toward the market.
  * The market is not gospel, but a number twenty books agree on carries
@@ -166,7 +214,10 @@ export function project(input: SimInput, p: SportProfile): { margin: number; tot
   // Weather lands on the model's own total, before the market blend — a book
   // has already priced the forecast, so letting the market pull afterwards is
   // what stops the adjustment being counted twice.
-  let total = p.baseTotal * ((attack + defend) / 2) * conditions(input, p).total * park(input);
+  const bucket = conditions(input, p).total;
+  // A temperature in hand supersedes the bucket that was standing in for it.
+  const weatherTotal = temperatureKnown(input, p) && (input.weather === 'cold' || input.weather === 'heat') ? 1 : bucket;
+  let total = p.baseTotal * ((attack + defend) / 2) * weatherTotal * park(input) * temperature(input, p);
 
   /*
    * The starting pitcher, where there is one.

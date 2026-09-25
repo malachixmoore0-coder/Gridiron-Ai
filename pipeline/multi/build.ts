@@ -476,6 +476,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
             homePitcher: usesPitchers ? pitcherFactor(armOf(g.homeProbable), leagueEra) : null,
             awayPitcher: usesPitchers ? pitcherFactor(armOf(g.awayProbable), leagueEra) : null,
             parkFactor: APPLY_PARKS ? parks.factors[g.homeId] ?? null : null,
+            tempF: g.weather?.tempF ?? null,
             marketHomeSpread: g.homeSpread,
             marketTotal: g.totalLine,
             marketWeight: MARKET_WEIGHT,

@@ -63,6 +63,14 @@ export interface SportProfile {
    */
   regulationPeriods: number;
   periodSeconds: number | null;
+  /**
+   * Fractional change in the total per degree Fahrenheit above tempReferenceF.
+   * Zero means unmeasured, and unmeasured means no adjustment -- there is no
+   * default here on purpose, because guessing one for a sport nobody has checked
+   * is how the bucket table this replaces came to be wrong.
+   */
+  tempPerDegree: number;
+  tempReferenceF: number;
   /** How a slate is grouped: football is weekly, everything else is daily. */
   cadence: 'week' | 'day';
   /**
@@ -84,25 +92,25 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
     unit: 'point', model: 'normal', draws: false,
     marginSigma: 13.5, totalSigma: 10.5, homeEdge: 2.0, eloScale: 0.04,
     baseTotal: 44, spreadStep: 0.5, primaryMarket: 'spread',
-    periods: ['1st', '2nd', '3rd', '4th', 'OT'], regulationPeriods: 4, periodSeconds: 900, cadence: 'week', outdoor: true,
+    periods: ['1st', '2nd', '3rd', '4th', 'OT'], regulationPeriods: 4, periodSeconds: 900, tempPerDegree: 0, tempReferenceF: 60, cadence: 'week', outdoor: true,
   },
   basketball: {
     unit: 'point', model: 'normal', draws: false,
     marginSigma: 11.5, totalSigma: 16.0, homeEdge: 2.4, eloScale: 0.028,
     baseTotal: 224, spreadStep: 0.5, primaryMarket: 'spread',
-    periods: ['1st', '2nd', '3rd', '4th', 'OT'], regulationPeriods: 4, periodSeconds: 720, cadence: 'day', outdoor: false,
+    periods: ['1st', '2nd', '3rd', '4th', 'OT'], regulationPeriods: 4, periodSeconds: 720, tempPerDegree: 0, tempReferenceF: 70, cadence: 'day', outdoor: false,
   },
   baseball: {
     unit: 'run', model: 'poisson', draws: false,
     marginSigma: 4.4, totalSigma: 3.0, homeEdge: 0.22, eloScale: 0.0032,
     baseTotal: 8.6, spreadStep: 1.5, primaryMarket: 'moneyline',
-    periods: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', 'Extra'], regulationPeriods: 9, periodSeconds: null, cadence: 'day', outdoor: true,
+    periods: ['1st', '2nd', '3rd', '4th', '5th', '6th', '7th', '8th', '9th', 'Extra'], regulationPeriods: 9, periodSeconds: null, tempPerDegree: 0.0022, tempReferenceF: 72, cadence: 'day', outdoor: true,
   },
   soccer: {
     unit: 'goal', model: 'poisson', draws: true,
     marginSigma: 1.7, totalSigma: 1.4, homeEdge: 0.28, eloScale: 0.0022,
     baseTotal: 2.9, spreadStep: 0.5, primaryMarket: 'moneyline',
-    periods: ['1st half', '2nd half', 'Extra'], regulationPeriods: 2, periodSeconds: 2700, cadence: 'day', outdoor: true,
+    periods: ['1st half', '2nd half', 'Extra'], regulationPeriods: 2, periodSeconds: 2700, tempPerDegree: 0, tempReferenceF: 60, cadence: 'day', outdoor: true,
   },
   hockey: {
     // Goals are rare events like soccer's, so the same Poisson applies — but a
@@ -111,7 +119,7 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
     unit: 'goal', model: 'poisson', draws: false,
     marginSigma: 2.1, totalSigma: 1.8, homeEdge: 0.20, eloScale: 0.0030,
     baseTotal: 6.1, spreadStep: 0.5, primaryMarket: 'moneyline',
-    periods: ['1st', '2nd', '3rd', 'OT', 'SO'], regulationPeriods: 3, periodSeconds: 1200, cadence: 'day', outdoor: false,
+    periods: ['1st', '2nd', '3rd', 'OT', 'SO'], regulationPeriods: 3, periodSeconds: 1200, tempPerDegree: 0, tempReferenceF: 60, cadence: 'day', outdoor: false,
   },
   golf: {
     // Golf is not two sides and a margin, so the head-to-head engine never
@@ -121,7 +129,7 @@ export const SPORTS: Record<SportId, Omit<SportProfile, 'sport'>> = {
     unit: 'stroke', model: 'normal', draws: false,
     marginSigma: 2.9, totalSigma: 2.9, homeEdge: 0, eloScale: 0,
     baseTotal: 71, spreadStep: 1, primaryMarket: 'moneyline',
-    periods: ['R1', 'R2', 'R3', 'R4'], regulationPeriods: 4, periodSeconds: null, cadence: 'day', outdoor: true,
+    periods: ['R1', 'R2', 'R3', 'R4'], regulationPeriods: 4, periodSeconds: null, tempPerDegree: 0, tempReferenceF: 70, cadence: 'day', outdoor: true,
   },
 };
 
