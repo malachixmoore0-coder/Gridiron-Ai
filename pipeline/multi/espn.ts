@@ -39,6 +39,18 @@ export interface EspnProbable {
   era: number | null;
 }
 
+/** A club as one fixture describes it. Null-ish fields mean ESPN gave nothing. */
+export interface EspnSide {
+  id: string;
+  name: string;
+  short: string;
+  abbr: string;
+  logoUrl: string | null;
+  colors: { primary: string; secondary: string };
+  /** True for an unfilled bracket slot: a real fixture with no team in it yet. */
+  placeholder: boolean;
+}
+
 export interface EspnEvent {
   id: string;
   date: string;
@@ -61,9 +73,15 @@ export interface EspnEvent {
   venueIndoor: boolean;
   awayId: string;
   homeId: string;
-  /** Display names, carried only so a dropped event can be named in a log. */
-  awayName: string;
-  homeName: string;
+  /**
+   * Each side as the scoreboard describes it. The teams endpoint is not always
+   * right about who is in a league -- it handed back a Premier League containing
+   * Coventry, Hull and Ipswich and no Burnley, West Ham or Wolves -- and a
+   * fixture list is the better authority on who actually plays. Enough here to
+   * stand a club up from its fixtures when the roster call has left it out.
+   */
+  away: EspnSide;
+  home: EspnSide;
   awayScore: number | null;
   homeScore: number | null;
   awayRank: number | null;
@@ -137,6 +155,29 @@ export async function loadStandings(path: string): Promise<Map<string, { group: 
 }
 
 /** Every team in a league, with the colours and logo the app draws with. */
+/**
+ * Read one side out of a fixture.
+ *
+ * A bracket slot that has not been filled yet comes back named "TBD" with no
+ * abbreviation, and that is a real fixture rather than bad data -- the playoff
+ * game exists, the team in it does not yet. Flagged rather than discarded so the
+ * board can show the slot without pretending to know who is in it.
+ */
+function sideOf(c: any): EspnSide {
+  const t = c?.team ?? {};
+  const name = String(t.displayName ?? t.shortDisplayName ?? t.name ?? t.abbreviation ?? t.id ?? 'TBD');
+  const abbr = String(t.abbreviation ?? t.shortDisplayName ?? name).toUpperCase().slice(0, 5);
+  return {
+    id: String(t.id ?? ''),
+    name,
+    short: String(t.shortDisplayName ?? t.name ?? name),
+    abbr,
+    logoUrl: t.logos?.[0]?.href ?? t.logo ?? null,
+    colors: { primary: hex(t.color, '#2A3646'), secondary: hex(t.alternateColor, '#8FA1B4') },
+    placeholder: !t.id || /^tbd$/i.test(name) || /^tbd$/i.test(abbr),
+  };
+}
+
 export async function loadTeams(path: string): Promise<EspnTeamRow[]> {
   const [json, standings] = await Promise.all([
     fetchJson<any>(`${SITE}/${path}/teams?limit=1000`, `${path} teams`, 20000).catch(() => null),
@@ -302,8 +343,8 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       venueIndoor: !!comp.venue?.indoor,
       awayId: String(away.team.id),
       homeId: String(home.team.id),
-      awayName: String(away.team.displayName ?? away.team.shortDisplayName ?? away.team.abbreviation ?? away.team.id ?? '?'),
-      homeName: String(home.team.displayName ?? home.team.shortDisplayName ?? home.team.abbreviation ?? home.team.id ?? '?'),
+      away: sideOf(away),
+      home: sideOf(home),
       awayScore: started ? num(away.score) : null,
       homeScore: started ? num(home.score) : null,
       awayRank: num(away.curatedRank?.current) ?? null,

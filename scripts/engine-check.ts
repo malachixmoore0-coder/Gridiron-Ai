@@ -16,6 +16,8 @@ import { computeParkFactors, type ParkGame } from '../pipeline/multi/parks';
 import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
+import { reconcileMembers } from '../pipeline/multi/members';
+import type { EspnEvent, EspnSide, EspnTeamRow } from '../pipeline/multi/espn';
 import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
 import { bestAvailable, chooseThreshold, computeConviction, gradedOnly, picksToCertify, wilsonFloor } from '../pipeline/multi/conviction';
 import { fieldSeed, simulateField } from '../src/sports/golf';
@@ -830,6 +832,56 @@ console.log('\n— Conviction');
   const c = computeConviction(make([{ conf: 55, n: 40, won: 20 }]), 0.7, '2026-09-25T00:00:00.000Z');
   check(c.threshold === null && c.graded === 40, 'conviction: a league with no qualifying tier says so');
   check(/clears/.test(c.note), `conviction: and explains why (${c.note})`);
+}
+
+// ---- who is actually in the league -----------------------------------------
+console.log('\n— League membership');
+{
+  const side = (id: string, name: string, placeholder = false): EspnSide => ({
+    id, name, short: name, abbr: name.slice(0, 3).toUpperCase(), logoUrl: null,
+    colors: { primary: '#000000', secondary: '#ffffff' }, placeholder,
+  });
+  const row = (id: string, abbr: string): EspnTeamRow => ({
+    id, abbr, name: abbr, short: abbr, group: '', colors: { primary: '#000000', secondary: '#ffffff' },
+    logoUrl: null, record: null, rank: null,
+  });
+  const ev = (home: EspnSide, away: EspnSide, date = '2026-03-01T00:00:00Z') =>
+    ({ date, home, away, homeId: home.id, awayId: away.id } as unknown as EspnEvent);
+
+  // The real shape of the fault: a listed club that never plays, and a playing
+  // club that was never listed.
+  const listed = [row('1', 'ARS'), row('2', 'CHE'), row('99', 'IPS')];
+  const fixtures = [
+    ...Array.from({ length: 30 }, (_, i) => ev(side('1', 'Arsenal'), side('2', 'Chelsea'), `2026-03-${String((i % 28) + 1).padStart(2, '0')}T00:00:00Z`)),
+    ...Array.from({ length: 17 }, () => ev(side('3', 'Burnley'), side('1', 'Arsenal'))),
+  ];
+  const r = reconcileMembers(listed, fixtures);
+  check(r.adopted.length === 1 && r.adopted[0].name === 'Burnley', `members: a club the fixtures know is adopted (${r.adopted.map((t) => t.name).join(',')})`);
+  check(r.ghosts.length === 1 && r.ghosts[0].abbr === 'IPS', `members: a club that plays nobody is named (${r.ghosts.map((t) => t.abbr).join(',')})`);
+  check(r.adopted[0].record === null && r.adopted[0].rank === null, 'members: an adopted club starts with no record to its name');
+
+  /*
+   * The one that must not be adopted. A playoff fixture with an unfilled slot is
+   * a real game with nobody in it yet; a club called TBD in the ratings and the
+   * standings would be worse than the missing fixture.
+   */
+  const bracket = [
+    ...Array.from({ length: 50 }, () => ev(side('1', 'Arsenal'), side('2', 'Chelsea'))),
+    ev(side('', 'TBD', true), side('', 'TBD', true), '2026-09-29T00:00:00Z'),
+    ev(side('1', 'Arsenal'), side('', 'TBD', true), '2026-09-30T00:00:00Z'),
+  ];
+  const b = reconcileMembers([row('1', 'ARS'), row('2', 'CHE')], bracket);
+  check(b.adopted.length === 0, `members: an unfilled bracket slot is never adopted as a club (${b.adopted.length})`);
+  check(b.pending.length === 2, `members: but the fixture waiting on it is reported (${b.pending.length})`);
+  check(b.pending[0].date === '2026-09-29', `members: with its date (${b.pending[0].date})`);
+
+  // A season that has not begun has no fixtures to judge anyone by.
+  const preseason = reconcileMembers([row('1', 'ARS'), row('2', 'CHE')], []);
+  check(preseason.ghosts.length === 0, 'members: before a ball is kicked nobody is a phantom');
+  check(reconcileMembers([row('1', 'ARS')], fixtures).ghosts.length === 0, 'members: a club that does play is not a phantom');
+  // Idempotent: adopting twice must not duplicate.
+  const twice = reconcileMembers(listed, [...fixtures, ...fixtures]);
+  check(twice.adopted.length === 1, `members: a club is adopted once however many games it plays (${twice.adopted.length})`);
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

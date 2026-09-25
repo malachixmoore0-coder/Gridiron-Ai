@@ -20,6 +20,7 @@ import process from 'node:process';
 import { GENERIC_LEAGUES, profileFor, type LeagueMeta } from '../../src/sports/types';
 import type { SportGame, SportGroup, SportPredictionRecord, SportPredictionsFile, SportScheduleFile, SportTeam, SportTeamsFile } from '../../src/sports/feed';
 import { loadRange, loadTeams, type EspnEvent } from './espn';
+import { reconcileMembers } from './members';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { liveWinProbability } from '../../src/sports/live';
@@ -245,22 +246,25 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
    * game still to be played is called out separately -- those are the ones
    * somebody is looking for on the board.
    */
-  const orphaned: { date: string; who: string; label: string; future: boolean }[] = [];
+  /*
+   * Membership, reconciled against the fixtures. See members.ts for why the team
+   * list alone could not be trusted with it.
+   */
+  const members = reconcileMembers(teams, events);
+  if (members.adopted.length) {
+    console.log(`  adopted ${members.adopted.length} team${members.adopted.length === 1 ? '' : 's'} the fixtures know and the team list left out: ${members.adopted.map((t) => t.name).slice(0, 6).join(', ')}`);
+    for (const t of members.adopted) { teams.push(t); byId.set(t.id, t); }
+  }
+  if (members.ghosts.length) {
+    console.log(`  ${members.ghosts.length} listed team${members.ghosts.length === 1 ? '' : 's'} appear in no fixture at all: ${members.ghosts.map((t) => t.abbr).join(' ')}`);
+  }
+  if (members.pending.length) {
+    console.log(`  ${members.pending.length} fixture${members.pending.length === 1 ? '' : 's'} with a slot still to be filled (bracket not yet drawn)`);
+    for (const d of members.pending.slice(0, 4)) console.log(`      ${d.date}  ${d.label}`);
+  }
+
   const games: SportGame[] = events
-    .filter((e) => {
-      const haveHome = byId.has(e.homeId), haveAway = byId.has(e.awayId);
-      if (haveHome && haveAway) return true;
-      const who = !haveHome && !haveAway
-        ? `${e.awayName} (${e.awayId}) and ${e.homeName} (${e.homeId})`
-        : haveHome ? `${e.awayName} (${e.awayId})` : `${e.homeName} (${e.homeId})`;
-      orphaned.push({
-        date: e.date.slice(0, 10),
-        who,
-        label: `${e.awayName} @ ${e.homeName}`,
-        future: e.homeScore == null && e.awayScore == null && Date.parse(e.date) > now.getTime(),
-      });
-      return false;
-    })
+    .filter((e) => byId.has(e.homeId) && byId.has(e.awayId))
     .map((e) => ({
       id: e.id,
       season,
@@ -296,19 +300,6 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       homeRank: e.homeRank,
       books: null,
     }));
-
-  // Said out loud, now that the filter above has actually run.
-  if (orphaned.length) {
-    const ahead = orphaned.filter((d) => d.future);
-    const byWho = new Map<string, number>();
-    for (const d of orphaned) byWho.set(d.who, (byWho.get(d.who) ?? 0) + 1);
-    console.log(`  DROPPED ${orphaned.length} event${orphaned.length === 1 ? '' : 's'} — a side is not in this league's ${teams.length} teams`
-      + (ahead.length ? ` · ${ahead.length} of them NOT YET PLAYED` : ''));
-    for (const [who, n] of [...byWho.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)) {
-      console.log(`      ${String(n).padStart(3)} x  ${who}`);
-    }
-    for (const d of ahead.slice(0, 5)) console.log(`      upcoming: ${d.date}  ${d.label}`);
-  }
 
   // ---- kick-off weather, for the sports it can reach ----------------------
   if (p.outdoor && !process.argv.includes('--no-weather')) {
