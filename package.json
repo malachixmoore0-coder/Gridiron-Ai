@@ -23,7 +23,8 @@
     "brand": "node scripts/brand-assets.mjs",
     "ledger": "tsx scripts/ledger.ts",
     "test:feed": "tsx scripts/feed-check.ts",
-    "parks:check": "tsx scripts/parks-check.ts"
+    "parks:check": "tsx scripts/parks-check.ts",
+    "weather:check": "tsx scripts/weather-check.ts"
   },
   "dependencies": {
     "@expo/metro-runtime": "~3.2.1",

@@ -134,7 +134,7 @@ function poisson(rand: () => number, lambda: number): number {
  * soccer total about a seventh of a goal, which is the right relative size in
  * both.
  */
-const WEATHER: Record<Weather, { total: number; spread: number }> = {
+export const WEATHER: Record<Weather, { total: number; spread: number }> = {
   dome: { total: 1, spread: 1 },
   clear: { total: 1, spread: 1 },
   // Dense cold air carries a struck ball less far, in every sport that hits one.

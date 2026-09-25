@@ -384,6 +384,12 @@ npm run data:build:offline   # skip Open-Meteo calls
 # population as the subset that has been graded.
 npm run ledger            # every league; `-- mlb` for one
 
+# What the weather is really worth. The engine's multipliers (cold 0.95, rain
+# 0.94, wind nothing) were written from first principles and never checked
+# against a game; this puts each next to what the games say, and shows the
+# per-team "handles the cold" numbers shrunk to what their sample supports.
+npm run weather:check
+
 # Whether park factors are worth applying yet. Walks forward, fitting only on
 # games already played. Currently they are not; see APPLY_PARKS in
 # pipeline/multi/build.ts for the numbers behind that.

@@ -15,6 +15,7 @@ import { impliedProb, marketHomeProb } from './ledger';
 import { computeParkFactors, type ParkGame } from '../pipeline/multi/parks';
 import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
+import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -567,6 +568,61 @@ console.log('\n— The weather log');
   // a later run, not be recorded as calm and dry because the row was missing.
   check(!hasObservation(f2, 'g3') && !f2.games.g3, 'log: a game past the end of the archive is left unsettled, not invented');
   check(applyArchive(f2, [g2], hours) === 0, 'log: re-running the archive settles nothing twice');
+}
+
+console.log('\n— Weather splits');
+{
+  const NOW = '2026-09-25T00:00:00.000Z';
+  const parks = ['p0', 'p1', 'p2', 'p3', 'p4', 'p5'];
+  const opp = (i: number) => parks[i % parks.length];
+
+  /*
+   * A real effect: within every park, cold games run two runs lighter. The
+   * measurement has to find roughly that and not much else.
+   */
+  // Scored with scatter, not with a constant: a bucket where every game finished
+  // identically exercises none of the arithmetic that matters.
+  let sd = 12345;
+  const jitter = () => { sd = (sd * 1103515245 + 12345) % 2147483648; return (sd / 2147483648 - 0.5) * 6; };
+  const real: ObservedGame[] = [];
+  parks.forEach((h, pi) => {
+    const norm = 8 + pi; // parks differ a lot, which must not matter
+    for (let k = 0; k < 60; k++) {
+      const cold = k % 4 === 0;
+      const runs = norm - (cold ? 2 : 0) + jitter();
+      real.push({ homeId: h, awayId: opp(pi + 1 + k), homeScore: runs / 2, awayScore: runs / 2, summary: cold ? 'cold' : 'clear' });
+    }
+  });
+  const rs = computeWeatherSplits(real, NOW);
+  const coldRow = rs.league.find((e) => e.bucket === 'cold');
+  check(!!coldRow && Math.abs(coldRow.delta + 2) < 0.6, `splits: a real two-run cold effect is measured (${coldRow?.delta})`);
+  check(!!coldRow && coldRow.t > 2, `splits: and it is significant (|t| ${coldRow?.t})`);
+
+  /*
+   * The trap. Cold happens in the parks that suppress scoring anyway -- April in
+   * the north -- so every one of the low-scoring park's games is cold here and
+   * the weather itself does nothing. Measured against the league mean this reads
+   * as a huge cold effect; measured against each park's own norm it reads as
+   * zero, which is the answer.
+   */
+  const confounded: ObservedGame[] = [];
+  parks.forEach((h, pi) => {
+    const norm = pi < 2 ? 6 : 12;          // two cold, low-scoring grounds
+    const alwaysCold = pi < 2;
+    for (let k = 0; k < 40; k++) {
+      confounded.push({ homeId: h, awayId: opp(pi + 1 + k), homeScore: norm / 2, awayScore: norm / 2, summary: alwaysCold ? 'cold' : 'clear' });
+    }
+  });
+  const cs = computeWeatherSplits(confounded, NOW);
+  const fake = cs.league.find((e) => e.bucket === 'cold');
+  const naive = 6 - 12; // what comparing to the league mean would have said
+  check(!!fake && Math.abs(fake.delta) < 0.5, `splits: a cold effect that is really the ballpark is not credited to the cold (${fake?.delta}, naive would say ${naive})`);
+
+  // Per-side effects on samples this small must shrink to nothing.
+  check(rs.sideReliability < 0.35, `splits: per-side weather edges are mostly noise and are shrunk (reliability ${rs.sideReliability})`);
+  check(rs.sides.every((r) => Math.abs(r.edge) <= Math.abs(r.raw) + 1e-9), 'splits: every side edge is shrunk toward zero, never away');
+  check(computeWeatherSplits(real.slice(0, 20), NOW).league.length === 0, 'splits: too few games measures nothing');
+  check(computeWeatherSplits([], NOW).games === 0, 'splits: no games yields nothing');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');
