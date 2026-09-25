@@ -21,7 +21,6 @@ import { GENERIC_LEAGUES, profileFor, type LeagueMeta } from '../../src/sports/t
 import type { SportGame, SportGroup, SportPredictionRecord, SportPredictionsFile, SportScheduleFile, SportTeam, SportTeamsFile } from '../../src/sports/feed';
 import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { reconcileMembers } from './members';
-import { seriesFromGames, simulateBracket, type BracketTeam } from './bracket';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { liveWinProbability } from '../../src/sports/live';
@@ -270,9 +269,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       id: e.id,
       season,
       week: dayIndex.get(dayKey(e.date)) ?? 1,
-      // What it actually is. Calling a playoff series a regular-season game made
-      // the postseason invisible to everything downstream, a bracket included.
-      gameType: e.seasonType === 3 ? 'postseason' : e.seasonType === 1 ? 'preseason' : 'regular',
+      gameType: 'regular',
       kickoff: e.date,
       weekday: new Date(e.date).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' }),
       awayId: e.awayId,
@@ -395,8 +392,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     const list = games.filter((g) => dayKey(g.kickoff) === d);
     return {
       week: i + 1,
-      // A day belongs to the postseason if anything played on it does.
-      gameType: list.some((g) => g.gameType === 'postseason') ? 'postseason' : 'regular',
+      gameType: 'regular',
       label: label(`${d}T12:00:00Z`),
       games: list.length,
       final: list.filter((g) => g.status === 'final').length,
@@ -595,37 +591,6 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       priced += 1;
     }
     if (priced) console.log(`  live: ${priced} game${priced === 1 ? '' : 's'} in flight repriced`);
-  }
-
-  /*
-   * ---- the playoffs ------------------------------------------------------
-   * Built from the fixtures rather than from a hard-coded bracket, so it
-   * appears the day a league draws one and says nothing the rest of the year.
-   * Only the games still to be played are predicted: a series already standing
-   * at 2-0 starts there, and one already won is reported won.
-   */
-  {
-    const { series, undrawn } = seriesFromGames(
-      games.map((g) => ({
-        id: g.id, kickoff: g.kickoff, gameType: g.gameType,
-        homeId: g.homeId, awayId: g.awayId,
-        homeScore: g.homeScore, awayScore: g.awayScore,
-      })),
-      p.sport,
-    );
-    if (series.length) {
-      const seeds = new Map<string, BracketTeam>();
-      for (const t of sportTeams) {
-        seeds.set(t.id, { id: t.id, seed: t.rank ?? null, rating: t.rating, attack: t.attack, defence: t.defence });
-      }
-      const bracket = simulateBracket({ league: meta.key, profile: p, teams: seeds, series, undrawn }, now.toISOString());
-      writeJson(dir, 'bracket.json', bracket);
-      const live = bracket.series.filter((x) => !x.settled).length;
-      const top = bracket.title[0];
-      console.log(`  playoffs: ${series.length} series (${live} still alive)`
-        + (top ? ` · ${sportTeams.find((t) => t.id === top.teamId)?.abbr ?? top.teamId} ${top.pct}% to win it` : ' · title odds withheld until the bracket is drawn')
-        + (undrawn.length ? ` · not yet drawn: ${undrawn.join(', ')}` : ''));
-    }
   }
 
   const scheduleFile: SportScheduleFile = {
