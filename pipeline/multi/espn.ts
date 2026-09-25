@@ -82,6 +82,12 @@ export interface EspnEvent {
    */
   away: EspnSide;
   home: EspnSide;
+  /**
+   * ESPN's season type: 1 preseason, 2 regular, 3 postseason, 4 all-star-ish.
+   * Everything downstream called every game 'regular', which made a playoff
+   * series indistinguishable from a Tuesday in June.
+   */
+  seasonType: number | null;
   awayScore: number | null;
   homeScore: number | null;
   awayRank: number | null;
@@ -345,6 +351,7 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       homeId: String(home.team.id),
       away: sideOf(away),
       home: sideOf(home),
+      seasonType: num(ev.season?.type) ?? num(comp.season?.type) ?? null,
       awayScore: started ? num(away.score) : null,
       homeScore: started ? num(home.score) : null,
       awayRank: num(away.curatedRank?.current) ?? null,
