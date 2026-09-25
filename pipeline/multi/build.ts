@@ -619,6 +619,16 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
      * says a champion is 100% to win a tournament that finished in June.
      */
     const unplayed = series.some((x) => x.remaining.length > 0);
+    // Taken down as well as put up. Skipping the write left last spring's
+    // bracket sitting on disk and being served as the current one, which is the
+    // same wrong answer with an extra step.
+    if (!series.length || !unplayed) {
+      const stale = path.join(dir, 'bracket.json');
+      if (fs.existsSync(stale)) {
+        fs.unlinkSync(stale);
+        console.log('  playoffs: bracket taken down — every series is decided');
+      }
+    }
     if (series.length && unplayed) {
       const seeds = new Map<string, BracketTeam>();
       for (const t of sportTeams) {
