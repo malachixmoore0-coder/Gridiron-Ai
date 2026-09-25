@@ -26,7 +26,8 @@ import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, unitOf, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
 import { geocode, saveGeocache } from './geocode';
-import { forecastAt } from '../sources/weather';
+import { archiveHours, forecastAt } from '../sources/weather';
+import { applyArchive, hasObservation, noteForecast, readWeather, writeWeather, type LogGame } from './weatherLog';
 import { backfillFromSchools, nameKey, readAthletics, supportsAthletics, writeAthletics, type SchoolPlayer } from './athletics';
 import { closeBrowser } from './render';
 import { readLines, recordLines, writeLines } from './lines';
@@ -77,6 +78,12 @@ const APPLY_PARKS = false;
 const WEATHER_DAYS = 4;
 /** Forecasts in flight at once. Polite to a free, keyless API; fast enough. */
 const WEATHER_CONCURRENCY = 6;
+/**
+ * Venues to ask the weather archive about per run. Thirty covers a baseball
+ * season in one go; the leagues with hundreds of grounds fill in over a few
+ * runs instead of holding up a build.
+ */
+const ARCHIVE_VENUES_PER_RUN = 60;
 
 const HORIZON_DAYS = 12;
 /** How far back to read results for the ratings. */
@@ -262,6 +269,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
   // ---- kick-off weather, for the sports it can reach ----------------------
   if (p.outdoor && !process.argv.includes('--no-weather')) {
     const cityOf = new Map(events.map((e) => [e.id, e.venueCity]));
+    const wxLog = readWeather(dir, meta.key);
     const upcoming = games.filter((g) =>
       g.status === 'scheduled'
       && g.roof !== 'dome'
@@ -293,10 +301,56 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
         if (!wx) return;
         g.weather = wx;
         g.weatherHint = wx.summary;
+        // Written down as well as used. The forecast a projection was built on
+        // is worth keeping even after it is superseded by what happened.
+        noteForecast(wxLog, g, wx);
         got += 1;
       });
     }
     console.log(`  weather on ${got}/${upcoming.length} upcoming ${meta.short} games`);
+
+    /*
+     * ---- and what the weather actually was ---------------------------------
+     * One archive call per venue, covering every game there still unsettled, so
+     * a season costs thirty requests rather than three thousand. The archive
+     * trails real time by a few days; games inside that lag simply stay
+     * unresolved and are picked up by a later run, which is why this asks only
+     * for games it does not already have an observation for.
+     */
+    const pending = games.filter((g) =>
+      g.roof !== 'dome'
+      && !!cityOf.get(g.id)
+      && g.homeScore != null
+      && !hasObservation(wxLog, g.id));
+
+    const byCity = new Map<string, LogGame[]>();
+    for (const g of pending) {
+      const city = cityOf.get(g.id)!;
+      const list = byCity.get(city) ?? [];
+      list.push({ id: g.id, kickoff: g.kickoff, homeId: g.homeId, awayId: g.awayId });
+      byCity.set(city, list);
+    }
+
+    // Capped per run. College baseball has hundreds of venues, and a first run
+    // that tried them all would turn a five-minute build into an afternoon.
+    let settled = 0, asked = 0;
+    for (const [city, list] of [...byCity.entries()].sort((a, b) => b[1].length - a[1].length)) {
+      if (asked >= ARCHIVE_VENUES_PER_RUN) break;
+      const at = points.get(city) ?? await geocode(city);
+      points.set(city, at);
+      if (!at) continue;
+      const days = list.map((g) => g.kickoff.slice(0, 10)).sort();
+      asked += 1;
+      const hours = await archiveHours(at.lat, at.lng, days[0], days[days.length - 1]);
+      if (!hours.size) continue;
+      settled += applyArchive(wxLog, list, hours);
+    }
+    saveGeocache();
+    writeWeather(dir, wxLog);
+    const observed = Object.values(wxLog.games).filter((w) => w.source === 'observed').length;
+    if (pending.length || settled) {
+      console.log(`  weather history: +${settled} observed from ${asked} venue${asked === 1 ? '' : 's'} · ${observed} games on file · ${pending.length - settled} still unsettled`);
+    }
   }
 
   const groups: SportGroup[] = days.map((d, i) => {

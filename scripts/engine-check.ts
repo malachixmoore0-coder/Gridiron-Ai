@@ -13,6 +13,8 @@ import { probableOf } from '../pipeline/multi/espn';
 import { pitcherFactor } from '../pipeline/multi/pitchers';
 import { impliedProb, marketHomeProb } from './ledger';
 import { computeParkFactors, type ParkGame } from '../pipeline/multi/parks';
+import { classify, type Observation } from '../pipeline/sources/weather';
+import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -513,6 +515,58 @@ console.log('\n— The engine applying one');
   // The guard: a run total mistakenly filed as a factor must not multiply.
   check(project({ ...base, parkFactor: 8.6 }, p).total === flat, 'parks: a nonsense factor is refused, not applied');
   check(project({ ...base, parkFactor: 0 }, p).total === flat, 'parks: a zero factor is refused');
+}
+
+// ---- weather, classified the same way from either source --------------------
+console.log('\n— Weather');
+{
+  const base = { tempF: 62, windMph: 4, snowIn: 0 };
+  check(classify({ ...base, precipIn: 0 }) === 'clear', 'weather: a calm dry evening is clear');
+  check(classify({ ...base, snowIn: 0.4, precipIn: 0.5 }) === 'snow', 'weather: snow outranks rain');
+  check(classify({ ...base, windMph: 22, precipIn: 0.5 }) === 'wind', 'weather: wind outranks rain');
+  check(classify({ ...base, precipIn: 0.2 }) === 'rain', 'weather: rain that fell is rain');
+  check(classify({ ...base, tempF: 20, precipIn: 0 }) === 'cold', 'weather: cold is cold');
+  check(classify({ ...base, tempF: 95, precipIn: 0 }) === 'heat', 'weather: heat is heat');
+  /*
+   * The one that matters for the splits. A forecast knows a chance and an
+   * archive knows an amount; if they disagreed on where "rain" begins then a
+   * study of teams in the rain would partly be measuring which source it drew
+   * from. Real precipitation decides whenever it is known.
+   */
+  check(classify({ ...base, precipIn: 0, precipPct: 90 }) === 'clear', 'weather: an amount that fell overrules a chance it might');
+  check(classify({ ...base, precipPct: 80 }) === 'rain', 'weather: a chance is used when no amount is known');
+  check(classify({ ...base, precipPct: 20 }) === 'clear', 'weather: a low chance is not rain');
+}
+
+console.log('\n— The weather log');
+{
+  const g = { id: 'g1', kickoff: '2026-07-04T23:10:00.000Z', homeId: 'h', awayId: 'a' };
+  const fc = { tempF: 70, windMph: 5, precipPct: 60, snowIn: 0, summary: classify({ tempF: 70, windMph: 5, snowIn: 0, precipPct: 60 }) };
+  const obs: Observation = { tempF: 68, windMph: 6, precipIn: 0, snowIn: 0, summary: 'clear' };
+
+  const f = emptyWeather('mlb');
+  check(noteForecast(f, g, fc) && f.games.g1.source === 'forecast', 'log: a forecast is written down');
+  check(f.games.g1.summary === 'rain' && f.games.g1.precipIn === null, 'log: a forecast keeps its chance and claims no amount');
+  check(noteObservation(f, g, obs) && f.games.g1.source === 'observed', 'log: an observation replaces the forecast');
+  check(f.games.g1.summary === 'clear' && f.games.g1.precipPct === null, 'log: the observation is what is kept');
+  // The rule the whole file rests on.
+  check(noteForecast(f, g, fc) === false && f.games.g1.source === 'observed', 'log: a forecast never overwrites what happened');
+  check(noteObservation(f, g, { ...obs, tempF: 1 }) === false && f.games.g1.tempF === 68, 'log: an observation is written once and left alone');
+  check(hasObservation(f, 'g1') && !hasObservation(f, 'nope'), 'log: settled games are distinguishable from unsettled');
+
+  // Matching games to a venue's archived hours, on the kickoff hour in UTC.
+  check(hourKey('2026-07-04T23:10:00.000Z') === '2026-07-04T23', 'log: a kickoff resolves to its UTC hour');
+  const hours = new Map<string, Observation>([['2026-07-04T23', obs]]);
+  const g2 = { id: 'g2', kickoff: '2026-07-04T23:40:00.000Z', homeId: 'h', awayId: 'b' };
+  const g3 = { id: 'g3', kickoff: '2026-09-24T18:05:00.000Z', homeId: 'h', awayId: 'c' };
+  const f2 = emptyWeather('mlb');
+  const settled = applyArchive(f2, [g2, g3], hours);
+  check(settled === 1, `log: only the games the archive covers are settled (${settled})`);
+  check(hasObservation(f2, 'g2'), 'log: a covered game is settled');
+  // The archive trails real time by a few days. A recent game must stay open for
+  // a later run, not be recorded as calm and dry because the row was missing.
+  check(!hasObservation(f2, 'g3') && !f2.games.g3, 'log: a game past the end of the archive is left unsettled, not invented');
+  check(applyArchive(f2, [g2], hours) === 0, 'log: re-running the archive settles nothing twice');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');
