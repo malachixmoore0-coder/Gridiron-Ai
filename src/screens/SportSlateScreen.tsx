@@ -37,7 +37,16 @@ interface Props {
   onUpgrade: () => void;
 }
 
-const WEEK_TAB = 132;
+/*
+ * The day strip's geometry, in one place because the scroll arithmetic depends on
+ * it exactly. A tab was 122 wide with an 8px gap -- a pitch of 130 -- while the
+ * scroll assumed 132, and two pixels a tab across a hundred and seventy-five days
+ * of hockey is three hundred and fifty pixels, so "scroll to today" landed two
+ * days past it. Derived from the parts now, so the two cannot drift apart again.
+ */
+const TAB_WIDTH = 122;
+const TAB_GAP = spacing.sm;
+const TAB_PITCH = TAB_WIDTH + TAB_GAP;
 
 /** Kickoff has passed and no final is on file: treat it as under way. */
 function effectiveStatus(g: { status: GameStatus; kickoff: string }, now: number, hours: number): GameStatus {
@@ -60,22 +69,62 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
   const profile = profileFor(view.id);
   const meta = LEAGUE_BY_KEY[view.id];
   const [tab, setTab] = useState<number>(0);
+  const [barWidth, setBarWidth] = useState(0);
   const [open, setOpen] = useState<string | null>(null);
   const [adding, setAdding] = useState<{ game: LeagueGame; abbrs: [string, string] } | null>(null);
   const [now, setNow] = useState(Date.now());
   const bar = useRef<ScrollView>(null);
-  const followed = useRef(false);
+  const followed = useRef<string | null>(null);
 
   useEffect(() => { const t = setInterval(() => setNow(Date.now()), 60_000); return () => clearInterval(t); }, []);
 
   const weeks = view.weeks;
   const currentIdx = Math.max(0, weeks.findIndex((w) => w.week === view.week));
-  useEffect(() => {
-    if (!followed.current && weeks.length) { setTab(currentIdx); followed.current = true; }
-  }, [currentIdx, weeks.length]);
-  useEffect(() => { bar.current?.scrollTo({ x: Math.max(0, (tab - 1) * WEEK_TAB), animated: false }); }, [tab]);
 
-  const selected = weeks[tab] ?? weeks[currentIdx];
+  /*
+   * Jump to today, once per league.
+   *
+   * This used to be a boolean, set the first time a slate loaded and never
+   * cleared, which meant it only ever worked for whichever league happened to
+   * open first. Switching league kept the old day index: leaving the WNBA on day
+   * 116 of 116 and switching to baseball's 215 landed you in June, with today's
+   * games seven months off to the right. Keyed by league, it re-syncs on every
+   * switch and still will not fight a deliberate scroll within one.
+   */
+  useEffect(() => {
+    if (!weeks.length || followed.current === view.id) return;
+    setTab(currentIdx);
+    followed.current = view.id;
+  }, [view.id, currentIdx, weeks.length]);
+
+  /**
+   * A day index that is always inside the strip. Leagues have wildly different
+   * numbers of days, so an index carried over from a longer season would
+   * otherwise point past the end -- which read as a blank strip and a body
+   * showing some other day's games.
+   */
+  const tabIdx = weeks.length ? Math.min(Math.max(0, tab), weeks.length - 1) : 0;
+
+  // Centred, not flush left. A strip two hundred days long is only usable if the
+  // day in question is somewhere near the middle of it when it arrives.
+  useEffect(() => {
+    if (!bar.current) return;
+    const centred = barWidth > 0 ? tabIdx * TAB_PITCH + TAB_WIDTH / 2 - barWidth / 2 : (tabIdx - 1) * TAB_PITCH;
+    bar.current.scrollTo({ x: Math.max(0, centred), animated: false });
+  }, [tabIdx, barWidth, weeks.length]);
+
+  const selected = weeks[tabIdx] ?? weeks[currentIdx];
+
+  /**
+   * The next day with a game still to play, today included. -1 means the league
+   * has nothing scheduled at all -- the WNBA in late September, say, with the
+   * season all but over and the next round not yet published. Worth telling
+   * somebody, because an empty board otherwise reads as a broken app.
+   */
+  const upcomingIdx = useMemo(
+    () => weeks.findIndex((w, i) => i >= currentIdx && w.games - w.final - w.live > 0),
+    [weeks, currentIdx],
+  );
   const liveHours = profile.sport === 'baseball' ? 5 : profile.sport === 'soccer' ? 3 : 4;
 
   const games = useMemo(() => {
@@ -140,9 +189,29 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
       />
 
       {weeks.length > 1 && (
-        <ScrollView ref={bar} horizontal showsHorizontalScrollIndicator={false} style={styles.bar} contentContainerStyle={styles.barInner}>
+        <View style={styles.barRow}>
+          {tabIdx !== currentIdx && (
+            <TouchableOpacity
+              style={styles.todayJump}
+              activeOpacity={0.85}
+              onPress={() => { haptic('select'); setTab(currentIdx); }}
+              accessibilityRole="button"
+              accessibilityLabel="Jump back to today"
+            >
+              <Ionicons name="today-outline" size={13} color={meta.accent} />
+              <Text style={[styles.todayText, { color: meta.accent }]}>Today</Text>
+            </TouchableOpacity>
+          )}
+        <ScrollView
+          ref={bar}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          style={styles.bar}
+          contentContainerStyle={styles.barInner}
+          onLayout={(e) => setBarWidth(e.nativeEvent.layout.width)}
+        >
           {weeks.map((w, i) => {
-            const on = i === tab;
+            const on = i === tabIdx;
             return (
               <TouchableOpacity
                 key={`${w.gameType}-${w.week}`}
@@ -151,8 +220,15 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                 onPress={() => { haptic('select'); setTab(i); }}
                 accessibilityRole="tab"
                 accessibilityState={{ selected: on }}
+                // React Native Web does not map accessibilityState.selected onto
+                // a tab, so the strip shipped with no aria-selected anywhere and
+                // a screen reader could not tell which day was chosen. Stated
+                // outright; harmless on native, which ignores it.
+                {...({ 'aria-selected': on } as object)}
               >
-                <Text style={[styles.weekLabel, on && { color: meta.accent }]} numberOfLines={1}>{w.label}</Text>
+                <Text style={[styles.weekLabel, on && { color: meta.accent }]} numberOfLines={1}>
+                  {i === currentIdx ? 'Today' : w.label}
+                </Text>
                 <Text style={styles.weekMeta}>
                   {w.live ? `${w.live} live` : w.final === w.games ? 'final' : `${w.games} game${w.games === 1 ? '' : 's'}`}
                 </Text>
@@ -160,6 +236,7 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
             );
           })}
         </ScrollView>
+        </View>
       )}
 
       <ScrollView
@@ -192,6 +269,18 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                 const opened = open === g.id;
                 const onCard = eng.picks.some((p) => p.gameId === g.id && p.status === 'open');
                 const drawPct = (rec as { drawPct?: number } | undefined)?.drawPct ?? 0;
+                /*
+                 * A running game is shown at what it is worth now, not at what it
+                 * was worth before it started. Until this, a side nine down in the
+                 * fourth still carried its pre-game 75%, which is not a forecast
+                 * so much as a refusal to look at the scoreboard. Pre-game numbers
+                 * are still what the record is graded on -- these only ever reach
+                 * the screen.
+                 */
+                const liveNow = st === 'in_progress' && g.liveHomeWinPct != null && g.liveAwayWinPct != null;
+                const awayPct = liveNow ? g.liveAwayWinPct! : rec?.awayWinPct ?? 0;
+                const homePct = liveNow ? g.liveHomeWinPct! : rec?.homeWinPct ?? 0;
+                const barDraw = liveNow ? g.liveDrawPct ?? 0 : drawPct;
                 return (
                   <TouchableOpacity
                     key={g.id}
@@ -252,16 +341,16 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                     {!!rec && (
                       <>
                         <ProbBar
-                          awayPct={rec.awayWinPct}
-                          homePct={rec.homeWinPct}
-                          drawPct={drawPct}
+                          awayPct={awayPct}
+                          homePct={homePct}
+                          drawPct={barDraw}
                           awayAbbr={away?.abbr ?? ''}
                           homeAbbr={home?.abbr ?? ''}
                           height={10}
                         />
                         <View style={styles.lineRow}>
                           <Text style={styles.stat}>
-                            <Text style={styles.statKey}>Model </Text>
+                            <Text style={styles.statKey}>{liveNow ? 'Live · model ' : 'Model '}</Text>
                             {rec.spread > 0 ? `${away?.abbr} -${rec.spread.toFixed(1)}` : `${home?.abbr} ${rec.spread.toFixed(1)}`} · {rec.total.toFixed(1)}
                           </Text>
                           {g.homeSpread != null && (
@@ -328,6 +417,38 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
           );
         })}
 
+        {/*
+          * A day with nothing still to play is ordinary and needs no comment --
+          * unless the reason somebody is looking is that they want the next
+          * fixture, which is most of the time. So: point at it, or say plainly
+          * that there is not one. An empty board with no explanation is what
+          * makes a working app look broken.
+          */}
+        {!view.loading && !grouped.scheduled.length && (
+          upcomingIdx >= 0 && upcomingIdx !== tabIdx ? (
+            <TouchableOpacity
+              style={styles.nextUp}
+              activeOpacity={0.85}
+              onPress={() => { haptic('select'); setTab(upcomingIdx); }}
+              accessibilityRole="button"
+              accessibilityLabel={`Go to the next ${meta.name} games, ${weeks[upcomingIdx]?.label}`}
+            >
+              <Ionicons name="arrow-forward-circle-outline" size={16} color={meta.accent} />
+              <Text style={styles.nextUpText}>
+                Nothing left to play on this day. Next {meta.name} games: {weeks[upcomingIdx]?.label}.
+              </Text>
+            </TouchableOpacity>
+          ) : upcomingIdx < 0 ? (
+            <View style={styles.nextUp}>
+              <Ionicons name="checkmark-done-circle-outline" size={16} color={colors.inkFaint} />
+              <Text style={styles.nextUpText}>
+                {meta.name} has no games scheduled yet. Its season is at an end or between rounds — fixtures appear
+                here as soon as they are published.
+              </Text>
+            </View>
+          ) : null
+        )}
+
         {!games.length && !view.loading && (
           <View style={styles.empty}>
             <SportGlyph sport={profile.sport} size={30} color={meta.accent} tile />
@@ -366,13 +487,20 @@ const styles = StyleSheet.create({
   // was 26pt tall around a 47pt tab, so every label lost its second line and
   // the tabs disappeared under the card below. It is not the thing that gives
   // way when the column is short of room.
-  bar: { flexGrow: 0, flexShrink: 0, marginBottom: spacing.sm },
+  bar: { flexGrow: 1, flexShrink: 1, marginBottom: 0 },
+  // The jump sits outside the scroller on purpose: inside it, the one control
+  // that gets you back to today would itself need scrolling to.
+  barRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, paddingLeft: spacing.lg, marginBottom: spacing.sm },
+  todayJump: { flexDirection: 'row', alignItems: 'center', gap: 4, paddingHorizontal: 10, paddingVertical: 7, borderRadius: radius.md, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
+  todayText: { fontSize: 11, fontWeight: '700' },
+  nextUp: { flexDirection: 'row', alignItems: 'center', gap: 8, padding: spacing.md, marginBottom: spacing.md, backgroundColor: colors.card, borderRadius: radius.lg, borderWidth: 1, borderColor: colors.border },
+  nextUpText: { color: colors.inkFaint, fontSize: 12, flex: 1, lineHeight: 17 },
   // alignItems matters here: a horizontal ScrollView lays its children out in a
   // row, and the default stretch makes each tab take the row's height — which
   // was itself derived from nothing, so the whole strip collapsed to the
   // padding and the labels inside it were clipped away to nothing.
-  barInner: { paddingHorizontal: spacing.lg, gap: spacing.sm, alignItems: 'flex-start' },
-  weekTab: { width: WEEK_TAB - 10, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.md, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
+  barInner: { paddingRight: spacing.lg, gap: TAB_GAP, alignItems: 'flex-start' },
+  weekTab: { width: TAB_WIDTH, paddingHorizontal: spacing.md, paddingVertical: 9, borderRadius: radius.md, backgroundColor: colors.card, borderWidth: 1, borderColor: colors.border },
   weekLabel: { color: colors.ink, fontSize: 12.5, fontWeight: '800' },
   weekMeta: { color: colors.inkFaint, fontSize: 10, marginTop: 2 },
 

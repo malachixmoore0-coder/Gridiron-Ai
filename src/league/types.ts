@@ -71,6 +71,18 @@ export interface LeagueGame {
   /** Listed starting pitchers. Baseball only, and only once they are posted. */
   awayProbable?: GameProbable | null;
   homeProbable?: GameProbable | null;
+  /**
+   * What a game in progress is worth right now, given the score and the time
+   * left. Present only while it is running, and never mixed into the locked
+   * pre-game projection the record is graded against.
+   */
+  period?: number | null;
+  clockSeconds?: number | null;
+  bottomHalf?: boolean | null;
+  liveHomeWinPct?: number | null;
+  liveAwayWinPct?: number | null;
+  liveDrawPct?: number | null;
+  liveRemaining?: number | null;
 }
 
 export type { PredictionRecord };
