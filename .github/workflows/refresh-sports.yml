@@ -145,12 +145,26 @@ jobs:
             echo "No dataset changes."
           else
             git commit -m "data: refresh multi-sport datasets"
+            # Replay ONLY our data on top of whatever landed while we ran.
+            #
+            # This used to be `git reset --soft origin/main` followed by a commit,
+            # which is a quiet disaster: --soft keeps the index built from THIS
+            # run's checkout, so committing it writes that whole stale tree back
+            # out. Any source pushed while the job was running was reverted
+            # without a word -- it deleted a new pipeline module and undid three
+            # other files in one go, and the only trace was a commit titled
+            # "data: refresh multi-sport datasets".
+            #
+            # Taking origin/main hard and re-applying just our paths keeps
+            # somebody else's source exactly as they pushed it.
             for attempt in 1 2 3; do
               git push && break
-              echo "Push rejected (attempt $attempt) — replaying our update on top of origin/main."
+              echo "Push rejected (attempt $attempt) — replaying only our data on top of origin/main."
+              ours=$(git rev-parse HEAD)
               git fetch origin main
-              git reset --soft origin/main
+              git reset --hard origin/main
+              git checkout "$ours" -- data/live
               git add data/live
-              git commit -m "data: refresh multi-sport datasets" || true
+              git diff --cached --quiet || git commit -m "data: refresh multi-sport datasets"
             done
           fi

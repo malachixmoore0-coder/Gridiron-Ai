@@ -17,6 +17,7 @@ import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
 import { reconcileMembers } from '../pipeline/multi/members';
+import { gameProbability, seriesFromGames, simulateBracket, type BracketTeam, type PlayoffGame, type SeriesState } from '../pipeline/multi/bracket';
 import type { EspnEvent, EspnSide, EspnTeamRow } from '../pipeline/multi/espn';
 import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
 import { bestAvailable, chooseThreshold, computeConviction, gradedOnly, picksToCertify, wilsonFloor } from '../pipeline/multi/conviction';
@@ -882,6 +883,99 @@ console.log('\n— League membership');
   // Idempotent: adopting twice must not duplicate.
   const twice = reconcileMembers(listed, [...fixtures, ...fixtures]);
   check(twice.adopted.length === 1, `members: a club is adopted once however many games it plays (${twice.adopted.length})`);
+}
+
+// ---- the playoff bracket ----------------------------------------------------
+console.log('\n— Playoff series');
+{
+  const mlbP = profileFor('mlb');
+  const g = (id: string, kickoff: string, homeId: string, awayId: string, hs: number | null = null, as: number | null = null): PlayoffGame =>
+    ({ id, kickoff, gameType: 'postseason', homeId, awayId, homeScore: hs, awayScore: as });
+
+  // A best-of-five at 2-0, with the rest still to play.
+  const games: PlayoffGame[] = [
+    g('1', '2026-10-01T00:00Z', 'A', 'B', 5, 3),
+    g('2', '2026-10-02T00:00Z', 'A', 'B', 4, 1),
+    g('3', '2026-10-04T00:00Z', 'B', 'A'),
+    g('4', '2026-10-05T00:00Z', 'B', 'A'),
+    // A regular-season meeting between the same two must not join the series.
+    { id: 'r', kickoff: '2026-06-01T00:00Z', gameType: 'regular', homeId: 'A', awayId: 'B', homeScore: 2, awayScore: 1 },
+  ];
+  const { series } = seriesFromGames(games, 'baseball');
+  check(series.length === 1, `bracket: repeated postseason meetings are one series (${series.length})`);
+  check(series[0].homeWins === 2 && series[0].awayWins === 0, `bracket: the series score is read from the games (${series[0].homeWins}-${series[0].awayWins})`);
+  check(series[0].remaining.length === 2, `bracket: only unplayed games are left to predict (${series[0].remaining.length})`);
+  // MLB opens with the Wild Card best-of-three; the five comes a round later.
+  check(series[0].bestOf === 3, `bracket: baseball opens with a best-of-three (${series[0].bestOf})`);
+  // The one that matters for correctness: a win by the road side in a game held
+  // at the other ground still counts for the right team.
+  // B wins twice: once away at A's ground, once at home. The series is keyed on
+  // A hosting game one, so both have to land on B regardless of which ground.
+  const flipped = seriesFromGames([
+    g('1', '2026-10-01T00:00Z', 'A', 'B', 1, 9),
+    g('2', '2026-10-04T00:00Z', 'B', 'A', 9, 1),
+  ], 'baseball');
+  check(flipped.series[0].awayWins === 2 && flipped.series[0].homeWins === 0,
+    `bracket: wins follow the team, not the ground (${flipped.series[0].homeWins}-${flipped.series[0].awayWins})`);
+  // And the mirror: A wins one at home and one away.
+  const split = seriesFromGames([
+    g('1', '2026-10-01T00:00Z', 'A', 'B', 9, 1),
+    g('2', '2026-10-04T00:00Z', 'B', 'A', 1, 9),
+  ], 'baseball');
+  check(split.series[0].homeWins === 2 && split.series[0].awayWins === 0,
+    `bracket: and the same in reverse (${split.series[0].homeWins}-${split.series[0].awayWins})`);
+  // A genuine split reads as a split.
+  const even2 = seriesFromGames([
+    g('1', '2026-10-01T00:00Z', 'A', 'B', 9, 1),
+    g('2', '2026-10-04T00:00Z', 'B', 'A', 9, 1),
+  ], 'baseball');
+  check(even2.series[0].homeWins === 1 && even2.series[0].awayWins === 1,
+    `bracket: two home wins by different sides is one apiece (${even2.series[0].homeWins}-${even2.series[0].awayWins})`);
+  check(seriesFromGames([], 'baseball').series.length === 0, 'bracket: no postseason yields no series');
+
+  console.log('\n— Bracket odds');
+  const teams = new Map<string, BracketTeam>([
+    ['A', { id: 'A', seed: 1, rating: 1600 }],
+    ['B', { id: 'B', seed: 4, rating: 1500 }],
+  ]);
+  const one = (st: Partial<SeriesState> = {}): SeriesState =>
+    ({ id: 'A|B', round: 'First round', bestOf: 5, homeId: 'A', awayId: 'B', homeWins: 0, awayWins: 0, remaining: [], ...st });
+
+  const even = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one()] }, 'now');
+  check(even.series[0].homePct > 50, `bracket: the stronger, home side is favoured (${even.series[0].homePct}%)`);
+  check(Math.abs(even.series[0].homePct + even.series[0].awayPct - 100) < 0.2, 'bracket: the two sides sum to 100');
+
+  // Standing at 2-0 in a best-of-five is nearly over, and must be reflected.
+  const ahead = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one({ homeWins: 2 })] }, 'now');
+  check(ahead.series[0].homePct > even.series[0].homePct + 20, `bracket: two up in a five is worth a lot (${even.series[0].homePct}% -> ${ahead.series[0].homePct}%)`);
+  check(ahead.series[0].gamesLeft === 3, `bracket: and three games could still be needed (${ahead.series[0].gamesLeft})`);
+
+  /*
+   * Nothing already decided is re-predicted. A finished series is 100/0, not a
+   * model opinion about games everybody has already watched.
+   */
+  const done = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one({ homeWins: 3 })] }, 'now');
+  check(done.series[0].settled && done.series[0].homePct === 100 && done.series[0].gamesLeft === 0,
+    'bracket: a series already won is reported won, not re-rolled');
+  const lost = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one({ awayWins: 3 })] }, 'now');
+  check(lost.series[0].settled && lost.series[0].homePct === 0, 'bracket: and one already lost is lost');
+
+  // A trailing side is not written off while it can still win.
+  const behind = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one({ awayWins: 2 })] }, 'now');
+  check(behind.series[0].homePct > 0 && behind.series[0].homePct < 30, `bracket: two down is bad, not over (${behind.series[0].homePct}%)`);
+
+  // An undrawn round means no title odds rather than invented ones.
+  const partial = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one()], undrawn: ['Finals'] }, 'now');
+  check(partial.title.length === 0, 'bracket: an undrawn round yields no title odds rather than a guess');
+  check(even.title.length > 0 && Math.abs(even.title.reduce((a, b) => a + b.pct, 0) - 100) < 1,
+    `bracket: a fully drawn bracket crowns somebody, and the odds sum to 100 (${even.title.reduce((a, b) => a + b.pct, 0)})`);
+
+  // Determinism: the same bracket twice must not wobble.
+  const again = simulateBracket({ league: 'mlb', profile: mlbP, teams, series: [one()] }, 'now');
+  check(again.series[0].homePct === even.series[0].homePct, 'bracket: the same state gives the same number twice');
+
+  check(gameProbability({ id: 'A', seed: 1, rating: 1600 }, { id: 'B', seed: 8, rating: 1400 }, mlbP) > 0.5, 'bracket: a big rating gap favours the better side');
+  check(Math.abs(gameProbability({ id: 'A', seed: 1, rating: 1500 }, { id: 'B', seed: 2, rating: 1500 }, mlbP, true) - 0.5) < 0.01, 'bracket: two equals at a neutral ground are even');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');
