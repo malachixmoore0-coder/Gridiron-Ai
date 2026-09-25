@@ -11,6 +11,10 @@
   "lat": 47.47156,
   "lng": -0.55202
  },
+ "athens, georgia": {
+  "lat": 33.96095,
+  "lng": -83.37794
+ },
  "athens, greece": null,
  "atlanta, georgia": {
   "lat": 33.749,
@@ -20,6 +24,10 @@
   "lat": 33.749,
   "lng": -84.38798
  },
+ "auburn, alabama": {
+  "lat": 32.60986,
+  "lng": -85.48078
+ },
  "aue, germany": {
   "lat": 50.59034,
   "lng": 12.70657
@@ -27,6 +35,10 @@
  "augsburg, germany": {
   "lat": 48.37154,
   "lng": 10.89851
+ },
+ "austin, texas": {
+  "lat": 30.26715,
+  "lng": -97.74306
  },
  "austin, texas, usa": {
   "lat": 30.26715,
@@ -36,7 +48,15 @@
   "lat": 47.7996,
   "lng": 3.57033
  },
+ "bakersfield, california": {
+  "lat": 35.37329,
+  "lng": -119.01871
+ },
  "baltimore, maryland": {
+  "lat": 39.29038,
+  "lng": -76.61219
+ },
+ "baltimore, maryland, usa": {
   "lat": 39.29038,
   "lng": -76.61219
  },
@@ -44,9 +64,17 @@
   "lat": 41.38879,
   "lng": 2.15899
  },
+ "baton rouge, louisiana": {
+  "lat": 30.44332,
+  "lng": -91.18747
+ },
  "bergamo, italy": {
   "lat": 45.69601,
   "lng": 9.66721
+ },
+ "berkeley, california": {
+  "lat": 37.87159,
+  "lng": -122.27275
  },
  "berlin, germany": {
   "lat": 52.52437,
@@ -60,6 +88,7 @@
   "lat": 52.48142,
   "lng": -1.89983
  },
+ "bodø/glimt, norway": null,
  "bologna, italy": {
   "lat": 44.49381,
   "lng": 11.33875
@@ -71,6 +100,14 @@
  "bournemouth, england": {
   "lat": 50.72048,
   "lng": -1.8795
+ },
+ "bowling green, kentucky": {
+  "lat": 36.99032,
+  "lng": -86.4436
+ },
+ "bradenton, florida": {
+  "lat": 27.49893,
+  "lng": -82.57482
  },
  "bremen, germany": {
   "lat": 53.07582,
@@ -92,13 +129,34 @@
   "lat": 51.20892,
   "lng": 3.22424
  },
+ "budapest, hungary": {
+  "lat": 47.49835,
+  "lng": 19.04045
+ },
+ "buies creek, north carolina": {
+  "lat": 35.41322,
+  "lng": -78.73557
+ },
+ "cagliari, italy": null,
  "carson, california, usa": {
   "lat": 33.83141,
   "lng": -118.28202
  },
+ "chapel hill, north carolina": {
+  "lat": 35.9132,
+  "lng": -79.05584
+ },
+ "charlotte, north carolina": {
+  "lat": 35.22709,
+  "lng": -80.84313
+ },
  "charlotte, north carolina, usa": {
   "lat": 35.22709,
   "lng": -80.84313
+ },
+ "charlottesville, virginia": {
+  "lat": 38.02931,
+  "lng": -78.47668
  },
  "chester, pennsylvania, usa": {
   "lat": 39.84753,
@@ -124,13 +182,33 @@
   "lat": 31.72024,
   "lng": -106.46084
  },
+ "clearwater, florida": {
+  "lat": 27.96585,
+  "lng": -82.8001
+ },
+ "clemson, south carolina": {
+  "lat": 34.68344,
+  "lng": -82.83737
+ },
  "cleveland, ohio": {
   "lat": 41.4995,
   "lng": -81.69541
  },
+ "college station, texas": {
+  "lat": 30.62798,
+  "lng": -96.33441
+ },
  "cologne, germany": {
   "lat": 50.93333,
   "lng": 6.95
+ },
+ "columbia, south carolina": {
+  "lat": 34.00071,
+  "lng": -81.03481
+ },
+ "columbus, ohio": {
+  "lat": 39.96118,
+  "lng": -82.99879
  },
  "columbus, ohio, usa": {
   "lat": 39.96118,
@@ -144,17 +222,49 @@
   "lat": 45.80819,
   "lng": 9.0832
  },
+ "conway, south carolina": {
+  "lat": 33.836,
+  "lng": -79.04781
+ },
+ "coral gables, florida": {
+  "lat": 25.72149,
+  "lng": -80.26838
+ },
  "coventry, england": {
   "lat": 52.40656,
   "lng": -1.51217
  },
+ "dallas, texas": {
+  "lat": 32.78306,
+  "lng": -96.80667
+ },
+ "deland, florida": {
+  "lat": 29.02832,
+  "lng": -81.30312
+ },
  "denver, colorado": {
+  "lat": 39.73915,
+  "lng": -104.9847
+ },
+ "denver, colorado, usa": {
   "lat": 39.73915,
   "lng": -104.9847
  },
  "detroit, michigan": {
   "lat": 42.33143,
   "lng": -83.04575
+ },
+ "dunedin, florida": {
+  "lat": 28.0199,
+  "lng": -82.77323
+ },
+ "durham, north carolina": {
+  "lat": 35.99403,
+  "lng": -78.89862
+ },
+ "dyersville, iowa": {
+  "lat": 42.48444,
+  "lng": -91.12291
  },
  "eindhoven, netherlands": {
   "lat": 51.44083,
@@ -172,6 +282,15 @@
   "lat": 43.80077,
   "lng": 11.23441
  },
+ "florence, alabama": {
+  "lat": 34.79981,
+  "lng": -87.67725
+ },
+ "fort myers, florida": {
+  "lat": 26.62168,
+  "lng": -81.84059
+ },
+ "foxborough, massachusetts, usa": null,
  "frankfurt, germany": {
   "lat": 50.11552,
   "lng": 8.68417
@@ -183,6 +302,14 @@
  "frosinone, italy": {
   "lat": 41.63976,
   "lng": 13.34109
+ },
+ "fullerton, california": {
+  "lat": 33.87029,
+  "lng": -117.92534
+ },
+ "gainesville, florida": {
+  "lat": 29.65163,
+  "lng": -82.32483
  },
  "gelsenkirchen, germany": {
   "lat": 51.50508,
@@ -196,6 +323,14 @@
   "lat": 40.30571,
   "lng": -3.73295
  },
+ "goodyear, arizona": {
+  "lat": 33.43532,
+  "lng": -112.35821
+ },
+ "greensboro, north carolina": {
+  "lat": 36.07264,
+  "lng": -79.79198
+ },
  "guadalajara, mexico": {
   "lat": 20.67738,
   "lng": -103.34749
@@ -204,17 +339,46 @@
   "lat": 25.67678,
   "lng": -100.25646
  },
+ "hamburg norderstedt, germany": null,
  "harrison, new jersey, usa": {
   "lat": 40.74649,
   "lng": -74.15626
+ },
+ "hattiesburg, mississippi": {
+  "lat": 31.32712,
+  "lng": -89.29034
+ },
+ "houston, texas": {
+  "lat": 29.76328,
+  "lng": -95.36327
  },
  "houston, texas, usa": {
   "lat": 29.76328,
   "lng": -95.36327
  },
+ "hull, england": {
+  "lat": 53.7446,
+  "lng": -0.33525
+ },
+ "ipswich, england": {
+  "lat": 52.05917,
+  "lng": 1.15545
+ },
  "istanbul, türkiye": {
   "lat": 41.01384,
   "lng": 28.94966
+ },
+ "jacksonville, alabama": {
+  "lat": 33.81382,
+  "lng": -85.7613
+ },
+ "jacksonville, florida": {
+  "lat": 30.33218,
+  "lng": -81.65565
+ },
+ "jupiter, florida": {
+  "lat": 26.93422,
+  "lng": -80.09421
  },
  "kansas city, kansas, usa": {
   "lat": 39.11417,
@@ -224,9 +388,29 @@
   "lat": 39.09973,
   "lng": -94.57857
  },
+ "kennesaw, georgia": {
+  "lat": 34.02343,
+  "lng": -84.61549
+ },
+ "knoxville, tennessee": {
+  "lat": 35.96064,
+  "lng": -83.92074
+ },
  "la coruña, spain": {
   "lat": 25.88048,
   "lng": -103.29757
+ },
+ "lakeland, florida": {
+  "lat": 28.03947,
+  "lng": -81.9498
+ },
+ "las vegas, nevada": {
+  "lat": 36.17497,
+  "lng": -115.13722
+ },
+ "lawrence, kansas": {
+  "lat": 38.97167,
+  "lng": -95.23525
  },
  "le havre, france": {
   "lat": 49.49346,
@@ -252,10 +436,18 @@
   "lat": 51.33962,
   "lng": 12.37129
  },
+ "lens, france": {
+  "lat": 50.43302,
+  "lng": 2.82791
+ },
  "león de los aldamas, mexico": null,
  "leverkusen, germany": {
   "lat": 51.0303,
   "lng": 6.98432
+ },
+ "lexington, kentucky": {
+  "lat": 37.98869,
+  "lng": -84.47772
  },
  "lille, france": {
   "lat": 50.63391,
@@ -273,6 +465,10 @@
   "lat": 51.50853,
   "lng": -0.12574
  },
+ "long beach, california": {
+  "lat": 33.76696,
+  "lng": -118.18923
+ },
  "lorient, france": {
   "lat": 47.74817,
   "lng": -3.37177
@@ -284,6 +480,10 @@
  "los angeles, california, usa": {
   "lat": 34.05223,
   "lng": -118.24368
+ },
+ "louisville, kentucky": {
+  "lat": 38.25424,
+  "lng": -85.75941
  },
  "lyon, france": {
   "lat": 45.74906,
@@ -313,9 +513,21 @@
   "lat": 43.29695,
   "lng": 5.38107
  },
+ "mesa, arizona": {
+  "lat": 33.42227,
+  "lng": -111.82264
+ },
+ "mexico city": {
+  "lat": 19.42847,
+  "lng": -99.12766
+ },
  "mexico city, mexico": {
   "lat": 19.42847,
   "lng": -99.12766
+ },
+ "miami, florida": {
+  "lat": 25.77427,
+  "lng": -80.19366
  },
  "miami, florida, usa": {
   "lat": 25.77427,
@@ -337,6 +549,10 @@
   "lat": 51.18539,
   "lng": 6.44172
  },
+ "monroe, louisiana": {
+  "lat": 32.50931,
+  "lng": -92.1193
+ },
  "montreal, canada": {
   "lat": 45.50884,
   "lng": -73.58781
@@ -345,13 +561,33 @@
   "lat": 45.58005,
   "lng": 9.27246
  },
+ "moraga, california": {
+  "lat": 37.83493,
+  "lng": -122.12969
+ },
+ "morgantown, west virginia": {
+  "lat": 39.62953,
+  "lng": -79.9559
+ },
+ "mount pleasant, south carolina": {
+  "lat": 32.79407,
+  "lng": -79.86259
+ },
  "münchen, germany": {
   "lat": 48.13743,
   "lng": 11.57549
  },
+ "murfreesboro, tennessee": {
+  "lat": 35.84562,
+  "lng": -86.39027
+ },
  "napoli, italy": {
   "lat": 40.87618,
   "lng": 14.5195
+ },
+ "nashville, tennessee": {
+  "lat": 36.16589,
+  "lng": -86.78444
  },
  "nashville, tennessee, usa": {
   "lat": 36.16589,
@@ -365,17 +601,38 @@
   "lat": 40.71427,
   "lng": -74.00597
  },
+ "newcastle-upon-tyne, england": null,
  "nice, france": {
   "lat": 43.70313,
   "lng": 7.26608
+ },
+ "norfolk, virginia": {
+  "lat": 36.84681,
+  "lng": -76.28522
+ },
+ "north port, florida": {
+  "lat": 27.04422,
+  "lng": -82.23593
+ },
+ "northridge, california": {
+  "lat": 34.22834,
+  "lng": -118.53675
  },
  "nottingham, england": {
   "lat": 52.9536,
   "lng": -1.15047
  },
+ "omaha, nebraska": {
+  "lat": 41.25626,
+  "lng": -95.94043
+ },
  "orlando, florida, usa": {
   "lat": 28.53834,
   "lng": -81.37924
+ },
+ "oxford, mississippi": {
+  "lat": 34.3665,
+  "lng": -89.51925
  },
  "pachuca, mexico": {
   "lat": 20.11697,
@@ -384,6 +641,10 @@
  "paderborn, germany": {
   "lat": 51.71905,
   "lng": 8.75439
+ },
+ "palm beach, florida": {
+  "lat": 26.70562,
+  "lng": -80.03643
  },
  "pamplona, spain": {
   "lat": 42.81687,
@@ -397,14 +658,23 @@
   "lat": 44.79935,
   "lng": 10.32618
  },
+ "peoria, arizona": {
+  "lat": 33.5806,
+  "lng": -112.23738
+ },
  "philadelphia, pennsylvania": {
   "lat": 39.95238,
   "lng": -75.16362
+ },
+ "phoenix, arizona": {
+  "lat": 33.44838,
+  "lng": -112.07404
  },
  "pittsburgh, pennsylvania": {
   "lat": 40.44062,
   "lng": -79.99589
  },
+ "port st. lucie, florida": null,
  "portland, oregon, usa": {
   "lat": 45.52345,
   "lng": -122.67621
@@ -425,6 +695,10 @@
   "lat": 40.68149,
   "lng": -73.83652
  },
+ "raleigh, north carolina": {
+  "lat": 35.7721,
+  "lng": -78.63861
+ },
  "reggio emilia, italy": {
   "lat": 44.69825,
   "lng": 10.63125
@@ -432,6 +706,10 @@
  "rennes, france": {
   "lat": 48.11109,
   "lng": -1.67431
+ },
+ "riverside, california": {
+  "lat": 33.95335,
+  "lng": -117.39616
  },
  "roma, italy": {
   "lat": 44.99364,
@@ -465,6 +743,10 @@
   "lat": 22.15234,
   "lng": -100.97135
  },
+ "san marcos, texas": {
+  "lat": 29.88327,
+  "lng": -97.94139
+ },
  "san nicolás de los garza, mexico": {
   "lat": 25.74167,
   "lng": -100.30222
@@ -477,6 +759,10 @@
   "lat": 40.59161,
   "lng": -111.8841
  },
+ "santa clara, california, usa": {
+  "lat": 37.35411,
+  "lng": -121.95524
+ },
  "santander, spain": {
   "lat": 43.46589,
   "lng": -3.80493
@@ -484,6 +770,14 @@
  "santiago de querétaro, mexico": {
   "lat": 20.58806,
   "lng": -100.38806
+ },
+ "sarasota, florida": {
+  "lat": 27.33643,
+  "lng": -82.53065
+ },
+ "scottsdale, arizona": {
+  "lat": 33.50921,
+  "lng": -111.89903
  },
  "seattle, washington, usa": {
   "lat": 47.60621,
@@ -509,6 +803,18 @@
   "lat": 38.62727,
   "lng": -90.19789
  },
+ "stanford, california, usa": {
+  "lat": 37.42411,
+  "lng": -122.16608
+ },
+ "starkville, mississippi": {
+  "lat": 33.45049,
+  "lng": -88.81961
+ },
+ "statesboro, georgia": {
+  "lat": 32.44879,
+  "lng": -81.78317
+ },
  "strasbourg, france": {
   "lat": 48.58392,
   "lng": 7.74553
@@ -520,6 +826,22 @@
  "sunderland, england": {
   "lat": 54.90465,
   "lng": -1.38222
+ },
+ "surprise, arizona": {
+  "lat": 33.63059,
+  "lng": -112.33322
+ },
+ "tallahassee, florida": {
+  "lat": 30.43826,
+  "lng": -84.28073
+ },
+ "tampa, florida": {
+  "lat": 27.94752,
+  "lng": -82.45843
+ },
+ "tempe, arizona": {
+  "lat": 33.41477,
+  "lng": -111.90931
  },
  "tijuana, mexico": {
   "lat": 32.5027,
@@ -546,6 +868,14 @@
   "lng": 1.44367
  },
  "toyota stadium, usa": null,
+ "troy, alabama": {
+  "lat": 31.80877,
+  "lng": -85.96995
+ },
+ "tuscaloosa, alabama": {
+  "lat": 33.20984,
+  "lng": -87.56917
+ },
  "udine, italy": {
   "lat": 46.0693,
   "lng": 13.23715
@@ -570,6 +900,10 @@
   "lat": 42.84998,
   "lng": -2.67268
  },
+ "waco, texas": {
+  "lat": 31.54933,
+  "lng": -97.14667
+ },
  "washington, district of columbia": {
   "lat": 38.89511,
   "lng": -77.03637
@@ -577,5 +911,13 @@
  "washington, district of columbia, usa": {
   "lat": 38.89511,
   "lng": -77.03637
+ },
+ "wichita, kansas": {
+  "lat": 37.69224,
+  "lng": -97.33754
+ },
+ "williamsport, pennsylvania": {
+  "lat": 41.24119,
+  "lng": -77.00108
  }
 }
