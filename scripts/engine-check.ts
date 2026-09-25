@@ -17,7 +17,7 @@ import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
 import { reconcileMembers } from '../pipeline/multi/members';
-import { gameProbability, seriesFromGames, simulateBracket, type BracketTeam, type PlayoffGame, type SeriesState } from '../pipeline/multi/bracket';
+import { gameProbability, isPostseason, seriesFromGames, simulateBracket, type BracketTeam, type PlayoffGame, type SeriesState } from '../pipeline/multi/bracket';
 import type { EspnEvent, EspnSide, EspnTeamRow } from '../pipeline/multi/espn';
 import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
 import { bestAvailable, chooseThreshold, computeConviction, gradedOnly, picksToCertify, wilsonFloor } from '../pipeline/multi/conviction';
@@ -932,6 +932,26 @@ console.log('\n— Playoff series');
   check(even2.series[0].homeWins === 1 && even2.series[0].awayWins === 1,
     `bracket: two home wins by different sides is one apiece (${even2.series[0].homeWins}-${even2.series[0].awayWins})`);
   check(seriesFromGames([], 'baseball').series.length === 0, 'bracket: no postseason yields no series');
+
+  /*
+   * Spotting a playoff at all. ESPN's numeric type is the intended signal and it
+   * is simply missing on some leagues -- the WNBA played an entire postseason
+   * and every game of it came back untyped, which is why one signal is not
+   * enough.
+   */
+  const ev = (seasonType: number | null, seasonSlug: string | null, title: string | null) => ({ seasonType, seasonSlug, title });
+  check(isPostseason(ev(3, null, null)), 'postseason: the numeric type is believed');
+  check(isPostseason(ev(null, 'post-season', null)), 'postseason: the slug is believed when the number is missing');
+  check(isPostseason(ev(null, null, 'WNBA Finals - Game 3')), 'postseason: and the fixture name when both are');
+  check(isPostseason(ev(null, null, 'NLDS Game 1')), 'postseason: a division series is one');
+  check(isPostseason(ev(null, null, 'Western Conference Finals')), 'postseason: a conference final is one');
+  check(isPostseason(ev(null, null, 'Wild Card Round')), 'postseason: a wild card game is one');
+  check(!isPostseason(ev(2, null, 'Boston Red Sox at New York Yankees')), 'postseason: an ordinary fixture is not');
+  check(!isPostseason(ev(2, 'regular-season', null)), 'postseason: nor is a regular-season slug');
+  check(!isPostseason(ev(1, null, null)), 'postseason: nor is preseason');
+  check(!isPostseason(ev(null, null, null)), 'postseason: nothing known means no claim');
+  // Word boundaries, so "Finalissima" and "Semifinalist" are not playoffs.
+  check(!isPostseason(ev(2, null, 'Copa Finalissima')), 'postseason: a word merely containing "final" is not a final');
 
   console.log('\n— Bracket odds');
   const teams = new Map<string, BracketTeam>([

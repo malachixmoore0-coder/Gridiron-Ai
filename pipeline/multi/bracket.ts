@@ -283,3 +283,25 @@ export function seriesFromGames(games: PlayoffGame[], sport: string): { series: 
 
   return { series, undrawn };
 }
+
+/**
+ * Is this fixture part of a postseason?
+ *
+ * Three signals, because no one of them is dependable. ESPN's numeric season
+ * type is the intended answer and is simply absent on some leagues' scoreboards
+ * -- the WNBA played a full playoff and every game of it came back untyped. The
+ * slug says "post-season" in words when the number does not. And a playoff
+ * fixture is nearly always named as one: "WNBA Finals - Game 3", "NLDS Game 1".
+ *
+ * Any one of the three is enough. Guarding against a false positive matters
+ * less than it looks: a regular-season game wrongly called a playoff would have
+ * to also be played repeatedly between the same two sides within a week to be
+ * mistaken for a series, which is what the grouping actually keys on.
+ */
+const PLAYOFF_WORDS = /\b(play-?offs?|post-?season|finals?|semi-?finals?|quarter-?finals?|conference final|wild ?card|division series|championship series|world series|elimination|nlds|alds|nlcs|alcs|game \d+ of)\b/i;
+
+export function isPostseason(e: { seasonType: number | null; seasonSlug: string | null; title: string | null }): boolean {
+  if (e.seasonType === 3) return true;
+  if (e.seasonSlug && /post/.test(e.seasonSlug)) return true;
+  return !!e.title && PLAYOFF_WORDS.test(e.title);
+}

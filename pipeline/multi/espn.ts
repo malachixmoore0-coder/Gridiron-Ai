@@ -88,6 +88,10 @@ export interface EspnEvent {
    * series indistinguishable from a Tuesday in June.
    */
   seasonType: number | null;
+  /** ESPN's own words for it, e.g. "post-season". A second opinion on the above. */
+  seasonSlug: string | null;
+  /** The fixture's name, which for a playoff game usually says so outright. */
+  title: string | null;
   awayScore: number | null;
   homeScore: number | null;
   awayRank: number | null;
@@ -351,7 +355,9 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       homeId: String(home.team.id),
       away: sideOf(away),
       home: sideOf(home),
-      seasonType: num(ev.season?.type) ?? num(comp.season?.type) ?? null,
+      seasonType: num(ev.season?.type) ?? num(comp.season?.type) ?? num((ev as any).seasonType) ?? null,
+      seasonSlug: String(ev.season?.slug ?? comp.season?.slug ?? '').toLowerCase() || null,
+      title: String(ev.name ?? comp.notes?.[0]?.headline ?? '') || null,
       awayScore: started ? num(away.score) : null,
       homeScore: started ? num(home.score) : null,
       awayRank: num(away.curatedRank?.current) ?? null,

@@ -21,7 +21,7 @@ import { GENERIC_LEAGUES, profileFor, type LeagueMeta } from '../../src/sports/t
 import type { SportGame, SportGroup, SportPredictionRecord, SportPredictionsFile, SportScheduleFile, SportTeam, SportTeamsFile } from '../../src/sports/feed';
 import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { reconcileMembers } from './members';
-import { seriesFromGames, simulateBracket, type BracketTeam } from './bracket';
+import { isPostseason, seriesFromGames, simulateBracket, type BracketTeam } from './bracket';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
 import { liveWinProbability } from '../../src/sports/live';
@@ -272,7 +272,7 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       week: dayIndex.get(dayKey(e.date)) ?? 1,
       // What it actually is. Calling a playoff series a regular-season game made
       // the postseason invisible to everything downstream, a bracket included.
-      gameType: e.seasonType === 3 ? 'postseason' : e.seasonType === 1 ? 'preseason' : 'regular',
+      gameType: isPostseason(e) ? 'postseason' : e.seasonType === 1 ? 'preseason' : 'regular',
       kickoff: e.date,
       weekday: new Date(e.date).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' }),
       awayId: e.awayId,
