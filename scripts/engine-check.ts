@@ -17,6 +17,7 @@ import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
 import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
+import { bestAvailable, chooseThreshold, computeConviction, gradedOnly, picksToCertify, wilsonFloor } from '../pipeline/multi/conviction';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -761,6 +762,74 @@ console.log('\n— Temperature');
   // Unmeasured sports get nothing, which is the point.
   const nbaBase = { ...base, home: { id: 'h', rating: 1500, attack: 1, defence: 1 } };
   check(project({ ...nbaBase, tempF: 95 }, nbaP).total === project({ ...nbaBase, tempF: 40 }, nbaP).total, 'temp: a sport nobody measured gets no temperature effect');
+}
+
+// ---- the conviction tier ----------------------------------------------------
+console.log('\n— Conviction');
+{
+  // n graded games at a given confidence, a given number of them won.
+  const make = (specs: { conf: number; n: number; won: number }[]) =>
+    specs.flatMap((sp, si) => Array.from({ length: sp.n }, (_, i) => ({
+      id: `g${si}-${i}`, season: 2026, week: 1, gameType: 'regular',
+      kickoff: `2026-0${1 + (i % 9)}-01T00:00:00.000Z`,
+      awayId: 'a', homeId: 'h', neutralSite: false,
+      homeWinPct: sp.conf, awayWinPct: 100 - sp.conf,
+      projectedHome: 5, projectedAway: 4, spread: -1, total: 9,
+      marketHomeSpread: null, marketTotal: null,
+      predictedAt: '2026-01-01T00:00:00.000Z', updates: 1,
+      status: 'final' as const, lockedAt: null,
+      result: {
+        homeScore: 1, awayScore: 0, suCorrect: i < sp.won,
+        ats: null, ou: null, brier: 0.2, spreadError: 0, totalError: 0,
+      },
+    })));
+
+  // Wilson's 95% interval for 9/10 is [0.596, 0.982]; the lower end is the bar.
+  check(Math.abs(wilsonFloor(9, 10) - 0.596) < 0.005, `conviction: nine from ten has a floor near 60% (${wilsonFloor(9, 10).toFixed(3)})`);
+  check(Math.abs(wilsonFloor(1, 1) - 0.2065) < 0.01, `conviction: a single win proves almost nothing (${wilsonFloor(1, 1).toFixed(3)})`);
+  check(wilsonFloor(70, 100) > wilsonFloor(7, 10), 'conviction: the same rate on more games has a higher floor');
+  check(wilsonFloor(0, 0) === 0, 'conviction: no games has no floor');
+
+  // A threshold is only certified once the sample can support it.
+  const thin = gradedOnly(make([{ conf: 80, n: 10, won: 10 }]));
+  check(chooseThreshold(thin, 0.7) === null, 'conviction: ten from ten certifies nothing');
+  const plenty = gradedOnly(make([{ conf: 80, n: 200, won: 170 }]));
+  check(chooseThreshold(plenty, 0.7) !== null, 'conviction: 170 from 200 does');
+
+  /*
+   * The lowest qualifying threshold wins, not the prettiest. A tier chosen for
+   * the best-looking rate ends up tiny and overstated at once.
+   */
+  const mixed = gradedOnly(make([
+    { conf: 62, n: 200, won: 160 },  // 80% -- qualifies, and covers far more
+    { conf: 90, n: 40, won: 40 },    // 100% -- prettier, on a tenth of the games
+  ]));
+  const t = chooseThreshold(mixed, 0.7);
+  check(t != null && t <= 62, `conviction: the widest qualifying tier is taken, not the flashiest (${t})`);
+
+  /*
+   * Regression: bestAvailable compared a fraction against a percentage, so the
+   * first qualifying threshold silently won every time and a real 74% tier was
+   * reported as the 59% one underneath it.
+   */
+  const layered = gradedOnly(make([
+    { conf: 55, n: 120, won: 60 },   // 50% at the bottom, and the first to qualify
+    { conf: 75, n: 60, won: 48 },    // 80% higher up -- this is the answer
+  ]));
+  const best = bestAvailable(layered, 30);
+  check(best != null && best.rate > 70, `conviction: the best tier is found, not merely the first (${best?.rate}% at ${best?.threshold}%+)`);
+  check(best != null && best.threshold >= 56, 'conviction: and it is the higher threshold that carries it');
+
+  // What it would take to prove a rate.
+  check(picksToCertify(0.7, 0.7) === null && picksToCertify(0.6, 0.7) === null, 'conviction: nothing at or below target needs proving');
+  const near = picksToCertify(0.72, 0.7)!, far = picksToCertify(0.9, 0.7)!;
+  check(near > far, `conviction: a rate close to the target takes far more games to prove (${near} vs ${far})`);
+  check(far > 0 && far < 100, `conviction: a rate well clear of it takes few (${far})`);
+
+  // The honest report on a league that cannot support a tier.
+  const c = computeConviction(make([{ conf: 55, n: 40, won: 20 }]), 0.7, '2026-09-25T00:00:00.000Z');
+  check(c.threshold === null && c.graded === 40, 'conviction: a league with no qualifying tier says so');
+  check(/clears/.test(c.note), `conviction: and explains why (${c.note})`);
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

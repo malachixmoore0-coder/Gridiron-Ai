@@ -384,6 +384,11 @@ npm run data:build:offline   # skip Open-Meteo calls
 # population as the subset that has been graded.
 npm run ledger            # every league; `-- mlb` for one
 
+# Which leagues can honestly carry a 70% tier, and what it would take. Picks the
+# threshold on the first half of the record and reports the second half, because
+# a threshold scored on the games that chose it always looks good.
+npm run conviction
+
 # What the weather is really worth. The engine's multipliers (cold 0.95, rain
 # 0.94, wind nothing) were written from first principles and never checked
 # against a game; this puts each next to what the games say, and shows the
