@@ -901,7 +901,7 @@ console.log('\n— Playoff series');
     // A regular-season meeting between the same two must not join the series.
     { id: 'r', kickoff: '2026-06-01T00:00Z', gameType: 'regular', homeId: 'A', awayId: 'B', homeScore: 2, awayScore: 1 },
   ];
-  const { series } = seriesFromGames(games, 'baseball');
+  const { series } = seriesFromGames(games, 'mlb');
   check(series.length === 1, `bracket: repeated postseason meetings are one series (${series.length})`);
   check(series[0].homeWins === 2 && series[0].awayWins === 0, `bracket: the series score is read from the games (${series[0].homeWins}-${series[0].awayWins})`);
   check(series[0].remaining.length === 2, `bracket: only unplayed games are left to predict (${series[0].remaining.length})`);
@@ -914,24 +914,55 @@ console.log('\n— Playoff series');
   const flipped = seriesFromGames([
     g('1', '2026-10-01T00:00Z', 'A', 'B', 1, 9),
     g('2', '2026-10-04T00:00Z', 'B', 'A', 9, 1),
-  ], 'baseball');
+  ], 'mlb');
   check(flipped.series[0].awayWins === 2 && flipped.series[0].homeWins === 0,
     `bracket: wins follow the team, not the ground (${flipped.series[0].homeWins}-${flipped.series[0].awayWins})`);
   // And the mirror: A wins one at home and one away.
   const split = seriesFromGames([
     g('1', '2026-10-01T00:00Z', 'A', 'B', 9, 1),
     g('2', '2026-10-04T00:00Z', 'B', 'A', 1, 9),
-  ], 'baseball');
+  ], 'mlb');
   check(split.series[0].homeWins === 2 && split.series[0].awayWins === 0,
     `bracket: and the same in reverse (${split.series[0].homeWins}-${split.series[0].awayWins})`);
   // A genuine split reads as a split.
   const even2 = seriesFromGames([
     g('1', '2026-10-01T00:00Z', 'A', 'B', 9, 1),
     g('2', '2026-10-04T00:00Z', 'B', 'A', 9, 1),
-  ], 'baseball');
+  ], 'mlb');
   check(even2.series[0].homeWins === 1 && even2.series[0].awayWins === 1,
     `bracket: two home wins by different sides is one apiece (${even2.series[0].homeWins}-${even2.series[0].awayWins})`);
-  check(seriesFromGames([], 'baseball').series.length === 0, 'bracket: no postseason yields no series');
+  check(seriesFromGames([], 'mlb').series.length === 0, 'bracket: no postseason yields no series');
+
+  /*
+   * Series length belongs to the league, not the sport. Reading the NBA off a
+   * shared "basketball" entry reported a series that finished 4-3 as a
+   * best-of-three, which cannot happen, and turned a single-elimination college
+   * tournament into seventy-seven best-of-three ties all somehow still alive.
+   */
+  const nbaSeven = seriesFromGames([
+    g('1', '2026-04-20T00:00Z', 'A', 'B', 110, 100),
+    g('2', '2026-04-22T00:00Z', 'A', 'B', 99, 101),
+  ], 'nba');
+  check(nbaSeven.series[0].bestOf === 7, `bracket: the NBA plays best-of-seven from the first round (${nbaSeven.series[0].bestOf})`);
+  const wnbaThree = seriesFromGames([g('1', '2026-09-14T00:00Z', 'A', 'B', 80, 70)], 'wnba');
+  check(wnbaThree.series[0].bestOf === 3, `bracket: the WNBA opens with a best-of-three (${wnbaThree.series[0].bestOf})`);
+  // Single elimination: one game settles it outright.
+  const college = seriesFromGames([g('1', '2026-03-19T00:00Z', 'A', 'B', 70, 60)], 'mbb');
+  check(college.series[0].bestOf === 1, `bracket: a college tournament tie is one game (${college.series[0].bestOf})`);
+  const collegeOdds = simulateBracket({
+    league: 'mbb', profile: profileFor('mbb'),
+    teams: new Map([['A', { id: 'A', seed: 1, rating: 1600 }], ['B', { id: 'B', seed: 16, rating: 1400 }]]),
+    series: college.series,
+  }, 'now');
+  check(collegeOdds.series[0].settled, 'bracket: and winning it once wins it');
+  // Rounds separate properly when a tournament plays them two days apart.
+  const twoRounds = seriesFromGames([
+    g('1', '2026-03-19T00:00Z', 'A', 'B', 70, 60),
+    g('2', '2026-03-19T00:00Z', 'C', 'D', 70, 60),
+    g('3', '2026-03-26T00:00Z', 'A', 'C', 70, 60),
+  ], 'mbb');
+  check(new Set(twoRounds.series.map((x) => x.round)).size === 2,
+    `bracket: a week later is the next round, not the same one (${[...new Set(twoRounds.series.map((x) => x.round))].join('/')})`);
 
   /*
    * Spotting a playoff at all. ESPN's numeric type is the intended signal and it

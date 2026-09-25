@@ -611,9 +611,15 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
         homeId: g.homeId, awayId: g.awayId,
         homeScore: g.homeScore, awayScore: g.awayScore,
       })),
-      p.sport,
+      meta.key,
     );
-    if (series.length) {
+    /*
+     * Only while there is something left to predict. A bracket whose every
+     * series is settled is last spring's, and publishing it as the current one
+     * says a champion is 100% to win a tournament that finished in June.
+     */
+    const unplayed = series.some((x) => x.remaining.length > 0);
+    if (series.length && unplayed) {
       const seeds = new Map<string, BracketTeam>();
       for (const t of sportTeams) {
         seeds.set(t.id, { id: t.id, seed: t.rank ?? null, rating: t.rating, attack: t.attack, defence: t.defence });

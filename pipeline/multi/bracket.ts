@@ -211,14 +211,36 @@ export interface PlayoffGame {
   awayScore: number | null;
 }
 
-/** Series length by round depth, per sport. Index 0 is the first round played. */
-const SERIES_SHAPE: Record<string, number[]> = {
-  baseball: [3, 5, 7, 7],
-  basketball: [3, 5, 7, 7],
-  hockey: [7, 7, 7, 7],
+/**
+ * How a competition's postseason is actually played, by league rather than by
+ * sport, because the sport is not enough. The NBA is best-of-seven from the
+ * first round and the WNBA is not; both are basketball. Read off one shared
+ * basketball entry, an NBA series that finished 4-3 was reported as a
+ * best-of-three, which is not a thing that can happen.
+ *
+ * `roundGapDays` is how far apart two series can start and still belong to the
+ * same round. A best-of-seven round takes a fortnight; a single-elimination
+ * tournament plays a whole round in two days, and using the same window there
+ * collapsed an entire March into one round of seventy-seven "series".
+ */
+interface PostseasonShape { bestOf: number[]; roundGapDays: number }
+
+const SHAPES: Record<string, PostseasonShape> = {
+  mlb: { bestOf: [3, 5, 7, 7], roundGapDays: 8 },
+  nba: { bestOf: [7, 7, 7, 7], roundGapDays: 8 },
+  wnba: { bestOf: [3, 5, 7], roundGapDays: 6 },
+  nhl: { bestOf: [7, 7, 7, 7], roundGapDays: 8 },
+  // One game and you are out. Every meeting is its own tie, and a round is over
+  // in a couple of days.
+  mbb: { bestOf: [1], roundGapDays: 3 },
+  wbb: { bestOf: [1], roundGapDays: 3 },
+  cbase: { bestOf: [1], roundGapDays: 3 },
 };
 
-const ROUND_NAMES = ['First round', 'Semi-finals', 'Conference finals', 'Finals'];
+/** Anything not named plays one game for it, which is the safer assumption. */
+const DEFAULT_SHAPE: PostseasonShape = { bestOf: [1], roundGapDays: 4 };
+
+const ROUND_NAMES = ['First round', 'Second round', 'Regional semi-finals', 'Regional finals', 'Semi-finals', 'Finals'];
 
 /**
  * Group postseason fixtures into series.
@@ -231,7 +253,7 @@ const ROUND_NAMES = ['First round', 'Semi-finals', 'Conference finals', 'Finals'
  * A fixture with an unfilled side is skipped: those are the slots a later round
  * is waiting on, and they are what `undrawn` reports.
  */
-export function seriesFromGames(games: PlayoffGame[], sport: string): { series: SeriesState[]; undrawn: string[] } {
+export function seriesFromGames(games: PlayoffGame[], league: string): { series: SeriesState[]; undrawn: string[] } {
   const post = games.filter((g) => g.gameType === 'postseason' && g.homeId && g.awayId);
   if (!post.length) return { series: [], undrawn: [] };
 
@@ -248,13 +270,13 @@ export function seriesFromGames(games: PlayoffGame[], sport: string): { series: 
     return { key, list: sorted, start: sorted[0].kickoff };
   }).sort((a, b) => (a.start < b.start ? -1 : 1));
 
-  const shape = SERIES_SHAPE[sport] ?? [7, 7, 7, 7];
+  const shape = SHAPES[league] ?? DEFAULT_SHAPE;
   let round = 0;
   let roundStart = pairs.length ? Date.parse(pairs[0].start) : 0;
   const series: SeriesState[] = [];
   for (const pr of pairs) {
     // More than a week after this round began is the next round.
-    if (Date.parse(pr.start) - roundStart > 8 * 86_400_000) { round += 1; roundStart = Date.parse(pr.start); }
+    if (Date.parse(pr.start) - roundStart > shape.roundGapDays * 86_400_000) { round += 1; roundStart = Date.parse(pr.start); }
     const first = pr.list[0];
     // The side hosting game one is the better seed, which is how every one of
     // these leagues arranges it.
@@ -270,7 +292,7 @@ export function seriesFromGames(games: PlayoffGame[], sport: string): { series: 
     series.push({
       id: pr.key,
       round: ROUND_NAMES[Math.min(round, ROUND_NAMES.length - 1)],
-      bestOf: shape[Math.min(round, shape.length - 1)] ?? 7,
+      bestOf: shape.bestOf[Math.min(round, shape.bestOf.length - 1)] ?? 7,
       homeId, awayId, homeWins, awayWins, remaining,
     });
   }
