@@ -264,8 +264,21 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     for (const d of members.pending.slice(0, 4)) console.log(`      ${d.date}  ${d.label}`);
   }
 
+  /*
+   * A fixture whose side is still TBD is a real, scheduled game. Dropping those
+   * is why a board can say a league has nothing coming up while its playoff
+   * schedule is published everywhere else: the WNBA's first round is set for the
+   * 27th and MLB's for the 29th, and both arrive here named "TBD @ TBD" until the
+   * seeding is final. They are kept and shown as fixtures awaiting a draw; they
+   * get no projection, because the loop below skips any game whose sides are not
+   * rated, and there is nothing to rate yet.
+   *
+   * What is still dropped is a fixture with a *named* side that we somehow have
+   * no team for. After the reconciliation above, that should not happen.
+   */
+  const isPending = (e: EspnEvent) => e.home.placeholder || e.away.placeholder;
   const games: SportGame[] = events
-    .filter((e) => byId.has(e.homeId) && byId.has(e.awayId))
+    .filter((e) => isPending(e) || (byId.has(e.homeId) && byId.has(e.awayId)))
     .map((e) => ({
       id: e.id,
       season,
@@ -275,8 +288,11 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       gameType: isPostseason(e) ? 'postseason' : e.seasonType === 1 ? 'preseason' : 'regular',
       kickoff: e.date,
       weekday: new Date(e.date).toLocaleDateString('en-US', { weekday: 'long', timeZone: 'UTC' }),
-      awayId: e.awayId,
-      homeId: e.homeId,
+      // An unfilled slot gets no team id, so nothing downstream can mistake it
+      // for a club: no rating, no standing, no projection.
+      awayId: e.away.placeholder ? '' : e.awayId,
+      homeId: e.home.placeholder ? '' : e.homeId,
+      matchupPending: isPending(e),
       neutralSite: e.neutral,
       stadium: e.venue,
       roof: e.venueIndoor ? 'dome' : 'outdoors',

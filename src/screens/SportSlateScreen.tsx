@@ -294,7 +294,7 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                     <View style={styles.top}>
                       <View style={styles.team}>
                         <RefMark team={away} size={34} disc />
-                        <Text style={styles.abbr} numberOfLines={1}>{away?.abbr ?? '—'}</Text>
+                        <Text style={styles.abbr} numberOfLines={1}>{away?.abbr ?? (g.matchupPending ? 'TBC' : '—')}</Text>
                         {st === 'scheduled'
                           ? !!away?.record && <Text style={styles.rec}>{away.record}</Text>
                           : <Text style={[styles.score, numeric]}>{g.awayScore ?? '–'}</Text>}
@@ -302,6 +302,12 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                       <View style={styles.mid}>
                         {st === 'in_progress' ? (
                           <View style={styles.liveRow}><View style={styles.liveDot} /><Text style={styles.liveText}>{g.statusDetail || 'In progress'}</Text></View>
+                        ) : g.matchupPending ? (
+                          // The fixture is real and on the schedule; the two
+                          // sides are not decided yet. Saying so beats a dash.
+                          <Text style={styles.when} numberOfLines={1}>
+                            {new Date(g.kickoff).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })} · TBC
+                          </Text>
                         ) : (
                           <Text style={styles.when} numberOfLines={1}>
                             {st === 'final' ? 'Final' : new Date(g.kickoff).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
@@ -331,7 +337,7 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                       </View>
                       <View style={styles.team}>
                         <RefMark team={home} size={34} disc />
-                        <Text style={styles.abbr} numberOfLines={1}>{home?.abbr ?? '—'}</Text>
+                        <Text style={styles.abbr} numberOfLines={1}>{home?.abbr ?? (g.matchupPending ? 'TBC' : '—')}</Text>
                         {st === 'scheduled'
                           ? !!home?.record && <Text style={styles.rec}>{home.record}</Text>
                           : <Text style={[styles.score, numeric]}>{g.homeScore ?? '–'}</Text>}

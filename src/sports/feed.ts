@@ -88,6 +88,12 @@ export interface SportGame {
    * anything not in progress — a live probability on a finished game would be a
    * claim about a result already known.
    */
+  /**
+   * A scheduled fixture whose sides are not known yet — a playoff game waiting
+   * on the round before it. Real enough to show on the board, and never
+   * projected, because there is nobody in it to project.
+   */
+  matchupPending?: boolean;
   period?: number | null;
   clockSeconds?: number | null;
   bottomHalf?: boolean | null;

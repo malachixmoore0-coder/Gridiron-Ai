@@ -76,6 +76,8 @@ export interface LeagueGame {
    * left. Present only while it is running, and never mixed into the locked
    * pre-game projection the record is graded against.
    */
+  /** A playoff fixture whose sides the bracket has not decided yet. */
+  matchupPending?: boolean;
   period?: number | null;
   clockSeconds?: number | null;
   bottomHalf?: boolean | null;

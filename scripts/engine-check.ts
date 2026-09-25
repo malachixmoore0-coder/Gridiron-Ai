@@ -876,6 +876,21 @@ console.log('\n— League membership');
   check(b.pending.length === 2, `members: but the fixture waiting on it is reported (${b.pending.length})`);
   check(b.pending[0].date === '2026-09-29', `members: with its date (${b.pending[0].date})`);
 
+  /*
+   * The fixture that started all this. The WNBA's first round is scheduled for
+   * the 27th and MLB's for the 29th, and both arrive named "TBD @ TBD" until
+   * seeding is final. They must reach the board as real fixtures -- a league
+   * whose playoff schedule is published everywhere else should not read as
+   * having nothing coming up -- while never becoming clubs.
+   */
+  const pendingOnly = reconcileMembers([row('1', 'ARS'), row('2', 'CHE')], [
+    ...Array.from({ length: 50 }, () => ev(side('1', 'Arsenal'), side('2', 'Chelsea'))),
+    ev(side('', 'TBD', true), side('', 'TBD', true), '2026-09-27T00:00:00Z'),
+  ]);
+  check(pendingOnly.pending.length === 1 && pendingOnly.adopted.length === 0,
+    'members: a fixture awaiting a draw is reported, and creates no club');
+  check(pendingOnly.ghosts.length === 0, 'members: and does not make anyone else a phantom');
+
   // A season that has not begun has no fixtures to judge anyone by.
   const preseason = reconcileMembers([row('1', 'ARS'), row('2', 'CHE')], []);
   check(preseason.ghosts.length === 0, 'members: before a ball is kicked nobody is a phantom');
