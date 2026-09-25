@@ -61,6 +61,9 @@ export interface EspnEvent {
   venueIndoor: boolean;
   awayId: string;
   homeId: string;
+  /** Display names, carried only so a dropped event can be named in a log. */
+  awayName: string;
+  homeName: string;
   awayScore: number | null;
   homeScore: number | null;
   awayRank: number | null;
@@ -299,6 +302,8 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       venueIndoor: !!comp.venue?.indoor,
       awayId: String(away.team.id),
       homeId: String(home.team.id),
+      awayName: String(away.team.displayName ?? away.team.shortDisplayName ?? away.team.abbreviation ?? away.team.id ?? '?'),
+      homeName: String(home.team.displayName ?? home.team.shortDisplayName ?? home.team.abbreviation ?? home.team.id ?? '?'),
       awayScore: started ? num(away.score) : null,
       homeScore: started ? num(home.score) : null,
       awayRank: num(away.curatedRank?.current) ?? null,

@@ -232,8 +232,35 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
    * cached, which is what keeps this a few calls per build rather than one per
    * game per day.
    */
+  /*
+   * An event is kept only if both of its sides are in the league's own team
+   * list, because a game against a team with no rating cannot be projected.
+   * That much is right. Dropping them without saying so was not: this silently
+   * discarded thirty-five WNBA events out of three hundred and eighty, and the
+   * only visible symptom was a board that looked like a finished season. The
+   * same one-line filter with no accounting behind it is what turned a broken
+   * date syntax into a nine-day outage nobody noticed.
+   *
+   * So it is counted now, grouped by the side that is missing, and a dropped
+   * game still to be played is called out separately -- those are the ones
+   * somebody is looking for on the board.
+   */
+  const orphaned: { date: string; who: string; label: string; future: boolean }[] = [];
   const games: SportGame[] = events
-    .filter((e) => byId.has(e.homeId) && byId.has(e.awayId))
+    .filter((e) => {
+      const haveHome = byId.has(e.homeId), haveAway = byId.has(e.awayId);
+      if (haveHome && haveAway) return true;
+      const who = !haveHome && !haveAway
+        ? `${e.awayName} (${e.awayId}) and ${e.homeName} (${e.homeId})`
+        : haveHome ? `${e.awayName} (${e.awayId})` : `${e.homeName} (${e.homeId})`;
+      orphaned.push({
+        date: e.date.slice(0, 10),
+        who,
+        label: `${e.awayName} @ ${e.homeName}`,
+        future: e.homeScore == null && e.awayScore == null && Date.parse(e.date) > now.getTime(),
+      });
+      return false;
+    })
     .map((e) => ({
       id: e.id,
       season,
@@ -269,6 +296,19 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       homeRank: e.homeRank,
       books: null,
     }));
+
+  // Said out loud, now that the filter above has actually run.
+  if (orphaned.length) {
+    const ahead = orphaned.filter((d) => d.future);
+    const byWho = new Map<string, number>();
+    for (const d of orphaned) byWho.set(d.who, (byWho.get(d.who) ?? 0) + 1);
+    console.log(`  DROPPED ${orphaned.length} event${orphaned.length === 1 ? '' : 's'} — a side is not in this league's ${teams.length} teams`
+      + (ahead.length ? ` · ${ahead.length} of them NOT YET PLAYED` : ''));
+    for (const [who, n] of [...byWho.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4)) {
+      console.log(`      ${String(n).padStart(3)} x  ${who}`);
+    }
+    for (const d of ahead.slice(0, 5)) console.log(`      upcoming: ${d.date}  ${d.label}`);
+  }
 
   // ---- kick-off weather, for the sports it can reach ----------------------
   if (p.outdoor && !process.argv.includes('--no-weather')) {
