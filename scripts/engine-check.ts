@@ -16,6 +16,7 @@ import { computeParkFactors, type ParkGame } from '../pipeline/multi/parks';
 import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
+import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
 import { fieldSeed, simulateField } from '../src/sports/golf';
 import { withForecast } from '@/utils/forecast';
 import type { LeagueView } from '@/league/types';
@@ -623,6 +624,104 @@ console.log('\n— Weather splits');
   check(rs.sides.every((r) => Math.abs(r.edge) <= Math.abs(r.raw) + 1e-9), 'splits: every side edge is shrunk toward zero, never away');
   check(computeWeatherSplits(real.slice(0, 20), NOW).league.length === 0, 'splits: too few games measures nothing');
   check(computeWeatherSplits([], NOW).games === 0, 'splits: no games yields nothing');
+}
+
+// ---- watching a game -------------------------------------------------------
+console.log('\n— How much game is left');
+{
+  const nba = profileFor('nba'), mlbP = profileFor('mlb'), soccer = profileFor('epl'), mbbP = profileFor('mbb');
+  const at = (period: number, clockSeconds: number | null, bottomHalf?: boolean): LiveState =>
+    ({ period, clockSeconds, bottomHalf, homeScore: 0, awayScore: 0 });
+
+  check(Math.abs(fractionRemaining(at(1, 720), nba) - 1) < 1e-9, 'clock: tip-off is a whole game');
+  check(Math.abs(fractionRemaining(at(3, 360), nba) - 0.375) < 1e-9, 'clock: halfway through the 3rd leaves 37.5%');
+  check(Math.abs(fractionRemaining(at(4, 0), nba)) < 1e-9, 'clock: no time on the 4th-quarter clock leaves nothing');
+  // College basketball is two twenty-minute halves, not four quarters. Reading it
+  // off the NBA's shape would report the wrong half of the game.
+  check(Math.abs(fractionRemaining(at(2, 600), mbbP) - 0.25) < 1e-9, 'clock: college basketball is halves, not quarters');
+  check(fractionRemaining(at(5, 120), nba) > 0 && fractionRemaining(at(5, 120), nba) < 0.1, 'clock: overtime is a sliver, not nothing');
+  // Baseball has no clock, so progress is innings and halves.
+  check(Math.abs(fractionRemaining(at(1, null, false), mlbP) - 1) < 1e-9, 'innings: the top of the 1st is a whole game');
+  check(Math.abs(fractionRemaining(at(7, null, false), mlbP) - 3 / 9) < 1e-9, 'innings: the top of the 7th leaves three');
+  check(Math.abs(fractionRemaining(at(7, null, true), mlbP) - 2.5 / 9) < 1e-9, 'innings: the bottom of the 7th leaves two and a half');
+  check(Math.abs(fractionRemaining(at(1, 2700), soccer) - 1) < 1e-9, 'clock: kick-off is a whole match');
+  // A clock sport whose clock did not arrive must degrade, not freeze.
+  const noClock = fractionRemaining(at(3, null), nba);
+  check(noClock > 0.2 && noClock < 0.4, `clock: a missing clock falls back to mid-period (${noClock.toFixed(3)})`);
+}
+
+console.log('\n— Live win probability');
+{
+  const nba = profileFor('nba'), mlbP = profileFor('mlb'), soccer = profileFor('epl');
+  const evenNba = { projectedHome: 112, projectedAway: 110 };
+  const evenMlb = { projectedHome: 4.4, projectedAway: 4.2 };
+  const evenSoc = { projectedHome: 1.5, projectedAway: 1.3 };
+
+  // Tip-off should land near the pre-game number, not somewhere new.
+  const tip = liveWinProbability({ period: 1, clockSeconds: 720, homeScore: 0, awayScore: 0 }, evenNba, nba);
+  check(tip.homeWinPct > 50 && tip.homeWinPct < 62, `live: tip-off sits near the pre-game number (${tip.homeWinPct}%)`);
+  check(Math.abs(tip.homeWinPct + tip.awayWinPct - 100) < 0.2, 'live: the two sides sum to 100');
+
+  // The same lead is worth more the later it is. This is the whole point.
+  const early = liveWinProbability({ period: 1, clockSeconds: 600, homeScore: 6, awayScore: 0 }, evenNba, nba).homeWinPct;
+  const late = liveWinProbability({ period: 4, clockSeconds: 60, homeScore: 6, awayScore: 0 }, evenNba, nba).homeWinPct;
+  check(late > early, `live: six up is worth more late than early (${early}% -> ${late}%)`);
+  // Confident, but not certain: the endgame floor is what keeps this off 100.
+  check(late > 92 && late < 99, `live: six up with a minute left is likely, not certain (${late}%)`);
+  const twoUp = liveWinProbability({ period: 4, clockSeconds: 60, homeScore: 2, awayScore: 0 }, evenNba, nba).homeWinPct;
+  check(twoUp > 60 && twoUp < 82, `live: two up with a minute left is far from safe (${twoUp}%)`);
+  const twentyUp = liveWinProbability({ period: 4, clockSeconds: 60, homeScore: 20, awayScore: 0 }, evenNba, nba).homeWinPct;
+  check(twentyUp > 99, `live: twenty up with a minute left is over (${twentyUp}%)`);
+  check(early < 80, `live: six up in the 1st is not (${early}%)`);
+
+  // Monotonic in the lead.
+  const ladder = [-10, -4, 0, 4, 10].map((l) =>
+    liveWinProbability({ period: 3, clockSeconds: 300, homeScore: 50 + l, awayScore: 50 }, evenNba, nba).homeWinPct);
+  check(ladder.every((v, i) => i === 0 || v >= ladder[i - 1]), `live: a bigger lead never lowers the chance (${ladder.join(' ')})`);
+
+  // Settled games.
+  const won = liveWinProbability({ period: 4, clockSeconds: 0, homeScore: 101, awayScore: 99 }, evenNba, nba);
+  check(won.homeWinPct === 100 && !won.live, 'live: a finished win reads as won and not live');
+  const lost = liveWinProbability({ period: 4, clockSeconds: 0, homeScore: 99, awayScore: 101 }, evenNba, nba);
+  check(lost.homeWinPct === 0 && !lost.live, 'live: a finished loss reads as lost');
+  // Level at the end is a draw in soccer and extra time everywhere else.
+  const drawn = liveWinProbability({ period: 2, clockSeconds: 0, homeScore: 1, awayScore: 1 }, evenSoc, soccer);
+  check(drawn.drawPct === 100 && !drawn.live, 'live: level at full time in soccer is a draw, not a coin flip');
+  const extras = liveWinProbability({ period: 9, clockSeconds: null, bottomHalf: true, homeScore: 3, awayScore: 3 }, evenMlb, mlbP);
+  check(extras.live && Math.abs(extras.homeWinPct - 50) < 8, `live: level after nine is extra innings, near even (${extras.homeWinPct}%)`);
+
+  // Soccer: a draw is a real outcome mid-match and the three sum to 100.
+  const mid = liveWinProbability({ period: 2, clockSeconds: 900, homeScore: 1, awayScore: 1 }, evenSoc, soccer);
+  check(mid.drawPct != null && mid.drawPct > 25, `live: a tied match late still has a big draw chance (${mid.drawPct}%)`);
+  check(Math.abs(mid.homeWinPct + mid.awayWinPct + (mid.drawPct ?? 0) - 100) < 0.3, 'live: three soccer outcomes sum to 100');
+  // Baseball has no draw, so the tie mass has to go somewhere rather than vanish.
+  const tiedMlb = liveWinProbability({ period: 8, clockSeconds: null, homeScore: 2, awayScore: 2 }, evenMlb, mlbP);
+  check(tiedMlb.drawPct === undefined, 'live: baseball reports no draw');
+  check(Math.abs(tiedMlb.homeWinPct + tiedMlb.awayWinPct - 100) < 0.3, 'live: and its two sides still sum to 100');
+
+  // A big late baseball lead must be near-certain; the Poisson sum has to hold up.
+  const bigLate = liveWinProbability({ period: 9, clockSeconds: null, bottomHalf: false, homeScore: 9, awayScore: 2 }, evenMlb, mlbP);
+  check(bigLate.homeWinPct > 98, `live: seven up in the 9th is all but over (${bigLate.homeWinPct}%)`);
+  // And a one-run 9th should not be, which is where a normal curve would have lied.
+  const oneRun = liveWinProbability({ period: 9, clockSeconds: null, bottomHalf: false, homeScore: 3, awayScore: 2 }, evenMlb, mlbP);
+  check(oneRun.homeWinPct > 60 && oneRun.homeWinPct < 92, `live: one up in the 9th is likely, not certain (${oneRun.homeWinPct}%)`);
+
+  // Nothing anywhere should produce a NaN or escape the range.
+  let bad = 0;
+  for (const key of ['nba', 'mlb', 'epl', 'nhl', 'wnba', 'mbb'] as const) {
+    const pr = profileFor(key);
+    for (let period = 1; period <= pr.regulationPeriods + 1; period++) {
+      for (const clock of [pr.periodSeconds, pr.periodSeconds != null ? 0 : null, null]) {
+        for (const lead of [-20, -1, 0, 1, 20]) {
+          const r = liveWinProbability({ period, clockSeconds: clock, bottomHalf: period % 2 === 0, homeScore: 50 + lead, awayScore: 50 }, { projectedHome: pr.baseTotal / 2, projectedAway: pr.baseTotal / 2 }, pr);
+          const parts = [r.homeWinPct, r.awayWinPct, ...(r.drawPct != null ? [r.drawPct] : [])];
+          if (parts.some((v) => !Number.isFinite(v) || v < 0 || v > 100)) bad++;
+          if (Math.abs(parts.reduce((a, b) => a + b, 0) - 100) > 0.5) bad++;
+        }
+      }
+    }
+  }
+  check(bad === 0, `live: every state across six leagues is finite, in range and sums to 100 (${bad} bad)`);
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

@@ -44,6 +44,15 @@ export interface EspnEvent {
   date: string;
   status: 'scheduled' | 'in_progress' | 'final';
   detail: string | null;
+  /**
+   * Where the game has got to. ESPN gives the period and the seconds left in it;
+   * both are absent before the start and unreliable enough afterwards that they
+   * are only read while a game is actually running.
+   */
+  period: number | null;
+  clockSeconds: number | null;
+  /** Baseball: the home side is batting. Read off ESPN's own "Bot 7th". */
+  bottomHalf: boolean | null;
   neutral: boolean;
   venue: string;
   /** City the venue is in, for a forecast lookup. Empty when ESPN omits it. */
@@ -275,6 +284,11 @@ export async function loadScoreboard(path: string, dates: string, limit = 400): 
       date: String(comp.date ?? ev.date ?? ''),
       status: statusOf(state, done),
       detail: comp.status?.type?.shortDetail ?? null,
+      // Only while it is in progress. A finished game reports the last period it
+      // reached, which read as live state would put a settled game back in play.
+      period: state === 'in' ? num(comp.status?.period) : null,
+      clockSeconds: state === 'in' ? num(comp.status?.clock) : null,
+      bottomHalf: state === 'in' ? /\bbot(?:tom)?\b/i.test(String(comp.status?.type?.shortDetail ?? '')) : null,
       neutral: !!comp.neutralSite,
       venue: String(comp.venue?.fullName ?? ''),
       // Address and roof come straight from the scoreboard, which is what makes

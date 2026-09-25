@@ -22,6 +22,7 @@ import type { SportGame, SportGroup, SportPredictionRecord, SportPredictionsFile
 import { loadRange, loadTeams, type EspnEvent } from './espn';
 import { buildRatings } from './ratings';
 import { simulate, seedFor } from '../../src/sports/engine';
+import { liveWinProbability } from '../../src/sports/live';
 import { loadEventBooks } from '../sources/books';
 import { applyStats, gradeLeague, loadAthleteStats, loadLeagueStats, loadRoster, rankDepth, unitOf, type SportPlayer, type SportRosterFile } from './roster';
 import { backfillHeadshots, readCache, writeCache } from './headshots';
@@ -255,6 +256,9 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
       weatherHint: null,
       homeProbable: e.homeProbable,
       awayProbable: e.awayProbable,
+      period: e.period,
+      clockSeconds: e.clockSeconds,
+      bottomHalf: e.bottomHalf,
       awayScore: e.awayScore,
       homeScore: e.homeScore,
       status: e.status,
@@ -521,6 +525,42 @@ async function buildLeague(meta: LeagueMeta): Promise<void> {
     league: meta.key, sport: meta.sport, generatedAt: now.toISOString(), season,
     week: currentWeek, phase: 'regular', teams: sportTeams,
   };
+  /*
+   * ---- games in flight ----------------------------------------------------
+   * The pre-game projection is frozen at first pitch and never revisited, which
+   * is what makes the graded record honest. This is the other number: what the
+   * game is worth right now, given the score and how much of it is left. It is
+   * recomputed every run and stored on the game rather than the prediction, so
+   * it can never be mistaken for the locked forecast the record is scored on.
+   */
+  {
+    let priced = 0;
+    for (const g of games) {
+      if (g.status !== 'in_progress' || g.homeScore == null || g.awayScore == null) continue;
+      const rec = records.get(g.id);
+      // Needs the pre-game scoreline to carry the teams' strength into the live
+      // number; without it a trailing good side would look like a trailing poor one.
+      if (!rec) continue;
+      const live = liveWinProbability(
+        {
+          period: g.period ?? 1,
+          clockSeconds: g.clockSeconds ?? null,
+          bottomHalf: g.bottomHalf ?? false,
+          homeScore: g.homeScore,
+          awayScore: g.awayScore,
+        },
+        { projectedHome: rec.projectedHome, projectedAway: rec.projectedAway },
+        p,
+      );
+      g.liveHomeWinPct = live.homeWinPct;
+      g.liveAwayWinPct = live.awayWinPct;
+      if (live.drawPct != null) g.liveDrawPct = live.drawPct;
+      g.liveRemaining = Math.round(live.remaining * 1000) / 1000;
+      priced += 1;
+    }
+    if (priced) console.log(`  live: ${priced} game${priced === 1 ? '' : 's'} in flight repriced`);
+  }
+
   const scheduleFile: SportScheduleFile = {
     generatedAt: now.toISOString(), season, week: currentWeek, phase: 'regular', weeks: groups, games,
   };

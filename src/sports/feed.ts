@@ -83,6 +83,19 @@ export interface SportGame {
   awayProbable?: GameProbable | null;
   awayScore: number | null;
   homeScore: number | null;
+  /**
+   * Where a running game has got to, and what it is worth now. Absent on
+   * anything not in progress — a live probability on a finished game would be a
+   * claim about a result already known.
+   */
+  period?: number | null;
+  clockSeconds?: number | null;
+  bottomHalf?: boolean | null;
+  liveHomeWinPct?: number | null;
+  liveAwayWinPct?: number | null;
+  liveDrawPct?: number | null;
+  /** Share of the game still to play when that was computed. */
+  liveRemaining?: number | null;
   status: GameStatus;
   statusDetail: string | null;
   broadcast?: string | null;
