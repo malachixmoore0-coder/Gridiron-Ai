@@ -17,6 +17,7 @@ import { classify, type Observation } from '../pipeline/sources/weather';
 import { applyArchive, emptyWeather, hasObservation, hourKey, noteForecast, noteObservation } from '../pipeline/multi/weatherLog';
 import { computeWeatherSplits, type ObservedGame } from '../pipeline/multi/weatherSplits';
 import { reconcileMembers } from '../pipeline/multi/members';
+import { anatomy, anatomyLabels, ladderLabel, parlay, type ParlayLeg } from '../src/utils/edge';
 import { gameProbability, isPostseason, seriesFromGames, simulateBracket, type BracketTeam, type PlayoffGame, type SeriesState } from '../pipeline/multi/bracket';
 import type { EspnEvent, EspnSide, EspnTeamRow } from '../pipeline/multi/espn';
 import { fractionRemaining, liveWinProbability, type LiveState } from '../src/sports/live';
@@ -1042,6 +1043,133 @@ console.log('\n— Playoff series');
 
   check(gameProbability({ id: 'A', seed: 1, rating: 1600 }, { id: 'B', seed: 8, rating: 1400 }, mlbP) > 0.5, 'bracket: a big rating gap favours the better side');
   check(Math.abs(gameProbability({ id: 'A', seed: 1, rating: 1500 }, { id: 'B', seed: 2, rating: 1500 }, mlbP, true) - 0.5) < 0.01, 'bracket: two equals at a neutral ground are even');
+}
+
+// ---- what a parlay is made of ----------------------------------------------
+console.log('\n— Parlay anatomy');
+{
+  const leg = (label: string, pct: number, american: number | null = null, gameId = label): ParlayLeg =>
+    ({ key: label, gameId, label, prob: pct / 100, american });
+
+  /*
+   * The slip that prompted this: thirty legs offered at 901.6x. Multiplied out
+   * the true odds are 1 in 1,546, so the fair price is 1,546x and the book is
+   * keeping 42% of the stake — a gap nothing on the screen was showing.
+   */
+  const real = [92, 82, 82, 82, 97, 84, 99, 58, 92, 48, 78, 96, 56, 84, 76, 62, 89, 70, 67, 78,
+    93, 92, 97, 53, 82, 78, 64, 98, 83, 78].map((pct, i) => leg(`L${i}`, pct));
+  const a = anatomy(real)!;
+  check(Math.round(a.oneIn) === 1546, `parlay: thirty legs is 1 in ${Math.round(a.oneIn)}`);
+  check(Math.abs(a.fairMultiple - 1545.7) < 1, `parlay: the fair payout is ${a.fairMultiple.toFixed(1)}x, not 901.6x`);
+  check(a.ladder.length === 30 && a.ladder[29].prob < a.ladder[0].prob, 'parlay: the ladder runs the whole slip');
+  // The cliff: ten legs is still a coin flip, thirty is a lottery.
+  check(a.ladder[9].prob > 0.5 && a.ladder[29].prob < 0.001,
+    `parlay: ten legs ${(a.ladder[9].prob * 100).toFixed(0)}% -> thirty legs ${(a.ladder[29].prob * 100).toFixed(3)}%`);
+  check(a.ladder.every((r, i) => i === 0 || r.prob <= a.ladder[i - 1].prob), 'parlay: the ladder only ever falls');
+  check(a.drags[0].prob === 0.48 && Math.abs(a.drags[0].divisor - 2.083) < 0.01,
+    `parlay: the 48% leg is named as the biggest drag, halving the ticket (${a.drags[0].divisor.toFixed(2)}x)`);
+  check(a.deadWeight.some((d) => d.prob === 0.99) && a.deadWeight.every((d) => d.addsPct < 0.05),
+    `parlay: legs too short to buy payout are named (${a.deadWeight.length} of them)`);
+
+  /*
+   * The hold, which is the number the whole thing exists for.
+   *
+   * Each leg is priced at its fair odds less a per-leg cut, because that is how
+   * a book actually prices one. Pricing every leg at a flat -110 instead — my
+   * first attempt — pairs a 92% favourite with a line implying 52%, which is not
+   * a hold at all but enormous value, and it duly reported a hold of minus
+   * seventeen million per cent.
+   *
+   * The point of the fixture is that a small cut compounds exactly as the
+   * probabilities do: 1.8% a leg over thirty legs is 42% of the stake, which is
+   * what the ticket that prompted all this was really charging.
+   */
+  const shaded = (pct: number, cutPerLeg: number): number => {
+    // Clamped, because a flat cut is bigger than the whole margin on a very
+    // short price: 1.8% off a 99% leg leaves a return below the stake, which no
+    // book offers and which sends the conversion below to a positive price on a
+    // near-certainty. Real books floor these around -10000 and take their cut on
+    // the longer legs instead.
+    const totalReturn = Math.max(1.01, (100 / pct) * (1 - cutPerLeg));
+    const profit = totalReturn - 1;
+    return profit >= 1 ? Math.round(profit * 100) : -Math.round(100 / profit);
+  };
+
+  // Twenty even legs, so the compounding is visible without the clamp muddying
+  // it: a 3% cut a leg is 46% of the stake over twenty, and 11% over four.
+  const even = (n: number) => Array.from({ length: n }, (_, i) => leg(`E${i}`, 70, shaded(70, 0.03)));
+  const twenty = anatomy(even(20))!;
+  const four = anatomy(even(4))!;
+  check(twenty.hold != null && Math.abs((twenty.hold ?? 0) - (1 - 0.97 ** 20)) < 0.02,
+    `parlay: a 3% cut a leg compounds to ${((twenty.hold ?? 0) * 100).toFixed(0)}% over twenty legs`);
+  check(four.hold != null && Math.abs((four.hold ?? 0) - (1 - 0.97 ** 4)) < 0.02,
+    `parlay: and only ${((four.hold ?? 0) * 100).toFixed(0)}% over four`);
+  check((twenty.hold ?? 0) > (four.hold ?? 0) * 3,
+    'parlay: the hold grows with the legs, which is the thing worth showing');
+  check(twenty.bookMultiple != null && twenty.bookMultiple! < twenty.fairMultiple,
+    `parlay: the book pays under fair (${twenty.bookMultiple?.toFixed(0)}x vs ${twenty.fairMultiple.toFixed(0)}x)`);
+
+  // And the mixed real-world slip, where the clamp does bite on the short legs.
+  const PCTS = [92, 82, 82, 82, 97, 84, 99, 58, 92, 48, 78, 96, 56, 84, 76, 62, 89, 70, 67, 78,
+    93, 92, 97, 53, 82, 78, 64, 98, 83, 78];
+  const h = anatomy(PCTS.map((pct, i) => leg(`P${i}`, pct, shaded(pct, 0.018))))!;
+  check(h.hold != null && h.hold! > 0.2, `parlay: the real slip's shape still shows a real hold (${((h.hold ?? 0) * 100).toFixed(0)}%)`);
+  check(h.bookMultiple != null && h.bookMultiple! < h.fairMultiple, 'parlay: and still pays under fair');
+
+  // A book actually paying over the odds must read as negative hold, not hidden.
+  const generous = [leg('A', 50, 150), leg('B', 50, 150)];
+  const gh = anatomy(generous)!;
+  check(gh.hold != null && gh.hold < 0, `parlay: a book paying over the odds shows a negative hold (${((gh.hold ?? 0) * 100).toFixed(0)}%)`);
+
+  // Fair coin legs: two 50s are 1 in 4, and the fair payout is 4x.
+  const coins = [leg('A', 50), leg('B', 50)];
+  const c = anatomy(coins)!;
+  check(Math.abs(c.oneIn - 4) < 1e-9 && Math.abs(c.fairMultiple - 4) < 1e-9,
+    `parlay: two coin flips are 1 in ${c.oneIn} at ${c.fairMultiple}x`);
+  check(c.drags.length === 2, 'parlay: both coin flips count as drags');
+  check(c.deadWeight.length === 0, 'parlay: and neither is dead weight');
+
+  /*
+   * What the slip actually puts on screen. A number that is right and rendered
+   * as "1 in 0.0" is still wrong to the reader, and that is the half that never
+   * gets checked.
+   */
+  const L = anatomyLabels(a);
+  check(L.oneIn === '1 in 1,546', `labels: the odds read "${L.oneIn}"`);
+  check(L.fair === '1,546x', `labels: the fair payout reads "${L.fair}"`);
+  check(L.book === '\u2014' && L.hold === '\u2014', 'labels: with no book price, a dash rather than a zero');
+  const priced = anatomyLabels(anatomy(PCTS.map((pct, i) => leg(`Q${i}`, pct, shaded(pct, 0.018))))!);
+  check(/^\d/.test(priced.book) && priced.book.endsWith('x'), `labels: a priced slip shows what the book pays ("${priced.book}")`);
+  check(priced.hold.endsWith('%'), `labels: and what they keep ("${priced.hold}")`);
+  // A short slip must not be dressed up with thousands separators it has not earned.
+  const small = anatomyLabels(anatomy([leg('A', 60), leg('B', 60)])!);
+  check(small.oneIn === '1 in 2.8' && small.fair === '2.8x', `labels: a two-leg slip reads "${small.oneIn}" at ${small.fair}`);
+  // The ladder switches units exactly where a percentage stops being readable.
+  check(ladderLabel(0.5) === '50.0%' && ladderLabel(0.0123) === '1.2%', 'labels: the ladder shows percentages while they mean something');
+  check(ladderLabel(0.00064696) === '1 in 1,546', `labels: and switches to "1 in N" once they do not (${ladderLabel(0.00064696)})`);
+  check(ladderLabel(0.01) === '1.0%', 'labels: the switch happens at one per cent, not before');
+
+  // Nothing to say about a single leg or an empty slip.
+  check(anatomy([leg('A', 60)]) === null, 'parlay: one leg is not a parlay');
+  check(anatomy([]) === null, 'parlay: an empty slip has no anatomy');
+
+  // The anatomy must agree with the pricing it is built from, haircut and all.
+  const sameGame = [leg('A', 60, -110, 'g1'), leg('B', 55, -110, 'g1'), leg('C', 70, -110, 'g2')];
+  const sg = parlay(sameGame);
+  const sa = anatomy(sameGame)!;
+  check(Math.abs(sa.oneIn - 1 / sg.prob) < 1e-9, 'parlay: the odds shown match the price the slip was given');
+  /*
+   * The ladder is the plain product; the price is not. Same-game legs land
+   * together more often than chance, so the quoted probability sits ABOVE the
+   * multiplication — which is why the ladder is labelled as what it is rather
+   * than passed off as the price.
+   */
+  check(sa.ladder[2].prob < sg.prob,
+    `parlay: with correlated legs the price beats the plain product (${sa.ladder[2].prob.toFixed(3)} vs ${sg.prob.toFixed(3)})`);
+  const independentOnly = parlay([leg('A', 60, -110, 'g1'), leg('B', 55, -110, 'g2'), leg('C', 70, -110, 'g3')]);
+  const ia = anatomy([leg('A', 60, -110, 'g1'), leg('B', 55, -110, 'g2'), leg('C', 70, -110, 'g3')])!;
+  check(Math.abs(ia.ladder[2].prob - independentOnly.prob) < 1e-9,
+    'parlay: with no shared game the ladder and the price are the same number');
 }
 
 console.log(failures ? `\n${failures} check(s) FAILED` : '\nAll engine checks passed.');

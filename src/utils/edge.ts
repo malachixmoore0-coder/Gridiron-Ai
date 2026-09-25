@@ -267,9 +267,19 @@ export interface ParlayLeg { key: string; gameId: string; label: string; prob: n
  * and that game going over move together, and a book that lets you combine them
  * prices that in. Rather than pretend to a full copula on three data points,
  * this applies a flat, documented correlation of 0.12 per same-game pair,
- * shrinking the joint probability toward the weakest leg. It is deliberately
- * conservative: it will never quote a parlay as better than the independent
- * product.
+ * pulling the joint probability toward the weakest leg.
+ *
+ * That pull is upward, and it has to be: positively correlated legs land
+ * together more often than chance, so P(A and B) exceeds P(A)P(B). A team
+ * covering and its game going over is likelier than multiplying the two
+ * suggests, and a book that lets you combine them prices exactly that in by
+ * paying less. The ceiling is the weakest leg — two perfectly correlated legs
+ * are really one bet — and the haircut never reaches it.
+ *
+ * This comment used to claim the opposite, that the quote would never come out
+ * better than the independent product. It always does when legs share a game,
+ * which is the whole point of modelling the correlation, and a test written
+ * from the comment rather than the arithmetic is what caught it.
  */
 export const SAME_GAME_RHO = 0.12;
 
@@ -292,6 +302,120 @@ export function parlay(legs: ParlayLeg[]): { prob: number; fair: number; book: n
     correlated: pairs > 0,
   };
 }
+
+/**
+ * What a parlay is actually made of.
+ *
+ * The headline on a long slip is the payout, and it is the least informative
+ * number on the screen. A thirty-leg ticket offered at 901x looked generous
+ * until the legs were multiplied out: the true odds were 1 in 1,546, so the
+ * fair payout was 1,546x and the house was keeping 42% of the stake. That gap
+ * is invisible unless something computes it, which is the whole reason for this.
+ *
+ * Four things, then, and each answers a question the payout cannot.
+ *
+ * "1 in N", because nobody has intuition for 0.065% but everybody has intuition
+ * for 1 in 1,546.
+ *
+ * The hold, which is what the book keeps. Vig per leg is small and compounds
+ * exactly as the probabilities do, so every leg added widens the gap between
+ * what a ticket should pay and what it does. A long parlay is two bets getting
+ * worse at once.
+ *
+ * The ladder, because the damage is not evenly spread. Ten legs can still be a
+ * coin flip; it is legs twenty through thirty that turn unlikely into a
+ * lottery, and seeing where the cliff is beats being told parlays are bad.
+ *
+ * And the dead weight: a leg at 99% multiplies the payout by 1.01 and still
+ * pays full vig. It is the one piece of advice here that costs nothing to act
+ * on, because dropping it barely changes what the ticket pays.
+ */
+export interface ParlayAnatomy {
+  /** The odds as a frequency: 1 in this many. */
+  oneIn: number;
+  /** Total return per unit staked, stake included, at the model's price. */
+  fairMultiple: number;
+  /** The same at the book's price, when every leg carries one. */
+  bookMultiple: number | null;
+  /** Share of the stake the book expects to keep. Negative means value. */
+  hold: number | null;
+  /** Probability after each leg, strongest first — where the cliff is. */
+  ladder: { legs: number; prob: number }[];
+  /** The legs costing the most probability, worst first. */
+  drags: { label: string; prob: number; divisor: number }[];
+  /** Legs so short they add almost nothing to the payout but still pay vig. */
+  deadWeight: { label: string; prob: number; addsPct: number }[];
+}
+
+/** Under this a leg is so short it is barely buying any payout. */
+const DEAD_WEIGHT_ADDS = 0.05;
+
+export function anatomy(legs: ParlayLeg[], priced = parlay(legs)): ParlayAnatomy | null {
+  if (legs.length < 2 || priced.prob <= 0) return null;
+
+  const bookMultiple = priced.book == null
+    ? null
+    : legs.every((l) => l.american != null)
+      ? legs.reduce((d, l) => d * (payout(l.american as number) + 1), 1)
+      : null;
+
+  /*
+   * Strongest first, so the ladder shows the cliff rather than an arbitrary
+   * order. Built on the independent product on purpose: the correlation
+   * haircut applies to the whole slip and cannot be attributed to one leg,
+   * and pretending otherwise would put a number on the ladder that does not
+   * add up to the number above it.
+   */
+  const byStrength = [...legs].sort((a, b) => b.prob - a.prob);
+  const ladder: { legs: number; prob: number }[] = [];
+  let running = 1;
+  byStrength.forEach((l, i) => {
+    running *= l.prob;
+    ladder.push({ legs: i + 1, prob: running });
+  });
+
+  const drags = [...legs]
+    .sort((a, b) => a.prob - b.prob)
+    .filter((l) => l.prob < 0.75)
+    .slice(0, 4)
+    .map((l) => ({ label: l.label, prob: l.prob, divisor: 1 / l.prob }));
+
+  const deadWeight = legs
+    .map((l) => ({ label: l.label, prob: l.prob, addsPct: 1 / l.prob - 1 }))
+    .filter((l) => l.addsPct < DEAD_WEIGHT_ADDS)
+    .sort((a, b) => a.addsPct - b.addsPct);
+
+  return {
+    oneIn: 1 / priced.prob,
+    fairMultiple: 1 / priced.prob,
+    bookMultiple,
+    hold: bookMultiple == null ? null : 1 - bookMultiple * priced.prob,
+    ladder,
+    drags,
+    deadWeight,
+  };
+}
+
+/**
+ * The anatomy as the slip actually shows it.
+ *
+ * Kept out of the component so the strings can be tested. A number that is
+ * right and rendered as "1 in 0.0" is still wrong on the screen, and that is
+ * the half nobody checks.
+ */
+export function anatomyLabels(a: ParlayAnatomy): { oneIn: string; fair: string; book: string; hold: string } {
+  const mult = (n: number) => (n >= 100 ? `${Math.round(n).toLocaleString()}x` : `${n.toFixed(1)}x`);
+  return {
+    oneIn: `1 in ${a.oneIn >= 1000 ? Math.round(a.oneIn).toLocaleString() : a.oneIn.toFixed(1)}`,
+    fair: mult(a.fairMultiple),
+    book: a.bookMultiple == null ? '\u2014' : mult(a.bookMultiple),
+    hold: a.hold == null ? '\u2014' : `${(a.hold * 100).toFixed(0)}%`,
+  };
+}
+
+/** A rung of the ladder: a percentage until a percentage stops meaning anything. */
+export const ladderLabel = (prob: number): string =>
+  (prob >= 0.01 ? `${(prob * 100).toFixed(1)}%` : `1 in ${Math.round(1 / prob).toLocaleString()}`);
 
 /* ---------- cover probabilities ---------- */
 

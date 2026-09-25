@@ -9,6 +9,14 @@
  * That last part matters. A tool that always says "bet it" is a tout; a tool
  * that tells you the parlay is -EV four times out of five is worth paying for
  * the fifth.
+ *
+ * The anatomy block underneath exists because the payout is the least
+ * informative number on a long slip. A thirty-leg ticket offered at 901x reads
+ * as generous until the legs are multiplied out: the true odds were 1 in 1,546,
+ * so it should have paid 1,546x and the house was keeping 42% of the stake.
+ * Vig per leg is small and compounds exactly as the probabilities do, so a long
+ * parlay is two bets getting worse at once — and none of that is visible unless
+ * something works it out and says so.
  */
 import React, { useMemo, useState } from 'react';
 import { View, Text, ScrollView, TouchableOpacity, StyleSheet } from 'react-native';
@@ -18,7 +26,7 @@ import { colors, numeric, radius, spacing, type as T, clearance } from '@/theme'
 import { useActiveLeague } from '@/league/LeagueContext';
 import { LeagueSwitch } from '@/components/LeagueSwitch';
 import { useEntitlements } from '@/context/EntitlementsContext';
-import { bestQuote, buildEdges, fmtOdds, legsFor, parlay, quotesFor, SAME_GAME_RHO, type BookQuote, type ParlayLeg } from '@/utils/edge';
+import { anatomy, anatomyLabels, ladderLabel, bestQuote, buildEdges, fmtOdds, legsFor, parlay, quotesFor, SAME_GAME_RHO, type BookQuote, type ParlayLeg } from '@/utils/edge';
 import { Locked, TierPill } from '@/components/Pro';
 
 interface Props { onUpgrade: () => void; onBack: () => void; }
@@ -28,6 +36,7 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
   const ent = useEntitlements();
   const [picked, setPicked] = useState<ParlayLeg[]>([]);
   const [openGame, setOpenGame] = useState<string | null>(null);
+  const [showAnatomy, setShowAnatomy] = useState(false);
   /** Chosen sportsbook per game; 'best' shops every leg. */
   const [books, setBooks] = useState<Record<string, string>>({});
 
@@ -64,7 +73,7 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
         <View style={{ padding: spacing.lg }}>
           <Locked
             title="Parlay Lab"
-            blurb="Price any parlay against the model, with a correlation haircut on same-game legs, and see whether the book's number is worth taking. Quant opens it at four legs; Desk at eight."
+            blurb="Price any parlay against the model, with a correlation haircut on same-game legs. It shows the true odds as 1 in N, what the ticket should pay against what the book pays, and how much of your stake they keep — plus which legs are costing you and which are buying you nothing. Quant opens it at four legs; Desk at eight."
             cta="Unlock the Lab"
             onPress={onUpgrade}
             style={{ height: 210 }}
@@ -117,6 +126,109 @@ export function ParlayScreen({ onUpgrade, onBack }: Props) {
                   : `Pass. Fair value is ${fmtOdds(priced.fair)} and the book is offering ${fmtOdds(priced.book as number)} — that gap is the house's edge.`}
               {priced.correlated ? `  Same-game legs are haircut ${(SAME_GAME_RHO * 100).toFixed(0)}% per pair; the real book will correlate them too.` : ''}
             </Text>
+            {(() => {
+              const a = anatomy(picked, priced);
+              if (!a) return null;
+              const L = anatomyLabels(a);
+              return (
+                <View style={styles.anatomy}>
+                  {/*
+                    * The payout is the least informative number on a long slip.
+                    * A thirty-leg ticket at 901x reads as generous until the legs
+                    * are multiplied out and the fair price turns out to be 1,546x.
+                    */}
+                  <View style={styles.anatomyTop}>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.priceLabel}>TRUE ODDS</Text>
+                      <Text style={[styles.anatomyBig, numeric]}>{L.oneIn}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.priceLabel}>SHOULD PAY</Text>
+                      <Text style={[styles.anatomyBig, numeric]}>{L.fair}</Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.priceLabel}>BOOK PAYS</Text>
+                      <Text style={[styles.anatomyBig, numeric, a.bookMultiple == null ? null : { color: colors.inkDim }]}>
+                        {L.book}
+                      </Text>
+                    </View>
+                    <View style={{ flex: 1 }}>
+                      <Text style={styles.priceLabel}>THEY KEEP</Text>
+                      <Text style={[styles.anatomyBig, numeric, { color: (a.hold ?? 0) > 0 ? colors.negative : colors.green }]}>
+                        {L.hold}
+                      </Text>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity
+                    style={styles.anatomyToggle}
+                    activeOpacity={0.8}
+                    onPress={() => setShowAnatomy((v) => !v)}
+                    accessibilityRole="button"
+                    accessibilityState={{ expanded: showAnatomy }}
+                  >
+                    <Text style={styles.anatomyToggleText}>
+                      {showAnatomy ? 'Hide the breakdown' : 'Where the odds go'}
+                    </Text>
+                    <Ionicons name={showAnatomy ? 'chevron-up' : 'chevron-down'} size={12} color={colors.inkGhost} />
+                  </TouchableOpacity>
+
+                  {showAnatomy && (
+                    <>
+                      {/* The damage is not evenly spread, and that is the point. */}
+                      <Text style={styles.anatomyHead}>Adding legs, strongest first</Text>
+                      {a.ladder
+                        .filter((r, i) => r.legs === 1 || r.legs === a.ladder.length || (i + 1) % Math.max(1, Math.ceil(a.ladder.length / 5)) === 0)
+                        .map((r) => (
+                          <View key={r.legs} style={styles.ladderRow}>
+                            <Text style={[styles.ladderLegs, numeric]}>{r.legs} leg{r.legs === 1 ? '' : 's'}</Text>
+                            <View style={styles.ladderTrack}>
+                              <View style={[styles.ladderFill, { width: `${Math.max(1, r.prob * 100)}%` }]} />
+                            </View>
+                            <Text style={[styles.ladderPct, numeric]}>
+                              {ladderLabel(r.prob)}
+                            </Text>
+                          </View>
+                        ))}
+
+                      {priced.correlated && (
+                        // The ladder multiplies; the price does not, because
+                        // same-game legs land together more often than chance.
+                        // Said here so the last rung is not read as the price.
+                        <Text style={styles.anatomyLine}>
+                          Legs from the same game land together more often than chance, so the ticket prices a little
+                          better than this ladder's last rung.
+                        </Text>
+                      )}
+
+                      {a.drags.length > 0 && (
+                        <>
+                          <Text style={styles.anatomyHead}>Costing you the most</Text>
+                          {a.drags.map((d) => (
+                            <Text key={d.label} style={styles.anatomyLine}>
+                              <Text style={styles.anatomyLineKey}>{d.label}</Text>
+                              {`  ${(d.prob * 100).toFixed(0)}% — divides your chance by ${d.divisor.toFixed(2)}`}
+                            </Text>
+                          ))}
+                        </>
+                      )}
+
+                      {a.deadWeight.length > 0 && (
+                        <>
+                          <Text style={styles.anatomyHead}>Buying you almost nothing</Text>
+                          <Text style={styles.anatomyLine}>
+                            {a.deadWeight.map((d) => d.label).join(', ')}
+                            {` — ${a.deadWeight.length === 1 ? 'this leg adds' : 'these add'} under `}
+                            {`${(Math.max(...a.deadWeight.map((d) => d.addsPct)) * 100).toFixed(0)}% to the payout and still pays full vig.`}
+                          </Text>
+                        </>
+                      )}
+                    </>
+                  )}
+                </View>
+              );
+            })()}
+
             <TouchableOpacity style={styles.clear} activeOpacity={0.8} onPress={() => setPicked([])}>
               <Text style={styles.clearText}>Clear slip</Text>
             </TouchableOpacity>
@@ -258,6 +370,19 @@ const styles = StyleSheet.create({
   priceLabel: { color: colors.inkFaint, fontSize: 8, fontWeight: '900', letterSpacing: 0.8 },
   priceValue: { color: colors.ink, fontSize: 16, fontWeight: '900', marginTop: 2 },
   verdict: { color: colors.inkDim, fontSize: 11, lineHeight: 16, marginTop: spacing.sm },
+  anatomy: { marginTop: spacing.md, paddingTop: spacing.md, borderTopWidth: 1, borderTopColor: colors.divider },
+  anatomyTop: { flexDirection: 'row', gap: spacing.sm },
+  anatomyBig: { color: colors.ink, fontSize: 14, fontWeight: '800', marginTop: 2 },
+  anatomyToggle: { flexDirection: 'row', alignItems: 'center', gap: 4, marginTop: spacing.sm },
+  anatomyToggleText: { color: colors.inkGhost, fontSize: 11, fontWeight: '700' },
+  anatomyHead: { color: colors.inkFaint, fontSize: 10, fontWeight: '800', letterSpacing: 0.6, textTransform: 'uppercase', marginTop: spacing.md, marginBottom: 6 },
+  ladderRow: { flexDirection: 'row', alignItems: 'center', gap: spacing.sm, marginBottom: 5 },
+  ladderLegs: { color: colors.inkDim, fontSize: 11, width: 52 },
+  ladderTrack: { flex: 1, height: 5, borderRadius: 3, backgroundColor: colors.divider, overflow: 'hidden' },
+  ladderFill: { height: 5, borderRadius: 3, backgroundColor: colors.green },
+  ladderPct: { color: colors.inkDim, fontSize: 11, width: 74, textAlign: 'right' },
+  anatomyLine: { color: colors.inkDim, fontSize: 11, lineHeight: 16, marginBottom: 3 },
+  anatomyLineKey: { color: colors.ink, fontWeight: '700' },
   clear: { alignSelf: 'flex-start', marginTop: spacing.sm },
   clearText: { color: colors.inkGhost, fontSize: 11, fontWeight: '800' },
 
