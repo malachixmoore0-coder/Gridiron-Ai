@@ -303,10 +303,12 @@ export function SportSlateScreen({ onRun, onOpenGame, onUpgrade }: Props) {
                         {st === 'in_progress' ? (
                           <View style={styles.liveRow}><View style={styles.liveDot} /><Text style={styles.liveText}>{g.statusDetail || 'In progress'}</Text></View>
                         ) : g.matchupPending ? (
-                          // The fixture is real and on the schedule; the two
-                          // sides are not decided yet. Saying so beats a dash.
+                          // The fixture is real and on the schedule; the sides
+                          // are not decided yet. Both team slots already say TBC,
+                          // so this one says what the game is instead of a third.
                           <Text style={styles.when} numberOfLines={1}>
-                            {new Date(g.kickoff).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })} · TBC
+                            {new Date(g.kickoff).toLocaleTimeString(undefined, { hour: 'numeric', minute: '2-digit' })}
+                            {g.gameType === 'postseason' ? ' · Playoffs' : ''}
                           </Text>
                         ) : (
                           <Text style={styles.when} numberOfLines={1}>
