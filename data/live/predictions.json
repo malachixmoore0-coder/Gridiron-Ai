@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-27T21:24:24.917Z",
+ "generatedAt": "2026-09-28T01:01:46.579Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -1501,9 +1501,21 @@
    "marketTotal": 48.5,
    "predictedAt": "2026-09-27T17:01:41.415Z",
    "updates": 34,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-27T16:05:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 36,
+    "awayScore": 30,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": null,
+    "ou": null,
+    "spreadError": 1,
+    "totalError": 17.2,
+    "brier": 0.1362
+   }
   },
   {
    "id": "2026_03_MIN_TB",
@@ -1524,9 +1536,21 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-09-27T17:01:41.415Z",
    "updates": 34,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-27T16:05:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 16,
+    "awayScore": 23,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "win",
+    "spreadError": -8,
+    "totalError": 0.4,
+    "brier": 0.2916
+   }
   },
   {
    "id": "2026_03_BAL_DAL",
@@ -1547,9 +1571,21 @@
    "marketTotal": 53.5,
    "predictedAt": "2026-09-27T17:01:41.415Z",
    "updates": 34,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-27T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 31,
+    "awayScore": 34,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "push",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": -9,
+    "totalError": 12,
+    "brier": 0.4436
+   }
   },
   {
    "id": "2026_03_LV_NO",
@@ -1570,9 +1606,21 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-09-27T17:01:41.415Z",
    "updates": 34,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-27T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 27,
+    "awayScore": 35,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": -11,
+    "totalError": 23.9,
+    "brier": 0.3505
+   }
   },
   {
    "id": "2026_03_LA_DEN",
@@ -1593,8 +1641,8 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-09-27T21:24:24.917Z",
    "updates": 34,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-09-27T20:20:00-04:00",
    "result": null
   },
   {
