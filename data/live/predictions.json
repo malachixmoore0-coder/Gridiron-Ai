@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-29T01:03:43.183Z",
+ "generatedAt": "2026-09-29T06:49:22.791Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -1676,9 +1676,21 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-09-28T21:15:52.655Z",
    "updates": 32,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-09-28T20:15:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 27,
+    "awayScore": 7,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 20,
+    "totalError": -13.6,
+    "brier": 0.243
+   }
   },
   {
    "id": "2026_04_PIT_CLE",
