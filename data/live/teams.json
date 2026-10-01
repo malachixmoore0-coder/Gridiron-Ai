@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-01T00:35:44.496Z",
+ "generatedAt": "2026-10-01T10:14:08.833Z",
  "season": 2026,
  "week": 4,
  "phase": "regular",
@@ -1447,7 +1447,7 @@
      "name": "Tavius Robinson",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 78,
+     "rating": 77,
      "snapPct": 0.79,
      "prwr": 0.093,
      "note": "0.59 sacks/g · 16 QB hits in 11 g",
@@ -2907,16 +2907,16 @@
      "jersey": "2"
     },
     {
-     "id": "ind-00-0035021",
-     "name": "Ashton Dulin",
+     "id": "ind-00-0039816",
+     "name": "Anthony Gould",
      "pos": "WR",
      "role": "starter",
      "rating": 60,
-     "snapPct": 0.21,
-     "targetShare": 0.016,
-     "tprr": 0.079,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ux55cx0r9iwqwmfmaip6",
-     "jersey": "16"
+     "snapPct": 0.03,
+     "targetShare": 0.003,
+     "tprr": 0.11,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/irctulz9pij3tzpokih0",
+     "jersey": "6"
     },
     {
      "id": "ind-00-0030279",
@@ -2932,17 +2932,16 @@
      "jersey": "10"
     },
     {
-     "id": "ind-00-0035535",
-     "name": "Darius Slayton",
+     "id": "ind-00-0035021",
+     "name": "Ashton Dulin",
      "pos": "WR",
      "role": "rotational",
-     "rating": 85,
-     "snapPct": 0.81,
-     "targetShare": 0.102,
-     "tprr": 0.133,
-     "note": "0.28 EPA/target on 65 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/otksyfjll5waf0vsczeu",
-     "jersey": "11"
+     "rating": 56,
+     "snapPct": 0.21,
+     "targetShare": 0.016,
+     "tprr": 0.079,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ux55cx0r9iwqwmfmaip6",
+     "jersey": "16"
     },
     {
      "id": "ind-00-0040128",
@@ -3009,7 +3008,7 @@
      "name": "Arden Key",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 69,
+     "rating": 68,
      "snapPct": 0.73,
      "prwr": 0.098,
      "note": "0.45 sacks/g · 14 QB hits in 10 g",
@@ -3306,7 +3305,7 @@
      "name": "Josh Hines-Allen",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 85,
+     "rating": 84,
      "snapPct": 0.73,
      "prwr": 0.128,
      "note": "0.59 sacks/g · 30 QB hits in 16 g",
@@ -3318,7 +3317,7 @@
      "name": "Travon Walker",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 85,
+     "rating": 84,
      "snapPct": 0.72,
      "prwr": 0.094,
      "note": "0.63 sacks/g · 15 QB hits in 8 g",
@@ -3457,7 +3456,7 @@
     "passDefense": 3.9,
     "rushDefense": 5,
     "prwr": 0.424,
-    "nickelCorner": 3.5,
+    "nickelCorner": 3.7,
     "lbCoverage": 6,
     "secondaryAdjust": 5.3,
     "blitzRate": 0.224,
@@ -4556,7 +4555,7 @@
      "name": "Nik Bonitto",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 91,
+     "rating": 92,
      "snapPct": 0.62,
      "prwr": 0.117,
      "note": "0.88 sacks/g · 33 QB hits in 17 g",
@@ -4863,7 +4862,7 @@
      "name": "Kwity Paye",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 87,
+     "rating": 86,
      "snapPct": 0.57,
      "prwr": 0.094,
      "note": "0.75 sacks/g · 14 QB hits in 8 g",
@@ -5159,7 +5158,7 @@
      "name": "Jonathan Greenard",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 68,
+     "rating": 67,
      "snapPct": 0.74,
      "prwr": 0.11,
      "note": "0.33 sacks/g · 13 QB hits in 9 g",
@@ -5653,7 +5652,7 @@
      "snapPct": 0.92,
      "note": "-0.2 EPA/dropback · -5.7 CPOE · 273 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/omybnfokapjw6jwb5dd3",
-     "jersey": "9"
+     "jersey": "18"
     },
     {
      "id": "nyg-00-0040715",
@@ -6246,7 +6245,7 @@
     "passDefense": 5,
     "rushDefense": 3.6,
     "prwr": 0.427,
-    "nickelCorner": 4.1,
+    "nickelCorner": 4,
     "lbCoverage": 6.4,
     "secondaryAdjust": 4.6,
     "blitzRate": 0.309,
@@ -6556,7 +6555,7 @@
     "passDefense": 4.2,
     "rushDefense": 5,
     "prwr": 0.419,
-    "nickelCorner": 4.7,
+    "nickelCorner": 4.6,
     "lbCoverage": 5.1,
     "secondaryAdjust": 4.6,
     "blitzRate": 0.262,
@@ -6700,15 +6699,15 @@
      "jersey": "71"
     },
     {
-     "id": "gb-00-0036551",
-     "name": "Aaron Banks",
+     "id": "gb-00-0029592",
+     "name": "Kevin Zeitler",
      "pos": "OL",
      "role": "starter",
      "rating": 68,
      "snapPct": 0.95,
      "pbwr": 0.815,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/g0vbcpdlnxiqnkj8m2wl",
-     "jersey": "65"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nfb14plexvixmjo0p5ye",
+     "jersey": "70"
     },
     {
      "id": "gb-00-0039112",
@@ -7864,17 +7863,16 @@
      "jersey": "4"
     },
     {
-     "id": "car-00-0037614",
-     "name": "John Metchie III",
+     "id": "car-00-0033589",
+     "name": "David Moore",
      "pos": "WR",
      "role": "starter",
-     "rating": 53,
-     "snapPct": 0.34,
-     "targetShare": 0.077,
-     "tprr": 0.241,
-     "note": "-0.02 EPA/target on 27 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nsjpnskeldxzbzckpfgg",
-     "jersey": "13"
+     "rating": 60,
+     "snapPct": 0.33,
+     "targetShare": 0.002,
+     "tprr": 0.04,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/iyawzolvibsds35fwapv",
+     "jersey": "83"
     },
     {
      "id": "car-00-0039491",
@@ -7890,17 +7888,17 @@
      "jersey": "18"
     },
     {
-     "id": "car-00-0039342",
-     "name": "Xavier Legette",
+     "id": "car-00-0037614",
+     "name": "John Metchie III",
      "pos": "WR",
      "role": "rotational",
      "rating": 53,
-     "snapPct": 0.52,
-     "targetShare": 0.103,
-     "tprr": 0.21,
-     "note": "-0.03 EPA/target on 35 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yoyxkitrdqbkhyqncy5p",
-     "jersey": "17"
+     "snapPct": 0.34,
+     "targetShare": 0.077,
+     "tprr": 0.241,
+     "note": "-0.02 EPA/target on 27 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nsjpnskeldxzbzckpfgg",
+     "jersey": "13"
     },
     {
      "id": "car-00-0037005",
@@ -8008,15 +8006,15 @@
      "jersey": "55"
     },
     {
-     "id": "car-00-0035277",
-     "name": "Mike Jackson",
+     "id": "car-00-0041063",
+     "name": "Will Lee III",
      "pos": "CB",
      "role": "starter",
-     "rating": 90,
-     "snapPct": 0.69,
-     "note": "19 PBU · 4 INT in 13 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ohcl41cpchr9fjoktlj6",
-     "jersey": "2"
+     "rating": 58,
+     "snapPct": 0.6,
+     "note": "4 PBU · 0 INT in 3 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wurwgex2escrqdqmyaeg",
+     "jersey": "24"
     },
     {
      "id": "car-00-0036962",
@@ -9646,7 +9644,7 @@
     "passDefense": 2.8,
     "rushDefense": 5.8,
     "prwr": 0.369,
-    "nickelCorner": 3.2,
+    "nickelCorner": 3.1,
     "lbCoverage": 3.2,
     "secondaryAdjust": 4.9,
     "blitzRate": 0.256,
