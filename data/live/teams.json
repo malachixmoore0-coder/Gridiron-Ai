@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-30T20:05:24.065Z",
+ "generatedAt": "2026-10-01T00:35:44.496Z",
  "season": 2026,
  "week": 4,
  "phase": "regular",
@@ -261,6 +261,7 @@
      "role": "rotational",
      "rating": 63,
      "snapPct": 0.4,
+     "prwr": 0.077,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/somthlvcx5v20nqmu85n",
      "jersey": "90"
     },
@@ -7991,6 +7992,7 @@
      "role": "rotational",
      "rating": 71,
      "snapPct": 0.39,
+     "prwr": 0.068,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/h3dk22cisv0hv6dpvd6a",
      "jersey": "92"
     },
@@ -8908,6 +8910,7 @@
      "role": "rotational",
      "rating": 64,
      "snapPct": 0.46,
+     "prwr": 0.077,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kgidfvowkezba4g4nig8",
      "jersey": "93"
     },
@@ -9491,7 +9494,7 @@
      "role": "starter",
      "rating": 92,
      "snapPct": 0.77,
-     "prwr": 0.137,
+     "prwr": 0.127,
      "note": "0.87 sacks/g · 32 QB hits in 15 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dwybonqyn3rrvi94yw9r",
      "jersey": "0"
@@ -9527,7 +9530,7 @@
      "role": "rotational",
      "rating": 72,
      "snapPct": 0.54,
-     "prwr": 0.08,
+     "prwr": 0.073,
      "headshotUrl": "https://static.www.nfl.com/image/private/f_auto,q_auto/league/gou42dathlyc1rfn4pga",
      "jersey": "99"
     },
