@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T18:39:54.916Z",
+ "generatedAt": "2026-10-04T22:32:36.120Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -1781,9 +1781,21 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 36,
+    "awayScore": 24,
+    "winner": "home",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 13,
+    "totalError": 13.7,
+    "brier": 0.2735
+   }
   },
   {
    "id": "2026_04_DAL_HOU",
@@ -1804,9 +1816,21 @@
    "marketTotal": 48.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 30,
+    "awayScore": 34,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -3,
+    "totalError": 13.8,
+    "brier": 0.2153
+   }
   },
   {
    "id": "2026_04_GB_TB",
@@ -1827,9 +1851,21 @@
    "marketTotal": 38.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 14,
+    "awayScore": 17,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "push",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 2,
+    "totalError": -13.5,
+    "brier": 0.1376
+   }
   },
   {
    "id": "2026_04_JAX_CIN",
@@ -1850,9 +1886,21 @@
    "marketTotal": 51.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 17,
+    "awayScore": 22,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "under",
+    "ou": "win",
+    "spreadError": -1.5,
+    "totalError": -7.8,
+    "brier": 0.1529
+   }
   },
   {
    "id": "2026_04_LA_PHI",
@@ -1873,9 +1921,21 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 20,
+    "awayScore": 24,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 1,
+    "totalError": -5.4,
+    "brier": 0.134
+   }
   },
   {
    "id": "2026_04_NE_BUF",
@@ -1896,9 +1956,21 @@
    "marketTotal": 50.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 26,
+    "awayScore": 29,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -10.5,
+    "totalError": 0.8,
+    "brier": 0.4789
+   }
   },
   {
    "id": "2026_04_NYJ_CHI",
@@ -1919,9 +1991,21 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 23,
+    "awayScore": 12,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 1.5,
+    "totalError": -10.7,
+    "brier": 0.0581
+   }
   },
   {
    "id": "2026_04_TEN_BAL",
@@ -1942,9 +2026,21 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-10-04T05:59:56.854Z",
    "updates": 31,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-04T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 24,
+    "awayScore": 18,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 1.5,
+    "totalError": -3.3,
+    "brier": 0.1369
+   }
   },
   {
    "id": "2026_04_MIA_MIN",
@@ -1965,8 +2061,8 @@
    "marketTotal": 38.5,
    "predictedAt": "2026-10-04T18:39:54.916Z",
    "updates": 31,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-04T16:05:00-04:00",
    "result": null
   },
   {
@@ -1988,8 +2084,8 @@
    "marketTotal": 48.5,
    "predictedAt": "2026-10-04T18:39:54.916Z",
    "updates": 31,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-04T16:25:00-04:00",
    "result": null
   },
   {
@@ -2011,8 +2107,8 @@
    "marketTotal": 47.5,
    "predictedAt": "2026-10-04T18:39:54.916Z",
    "updates": 31,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-04T16:25:00-04:00",
    "result": null
   },
   {
@@ -2034,8 +2130,8 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-10-04T18:39:54.916Z",
    "updates": 31,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-04T16:25:00-04:00",
    "result": null
   },
   {
