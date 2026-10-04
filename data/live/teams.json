@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-04T12:28:14.789Z",
+ "generatedAt": "2026-10-04T05:59:56.854Z",
  "season": 2026,
  "week": 4,
  "phase": "regular",
@@ -4486,16 +4486,17 @@
      "jersey": "27"
     },
     {
-     "id": "den-00-0036727",
-     "name": "Adam Prentice",
+     "id": "den-00-0040730",
+     "name": "RJ Harvey",
      "pos": "RB",
      "role": "rotational",
-     "rating": 56,
-     "snapPct": 0.1,
-     "targetShare": 0.011,
-     "tprr": 0.118,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuvyqidnso9ga1dfefoy",
-     "jersey": "46"
+     "rating": 70,
+     "snapPct": 0.44,
+     "targetShare": 0.082,
+     "tprr": 0.195,
+     "note": "3.7 YPC · -1.7 EPA/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/szxmro5enrxlscvv67xg",
+     "jersey": "12"
     },
     {
      "id": "den-00-0036613",
@@ -7737,8 +7738,6 @@
      "snapPct": 0.43,
      "prwr": 0.076,
      "note": "0.36 sacks/g · 12 QB hits in 7 g",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cmoytuhhkqslhcpulq5e",
      "jersey": "52"
     },
@@ -7774,8 +7773,6 @@
      "rating": 56,
      "snapPct": 0.94,
      "note": "1 sacks · 8 PBU · 0 INT in 9 g",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/epymgfknvbi0vbygiv4j",
      "jersey": "0"
     },
@@ -8315,8 +8312,6 @@
      "targetShare": 0.058,
      "tprr": 0.13,
      "note": "-0.3 EPA/target on 27 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Abdomen · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lijnonbrcmplvkcb5kqv",
      "jersey": "87"
     },
@@ -8363,8 +8358,6 @@
      "snapPct": 0.65,
      "prwr": 0.094,
      "note": "1.00 sacks/g · 10 QB hits in 7 g",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bhudfgndbvogastdhvb7",
      "jersey": "96"
     },
@@ -8398,8 +8391,6 @@
      "rating": 59,
      "snapPct": 1,
      "note": "3.5 sacks · 7 PBU · 1 INT in 14 g",
-     "reported": "out",
-     "reportNote": "Calf · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lndj0awmhdulawkcjgua",
      "jersey": "55"
     },
@@ -9152,17 +9143,18 @@
      "jersey": "2"
     },
     {
-     "id": "sea-00-0038797",
-     "name": "Emanuel Wilson",
+     "id": "sea-00-0041512",
+     "name": "Jadarian Price",
      "pos": "RB",
      "role": "starter",
-     "rating": 54,
-     "snapPct": 0.28,
-     "targetShare": 0.033,
-     "tprr": 0.124,
-     "note": "3.9 YPC · -8.14 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uorruvczsxzvffpbxu8z",
-     "jersey": "23"
+     "rating": 76,
+     "snapPct": 0.37,
+     "targetShare": 0.11,
+     "tprr": 0.19,
+     "reported": "out",
+     "reportNote": "Chest · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/toy90i08oumgbdlvctja",
+     "jersey": "8"
     },
     {
      "id": "sea-00-0038488",
