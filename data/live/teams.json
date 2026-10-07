@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-07T06:07:16.633Z",
+ "generatedAt": "2026-10-07T20:39:47.357Z",
  "season": 2026,
  "week": 5,
  "phase": "regular",
@@ -3951,7 +3951,7 @@
      "name": "Chris Jones",
      "pos": "DT",
      "role": "starter",
-     "rating": 83,
+     "rating": 84,
      "snapPct": 0.68,
      "prwr": 0.107,
      "note": "0.44 sacks/g · 27 QB hits in 16 g",
@@ -5629,7 +5629,7 @@
    "defense": {
     "passDefense": 5.3,
     "rushDefense": 2,
-    "prwr": 0.389,
+    "prwr": 0.392,
     "nickelCorner": 6.9,
     "lbCoverage": 6.2,
     "secondaryAdjust": 4.2,
@@ -5698,16 +5698,16 @@
      "jersey": "1"
     },
     {
-     "id": "nyg-00-0034419",
-     "name": "Braxton Berrios",
+     "id": "nyg-00-0038576",
+     "name": "Charlie Jones",
      "pos": "WR",
      "role": "starter",
      "rating": 60,
-     "snapPct": 0.09,
-     "targetShare": 0.008,
-     "tprr": 0.087,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/striwxmn9t0ixherw7l8",
-     "jersey": "87"
+     "snapPct": 0.03,
+     "targetShare": 0.001,
+     "tprr": 0.053,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/poy4ph18jx211xbe6ajt",
+     "jersey": "89"
     },
     {
      "id": "nyg-00-0041042",
@@ -5723,16 +5723,17 @@
      "jersey": "88"
     },
     {
-     "id": "nyg-00-0038576",
-     "name": "Charlie Jones",
+     "id": "nyg-00-0036309",
+     "name": "Darnell Mooney",
      "pos": "WR",
      "role": "rotational",
-     "rating": 56,
-     "snapPct": 0.03,
-     "targetShare": 0.001,
-     "tprr": 0.053,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/poy4ph18jx211xbe6ajt",
-     "jersey": "89"
+     "rating": 62,
+     "snapPct": 0.57,
+     "targetShare": 0.076,
+     "tprr": 0.138,
+     "note": "0.11 EPA/target on 41 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eaejonwaflt9drrs9ika",
+     "jersey": "17"
     },
     {
      "id": "nyg-00-0037838",
@@ -5846,9 +5847,9 @@
      "name": "Greg Newsome II",
      "pos": "CB",
      "role": "starter",
-     "rating": 89,
+     "rating": 84,
      "snapPct": 0.97,
-     "note": "15 PBU · 2 INT in 9 g",
+     "note": "14 PBU · 2 INT in 9 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zyfy3onrys9i6ounvai8",
      "jersey": "20"
     },
@@ -7687,7 +7688,7 @@
      "name": "Gervon Dexter Sr.",
      "pos": "DT",
      "role": "rotational",
-     "rating": 82,
+     "rating": 83,
      "snapPct": 0.55,
      "prwr": 0.092,
      "note": "0.59 sacks/g · 14 QB hits in 11 g",
@@ -8325,7 +8326,7 @@
      "name": "Kool-Aid McKinstry",
      "pos": "CB",
      "role": "starter",
-     "rating": 88,
+     "rating": 89,
      "snapPct": 1,
      "note": "21 PBU · 3 INT in 13 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/n0yip0zx9i25jbwugzmo",
@@ -9633,7 +9634,7 @@
     "rushEfficiency": 4.8,
     "explosiveness": 2.1,
     "qb": 5.31,
-    "pbwr": 0.591,
+    "pbwr": 0.587,
     "slotEfficiency": 5.8,
     "teSpeed": 9.3,
     "vsFront": {
@@ -9791,7 +9792,7 @@
      "role": "starter",
      "rating": 71,
      "snapPct": 0.95,
-     "pbwr": 0.841,
+     "pbwr": 0.837,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q24grx1dxcv83l2nmayx",
      "jersey": "65"
     },
@@ -9802,7 +9803,7 @@
      "role": "starter",
      "rating": 71,
      "snapPct": 0.95,
-     "pbwr": 0.841,
+     "pbwr": 0.837,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ylkuycgg5mlekrd0e7uy",
      "jersey": "72"
     },
