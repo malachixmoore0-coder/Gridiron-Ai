@@ -765,6 +765,10 @@
   "lat": 40.8,
   "lng": -96.66696
  },
+ "linz, austria": {
+  "lat": 48.30639,
+  "lng": 14.28611
+ },
  "lisbon, portugal": {
   "lat": 38.72509,
   "lng": -9.1498
@@ -1197,6 +1201,10 @@
  "roma, italy": {
   "lat": 44.99364,
   "lng": 11.10642
+ },
+ "rotterdam, netherlands": {
+  "lat": 51.9225,
+  "lng": 4.47917
  },
  "ruston, louisiana": {
   "lat": 32.52321,
