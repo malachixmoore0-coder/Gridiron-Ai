@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-10T09:56:28.042Z",
+ "generatedAt": "2026-10-10T17:22:32.395Z",
  "season": 2026,
  "week": 5,
  "phase": "regular",
@@ -2028,7 +2028,7 @@
      "targetShare": 0.185,
      "tprr": 0.255,
      "note": "-0.04 EPA/target on 28 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ztdyzyngqr1pexyghlt3",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/evzxqxsyr1m3ohchqcan",
      "jersey": "1"
     },
     {
@@ -2053,7 +2053,7 @@
      "targetShare": 0.013,
      "tprr": 0.142,
      "note": "-0.02 EPA/target on 23 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/piv889pkizjvgrtpfkxm",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pmbagsijcdb8hxdnwovq",
      "jersey": "0"
     },
     {
@@ -2078,7 +2078,7 @@
      "snapPct": 0.4,
      "targetShare": 0.02,
      "tprr": 0.053,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/senw8edxu2ovkg1dbdxs",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cupbiosaxda8p06n7mti",
      "jersey": "86"
     },
     {
@@ -2100,7 +2100,7 @@
      "rating": 65,
      "snapPct": 0.95,
      "pbwr": 0.789,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/am4um8hjfero03sgxrgn",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pbdmozb7amdd9ndvhhuj",
      "jersey": "74"
     },
     {
@@ -2112,7 +2112,7 @@
      "snapPct": 0.96,
      "prwr": 0.07,
      "note": "0.35 sacks/g · 6 QB hits in 10 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ukxxxlah4iappss0ro9e",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rro5bhapkqhh2jwjamk3",
      "jersey": "5"
     },
     {
@@ -2124,7 +2124,7 @@
      "snapPct": 0.64,
      "prwr": 0.113,
      "note": "0.47 sacks/g · 29 QB hits in 16 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpa5qqc59ndeg6timqmf",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vvispu2xwv6o2mt4ispy",
      "jersey": "8"
     },
     {
@@ -4192,33 +4192,6 @@
      "jersey": "30"
     },
     {
-     "id": "lac-00-0039915",
-     "name": "Ladd McConkey",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 71,
-     "snapPct": 0.54,
-     "targetShare": 0.108,
-     "tprr": 0.217,
-     "note": "0.15 EPA/target on 62 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Foot · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q2sk7yforrkiusvruo1o",
-     "jersey": "15"
-    },
-    {
-     "id": "lac-00-0038573",
-     "name": "Derius Davis",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 60,
-     "snapPct": 0.09,
-     "targetShare": 0.019,
-     "tprr": 0.23,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ykmeihbr6903smvblzgc",
-     "jersey": "12"
-    },
-    {
      "id": "lac-00-0038544",
      "name": "Quentin Johnston",
      "pos": "WR",
@@ -4234,18 +4207,44 @@
      "jersey": "1"
     },
     {
-     "id": "lac-00-0041550",
-     "name": "Brenen Thompson",
+     "id": "lac-00-0040727",
+     "name": "Tre Harris",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 76,
+     "snapPct": 0.77,
+     "targetShare": 0.133,
+     "tprr": 0.188,
+     "note": "0.33 EPA/target on 32 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/v5ofh8jggzo8rygtpwl7",
+     "jersey": "9"
+    },
+    {
+     "id": "lac-00-0039915",
+     "name": "Ladd McConkey",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 71,
+     "snapPct": 0.54,
+     "targetShare": 0.108,
+     "tprr": 0.217,
+     "note": "0.15 EPA/target on 62 tgt/season",
+     "reported": "questionable",
+     "reportNote": "Foot · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q2sk7yforrkiusvruo1o",
+     "jersey": "15"
+    },
+    {
+     "id": "lac-00-0040311",
+     "name": "Theo Wease Jr.",
      "pos": "WR",
      "role": "rotational",
-     "rating": 63,
-     "snapPct": 0.18,
-     "targetShare": 0.019,
-     "tprr": 0.115,
-     "reported": "out",
-     "reportNote": "Quadricep · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/khlvgjk60vz6ghkwpmak",
-     "jersey": "89"
+     "rating": 56,
+     "snapPct": 0.32,
+     "targetShare": 0.014,
+     "tprr": 0.046,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ywtuq1sielt0scr220fi",
+     "jersey": "82"
     },
     {
      "id": "lac-00-0038046",
@@ -4259,7 +4258,7 @@
      "note": "0.36 EPA/target on 9 tgt/season",
      "reported": "questionable",
      "reportNote": "Forearm · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/g75ws8vkqz9cqwifhcy7",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wjguwfmbshhyuetf3lgs",
      "jersey": "88"
     },
     {
@@ -4276,50 +4275,54 @@
      "jersey": "86"
     },
     {
-     "id": "lac-00-0041058",
-     "name": "Travis Burke",
+     "id": "lac-00-0035688",
+     "name": "Trey Pipkins",
      "pos": "LT",
      "role": "starter",
      "rating": 63,
      "snapPct": 0.95,
      "pbwr": 0.769,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yoigcukgefvk61ojqqba",
-     "jersey": "77"
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nhze2mywnxrcmwyck0x4",
+     "jersey": "79"
     },
     {
-     "id": "lac-00-0038103",
-     "name": "Cole Strange",
+     "id": "lac-00-0037241",
+     "name": "Trevor Penning",
      "pos": "OL",
      "role": "starter",
      "rating": 63,
      "snapPct": 0.95,
      "pbwr": 0.769,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ewuzloizbacphcy6yogg",
-     "jersey": "69"
-    },
-    {
-     "id": "lac-00-0039111",
-     "name": "Tuli Tuipulotu",
-     "pos": "EDGE",
-     "role": "starter",
-     "rating": 92,
-     "snapPct": 0.78,
-     "prwr": 0.11,
-     "note": "0.94 sacks/g · 30 QB hits in 16 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/u2qqrqzzi3yawzxmbrxs",
-     "jersey": "45"
+     "reported": "out",
+     "reportNote": "Concussion · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tr9e0yl1esqawnieqogh",
+     "jersey": "75"
     },
     {
      "id": "lac-00-0031040",
      "name": "Khalil Mack",
      "pos": "EDGE",
-     "role": "rotational",
+     "role": "starter",
      "rating": 84,
      "snapPct": 0.69,
      "prwr": 0.108,
      "note": "0.71 sacks/g · 16 QB hits in 12 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/t9j95jylmjpevgbkvmqn",
      "jersey": "52"
+    },
+    {
+     "id": "lac-00-0039835",
+     "name": "Justin Eboigbe",
+     "pos": "EDGE",
+     "role": "rotational",
+     "rating": 81,
+     "snapPct": 0.62,
+     "prwr": 0.079,
+     "note": "0.72 sacks/g · 12 QB hits in 9 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vayynevqkczp1ziitvkm",
+     "jersey": "92"
     },
     {
      "id": "lac-00-0040144",
@@ -5257,7 +5260,7 @@
      "note": "0.33 sacks/g · 13 QB hits in 9 g",
      "reported": "questionable",
      "reportNote": "Ankle · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/z49ugsnmbfkldervsiws",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uyfa94ubr2gdgly4cjkd",
      "jersey": "52"
     },
     {
@@ -5366,7 +5369,7 @@
     "redZoneTd": 0.678,
     "redZoneAggression": 6.8,
     "halftimeAdjust": 5.8,
-    "playActionRate": 0.247,
+    "playActionRate": 0.225,
     "passRate": 0.564,
     "pace": 67
    },
@@ -5398,7 +5401,7 @@
     "nickelCorner": 2.7,
     "lbCoverage": 2.9,
     "secondaryAdjust": 5.7,
-    "blitzRate": 0.28,
+    "blitzRate": 0.255,
     "takeaways": 2.6
    },
    "players": [
@@ -6129,7 +6132,7 @@
      "note": "0.56 EPA/target on 67 tgt/season",
      "reported": "out",
      "reportNote": "Hamstring · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cemcexmscsarpvwhafln",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dpmpctgbwlvgyzg3opli",
      "jersey": "3"
     },
     {
@@ -6984,7 +6987,7 @@
      "rating": 61,
      "snapPct": 0.72,
      "note": "-0.05 EPA/dropback · 0.4 CPOE · 255 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/btfruyf33adgnjzpcuen",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qzoa3bglbgxpxcvjqzo1",
      "jersey": "1"
     },
     {
@@ -6995,7 +6998,7 @@
      "rating": 71,
      "snapPct": 0.92,
      "note": "0.05 EPA/dropback · -0.6 CPOE · 234 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vuolixdvigc8axelug66",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/azwdmcksvjva4tgaa8vm",
      "jersey": "11"
     },
     {
@@ -7020,7 +7023,7 @@
      "snapPct": 0.26,
      "targetShare": 0.07,
      "tprr": 0.15,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fl3inwpzgb7fgzpaezw1",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jjmbquak368qrecg57wa",
      "jersey": "45"
     },
     {
@@ -7035,7 +7038,7 @@
      "note": "0.01 EPA/target on 80 tgt/season",
      "reported": "questionable",
      "reportNote": "Ankle · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/htjevkugzk6ietrjysny",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tzx1iqbxxa1807m6olwj",
      "jersey": "18"
     },
     {
@@ -7047,7 +7050,7 @@
      "snapPct": 0.19,
      "targetShare": 0.021,
      "tprr": 0.12,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yi2pgwujy0lv9l3m3sig",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zsjrzuziooij49ubg0lx",
      "jersey": "4"
     },
     {
@@ -7062,7 +7065,7 @@
      "note": "0.12 EPA/target on 51 tgt/season",
      "reported": "questionable",
      "reportNote": "Hamstring · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mi4lzk9gvjrvo6rwdf1e",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ty8e8iasniuuhto6qfdx",
      "jersey": "3"
     },
     {
@@ -7074,7 +7077,7 @@
      "snapPct": 0.3,
      "targetShare": 0.021,
      "tprr": 0.076,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pyritorbaz2enqayclln",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gylfmv9ivsu0rsc1g5uo",
      "jersey": "13"
     },
     {
@@ -7099,7 +7102,7 @@
      "snapPct": 0.07,
      "targetShare": 0.007,
      "tprr": 0.108,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vezjblfvo9gduiyonlum",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/amlveslginvwifpkih1q",
      "jersey": "86"
     },
     {
@@ -7123,7 +7126,7 @@
      "rating": 66,
      "snapPct": 0.95,
      "pbwr": 0.791,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pahzsehwe1mplzelu3wl",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/odagwbftgcrgwjdful8y",
      "jersey": "64"
     },
     {
@@ -7135,7 +7138,7 @@
      "snapPct": 0.85,
      "prwr": 0.095,
      "note": "0.96 sacks/g · 29 QB hits in 14 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/k9buimhpd1q6la5pdxs3",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kkibscog8h0y7z35uzav",
      "jersey": "15"
     },
     {
@@ -7169,7 +7172,7 @@
      "role": "rotational",
      "rating": 67,
      "snapPct": 0.3,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/o2druy2qqi3nkcbj9ns6",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/njdgjd9ij7rald5vbsen",
      "jersey": "97"
     },
     {
@@ -7180,7 +7183,7 @@
      "rating": 58,
      "snapPct": 0.94,
      "note": "8 sacks · 1 PBU · 0 INT in 15 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xp5tifhe6rxrdz4rsm2f",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vvpdkof8jj7s94fzjrnf",
      "jersey": "55"
     },
     {
@@ -7213,7 +7216,7 @@
      "rating": 89,
      "snapPct": 0.03,
      "note": "45/47 FG",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wv1h4umuddkfss96uutw",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kgctxvtvo8sn1zyh2m1c",
      "jersey": "16"
     }
    ],
@@ -7307,7 +7310,7 @@
      "role": "depth",
      "rating": 56,
      "snapPct": 0.57,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ymimvligfyrucu0v3p6a",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/shhpyhrz7zl8s2t3jy0l",
      "jersey": "17"
     },
     {
@@ -7335,7 +7338,7 @@
      "note": "4.8 YPC · 1.37 EPA/season",
      "reported": "out",
      "reportNote": "Thumb · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bkkk3uuouhcobydqawro",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sdrq7yje01g4fvsikoga",
      "jersey": "25"
     },
     {
@@ -7348,7 +7351,7 @@
      "targetShare": 0.123,
      "tprr": 0.173,
      "note": "0.29 EPA/target on 56 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/niewdl2p2325kpohbw9v",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kqxetflykjn9clz04k68",
      "jersey": "15"
     },
     {
@@ -7361,7 +7364,7 @@
      "targetShare": 0.142,
      "tprr": 0.247,
      "note": "0.63 EPA/target on 27 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dpdv6dm0almcbjdppizx",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/trqs4qje1ctnwxs9shwd",
      "jersey": "14"
     },
     {
@@ -7386,7 +7389,7 @@
      "snapPct": 0.06,
      "targetShare": 0.006,
      "tprr": 0.111,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lhodk54zsmznu4yxjoux",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/oqdpvuf3w45eelcjblq7",
      "jersey": "13"
     },
     {
@@ -7399,7 +7402,7 @@
      "targetShare": 0.111,
      "tprr": 0.14,
      "note": "0.42 EPA/target on 51 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cnxiyi76jeahgx94nh6d",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tdeidev1typrqjijtb3a",
      "jersey": "84"
     },
     {
@@ -7423,7 +7426,7 @@
      "rating": 81,
      "snapPct": 0.95,
      "pbwr": 0.922,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lyx4zcnkzewtzqxi7lvh",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bdqemwus6h5ztqefbuve",
      "jersey": "58"
     },
     {
@@ -7470,7 +7473,7 @@
      "snapPct": 0.71,
      "prwr": 0.08,
      "note": "0.19 sacks/g · 9 QB hits in 8 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cchbtgvedcufwteb6dip",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/j5ogni6ir0vlpmqtjxo5",
      "jersey": "50"
     },
     {
@@ -7482,7 +7485,7 @@
      "snapPct": 0.45,
      "prwr": 0.067,
      "note": "1.00 sacks/g · 3 QB hits in 3 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/svrbvbjq34qrfuqohfkf",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/v0yntxlqpbxl1ypttjgt",
      "jersey": "93"
     },
     {
@@ -7493,7 +7496,7 @@
      "rating": 89,
      "snapPct": 0.95,
      "note": "3 sacks · 9 PBU · 3 INT in 12 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yn9buon12abtkbrm9cqm",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/diyyyce6adtqk6ihcdyt",
      "jersey": "12"
     },
     {
@@ -7504,7 +7507,7 @@
      "rating": 67,
      "snapPct": 0.99,
      "note": "2 PBU · 1 INT in 3 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ooazlgwwseozyduthxn6",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qnducgpwjngnjmqvxwcs",
      "jersey": "1"
     },
     {
@@ -7515,7 +7518,7 @@
      "rating": 76,
      "snapPct": 1,
      "note": "3 PBU · 1 INT in 3 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hyl3qlps5bwhwvklhf2j",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lkqxlsmgrd6zfnxvwfph",
      "jersey": "31"
     },
     {
@@ -7526,7 +7529,7 @@
      "rating": 62,
      "snapPct": 0.03,
      "note": "32/38 FG",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tz5ecjri52gwpoo9s7be",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vtk4cn0bfnqv0cnh79an",
      "jersey": "8"
     }
    ],
@@ -7622,7 +7625,7 @@
      "rating": 74,
      "snapPct": 0.95,
      "note": "0.02 EPA/dropback · 2.0 CPOE · 415 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmm4ohds7qci0vqoobhm",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ofdaeqinzmboli54fyis",
      "jersey": "1"
     },
     {
@@ -7635,7 +7638,7 @@
      "targetShare": 0.15,
      "tprr": 0.247,
      "note": "5.3 YPC · 9.76 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/esii5yb8yn9edboi4mlq",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zaxetgy0p0ul6evlsf63",
      "jersey": "7"
     },
     {
@@ -7661,7 +7664,7 @@
      "targetShare": 0.208,
      "tprr": 0.26,
      "note": "0.35 EPA/target on 69 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mcllowcfrmmdeo4zy3g1",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/y5mkxrljhsglpwl3ky94",
      "jersey": "5"
     },
     {
@@ -7673,7 +7676,7 @@
      "snapPct": 0.23,
      "targetShare": 0.05,
      "tprr": 0.233,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qwbo8lgyd85dlwnbznsc",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ueo0q6wzg6gntezjk93y",
      "jersey": "17"
     },
     {
@@ -7686,7 +7689,7 @@
      "targetShare": 0.108,
      "tprr": 0.173,
      "note": "-0.54 EPA/target on 25 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gwuibfw7ljxudxtldcvh",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mzzh72ip9p7gqhkpsn4u",
      "jersey": "4"
     },
     {
@@ -7699,7 +7702,7 @@
      "targetShare": 0.058,
      "tprr": 0.174,
      "note": "-0.11 EPA/target on 37 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zsnzd30ysrewgufbv06y",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wxamgrryctedlz0coeyd",
      "jersey": "14"
     },
     {
@@ -7724,7 +7727,7 @@
      "snapPct": 0.57,
      "targetShare": 0.017,
      "tprr": 0.04,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tuzldnhk23mvsapfejqd",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wubpwkurzpoj7n5gkvga",
      "jersey": "89"
     },
     {
@@ -7737,7 +7740,7 @@
      "pbwr": 0.903,
      "reported": "questionable",
      "reportNote": "Groin · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hoifz7uqrpjm5g2mlyaa",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cwgpafrmgfydri6xmwxt",
      "jersey": "70"
     },
     {
@@ -7748,7 +7751,7 @@
      "rating": 79,
      "snapPct": 0.95,
      "pbwr": 0.903,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ej9vnjijinovikapg3nz",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/astznme04kczpjjb02of",
      "jersey": "63"
     },
     {
@@ -7762,7 +7765,7 @@
      "note": "0.44 sacks/g · 15 QB hits in 8 g",
      "reported": "questionable",
      "reportNote": "Hamstring · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cmoytuhhkqslhcpulq5e",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/iycguhurlxviqsp6rwif",
      "jersey": "52"
     },
     {
@@ -7788,7 +7791,7 @@
      "snapPct": 0.55,
      "prwr": 0.083,
      "note": "0.77 sacks/g · 17 QB hits in 11 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ijybsgxpvngj5wzlcupl",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yjyai4c0os0sgis3nrua",
      "jersey": "54"
     },
     {
@@ -7800,7 +7803,7 @@
      "snapPct": 0.55,
      "prwr": 0.092,
      "note": "0.59 sacks/g · 14 QB hits in 11 g",
-     "headshotUrl": "https://static.www.nfl.com/image/private/f_auto,q_auto/league/vj6m4qixxhqmufrr5ilo",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/btoicy0v0yxovpyzwdae",
      "jersey": "95"
     },
     {
@@ -7813,7 +7816,7 @@
      "note": "1 sacks · 8 PBU · 0 INT in 9 g",
      "reported": "questionable",
      "reportNote": "Hamstring · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/epymgfknvbi0vbygiv4j",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yiiz8flwant2fmki3fzi",
      "jersey": "0"
     },
     {
@@ -7824,7 +7827,7 @@
      "rating": 59,
      "snapPct": 0.88,
      "note": "10 PBU · 1 INT in 9 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tncrybucqelrcrsgumds",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/flnm8dkf4rlfotyxx1gm",
      "jersey": "21"
     },
     {
@@ -7835,7 +7838,7 @@
      "rating": 91,
      "snapPct": 0.98,
      "note": "12 PBU · 6 INT in 11 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kfq1ekzcnannihp8qatc",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lq0eslskvurxkfgnlpdb",
      "jersey": "31"
     },
     {
@@ -7846,7 +7849,7 @@
      "rating": 80,
      "snapPct": 0.03,
      "note": "34/38 FG",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qf6vaghxuoxqw0pyrvg3",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wyxpq0sdnno4p7hi5igm",
      "jersey": "6"
     }
    ],
@@ -8236,7 +8239,7 @@
      "rating": 72,
      "snapPct": 1,
      "note": "-0.01 EPA/dropback · 2.2 CPOE · 548 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/toiafc7qighw86geo7jf",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vu51ogqu4i3abbwpj2fl",
      "jersey": "6"
     },
     {
@@ -8247,7 +8250,7 @@
      "rating": 58,
      "snapPct": 0.82,
      "note": "-0.13 EPA/dropback · 2.4 CPOE · 272 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gcgmcf4kex3jsl4rlrng",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmqufmj0wwwnl5zr4w7a",
      "jersey": "2"
     },
     {
@@ -8262,7 +8265,7 @@
      "note": "3.5 YPC · -23.25 EPA/season",
      "reported": "questionable",
      "reportNote": "Back · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yxebpuskandivlh2iil4",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hedvtdbdgdyf4lo5e12p",
      "jersey": "41"
     },
     {
@@ -8275,7 +8278,7 @@
      "targetShare": 0.028,
      "tprr": 0.121,
      "note": "3.7 YPC · -6.66 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vclaomtslw55smksopku",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ugutum81zflympu9jlv1",
      "jersey": "5"
     },
     {
@@ -8288,7 +8291,7 @@
      "targetShare": 0.227,
      "tprr": 0.285,
      "note": "0.35 EPA/target on 102 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/onmxufsprtvglhejg94o",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/u1wdmijwkbobujmw7kbb",
      "jersey": "12"
     },
     {
@@ -8302,7 +8305,7 @@
      "tprr": 0.19,
      "reported": "questionable",
      "reportNote": "Thigh · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zakfmezzed4qotdrmbpc",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/npjiglbaqpngbxyraftk",
      "jersey": "19"
     },
     {
@@ -8315,7 +8318,7 @@
      "targetShare": 0.147,
      "tprr": 0.172,
      "note": "0.44 EPA/target on 36 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fa3dwsu8nxzkbf2knczm",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qt1phcijlgeilrf4zpef",
      "jersey": "14"
     },
     {
@@ -8327,7 +8330,7 @@
      "snapPct": 0.76,
      "targetShare": 0.066,
      "tprr": 0.093,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lzh0hbhllbouh97ffpp6",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sst98duh0vwxfdaezkvc",
      "jersey": "18"
     },
     {
@@ -8340,7 +8343,7 @@
      "targetShare": 0.128,
      "tprr": 0.198,
      "note": "0.37 EPA/target on 65 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ahzqkvhjot6lygwr4ccb",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lxnxhlxnolrx7ybhu5ug",
      "jersey": "83"
     },
     {
@@ -8353,7 +8356,7 @@
      "targetShare": 0.057,
      "tprr": 0.129,
      "note": "-0.3 EPA/target on 27 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lijnonbrcmplvkcb5kqv",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xajxem9ad7btdgu9d9yk",
      "jersey": "87"
     },
     {
@@ -8364,7 +8367,7 @@
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.878,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/i1lfvb8gnw3kfnz3cdyb",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gwr3pl53zw4v4xbm0ef6",
      "jersey": "72"
     },
     {
@@ -8375,7 +8378,7 @@
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.878,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cebriv15rawbtf7iulqy",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ls5polgsz1ydcwjlf0ps",
      "jersey": "76"
     },
     {
@@ -8387,7 +8390,7 @@
      "snapPct": 0.72,
      "prwr": 0.123,
      "note": "1.04 sacks/g · 20 QB hits in 13 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ueic3ypcpfldmbymzhrc",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/o8igbkzsei4fzpxkg3q4",
      "jersey": "99"
     },
     {
@@ -8399,7 +8402,7 @@
      "snapPct": 0.65,
      "prwr": 0.094,
      "note": "1.00 sacks/g · 10 QB hits in 7 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bhudfgndbvogastdhvb7",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/od4geznzgsqdp7rcevdz",
      "jersey": "96"
     },
     {
@@ -8421,7 +8424,7 @@
      "role": "rotational",
      "rating": 63,
      "snapPct": 0.59,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jij1yqsdhelakkptqz9k",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ac6mne4eytzwcfm0acyz",
      "jersey": "91"
     },
     {
@@ -8434,7 +8437,7 @@
      "note": "3.5 sacks · 7 PBU · 1 INT in 14 g",
      "reported": "out",
      "reportNote": "Calf · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lndj0awmhdulawkcjgua",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qae45apeddvsw0mcxevo",
      "jersey": "55"
     },
     {
@@ -8445,7 +8448,7 @@
      "rating": 89,
      "snapPct": 1,
      "note": "21 PBU · 3 INT in 13 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/n0yip0zx9i25jbwugzmo",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/guoe7hfbz0wbqyprfnuc",
      "jersey": "1"
     },
     {
@@ -8457,7 +8460,7 @@
      "snapPct": 1,
      "reported": "questionable",
      "reportNote": "Shoulder · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/szgvamjf2lv2ggswkobd",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zvqun3mf31fdm9m7pmp8",
      "jersey": "23"
     },
     {
@@ -8506,7 +8509,7 @@
     "redZoneTd": 0.54,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 6,
-    "playActionRate": 0.205,
+    "playActionRate": 0.185,
     "passRate": 0.52,
     "pace": 65.3
    },
@@ -8538,7 +8541,7 @@
     "nickelCorner": 7.6,
     "lbCoverage": 4,
     "secondaryAdjust": 5.7,
-    "blitzRate": 0.374,
+    "blitzRate": 0.33,
     "takeaways": 6.2
    },
    "players": [
