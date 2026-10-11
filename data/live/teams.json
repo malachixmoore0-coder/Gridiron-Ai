@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T05:54:31.163Z",
+ "generatedAt": "2026-10-11T12:58:30.015Z",
  "season": 2026,
  "week": 5,
  "phase": "regular",
@@ -128,6 +128,8 @@
      "targetShare": 0.132,
      "tprr": 0.273,
      "note": "0.19 EPA/target on 53 tgt/season",
+     "reported": "questionable",
+     "reportNote": "Shoulder · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmiale9dvql5ol2xmhf1",
      "jersey": "2"
     },
@@ -775,19 +777,16 @@
      "jersey": "3"
     },
     {
-     "id": "ne-00-0033555",
-     "name": "Mack Hollins",
+     "id": "ne-00-0040563",
+     "name": "Efton Chism III",
      "pos": "WR",
      "role": "rotational",
-     "rating": 89,
-     "snapPct": 0.65,
-     "targetShare": 0.127,
-     "tprr": 0.207,
-     "note": "0.47 EPA/target on 43 tgt/season",
-     "reported": "out",
-     "reportNote": "Calf · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qbz7whjzsittudcecezw",
-     "jersey": "13"
+     "rating": 56,
+     "snapPct": 0.29,
+     "targetShare": 0.044,
+     "tprr": 0.162,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zbnf3ujmwprzgjnwdtlo",
+     "jersey": "86"
     },
     {
      "id": "ne-00-0033090",
@@ -2341,25 +2340,10 @@
      "jersey": "10"
     },
     {
-     "id": "pit-00-0036252",
-     "name": "Michael Pittman",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 77,
-     "snapPct": 0.78,
-     "targetShare": 0.065,
-     "tprr": 0.09,
-     "note": "0.2 EPA/target on 63 tgt/season",
-     "reported": "out",
-     "reportNote": "Foot · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q1ythn05kwcmdr4mwzll",
-     "jersey": "11"
-    },
-    {
      "id": "pit-00-0039739",
      "name": "Roman Wilson",
      "pos": "WR",
-     "role": "rotational",
+     "role": "starter",
      "rating": 67,
      "snapPct": 0.51,
      "targetShare": 0.13,
@@ -2367,6 +2351,18 @@
      "note": "0.25 EPA/target on 23 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuhjoscmhmmsutbvfmrs",
      "jersey": "14"
+    },
+    {
+     "id": "pit-00-0041489",
+     "name": "Germie Bernard",
+     "pos": "WR",
+     "role": "rotational",
+     "rating": 67,
+     "snapPct": 0.38,
+     "targetShare": 0.059,
+     "tprr": 0.169,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rsbtypbsvxux94vokb5q",
+     "jersey": "17"
     },
     {
      "id": "pit-00-0038558",
@@ -3057,18 +3053,16 @@
      "jersey": "97"
     },
     {
-     "id": "ind-00-0034825",
-     "name": "Arden Key",
+     "id": "ind-00-0040744",
+     "name": "Jaylahn Tuimoloau",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 70,
-     "snapPct": 0.65,
-     "prwr": 0.098,
-     "note": "0.45 sacks/g · 14 QB hits in 10 g",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bfgh79r4mmjkiw91ptiq",
-     "jersey": "98"
+     "rating": 45,
+     "snapPct": 0.43,
+     "prwr": 0.077,
+     "note": "0.00 sacks/g · 7 QB hits in 6 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cxkxb1csogr9v773tdib",
+     "jersey": "91"
     },
     {
      "id": "ind-00-0032378",
@@ -4154,17 +4148,14 @@
      "jersey": "10"
     },
     {
-     "id": "lac-00-0037012",
-     "name": "Trey Lance",
+     "id": "lac-00-0040464",
+     "name": "DJ Uiagalelei",
      "pos": "QB",
      "role": "depth",
-     "rating": 42,
-     "snapPct": 0.38,
-     "note": "-0.65 EPA/dropback · -9.8 CPOE · 59 dropbacks",
-     "reported": "out",
-     "reportNote": "Groin · Doubtful",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/j3psmvvxo13kmbgi60ej",
-     "jersey": "5"
+     "rating": 56,
+     "snapPct": 0.35,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uxkbvrw5eu41udzsesnu",
+     "jersey": "7"
     },
     {
      "id": "lac-00-0040666",
@@ -4192,34 +4183,6 @@
      "jersey": "30"
     },
     {
-     "id": "lac-00-0038544",
-     "name": "Quentin Johnston",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 77,
-     "snapPct": 0.8,
-     "targetShare": 0.12,
-     "tprr": 0.164,
-     "note": "0.23 EPA/target on 52 tgt/season",
-     "reported": "out",
-     "reportNote": "Chest · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lyvsrjh4mjb4dqwp6shm",
-     "jersey": "1"
-    },
-    {
-     "id": "lac-00-0040727",
-     "name": "Tre Harris",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 76,
-     "snapPct": 0.77,
-     "targetShare": 0.133,
-     "tprr": 0.188,
-     "note": "0.33 EPA/target on 32 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/v5ofh8jggzo8rygtpwl7",
-     "jersey": "9"
-    },
-    {
      "id": "lac-00-0039915",
      "name": "Ladd McConkey",
      "pos": "WR",
@@ -4235,16 +4198,45 @@
      "jersey": "15"
     },
     {
-     "id": "lac-00-0040311",
-     "name": "Theo Wease Jr.",
+     "id": "lac-00-0038573",
+     "name": "Derius Davis",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 60,
+     "snapPct": 0.09,
+     "targetShare": 0.019,
+     "tprr": 0.23,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ykmeihbr6903smvblzgc",
+     "jersey": "12"
+    },
+    {
+     "id": "lac-00-0038544",
+     "name": "Quentin Johnston",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 77,
+     "snapPct": 0.8,
+     "targetShare": 0.12,
+     "tprr": 0.164,
+     "note": "0.23 EPA/target on 52 tgt/season",
+     "reported": "out",
+     "reportNote": "Chest · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lyvsrjh4mjb4dqwp6shm",
+     "jersey": "1"
+    },
+    {
+     "id": "lac-00-0041550",
+     "name": "Brenen Thompson",
      "pos": "WR",
      "role": "rotational",
-     "rating": 56,
-     "snapPct": 0.32,
-     "targetShare": 0.014,
-     "tprr": 0.046,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ywtuq1sielt0scr220fi",
-     "jersey": "82"
+     "rating": 63,
+     "snapPct": 0.18,
+     "targetShare": 0.019,
+     "tprr": 0.115,
+     "reported": "out",
+     "reportNote": "Quadricep · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/khlvgjk60vz6ghkwpmak",
+     "jersey": "89"
     },
     {
      "id": "lac-00-0038046",
@@ -4275,54 +4267,52 @@
      "jersey": "86"
     },
     {
-     "id": "lac-00-0035688",
-     "name": "Trey Pipkins",
+     "id": "lac-00-0039897",
+     "name": "Joe Alt",
      "pos": "LT",
      "role": "starter",
      "rating": 63,
      "snapPct": 0.95,
      "pbwr": 0.769,
      "reported": "out",
-     "reportNote": "Reserve list (IR)",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nhze2mywnxrcmwyck0x4",
-     "jersey": "79"
+     "reportNote": "Neck · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hul7ydlbropij2fjhvvy",
+     "jersey": "76"
     },
     {
-     "id": "lac-00-0037241",
-     "name": "Trevor Penning",
+     "id": "lac-00-0038103",
+     "name": "Cole Strange",
      "pos": "OL",
      "role": "starter",
      "rating": 63,
      "snapPct": 0.95,
      "pbwr": 0.769,
-     "reported": "out",
-     "reportNote": "Concussion · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tr9e0yl1esqawnieqogh",
-     "jersey": "75"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ewuzloizbacphcy6yogg",
+     "jersey": "69"
+    },
+    {
+     "id": "lac-00-0039111",
+     "name": "Tuli Tuipulotu",
+     "pos": "EDGE",
+     "role": "starter",
+     "rating": 92,
+     "snapPct": 0.78,
+     "prwr": 0.11,
+     "note": "0.94 sacks/g · 30 QB hits in 16 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/u2qqrqzzi3yawzxmbrxs",
+     "jersey": "45"
     },
     {
      "id": "lac-00-0031040",
      "name": "Khalil Mack",
      "pos": "EDGE",
-     "role": "starter",
+     "role": "rotational",
      "rating": 84,
      "snapPct": 0.69,
      "prwr": 0.108,
      "note": "0.71 sacks/g · 16 QB hits in 12 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/t9j95jylmjpevgbkvmqn",
      "jersey": "52"
-    },
-    {
-     "id": "lac-00-0039835",
-     "name": "Justin Eboigbe",
-     "pos": "EDGE",
-     "role": "rotational",
-     "rating": 81,
-     "snapPct": 0.62,
-     "prwr": 0.079,
-     "note": "0.72 sacks/g · 12 QB hits in 9 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vayynevqkczp1ziitvkm",
-     "jersey": "92"
     },
     {
      "id": "lac-00-0040144",
@@ -9699,6 +9689,8 @@
      "rating": 90,
      "snapPct": 1,
      "note": "17 PBU · 2 INT in 10 g",
+     "reported": "questionable",
+     "reportNote": "Hip · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qktbfevtbxiyrw9ekk72",
      "jersey": "37"
     },
