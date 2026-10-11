@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T19:35:29.687Z",
+ "generatedAt": "2026-10-11T20:38:43.026Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -2341,9 +2341,21 @@
    "marketTotal": 46.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 31,
+    "awayScore": 7,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 22.5,
+    "totalError": -11.9,
+    "brier": 0.2107
+   }
   },
   {
    "id": "2026_05_CIN_MIA",
@@ -2364,9 +2376,21 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 24,
+    "awayScore": 31,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "push",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -4.5,
+    "totalError": 8.3,
+    "brier": 0.1884
+   }
   },
   {
    "id": "2026_05_CLE_NYJ",
@@ -2387,9 +2411,21 @@
    "marketTotal": 39.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 17,
+    "awayScore": 12,
+    "winner": "home",
+    "suCorrect": false,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": null,
+    "ou": null,
+    "spreadError": 10.5,
+    "totalError": -10.3,
+    "brier": 0.4251
+   }
   },
   {
    "id": "2026_05_HOU_TEN",
@@ -2410,9 +2446,21 @@
    "marketTotal": 37.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 3,
+    "awayScore": 26,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": -15,
+    "totalError": -12.5,
+    "brier": 0.0949
+   }
   },
   {
    "id": "2026_05_IND_PIT",
@@ -2433,9 +2481,21 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 34,
+    "awayScore": 22,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": 10.5,
+    "totalError": 13.2,
+    "brier": 0.2162
+   }
   },
   {
    "id": "2026_05_LV_NE",
@@ -2456,9 +2516,21 @@
    "marketTotal": 45.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 45,
+    "awayScore": 17,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": 25.5,
+    "totalError": 19.3,
+    "brier": 0.1781
+   }
   },
   {
    "id": "2026_05_MIN_NO",
@@ -2479,9 +2551,21 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 13,
+    "awayScore": 23,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "win",
+    "spreadError": -12,
+    "totalError": -3.5,
+    "brier": 0.3136
+   }
   },
   {
    "id": "2026_05_NYG_WAS",
@@ -2525,8 +2609,8 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-11T16:05:00-04:00",
    "result": null
   },
   {
@@ -2548,8 +2632,8 @@
    "marketTotal": 55.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-11T16:25:00-04:00",
    "result": null
   },
   {
@@ -2571,8 +2655,8 @@
    "marketTotal": 46.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-11T16:25:00-04:00",
    "result": null
   },
   {
