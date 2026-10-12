@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-11T20:38:43.026Z",
+ "generatedAt": "2026-10-12T00:01:00.759Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -2586,9 +2586,21 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-10-11T05:54:31.163Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T13:00:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 27,
+    "awayScore": 27,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 1.5,
+    "totalError": 11.7,
+    "brier": 0.2134
+   }
   },
   {
    "id": "2026_05_DEN_LAC",
@@ -2609,9 +2621,21 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T16:05:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 17,
+    "awayScore": 23,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": null,
+    "ou": null,
+    "spreadError": 2,
+    "totalError": -2.7,
+    "brier": 0.0894
+   }
   },
   {
    "id": "2026_05_DET_ARI",
@@ -2632,9 +2656,21 @@
    "marketTotal": 55.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 21,
+    "awayScore": 45,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": -20.5,
+    "totalError": 15.4,
+    "brier": 0.1552
+   }
   },
   {
    "id": "2026_05_SF_SEA",
@@ -2655,9 +2691,21 @@
    "marketTotal": 46.5,
    "predictedAt": "2026-10-11T19:35:29.687Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-11T16:25:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 29,
+    "awayScore": 32,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "win",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": 0.5,
+    "totalError": 11.2,
+    "brier": 0.1706
+   }
   },
   {
    "id": "2026_05_BAL_ATL",
