@@ -1,7 +1,7 @@
 {
- "generatedAt": "2026-10-12T21:18:39.273Z",
+ "generatedAt": "2026-10-13T06:51:11.400Z",
  "season": 2026,
- "week": 5,
+ "week": 6,
  "phase": "regular",
  "teams": [
   {
@@ -29,46 +29,46 @@
     "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
-    "thirdDownOff": 0.493,
-    "thirdDownDef": 0.586,
-    "fourthDownGoRate": 0.878,
-    "redZoneTd": 0.709,
-    "redZoneAggression": 7.3,
-    "halftimeAdjust": 6.1,
-    "playActionRate": 0.258,
-    "passRate": 0.539,
-    "pace": 64.1
+    "thirdDownOff": 0.482,
+    "thirdDownDef": 0.578,
+    "fourthDownGoRate": 0.875,
+    "redZoneTd": 0.718,
+    "redZoneAggression": 7.4,
+    "halftimeAdjust": 6,
+    "playActionRate": 0.237,
+    "passRate": 0.54,
+    "pace": 64
    },
    "offense": {
-    "passEfficiency": 7.9,
-    "rushEfficiency": 8.3,
-    "explosiveness": 9.2,
+    "passEfficiency": 8.3,
+    "rushEfficiency": 8,
+    "explosiveness": 9.6,
     "qb": 8.59,
-    "pbwr": 0.638,
-    "slotEfficiency": 6.8,
+    "pbwr": 0.65,
+    "slotEfficiency": 7.5,
     "teSpeed": 8.69,
     "vsFront": {
-     "4-3": 8.7,
-     "3-4": 7.3,
-     "Multiple": 7.9
+     "4-3": 8.8,
+     "3-4": 7.9,
+     "Multiple": 8
     },
     "vsCoverage": {
-     "Cover-1": 9.5,
-     "Cover-2": 9,
-     "Cover-3": 9.1,
-     "Quarters": 9,
-     "Cover-2 Man": 9.4
+     "Cover-1": 9.6,
+     "Cover-2": 9.1,
+     "Cover-3": 9.2,
+     "Quarters": 9.1,
+     "Cover-2 Man": 9.5
     }
    },
    "defense": {
-    "passDefense": 5.7,
-    "rushDefense": 2.9,
-    "prwr": 0.454,
-    "nickelCorner": 5.8,
-    "lbCoverage": 6.3,
-    "secondaryAdjust": 6.7,
-    "blitzRate": 0.282,
-    "takeaways": 5.9
+    "passDefense": 5.2,
+    "rushDefense": 3,
+    "prwr": 0.437,
+    "nickelCorner": 5,
+    "lbCoverage": 5.8,
+    "secondaryAdjust": 6.3,
+    "blitzRate": 0.25,
+    "takeaways": 5.3
    },
    "players": [
     {
@@ -78,7 +78,7 @@
      "role": "starter",
      "rating": 90,
      "snapPct": 1,
-     "note": "0.14 EPA/dropback · 4.0 CPOE · 636 dropbacks",
+     "note": "0.15 EPA/dropback · 3.8 CPOE · 657 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ynrhq9iv30ysjpwmrfdv",
      "jersey": "17"
     },
@@ -99,9 +99,9 @@
      "role": "starter",
      "rating": 95,
      "snapPct": 0.68,
-     "targetShare": 0.066,
-     "tprr": 0.107,
-     "note": "5.4 YPC · 10.52 EPA/season",
+     "targetShare": 0.06,
+     "tprr": 0.097,
+     "note": "5.3 YPC · 9.14 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/anjbznqb9i21wzcgrtbs",
      "jersey": "4"
     },
@@ -110,11 +110,11 @@
      "name": "Ty Johnson",
      "pos": "RB",
      "role": "rotational",
-     "rating": 91,
+     "rating": 95,
      "snapPct": 0.28,
-     "targetShare": 0.04,
-     "tprr": 0.155,
-     "note": "4.0 YPC · 10.84 EPA/season",
+     "targetShare": 0.054,
+     "tprr": 0.214,
+     "note": "4.0 YPC · 13.16 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ejjjjb8kaydolab9jrcr",
      "jersey": "26"
     },
@@ -125,8 +125,8 @@
      "role": "starter",
      "rating": 74,
      "snapPct": 0.53,
-     "targetShare": 0.132,
-     "tprr": 0.273,
+     "targetShare": 0.109,
+     "tprr": 0.226,
      "note": "0.19 EPA/target on 53 tgt/season",
      "reported": "questionable",
      "reportNote": "Shoulder · Questionable",
@@ -151,11 +151,11 @@
      "name": "Khalil Shakir",
      "pos": "WR",
      "role": "starter",
-     "rating": 62,
+     "rating": 68,
      "snapPct": 0.63,
-     "targetShare": 0.152,
-     "tprr": 0.265,
-     "note": "0.07 EPA/target on 60 tgt/season",
+     "targetShare": 0.141,
+     "tprr": 0.247,
+     "note": "0.12 EPA/target on 62 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ituuwxmqtheiha2kkrvt",
      "jersey": "10"
     },
@@ -164,11 +164,11 @@
      "name": "Keon Coleman",
      "pos": "WR",
      "role": "rotational",
-     "rating": 83,
+     "rating": 84,
      "snapPct": 0.63,
-     "targetShare": 0.113,
-     "tprr": 0.196,
-     "note": "0.38 EPA/target on 40 tgt/season",
+     "targetShare": 0.103,
+     "tprr": 0.181,
+     "note": "0.38 EPA/target on 41 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/garesglkqop2fvgc5bgh",
      "jersey": "0"
     },
@@ -179,9 +179,9 @@
      "role": "starter",
      "rating": 94,
      "snapPct": 0.66,
-     "targetShare": 0.126,
-     "tprr": 0.209,
-     "note": "0.74 EPA/target on 35 tgt/season",
+     "targetShare": 0.12,
+     "tprr": 0.2,
+     "note": "0.71 EPA/target on 36 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cmrfup2mfx13pjb0qznw",
      "jersey": "86"
     },
@@ -190,11 +190,11 @@
      "name": "Dawson Knox",
      "pos": "TE",
      "role": "rotational",
-     "rating": 79,
+     "rating": 77,
      "snapPct": 0.69,
-     "targetShare": 0.04,
-     "tprr": 0.063,
-     "note": "0.36 EPA/target on 28 tgt/season",
+     "targetShare": 0.049,
+     "tprr": 0.078,
+     "note": "0.31 EPA/target on 30 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ihlvyh95aub97tfklmr1",
      "jersey": "88"
     },
@@ -203,9 +203,9 @@
      "name": "Dion Dawkins",
      "pos": "LT",
      "role": "starter",
-     "rating": 77,
+     "rating": 78,
      "snapPct": 0.95,
-     "pbwr": 0.888,
+     "pbwr": 0.9,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hklbgvcfogrzwbbc6mki",
      "jersey": "73"
     },
@@ -214,9 +214,9 @@
      "name": "Connor McGovern",
      "pos": "OL",
      "role": "starter",
-     "rating": 77,
+     "rating": 78,
      "snapPct": 0.95,
-     "pbwr": 0.888,
+     "pbwr": 0.9,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yikput3uch5xye56uzsm",
      "jersey": "66"
     },
@@ -225,10 +225,10 @@
      "name": "Greg Rousseau",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 96,
+     "rating": 95,
      "snapPct": 0.77,
      "prwr": 0.105,
-     "note": "0.87 sacks/g · 39 QB hits in 15 g",
+     "note": "0.81 sacks/g · 40 QB hits in 16 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cyhqf4lgtizbm9j7lged",
      "jersey": "15"
     },
@@ -252,7 +252,7 @@
      "rating": 56,
      "snapPct": 0.7,
      "prwr": 0.07,
-     "note": "0.22 sacks/g · 8 QB hits in 9 g",
+     "note": "0.20 sacks/g · 9 QB hits in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xvdgwgelbb8ml7w3k8hr",
      "jersey": "96"
     },
@@ -272,9 +272,9 @@
      "name": "Terrel Bernard",
      "pos": "LB",
      "role": "starter",
-     "rating": 63,
+     "rating": 51,
      "snapPct": 0.96,
-     "note": "0 sacks · 4 PBU · 1 INT in 5 g",
+     "note": "0 sacks · 4 PBU · 1 INT in 6 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ofu8rqr9dc39yhyjaup5",
      "jersey": "8"
     },
@@ -307,13 +307,13 @@
      "role": "starter",
      "rating": 94,
      "snapPct": 0.03,
-     "note": "6/6 FG",
+     "note": "9/9 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nybemwh44rplken2tdnx",
      "jersey": "16"
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/buf.png",
-   "record": "3-1"
+   "record": "4-1"
   },
   {
    "id": "mia",
@@ -346,14 +346,14 @@
     "redZoneTd": 0.534,
     "redZoneAggression": 5,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.27,
+    "playActionRate": 0.247,
     "passRate": 0.486,
     "pace": 57.7
    },
    "offense": {
     "passEfficiency": 3.7,
-    "rushEfficiency": 5.6,
-    "explosiveness": 6.8,
+    "rushEfficiency": 5.7,
+    "explosiveness": 6.7,
     "qb": 3.67,
     "pbwr": 0.63,
     "slotEfficiency": 3.9,
@@ -364,21 +364,21 @@
      "Multiple": 4.4
     },
     "vsCoverage": {
-     "Cover-1": 4.5,
-     "Cover-2": 4,
-     "Cover-3": 4.1,
-     "Quarters": 4,
-     "Cover-2 Man": 4.4
+     "Cover-1": 4.6,
+     "Cover-2": 4.1,
+     "Cover-3": 4.2,
+     "Quarters": 4.1,
+     "Cover-2 Man": 4.5
     }
    },
    "defense": {
     "passDefense": 3.1,
     "rushDefense": 5.3,
     "prwr": 0.391,
-    "nickelCorner": 3.5,
-    "lbCoverage": 2.4,
+    "nickelCorner": 3.6,
+    "lbCoverage": 2.3,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.312,
+    "blitzRate": 0.286,
     "takeaways": 4.4
    },
    "players": [
@@ -653,7 +653,7 @@
     "redZoneTd": 0.599,
     "redZoneAggression": 5.2,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.242,
+    "playActionRate": 0.217,
     "passRate": 0.558,
     "pace": 64.4
    },
@@ -663,11 +663,11 @@
     "explosiveness": 7,
     "qb": 9.77,
     "pbwr": 0.606,
-    "slotEfficiency": 8,
+    "slotEfficiency": 7.9,
     "teSpeed": 7.88,
     "vsFront": {
      "4-3": 5.4,
-     "3-4": 7.8,
+     "3-4": 7.7,
      "Multiple": 6.4
     },
     "vsCoverage": {
@@ -679,13 +679,13 @@
     }
    },
    "defense": {
-    "passDefense": 6.8,
+    "passDefense": 6.9,
     "rushDefense": 4.6,
     "prwr": 0.425,
-    "nickelCorner": 6.8,
-    "lbCoverage": 6.8,
-    "secondaryAdjust": 5.7,
-    "blitzRate": 0.325,
+    "nickelCorner": 6.9,
+    "lbCoverage": 6.9,
+    "secondaryAdjust": 5.8,
+    "blitzRate": 0.288,
     "takeaways": 5.4
    },
    "players": [
@@ -934,7 +934,7 @@
      "name": "Andy Borregales",
      "pos": "K",
      "role": "starter",
-     "rating": 60,
+     "rating": 62,
      "snapPct": 0.03,
      "note": "33/40 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/enykic9eob4ogreebucl",
@@ -975,7 +975,7 @@
     "redZoneTd": 0.502,
     "redZoneAggression": 4.4,
     "halftimeAdjust": 6.5,
-    "playActionRate": 0.192,
+    "playActionRate": 0.172,
     "passRate": 0.506,
     "pace": 60.9
    },
@@ -1004,11 +1004,11 @@
     "passDefense": 3.7,
     "rushDefense": 6,
     "prwr": 0.386,
-    "nickelCorner": 4.1,
+    "nickelCorner": 4.2,
     "lbCoverage": 4.8,
-    "secondaryAdjust": 5.8,
-    "blitzRate": 0.319,
-    "takeaways": 2.1
+    "secondaryAdjust": 5.9,
+    "blitzRate": 0.28,
+    "takeaways": 2.2
    },
    "players": [
     {
@@ -1283,16 +1283,16 @@
    },
    "coaching": {
     "headCoach": "Jesse Minter",
-    "offScheme": "Wide Zone",
+    "offScheme": "Power Run",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.408,
     "thirdDownDef": 0.603,
     "fourthDownGoRate": 0.813,
     "redZoneTd": 0.608,
-    "redZoneAggression": 6,
+    "redZoneAggression": 5.9,
     "halftimeAdjust": 4.7,
-    "playActionRate": 0.251,
+    "playActionRate": 0.219,
     "passRate": 0.506,
     "pace": 61.2
    },
@@ -1306,25 +1306,25 @@
     "teSpeed": 3.2,
     "vsFront": {
      "4-3": 6.4,
-     "3-4": 7.3,
+     "3-4": 7.2,
      "Multiple": 7
     },
     "vsCoverage": {
-     "Cover-1": 7.8,
-     "Cover-2": 7.4,
-     "Cover-3": 7.9,
-     "Quarters": 7.3,
-     "Cover-2 Man": 7.6
+     "Cover-1": 7.5,
+     "Cover-2": 8,
+     "Cover-3": 7.6,
+     "Quarters": 7.9,
+     "Cover-2 Man": 7.8
     }
    },
    "defense": {
-    "passDefense": 5.4,
+    "passDefense": 5.5,
     "rushDefense": 5.9,
     "prwr": 0.416,
     "nickelCorner": 4.8,
-    "lbCoverage": 7.5,
+    "lbCoverage": 7.6,
     "secondaryAdjust": 4.4,
-    "blitzRate": 0.269,
+    "blitzRate": 0.241,
     "takeaways": 5.6
    },
    "players": [
@@ -1606,9 +1606,9 @@
     "thirdDownDef": 0.55,
     "fourthDownGoRate": 0.719,
     "redZoneTd": 0.621,
-    "redZoneAggression": 5.6,
+    "redZoneAggression": 5.5,
     "halftimeAdjust": 4.7,
-    "playActionRate": 0.165,
+    "playActionRate": 0.153,
     "passRate": 0.608,
     "pace": 64
    },
@@ -1634,13 +1634,13 @@
     }
    },
    "defense": {
-    "passDefense": 5.1,
+    "passDefense": 5.2,
     "rushDefense": 3.1,
     "prwr": 0.412,
-    "nickelCorner": 5.4,
+    "nickelCorner": 5.5,
     "lbCoverage": 2.8,
     "secondaryAdjust": 4.6,
-    "blitzRate": 0.171,
+    "blitzRate": 0.159,
     "takeaways": 7
    },
    "players": [
@@ -1924,7 +1924,7 @@
     "redZoneTd": 0.486,
     "redZoneAggression": 3.9,
     "halftimeAdjust": 5.6,
-    "playActionRate": 0.211,
+    "playActionRate": 0.189,
     "passRate": 0.528,
     "pace": 62.4
    },
@@ -1950,13 +1950,13 @@
     }
    },
    "defense": {
-    "passDefense": 7.5,
+    "passDefense": 7.6,
     "rushDefense": 4.6,
     "prwr": 0.454,
-    "nickelCorner": 3.8,
-    "lbCoverage": 7.8,
+    "nickelCorner": 3.9,
+    "lbCoverage": 7.9,
     "secondaryAdjust": 5.9,
-    "blitzRate": 0.266,
+    "blitzRate": 0.246,
     "takeaways": 5
    },
    "players": [
@@ -2063,7 +2063,7 @@
      "name": "Harold Fannin Jr.",
      "pos": "TE",
      "role": "starter",
-     "rating": 69,
+     "rating": 68,
      "snapPct": 0.87,
      "targetShare": 0.136,
      "tprr": 0.168,
@@ -2234,13 +2234,13 @@
     "redZoneTd": 0.584,
     "redZoneAggression": 5.4,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.194,
+    "playActionRate": 0.179,
     "passRate": 0.592,
     "pace": 62
    },
    "offense": {
     "passEfficiency": 4.5,
-    "rushEfficiency": 7.5,
+    "rushEfficiency": 7.6,
     "explosiveness": 5.4,
     "qb": 4.38,
     "pbwr": 0.64,
@@ -2248,15 +2248,15 @@
     "teSpeed": 5.44,
     "vsFront": {
      "4-3": 7.1,
-     "3-4": 2.3,
+     "3-4": 2.4,
      "Multiple": 5.6
     },
     "vsCoverage": {
-     "Cover-1": 5.6,
-     "Cover-2": 5.7,
-     "Cover-3": 5.8,
-     "Quarters": 5.2,
-     "Cover-2 Man": 5.4
+     "Cover-1": 5.7,
+     "Cover-2": 5.8,
+     "Cover-3": 5.9,
+     "Quarters": 5.3,
+     "Cover-2 Man": 5.5
     }
    },
    "defense": {
@@ -2264,9 +2264,9 @@
     "rushDefense": 4.6,
     "prwr": 0.419,
     "nickelCorner": 5.9,
-    "lbCoverage": 5.8,
+    "lbCoverage": 5.9,
     "secondaryAdjust": 6.1,
-    "blitzRate": 0.296,
+    "blitzRate": 0.263,
     "takeaways": 7.2
    },
    "players": [
@@ -2347,7 +2347,7 @@
      "name": "Roman Wilson",
      "pos": "WR",
      "role": "starter",
-     "rating": 65,
+     "rating": 64,
      "snapPct": 0.47,
      "targetShare": 0.113,
      "tprr": 0.261,
@@ -2469,7 +2469,7 @@
      "name": "Patrick Queen",
      "pos": "LB",
      "role": "starter",
-     "rating": 57,
+     "rating": 58,
      "snapPct": 1,
      "note": "1 sacks · 6 PBU · 1 INT in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hvbmd1y24q3eoky2jl8i",
@@ -2504,7 +2504,7 @@
      "name": "Chris Boswell",
      "pos": "K",
      "role": "starter",
-     "rating": 56,
+     "rating": 57,
      "snapPct": 0.03,
      "note": "36/44 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rxbnhvnfjmheuryvdmuf",
@@ -2548,7 +2548,7 @@
     "redZoneTd": 0.488,
     "redZoneAggression": 3.8,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.223,
+    "playActionRate": 0.206,
     "passRate": 0.592,
     "pace": 66.6
    },
@@ -2558,11 +2558,11 @@
     "explosiveness": 4.9,
     "qb": 7.19,
     "pbwr": 0.64,
-    "slotEfficiency": 6.6,
+    "slotEfficiency": 6.5,
     "teSpeed": 8.08,
     "vsFront": {
      "4-3": 4.9,
-     "3-4": 6.2,
+     "3-4": 6.1,
      "Multiple": 4.7
     },
     "vsCoverage": {
@@ -2574,13 +2574,13 @@
     }
    },
    "defense": {
-    "passDefense": 7,
+    "passDefense": 7.1,
     "rushDefense": 7.2,
     "prwr": 0.432,
-    "nickelCorner": 6.8,
-    "lbCoverage": 7.9,
+    "nickelCorner": 6.9,
+    "lbCoverage": 8,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.223,
+    "blitzRate": 0.203,
     "takeaways": 6.5
    },
    "players": [
@@ -2860,7 +2860,7 @@
     "redZoneTd": 0.672,
     "redZoneAggression": 6.7,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.295,
+    "playActionRate": 0.26,
     "passRate": 0.57,
     "pace": 63.6
    },
@@ -2889,10 +2889,10 @@
     "passDefense": 5.2,
     "rushDefense": 4.5,
     "prwr": 0.397,
-    "nickelCorner": 6.1,
+    "nickelCorner": 6.2,
     "lbCoverage": 5.2,
     "secondaryAdjust": 5.1,
-    "blitzRate": 0.25,
+    "blitzRate": 0.232,
     "takeaways": 3.9
    },
    "players": [
@@ -3163,7 +3163,7 @@
    },
    "coaching": {
     "headCoach": "Liam Coen",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Vertical",
     "defFront": "4-3",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.432,
@@ -3172,7 +3172,7 @@
     "redZoneTd": 0.644,
     "redZoneAggression": 5,
     "halftimeAdjust": 4.9,
-    "playActionRate": 0.235,
+    "playActionRate": 0.203,
     "passRate": 0.602,
     "pace": 63.9
    },
@@ -3182,29 +3182,29 @@
     "explosiveness": 6.1,
     "qb": 6.95,
     "pbwr": 0.602,
-    "slotEfficiency": 6.5,
+    "slotEfficiency": 6.4,
     "teSpeed": 7.47,
     "vsFront": {
      "4-3": 6.8,
-     "3-4": 6.5,
-     "Multiple": 6.2
+     "3-4": 6.4,
+     "Multiple": 6.3
     },
     "vsCoverage": {
-     "Cover-1": 7.4,
-     "Cover-2": 6.9,
-     "Cover-3": 7,
-     "Quarters": 6.9,
-     "Cover-2 Man": 7.3
+     "Cover-1": 7.3,
+     "Cover-2": 6.5,
+     "Cover-3": 7.2,
+     "Quarters": 6.5,
+     "Cover-2 Man": 6.8
     }
    },
    "defense": {
     "passDefense": 7.2,
     "rushDefense": 7.9,
     "prwr": 0.413,
-    "nickelCorner": 9.9,
+    "nickelCorner": 10,
     "lbCoverage": 6.8,
     "secondaryAdjust": 5,
-    "blitzRate": 0.265,
+    "blitzRate": 0.24,
     "takeaways": 8.5
    },
    "players": [
@@ -3477,16 +3477,16 @@
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.337,
     "thirdDownDef": 0.602,
-    "fourthDownGoRate": 0.706,
+    "fourthDownGoRate": 0.707,
     "redZoneTd": 0.531,
     "redZoneAggression": 4.6,
     "halftimeAdjust": 6.6,
-    "playActionRate": 0.204,
+    "playActionRate": 0.18,
     "passRate": 0.54,
     "pace": 59.8
    },
    "offense": {
-    "passEfficiency": 2.2,
+    "passEfficiency": 2.3,
     "rushEfficiency": 4.9,
     "explosiveness": 4,
     "qb": 2.5,
@@ -3494,26 +3494,26 @@
     "slotEfficiency": 2.3,
     "teSpeed": 3.41,
     "vsFront": {
-     "4-3": 2.3,
+     "4-3": 2.4,
      "3-4": 3.4,
-     "Multiple": 3.1
+     "Multiple": 3.2
     },
     "vsCoverage": {
-     "Cover-1": 2.6,
-     "Cover-2": 2.7,
-     "Cover-3": 2.8,
-     "Quarters": 2.2,
-     "Cover-2 Man": 2.4
+     "Cover-1": 2.7,
+     "Cover-2": 2.8,
+     "Cover-3": 2.9,
+     "Quarters": 2.3,
+     "Cover-2 Man": 2.5
     }
    },
    "defense": {
     "passDefense": 3.3,
     "rushDefense": 5.3,
     "prwr": 0.406,
-    "nickelCorner": 3.4,
+    "nickelCorner": 3.5,
     "lbCoverage": 5.5,
     "secondaryAdjust": 5.7,
-    "blitzRate": 0.225,
+    "blitzRate": 0.202,
     "takeaways": 2.2
    },
    "players": [
@@ -3728,7 +3728,7 @@
      "name": "Alontae Taylor",
      "pos": "CB",
      "role": "starter",
-     "rating": 72,
+     "rating": 71,
      "snapPct": 1,
      "note": "11 PBU · 2 INT in 9 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mu0hxi4ydqjoiqigfkxq",
@@ -3752,7 +3752,7 @@
      "name": "Joey Slye",
      "pos": "K",
      "role": "starter",
-     "rating": 54,
+     "rating": 56,
      "snapPct": 0.03,
      "note": "33/41 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zueytl3rpbz7yxhjpdxg",
@@ -3799,32 +3799,32 @@
    },
    "offense": {
     "passEfficiency": 6.4,
-    "rushEfficiency": 7.2,
+    "rushEfficiency": 7.3,
     "explosiveness": 5.8,
     "qb": 7.42,
     "pbwr": 0.58,
-    "slotEfficiency": 7.1,
+    "slotEfficiency": 7,
     "teSpeed": 8.48,
     "vsFront": {
      "4-3": 6.4,
-     "3-4": 7.2,
+     "3-4": 7.1,
      "Multiple": 6.5
     },
     "vsCoverage": {
-     "Cover-1": 7.4,
-     "Cover-2": 7.5,
-     "Cover-3": 7.6,
-     "Quarters": 7,
-     "Cover-2 Man": 7.2
+     "Cover-1": 7.5,
+     "Cover-2": 7.6,
+     "Cover-3": 7.7,
+     "Quarters": 7.1,
+     "Cover-2 Man": 7.3
     }
    },
    "defense": {
-    "passDefense": 5.8,
+    "passDefense": 5.9,
     "rushDefense": 6.6,
     "prwr": 0.426,
     "nickelCorner": 7.1,
     "lbCoverage": 4.7,
-    "secondaryAdjust": 6.4,
+    "secondaryAdjust": 6.5,
     "blitzRate": 0.311,
     "takeaways": 5
    },
@@ -4105,7 +4105,7 @@
     "redZoneTd": 0.571,
     "redZoneAggression": 4.6,
     "halftimeAdjust": 5.8,
-    "playActionRate": 0.247,
+    "playActionRate": 0.225,
     "passRate": 0.507,
     "pace": 65.9
    },
@@ -4118,7 +4118,7 @@
     "slotEfficiency": 6,
     "teSpeed": 3.81,
     "vsFront": {
-     "4-3": 4.2,
+     "4-3": 4.3,
      "3-4": 3.4,
      "Multiple": 3.7
     },
@@ -4134,10 +4134,10 @@
     "passDefense": 7,
     "rushDefense": 6.6,
     "prwr": 0.444,
-    "nickelCorner": 5.6,
+    "nickelCorner": 5.7,
     "lbCoverage": 6.5,
     "secondaryAdjust": 5.9,
-    "blitzRate": 0.236,
+    "blitzRate": 0.211,
     "takeaways": 7
    },
    "players": [
@@ -4263,7 +4263,7 @@
      "name": "Oronde Gadsden II",
      "pos": "TE",
      "role": "rotational",
-     "rating": 66,
+     "rating": 65,
      "snapPct": 0.46,
      "targetShare": 0.084,
      "tprr": 0.198,
@@ -4425,8 +4425,8 @@
     "fourthDownGoRate": 0.733,
     "redZoneTd": 0.611,
     "redZoneAggression": 5.5,
-    "halftimeAdjust": 6.1,
-    "playActionRate": 0.236,
+    "halftimeAdjust": 6.2,
+    "playActionRate": 0.217,
     "passRate": 0.565,
     "pace": 63.7
    },
@@ -4457,8 +4457,8 @@
     "prwr": 0.488,
     "nickelCorner": 6.2,
     "lbCoverage": 5.7,
-    "secondaryAdjust": 6.3,
-    "blitzRate": 0.357,
+    "secondaryAdjust": 6.4,
+    "blitzRate": 0.327,
     "takeaways": 5
    },
    "players": [
@@ -4553,7 +4553,7 @@
      "name": "Troy Franklin",
      "pos": "WR",
      "role": "rotational",
-     "rating": 63,
+     "rating": 62,
      "snapPct": 0.37,
      "targetShare": 0.032,
      "tprr": 0.093,
@@ -4697,7 +4697,7 @@
      "name": "Wil Lutz",
      "pos": "K",
      "role": "starter",
-     "rating": 66,
+     "rating": 68,
      "snapPct": 0.03,
      "note": "36/43 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vcglg5vsgbiyggwibgy0",
@@ -4734,11 +4734,11 @@
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.369,
     "thirdDownDef": 0.549,
-    "fourthDownGoRate": 0.72,
+    "fourthDownGoRate": 0.721,
     "redZoneTd": 0.545,
     "redZoneAggression": 4.8,
     "halftimeAdjust": 5.5,
-    "playActionRate": 0.238,
+    "playActionRate": 0.216,
     "passRate": 0.546,
     "pace": 62
    },
@@ -4770,7 +4770,7 @@
     "nickelCorner": 2.9,
     "lbCoverage": 4.4,
     "secondaryAdjust": 6.1,
-    "blitzRate": 0.235,
+    "blitzRate": 0.21,
     "takeaways": 7.1
    },
    "players": [
@@ -5008,7 +5008,7 @@
      "name": "Matt Gay",
      "pos": "K",
      "role": "starter",
-     "rating": 53,
+     "rating": 54,
      "snapPct": 0.03,
      "note": "28/35 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/opglxpqmhu21eydoyvg2",
@@ -5047,9 +5047,9 @@
     "thirdDownDef": 0.603,
     "fourthDownGoRate": 0.837,
     "redZoneTd": 0.664,
-    "redZoneAggression": 6.7,
+    "redZoneAggression": 6.6,
     "halftimeAdjust": 3.3,
-    "playActionRate": 0.206,
+    "playActionRate": 0.186,
     "passRate": 0.534,
     "pace": 60.7
    },
@@ -5059,11 +5059,11 @@
     "explosiveness": 4.4,
     "qb": 6.25,
     "pbwr": 0.641,
-    "slotEfficiency": 2.7,
+    "slotEfficiency": 2.8,
     "teSpeed": 7.67,
     "vsFront": {
      "4-3": 3.9,
-     "3-4": 5,
+     "3-4": 4.9,
      "Multiple": 4.6
     },
     "vsCoverage": {
@@ -5075,13 +5075,13 @@
     }
    },
    "defense": {
-    "passDefense": 5.8,
+    "passDefense": 5.9,
     "rushDefense": 5.6,
     "prwr": 0.398,
-    "nickelCorner": 7,
-    "lbCoverage": 6,
+    "nickelCorner": 7.1,
+    "lbCoverage": 6.1,
     "secondaryAdjust": 4.6,
-    "blitzRate": 0.201,
+    "blitzRate": 0.18,
     "takeaways": 4.2
    },
    "players": [
@@ -5323,7 +5323,7 @@
      "name": "Jake Elliott",
      "pos": "K",
      "role": "starter",
-     "rating": 47,
+     "rating": 48,
      "snapPct": 0.03,
      "note": "25/32 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gxy1mhbnz1p2nufkg8qz",
@@ -5363,33 +5363,33 @@
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.452,
     "thirdDownDef": 0.493,
-    "fourthDownGoRate": 0.851,
+    "fourthDownGoRate": 0.852,
     "redZoneTd": 0.678,
-    "redZoneAggression": 6.9,
+    "redZoneAggression": 6.8,
     "halftimeAdjust": 5.9,
     "playActionRate": 0.239,
     "passRate": 0.564,
     "pace": 67
    },
    "offense": {
-    "passEfficiency": 7.5,
-    "rushEfficiency": 6.7,
+    "passEfficiency": 7.4,
+    "rushEfficiency": 6.8,
     "explosiveness": 4.5,
-    "qb": 8.36,
+    "qb": 8.13,
     "pbwr": 0.624,
-    "slotEfficiency": 6.4,
-    "teSpeed": 4.63,
+    "slotEfficiency": 6.3,
+    "teSpeed": 4.83,
     "vsFront": {
      "4-3": 7.1,
-     "3-4": 8.3,
+     "3-4": 8.2,
      "Multiple": 6.9
     },
     "vsCoverage": {
-     "Cover-1": 8.5,
-     "Cover-2": 8,
-     "Cover-3": 8.1,
-     "Quarters": 8,
-     "Cover-2 Man": 8.4
+     "Cover-1": 8.4,
+     "Cover-2": 7.9,
+     "Cover-3": 8,
+     "Quarters": 7.9,
+     "Cover-2 Man": 8.3
     }
    },
    "defense": {
@@ -5397,10 +5397,10 @@
     "rushDefense": 3.5,
     "prwr": 0.408,
     "nickelCorner": 2.7,
-    "lbCoverage": 3.1,
-    "secondaryAdjust": 5.7,
+    "lbCoverage": 3,
+    "secondaryAdjust": 5.8,
     "blitzRate": 0.283,
-    "takeaways": 2
+    "takeaways": 2.1
    },
    "players": [
     {
@@ -5408,7 +5408,7 @@
      "name": "Dak Prescott",
      "pos": "QB",
      "role": "starter",
-     "rating": 89,
+     "rating": 88,
      "snapPct": 1,
      "note": "0.18 EPA/dropback · 2.1 CPOE · 831 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yvscmqq1qki8zfsemmcd",
@@ -5604,7 +5604,7 @@
      "name": "Dee Winters",
      "pos": "LB",
      "role": "starter",
-     "rating": 59,
+     "rating": 60,
      "snapPct": 0.69,
      "note": "0 sacks · 5 PBU · 1 INT in 6 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xlebnylgre4ogpnnl4na",
@@ -5636,7 +5636,7 @@
      "name": "Brandon Aubrey",
      "pos": "K",
      "role": "starter",
-     "rating": 63,
+     "rating": 65,
      "snapPct": 0.03,
      "note": "45/54 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bgwg06zmyohjxvzznbf6",
@@ -5680,14 +5680,14 @@
     "thirdDownDef": 0.571,
     "fourthDownGoRate": 0.712,
     "redZoneTd": 0.565,
-    "redZoneAggression": 5,
+    "redZoneAggression": 4.9,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.23,
+    "playActionRate": 0.195,
     "passRate": 0.498,
     "pace": 67.7
    },
    "offense": {
-    "passEfficiency": 6.2,
+    "passEfficiency": 6.1,
     "rushEfficiency": 4.9,
     "explosiveness": 4.3,
     "qb": 2.97,
@@ -5696,25 +5696,25 @@
     "teSpeed": 5.64,
     "vsFront": {
      "4-3": 4.6,
-     "3-4": 6.6,
+     "3-4": 6.5,
      "Multiple": 5.6
     },
     "vsCoverage": {
-     "Cover-1": 4.8,
-     "Cover-2": 5.3,
-     "Cover-3": 4.9,
-     "Quarters": 5.2,
-     "Cover-2 Man": 5.1
+     "Cover-1": 4.7,
+     "Cover-2": 5.2,
+     "Cover-3": 4.8,
+     "Quarters": 5.1,
+     "Cover-2 Man": 5
     }
    },
    "defense": {
-    "passDefense": 5,
+    "passDefense": 5.1,
     "rushDefense": 2.1,
     "prwr": 0.399,
     "nickelCorner": 7,
     "lbCoverage": 5.9,
-    "secondaryAdjust": 4,
-    "blitzRate": 0.317,
+    "secondaryAdjust": 3.9,
+    "blitzRate": 0.286,
     "takeaways": 5.4
    },
    "players": [
@@ -5950,7 +5950,7 @@
      "name": "Dominic Zvada",
      "pos": "K",
      "role": "starter",
-     "rating": 50,
+     "rating": 51,
      "snapPct": 0.03,
      "note": "11/14 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rej45oauer8jysbtwbxm",
@@ -5991,7 +5991,7 @@
     "redZoneTd": 0.627,
     "redZoneAggression": 5.9,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.237,
+    "playActionRate": 0.219,
     "passRate": 0.542,
     "pace": 63.5
    },
@@ -6001,7 +6001,7 @@
     "explosiveness": 4.9,
     "qb": 3.91,
     "pbwr": 0.6,
-    "slotEfficiency": 5.5,
+    "slotEfficiency": 5.4,
     "teSpeed": 5.03,
     "vsFront": {
      "4-3": 4,
@@ -6022,8 +6022,8 @@
     "prwr": 0.407,
     "nickelCorner": 4.8,
     "lbCoverage": 2.9,
-    "secondaryAdjust": 5,
-    "blitzRate": 0.367,
+    "secondaryAdjust": 5.1,
+    "blitzRate": 0.303,
     "takeaways": 4.3
    },
    "players": [
@@ -6269,7 +6269,7 @@
      "name": "Drew Stevens",
      "pos": "K",
      "role": "starter",
-     "rating": 56,
+     "rating": 57,
      "snapPct": 0.03,
      "note": "9/11 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dzlynw7seoaqck1r2il3",
@@ -6313,21 +6313,21 @@
     "redZoneTd": 0.717,
     "redZoneAggression": 7.1,
     "halftimeAdjust": 5.2,
-    "playActionRate": 0.275,
+    "playActionRate": 0.253,
     "passRate": 0.525,
     "pace": 66
    },
    "offense": {
-    "passEfficiency": 7.8,
+    "passEfficiency": 7.7,
     "rushEfficiency": 6.1,
     "explosiveness": 7.4,
     "qb": 8.83,
     "pbwr": 0.575,
-    "slotEfficiency": 7.9,
+    "slotEfficiency": 7.7,
     "teSpeed": 9.09,
     "vsFront": {
      "4-3": 8,
-     "3-4": 7.2,
+     "3-4": 7.1,
      "Multiple": 7
     },
     "vsCoverage": {
@@ -6339,13 +6339,13 @@
     }
    },
    "defense": {
-    "passDefense": 4.4,
+    "passDefense": 4.5,
     "rushDefense": 4.2,
     "prwr": 0.443,
     "nickelCorner": 3.3,
-    "lbCoverage": 5.4,
+    "lbCoverage": 5.5,
     "secondaryAdjust": 4.3,
-    "blitzRate": 0.297,
+    "blitzRate": 0.268,
     "takeaways": 5.1
    },
    "players": [
@@ -6384,16 +6384,16 @@
      "jersey": "0"
     },
     {
-     "id": "det-00-0039364",
-     "name": "Sione Vaki",
+     "id": "det-00-0038896",
+     "name": "Jacob Saylors",
      "pos": "RB",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.26,
-     "targetShare": 0.024,
-     "tprr": 0.093,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/abqcluf2gbejhiyjjtoz",
-     "jersey": "33"
+     "snapPct": 0.03,
+     "targetShare": 0,
+     "tprr": 0.04,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wunm6abfmikwaewmwkp7",
+     "jersey": "25"
     },
     {
      "id": "det-00-0036963",
@@ -6409,16 +6409,16 @@
      "jersey": "14"
     },
     {
-     "id": "det-00-0035544",
-     "name": "Tom Kennedy",
+     "id": "det-00-0037524",
+     "name": "Tay Martin",
      "pos": "WR",
      "role": "starter",
      "rating": 60,
      "snapPct": 0.03,
-     "targetShare": 0.006,
-     "tprr": 0.214,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cbpuzvde5zqalmkjo0dv",
-     "jersey": "85"
+     "targetShare": 0.003,
+     "tprr": 0.107,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ttdp5v9tl0zqmb0dmmuv",
+     "jersey": "17"
     },
     {
      "id": "det-00-0037240",
@@ -6434,16 +6434,16 @@
      "jersey": "1"
     },
     {
-     "id": "det-00-0037524",
-     "name": "Tay Martin",
+     "id": "det-00-0035544",
+     "name": "Tom Kennedy",
      "pos": "WR",
      "role": "rotational",
      "rating": 56,
      "snapPct": 0.03,
-     "targetShare": 0.003,
-     "tprr": 0.107,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ttdp5v9tl0zqmb0dmmuv",
-     "jersey": "17"
+     "targetShare": 0.006,
+     "tprr": 0.214,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cbpuzvde5zqalmkjo0dv",
+     "jersey": "85"
     },
     {
      "id": "det-00-0039065",
@@ -6581,7 +6581,7 @@
      "name": "Jake Bates",
      "pos": "K",
      "role": "starter",
-     "rating": 63,
+     "rating": 65,
      "snapPct": 0.03,
      "note": "35/42 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/umhfee7ax7r8gjdt8okb",
@@ -6625,27 +6625,27 @@
     "redZoneTd": 0.555,
     "redZoneAggression": 5.6,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.218,
+    "playActionRate": 0.205,
     "passRate": 0.532,
     "pace": 61.2
    },
    "offense": {
-    "passEfficiency": 7.6,
+    "passEfficiency": 7.5,
     "rushEfficiency": 3.3,
     "explosiveness": 6.8,
     "qb": 9.3,
     "pbwr": 0.579,
-    "slotEfficiency": 6.2,
+    "slotEfficiency": 6.1,
     "teSpeed": 8.28,
     "vsFront": {
      "4-3": 6.8,
      "3-4": 6.2,
-     "Multiple": 5.5
+     "Multiple": 5.4
     },
     "vsCoverage": {
-     "Cover-1": 6.6,
-     "Cover-2": 7.1,
-     "Cover-3": 7.1,
+     "Cover-1": 6.5,
+     "Cover-2": 7,
+     "Cover-3": 7,
      "Quarters": 6.8,
      "Cover-2 Man": 6.5
     }
@@ -6654,11 +6654,11 @@
     "passDefense": 5.5,
     "rushDefense": 4.6,
     "prwr": 0.43,
-    "nickelCorner": 6,
-    "lbCoverage": 5.2,
+    "nickelCorner": 6.1,
+    "lbCoverage": 5.3,
     "secondaryAdjust": 5,
-    "blitzRate": 0.299,
-    "takeaways": 6
+    "blitzRate": 0.256,
+    "takeaways": 6.1
    },
    "players": [
     {
@@ -6862,7 +6862,7 @@
      "name": "Zaire Franklin",
      "pos": "LB",
      "role": "starter",
-     "rating": 61,
+     "rating": 62,
      "snapPct": 0.99,
      "note": "2 sacks · 6 PBU · 0 INT in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/k59qf7qnigqhlxw2652h",
@@ -6940,12 +6940,12 @@
     "redZoneTd": 0.529,
     "redZoneAggression": 4.9,
     "halftimeAdjust": 6.4,
-    "playActionRate": 0.261,
+    "playActionRate": 0.234,
     "passRate": 0.526,
     "pace": 60.3
    },
    "offense": {
-    "passEfficiency": 3.3,
+    "passEfficiency": 3.4,
     "rushEfficiency": 4.8,
     "explosiveness": 4.7,
     "qb": 4.61,
@@ -6958,21 +6958,21 @@
      "Multiple": 4
     },
     "vsCoverage": {
-     "Cover-1": 3.9,
-     "Cover-2": 3.5,
-     "Cover-3": 4,
-     "Quarters": 3.4,
-     "Cover-2 Man": 3.7
+     "Cover-1": 4,
+     "Cover-2": 3.6,
+     "Cover-3": 4.1,
+     "Quarters": 3.5,
+     "Cover-2 Man": 3.8
     }
    },
    "defense": {
-    "passDefense": 8.9,
+    "passDefense": 9,
     "rushDefense": 8,
     "prwr": 0.495,
-    "nickelCorner": 6.7,
-    "lbCoverage": 7.6,
-    "secondaryAdjust": 6.5,
-    "blitzRate": 0.578,
+    "nickelCorner": 6.8,
+    "lbCoverage": 7.7,
+    "secondaryAdjust": 6.6,
+    "blitzRate": 0.531,
     "takeaways": 7.3
    },
    "players": [
@@ -7055,7 +7055,7 @@
      "name": "Jordan Addison",
      "pos": "WR",
      "role": "starter",
-     "rating": 66,
+     "rating": 65,
      "snapPct": 0.91,
      "targetShare": 0.12,
      "tprr": 0.142,
@@ -7131,7 +7131,7 @@
      "name": "Dallas Turner",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 95,
+     "rating": 96,
      "snapPct": 0.85,
      "prwr": 0.095,
      "note": "0.96 sacks/g · 29 QB hits in 14 g",
@@ -7177,7 +7177,7 @@
      "name": "Eric Wilson",
      "pos": "LB",
      "role": "starter",
-     "rating": 55,
+     "rating": 56,
      "snapPct": 0.94,
      "note": "8 sacks · 1 PBU · 0 INT in 16 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vvpdkof8jj7s94fzjrnf",
@@ -7251,14 +7251,14 @@
     "redZoneTd": 0.53,
     "redZoneAggression": 5,
     "halftimeAdjust": 5.9,
-    "playActionRate": 0.314,
+    "playActionRate": 0.281,
     "passRate": 0.52,
     "pace": 70.9
    },
    "offense": {
     "passEfficiency": 6.1,
     "rushEfficiency": 6.9,
-    "explosiveness": 7,
+    "explosiveness": 6.9,
     "qb": 5.31,
     "pbwr": 0.658,
     "slotEfficiency": 6.6,
@@ -7283,7 +7283,7 @@
     "nickelCorner": 6.3,
     "lbCoverage": 6,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.335,
+    "blitzRate": 0.292,
     "takeaways": 7.6
    },
    "players": [
@@ -7408,7 +7408,7 @@
      "name": "Cole Kmet",
      "pos": "TE",
      "role": "rotational",
-     "rating": 77,
+     "rating": 76,
      "snapPct": 0.6,
      "targetShare": 0.043,
      "tprr": 0.076,
@@ -7524,7 +7524,7 @@
      "name": "Cairo Santos",
      "pos": "K",
      "role": "starter",
-     "rating": 59,
+     "rating": 60,
      "snapPct": 0.03,
      "note": "32/39 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vtk4cn0bfnqv0cnh79an",
@@ -7568,14 +7568,14 @@
     "redZoneTd": 0.65,
     "redZoneAggression": 5.4,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.218,
+    "playActionRate": 0.192,
     "passRate": 0.463,
     "pace": 63.4
    },
    "offense": {
-    "passEfficiency": 4.1,
+    "passEfficiency": 4.2,
     "rushEfficiency": 6.9,
-    "explosiveness": 6.7,
+    "explosiveness": 6.6,
     "qb": 4.84,
     "pbwr": 0.647,
     "slotEfficiency": 4.9,
@@ -7597,10 +7597,10 @@
     "passDefense": 6.3,
     "rushDefense": 5.3,
     "prwr": 0.433,
-    "nickelCorner": 5.5,
+    "nickelCorner": 5.6,
     "lbCoverage": 6.9,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.295,
+    "blitzRate": 0.277,
     "takeaways": 4.9
    },
    "players": [
@@ -7631,7 +7631,7 @@
      "name": "Bijan Robinson",
      "pos": "RB",
      "role": "starter",
-     "rating": 95,
+     "rating": 94,
      "snapPct": 0.68,
      "targetShare": 0.156,
      "tprr": 0.242,
@@ -7809,7 +7809,7 @@
      "name": "Divine Deablo",
      "pos": "LB",
      "role": "starter",
-     "rating": 56,
+     "rating": 57,
      "snapPct": 0.93,
      "note": "1 sacks · 8 PBU · 0 INT in 9 g",
      "reported": "questionable",
@@ -7883,16 +7883,16 @@
     "thirdDownDef": 0.544,
     "fourthDownGoRate": 0.665,
     "redZoneTd": 0.607,
-    "redZoneAggression": 5.1,
+    "redZoneAggression": 5,
     "halftimeAdjust": 6.1,
     "playActionRate": 0.233,
     "passRate": 0.572,
     "pace": 64.9
    },
    "offense": {
-    "passEfficiency": 5.8,
+    "passEfficiency": 5.7,
     "rushEfficiency": 5,
-    "explosiveness": 6.1,
+    "explosiveness": 6,
     "qb": 6.72,
     "pbwr": 0.595,
     "slotEfficiency": 5.9,
@@ -7916,9 +7916,9 @@
     "prwr": 0.35,
     "nickelCorner": 5.4,
     "lbCoverage": 4.3,
-    "secondaryAdjust": 6.3,
+    "secondaryAdjust": 6.4,
     "blitzRate": 0.303,
-    "takeaways": 6.2
+    "takeaways": 6.3
    },
    "players": [
     {
@@ -8191,16 +8191,16 @@
     "thirdDownDef": 0.581,
     "fourthDownGoRate": 0.775,
     "redZoneTd": 0.591,
-    "redZoneAggression": 5.6,
+    "redZoneAggression": 5.5,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.184,
+    "playActionRate": 0.175,
     "passRate": 0.571,
     "pace": 67.4
    },
    "offense": {
     "passEfficiency": 4.2,
     "rushEfficiency": 4.5,
-    "explosiveness": 2.5,
+    "explosiveness": 2.6,
     "qb": 5.08,
     "pbwr": 0.625,
     "slotEfficiency": 4.2,
@@ -8224,8 +8224,8 @@
     "prwr": 0.4,
     "nickelCorner": 6.8,
     "lbCoverage": 4.3,
-    "secondaryAdjust": 6.3,
-    "blitzRate": 0.293,
+    "secondaryAdjust": 6.4,
+    "blitzRate": 0.26,
     "takeaways": 4.7
    },
    "players": [
@@ -8467,7 +8467,7 @@
      "name": "Daniel Carlson",
      "pos": "K",
      "role": "starter",
-     "rating": 51,
+     "rating": 53,
      "snapPct": 0.03,
      "note": "27/34 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gsvj7rtvqwbwdeho8whf",
@@ -8514,8 +8514,8 @@
    },
    "offense": {
     "passEfficiency": 4.1,
-    "rushEfficiency": 5.9,
-    "explosiveness": 4.7,
+    "rushEfficiency": 6,
+    "explosiveness": 4.8,
     "qb": 2.73,
     "pbwr": 0.657,
     "slotEfficiency": 4.5,
@@ -8523,7 +8523,7 @@
     "vsFront": {
      "4-3": 4,
      "3-4": 5.2,
-     "Multiple": 4.7
+     "Multiple": 4.8
     },
     "vsCoverage": {
      "Cover-1": 3.9,
@@ -8534,7 +8534,7 @@
     }
    },
    "defense": {
-    "passDefense": 5.7,
+    "passDefense": 5.8,
     "rushDefense": 7.7,
     "prwr": 0.381,
     "nickelCorner": 7.7,
@@ -8599,7 +8599,7 @@
      "name": "Emeka Egbuka",
      "pos": "WR",
      "role": "starter",
-     "rating": 61,
+     "rating": 60,
      "snapPct": 0.86,
      "targetShare": 0.161,
      "tprr": 0.203,
@@ -8813,33 +8813,33 @@
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.513,
     "thirdDownDef": 0.592,
-    "fourthDownGoRate": 0.812,
+    "fourthDownGoRate": 0.813,
     "redZoneTd": 0.779,
-    "redZoneAggression": 7.6,
+    "redZoneAggression": 7.5,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.226,
+    "playActionRate": 0.203,
     "passRate": 0.55,
     "pace": 61.6
    },
    "offense": {
-    "passEfficiency": 8.4,
+    "passEfficiency": 8.3,
     "rushEfficiency": 6.1,
-    "explosiveness": 6.9,
+    "explosiveness": 6.8,
     "qb": 9.53,
     "pbwr": 0.641,
-    "slotEfficiency": 9.1,
+    "slotEfficiency": 9,
     "teSpeed": 8.89,
     "vsFront": {
-     "4-3": 9.1,
-     "3-4": 6.7,
-     "Multiple": 7.2
+     "4-3": 9,
+     "3-4": 6.6,
+     "Multiple": 7.1
     },
     "vsCoverage": {
-     "Cover-1": 8.4,
-     "Cover-2": 8.9,
-     "Cover-3": 8.9,
-     "Quarters": 8.6,
-     "Cover-2 Man": 8.3
+     "Cover-1": 8.3,
+     "Cover-2": 8.8,
+     "Cover-3": 8.8,
+     "Quarters": 8.5,
+     "Cover-2 Man": 8.2
     }
    },
    "defense": {
@@ -8847,9 +8847,9 @@
     "rushDefense": 7,
     "prwr": 0.374,
     "nickelCorner": 4.3,
-    "lbCoverage": 6.8,
-    "secondaryAdjust": 5.5,
-    "blitzRate": 0.26,
+    "lbCoverage": 6.9,
+    "secondaryAdjust": 5.6,
+    "blitzRate": 0.235,
     "takeaways": 4.7
    },
    "players": [
@@ -9005,7 +9005,7 @@
      "name": "Keion White",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 64,
+     "rating": 63,
      "snapPct": 0.63,
      "prwr": 0.085,
      "note": "0.50 sacks/g · 10 QB hits in 9 g",
@@ -9127,16 +9127,16 @@
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.357,
     "thirdDownDef": 0.691,
-    "fourthDownGoRate": 0.739,
+    "fourthDownGoRate": 0.74,
     "redZoneTd": 0.583,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.302,
+    "playActionRate": 0.267,
     "passRate": 0.494,
     "pace": 61.3
    },
    "offense": {
-    "passEfficiency": 6.3,
+    "passEfficiency": 6.2,
     "rushEfficiency": 3.8,
     "explosiveness": 7,
     "qb": 7.89,
@@ -9146,24 +9146,24 @@
     "vsFront": {
      "4-3": 4.6,
      "3-4": 5.8,
-     "Multiple": 5.2
+     "Multiple": 5.1
     },
     "vsCoverage": {
-     "Cover-1": 6.1,
-     "Cover-2": 5.7,
-     "Cover-3": 6.2,
-     "Quarters": 5.6,
-     "Cover-2 Man": 5.9
+     "Cover-1": 6,
+     "Cover-2": 5.6,
+     "Cover-3": 6.1,
+     "Quarters": 5.5,
+     "Cover-2 Man": 5.8
     }
    },
    "defense": {
-    "passDefense": 7.4,
+    "passDefense": 7.5,
     "rushDefense": 9.5,
     "prwr": 0.465,
     "nickelCorner": 5.2,
     "lbCoverage": 5.6,
-    "secondaryAdjust": 5.7,
-    "blitzRate": 0.217,
+    "secondaryAdjust": 5.8,
+    "blitzRate": 0.199,
     "takeaways": 8.1
    },
    "players": [
@@ -9434,46 +9434,46 @@
     "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
-    "thirdDownOff": 0.42,
-    "thirdDownDef": 0.648,
-    "fourthDownGoRate": 0.848,
-    "redZoneTd": 0.592,
-    "redZoneAggression": 6.1,
+    "thirdDownOff": 0.428,
+    "thirdDownDef": 0.652,
+    "fourthDownGoRate": 0.85,
+    "redZoneTd": 0.64,
+    "redZoneAggression": 6.5,
     "halftimeAdjust": 5.6,
-    "playActionRate": 0.299,
-    "passRate": 0.595,
-    "pace": 67.5
+    "playActionRate": 0.267,
+    "passRate": 0.603,
+    "pace": 68.8
    },
    "offense": {
-    "passEfficiency": 6.8,
+    "passEfficiency": 7.2,
     "rushEfficiency": 6.7,
-    "explosiveness": 7.7,
-    "qb": 8.13,
-    "pbwr": 0.623,
-    "slotEfficiency": 6.5,
-    "teSpeed": 4.83,
+    "explosiveness": 7.5,
+    "qb": 8.36,
+    "pbwr": 0.636,
+    "slotEfficiency": 7.1,
+    "teSpeed": 4.63,
     "vsFront": {
-     "4-3": 5.7,
-     "3-4": 7.4,
-     "Multiple": 6.6
+     "4-3": 5.3,
+     "3-4": 7.8,
+     "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 8,
-     "Cover-2": 7.5,
-     "Cover-3": 7.6,
-     "Quarters": 7.5,
-     "Cover-2 Man": 7.9
+     "Cover-1": 8.3,
+     "Cover-2": 7.8,
+     "Cover-3": 7.9,
+     "Quarters": 7.8,
+     "Cover-2 Man": 8.2
     }
    },
    "defense": {
-    "passDefense": 7.5,
+    "passDefense": 6.7,
     "rushDefense": 6.3,
-    "prwr": 0.43,
-    "nickelCorner": 5.9,
-    "lbCoverage": 8.2,
-    "secondaryAdjust": 6,
-    "blitzRate": 0.25,
-    "takeaways": 5.9
+    "prwr": 0.417,
+    "nickelCorner": 5.2,
+    "lbCoverage": 7.7,
+    "secondaryAdjust": 5.7,
+    "blitzRate": 0.23,
+    "takeaways": 6.4
    },
    "players": [
     {
@@ -9481,9 +9481,9 @@
      "name": "Matthew Stafford",
      "pos": "QB",
      "role": "starter",
-     "rating": 88,
+     "rating": 89,
      "snapPct": 0.96,
-     "note": "0.19 EPA/dropback · 1.2 CPOE · 782 dropbacks",
+     "note": "0.2 EPA/dropback · 1.2 CPOE · 838 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jwpkjfrkzufdyh8u1mg7",
      "jersey": "9"
     },
@@ -9502,11 +9502,11 @@
      "name": "Kyren Williams",
      "pos": "RB",
      "role": "starter",
-     "rating": 94,
+     "rating": 91,
      "snapPct": 0.68,
      "targetShare": 0.135,
-     "tprr": 0.213,
-     "note": "4.9 YPC · 8.41 EPA/season",
+     "tprr": 0.212,
+     "note": "4.8 YPC · 7.39 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xti3pek6rmojqchakxpy",
      "jersey": "23"
     },
@@ -9517,9 +9517,9 @@
      "role": "rotational",
      "rating": 90,
      "snapPct": 0.28,
-     "targetShare": 0.038,
-     "tprr": 0.145,
-     "note": "5.1 YPC · 4.01 EPA/season",
+     "targetShare": 0.045,
+     "tprr": 0.172,
+     "note": "5.1 YPC · 5.79 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/axzqbqjkrbwfzodwwakq",
      "jersey": "24"
     },
@@ -9530,9 +9530,9 @@
      "role": "starter",
      "rating": 96,
      "snapPct": 0.8,
-     "targetShare": 0.114,
-     "tprr": 0.152,
-     "note": "0.62 EPA/target on 94 tgt/season",
+     "targetShare": 0.184,
+     "tprr": 0.246,
+     "note": "0.57 EPA/target on 106 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ipy6qw7hdygdfc8k86ba",
      "jersey": "12"
     },
@@ -9553,11 +9553,11 @@
      "name": "Davante Adams",
      "pos": "WR",
      "role": "starter",
-     "rating": 88,
+     "rating": 89,
      "snapPct": 0.74,
-     "targetShare": 0.205,
-     "tprr": 0.297,
-     "note": "0.28 EPA/target on 76 tgt/season",
+     "targetShare": 0.184,
+     "tprr": 0.266,
+     "note": "0.29 EPA/target on 80 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tdzluk4xau3arxqk9zsl",
      "jersey": "17"
     },
@@ -9568,8 +9568,8 @@
      "role": "rotational",
      "rating": 55,
      "snapPct": 0.38,
-     "targetShare": 0.016,
-     "tprr": 0.046,
+     "targetShare": 0.012,
+     "tprr": 0.04,
      "note": "0.07 EPA/target on 14 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/enqcg1lgjkuk0hqz3qjc",
      "jersey": "88"
@@ -9579,11 +9579,11 @@
      "name": "Colby Parkinson",
      "pos": "TE",
      "role": "starter",
-     "rating": 73,
+     "rating": 72,
      "snapPct": 0.64,
-     "targetShare": 0.027,
-     "tprr": 0.045,
-     "note": "0.22 EPA/target on 31 tgt/season",
+     "targetShare": 0.029,
+     "tprr": 0.048,
+     "note": "0.2 EPA/target on 32 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qsyrgtfjj06wryahnxc9",
      "jersey": "84"
     },
@@ -9592,11 +9592,11 @@
      "name": "Tyler Higbee",
      "pos": "TE",
      "role": "rotational",
-     "rating": 72,
+     "rating": 79,
      "snapPct": 0.45,
-     "targetShare": 0.103,
-     "tprr": 0.244,
-     "note": "0.21 EPA/target on 28 tgt/season",
+     "targetShare": 0.102,
+     "tprr": 0.243,
+     "note": "0.32 EPA/target on 31 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/x1d4osiefibd04df6gow",
      "jersey": "89"
     },
@@ -9605,9 +9605,9 @@
      "name": "Alaric Jackson",
      "pos": "LT",
      "role": "starter",
-     "rating": 75,
+     "rating": 77,
      "snapPct": 0.95,
-     "pbwr": 0.873,
+     "pbwr": 0.886,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/p7eblgie3na4hjdl6pzb",
      "jersey": "77"
     },
@@ -9616,9 +9616,9 @@
      "name": "Coleman Shelton",
      "pos": "OL",
      "role": "starter",
-     "rating": 75,
+     "rating": 77,
      "snapPct": 0.95,
-     "pbwr": 0.873,
+     "pbwr": 0.886,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/aewvme2mltyuwnbdodlc",
      "jersey": "65"
     },
@@ -9674,9 +9674,9 @@
      "name": "Nate Landman",
      "pos": "LB",
      "role": "starter",
-     "rating": 76,
+     "rating": 81,
      "snapPct": 0.91,
-     "note": "2.5 sacks · 7 PBU · 1 INT in 12 g",
+     "note": "2.5 sacks · 7 PBU · 1 INT in 13 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/w44rpubxjijvxv0pkfnh",
      "jersey": "53"
     },
@@ -9709,9 +9709,9 @@
      "name": "Harrison Mevis",
      "pos": "K",
      "role": "starter",
-     "rating": 68,
+     "rating": 47,
      "snapPct": 0.03,
-     "note": "17/20 FG",
+     "note": "17/22 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yjmtai1e4eqbsw2yk6mh",
      "jersey": "92"
     }
@@ -9721,7 +9721,7 @@
     "sea"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lar.png",
-   "record": "2-2"
+   "record": "2-3"
   },
   {
    "id": "ari",
@@ -9752,9 +9752,9 @@
     "thirdDownDef": 0.564,
     "fourthDownGoRate": 0.693,
     "redZoneTd": 0.577,
-    "redZoneAggression": 5,
+    "redZoneAggression": 4.9,
     "halftimeAdjust": 4.9,
-    "playActionRate": 0.209,
+    "playActionRate": 0.191,
     "passRate": 0.597,
     "pace": 67.7
    },
@@ -9764,7 +9764,7 @@
     "explosiveness": 2.2,
     "qb": 6.02,
     "pbwr": 0.582,
-    "slotEfficiency": 6.5,
+    "slotEfficiency": 6.4,
     "teSpeed": 9.3,
     "vsFront": {
      "4-3": 5.6,
@@ -9786,7 +9786,7 @@
     "nickelCorner": 3.4,
     "lbCoverage": 3,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.259,
+    "blitzRate": 0.237,
     "takeaways": 5.4
    },
    "players": [
@@ -9867,7 +9867,7 @@
      "name": "Marvin Harrison Jr.",
      "pos": "WR",
      "role": "starter",
-     "rating": 84,
+     "rating": 83,
      "snapPct": 0.74,
      "targetShare": 0.057,
      "tprr": 0.082,
@@ -9906,7 +9906,7 @@
      "name": "Elijah Higgins",
      "pos": "TE",
      "role": "rotational",
-     "rating": 68,
+     "rating": 67,
      "snapPct": 0.36,
      "targetShare": 0.035,
      "tprr": 0.103,
