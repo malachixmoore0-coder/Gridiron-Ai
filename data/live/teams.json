@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-13T16:59:17.752Z",
+ "generatedAt": "2026-10-13T22:50:29.043Z",
  "season": 2026,
  "week": 6,
  "phase": "regular",
@@ -26,7 +26,7 @@
    },
    "coaching": {
     "headCoach": "Sean McDermott",
-    "offScheme": "Motion Heavy",
+    "offScheme": "West Coast",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.482,
@@ -53,11 +53,11 @@
      "Multiple": 8
     },
     "vsCoverage": {
-     "Cover-1": 9.6,
-     "Cover-2": 9.1,
-     "Cover-3": 9.2,
+     "Cover-1": 8.9,
+     "Cover-2": 9.4,
+     "Cover-3": 9.4,
      "Quarters": 9.1,
-     "Cover-2 Man": 9.5
+     "Cover-2 Man": 8.8
     }
    },
    "defense": {
@@ -346,7 +346,7 @@
     "redZoneTd": 0.534,
     "redZoneAggression": 5,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.247,
+    "playActionRate": 0.265,
     "passRate": 0.486,
     "pace": 57.7
    },
@@ -378,7 +378,7 @@
     "nickelCorner": 3.6,
     "lbCoverage": 2.3,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.286,
+    "blitzRate": 0.307,
     "takeaways": 4.4
    },
    "players": [
@@ -653,7 +653,7 @@
     "redZoneTd": 0.599,
     "redZoneAggression": 5.2,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.217,
+    "playActionRate": 0.242,
     "passRate": 0.558,
     "pace": 64.4
    },
@@ -685,7 +685,7 @@
     "nickelCorner": 6.9,
     "lbCoverage": 6.9,
     "secondaryAdjust": 5.8,
-    "blitzRate": 0.288,
+    "blitzRate": 0.314,
     "takeaways": 5.4
    },
    "players": [
@@ -975,7 +975,7 @@
     "redZoneTd": 0.502,
     "redZoneAggression": 4.4,
     "halftimeAdjust": 6.5,
-    "playActionRate": 0.172,
+    "playActionRate": 0.187,
     "passRate": 0.506,
     "pace": 60.9
    },
@@ -1007,7 +1007,7 @@
     "nickelCorner": 4.2,
     "lbCoverage": 4.8,
     "secondaryAdjust": 5.9,
-    "blitzRate": 0.28,
+    "blitzRate": 0.322,
     "takeaways": 2.2
    },
    "players": [
@@ -1283,7 +1283,7 @@
    },
    "coaching": {
     "headCoach": "Jesse Minter",
-    "offScheme": "Power Run",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.408,
@@ -1292,7 +1292,7 @@
     "redZoneTd": 0.608,
     "redZoneAggression": 5.9,
     "halftimeAdjust": 4.7,
-    "playActionRate": 0.219,
+    "playActionRate": 0.237,
     "passRate": 0.506,
     "pace": 61.2
    },
@@ -1307,14 +1307,14 @@
     "vsFront": {
      "4-3": 6.4,
      "3-4": 7.2,
-     "Multiple": 7
+     "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 7.5,
-     "Cover-2": 8,
-     "Cover-3": 7.6,
-     "Quarters": 7.9,
-     "Cover-2 Man": 7.8
+     "Cover-1": 8.1,
+     "Cover-2": 7.6,
+     "Cover-3": 7.7,
+     "Quarters": 7.6,
+     "Cover-2 Man": 8
     }
    },
    "defense": {
@@ -1324,7 +1324,7 @@
     "nickelCorner": 4.8,
     "lbCoverage": 7.6,
     "secondaryAdjust": 4.4,
-    "blitzRate": 0.241,
+    "blitzRate": 0.272,
     "takeaways": 5.6
    },
    "players": [
@@ -1608,7 +1608,7 @@
     "redZoneTd": 0.621,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 4.7,
-    "playActionRate": 0.153,
+    "playActionRate": 0.164,
     "passRate": 0.608,
     "pace": 64
    },
@@ -1640,7 +1640,7 @@
     "nickelCorner": 5.5,
     "lbCoverage": 2.8,
     "secondaryAdjust": 4.6,
-    "blitzRate": 0.159,
+    "blitzRate": 0.17,
     "takeaways": 7
    },
    "players": [
@@ -1924,7 +1924,7 @@
     "redZoneTd": 0.486,
     "redZoneAggression": 3.9,
     "halftimeAdjust": 5.6,
-    "playActionRate": 0.189,
+    "playActionRate": 0.205,
     "passRate": 0.528,
     "pace": 62.4
    },
@@ -1956,7 +1956,7 @@
     "nickelCorner": 3.9,
     "lbCoverage": 7.9,
     "secondaryAdjust": 5.9,
-    "blitzRate": 0.246,
+    "blitzRate": 0.27,
     "takeaways": 5
    },
    "players": [
@@ -2234,7 +2234,7 @@
     "redZoneTd": 0.584,
     "redZoneAggression": 5.4,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.179,
+    "playActionRate": 0.187,
     "passRate": 0.592,
     "pace": 62
    },
@@ -2266,7 +2266,7 @@
     "nickelCorner": 5.9,
     "lbCoverage": 5.9,
     "secondaryAdjust": 6.1,
-    "blitzRate": 0.263,
+    "blitzRate": 0.291,
     "takeaways": 7.2
    },
    "players": [
@@ -2548,7 +2548,7 @@
     "redZoneTd": 0.488,
     "redZoneAggression": 3.8,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.206,
+    "playActionRate": 0.228,
     "passRate": 0.592,
     "pace": 66.6
    },
@@ -2580,7 +2580,7 @@
     "nickelCorner": 6.9,
     "lbCoverage": 8,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.203,
+    "blitzRate": 0.217,
     "takeaways": 6.5
    },
    "players": [
@@ -2850,7 +2850,7 @@
    },
    "coaching": {
     "headCoach": "Shane Steichen",
-    "offScheme": "RPO Spread",
+    "offScheme": "Spread",
     "defFront": "4-3",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.397,
@@ -2859,7 +2859,7 @@
     "redZoneTd": 0.672,
     "redZoneAggression": 6.7,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.26,
+    "playActionRate": 0.291,
     "passRate": 0.57,
     "pace": 63.6
    },
@@ -2874,14 +2874,14 @@
     "vsFront": {
      "4-3": 6.1,
      "3-4": 5.6,
-     "Multiple": 6
+     "Multiple": 6.1
     },
     "vsCoverage": {
-     "Cover-1": 6.7,
-     "Cover-2": 6.8,
-     "Cover-3": 6.9,
-     "Quarters": 6.3,
-     "Cover-2 Man": 6.5
+     "Cover-1": 6.8,
+     "Cover-2": 6.3,
+     "Cover-3": 6.8,
+     "Quarters": 6.5,
+     "Cover-2 Man": 6.4
     }
    },
    "defense": {
@@ -2891,7 +2891,7 @@
     "nickelCorner": 6.2,
     "lbCoverage": 5.2,
     "secondaryAdjust": 5.1,
-    "blitzRate": 0.232,
+    "blitzRate": 0.246,
     "takeaways": 3.9
    },
    "players": [
@@ -3171,7 +3171,7 @@
     "redZoneTd": 0.644,
     "redZoneAggression": 5,
     "halftimeAdjust": 4.9,
-    "playActionRate": 0.203,
+    "playActionRate": 0.226,
     "passRate": 0.602,
     "pace": 63.9
    },
@@ -3203,7 +3203,7 @@
     "nickelCorner": 10,
     "lbCoverage": 6.8,
     "secondaryAdjust": 5,
-    "blitzRate": 0.24,
+    "blitzRate": 0.279,
     "takeaways": 8.5
    },
    "players": [
@@ -3480,7 +3480,7 @@
     "redZoneTd": 0.531,
     "redZoneAggression": 4.6,
     "halftimeAdjust": 6.6,
-    "playActionRate": 0.18,
+    "playActionRate": 0.197,
     "passRate": 0.54,
     "pace": 59.8
    },
@@ -3512,7 +3512,7 @@
     "nickelCorner": 3.5,
     "lbCoverage": 5.5,
     "secondaryAdjust": 5.7,
-    "blitzRate": 0.202,
+    "blitzRate": 0.226,
     "takeaways": 2.2
    },
    "players": [
@@ -4104,7 +4104,7 @@
     "redZoneTd": 0.571,
     "redZoneAggression": 4.6,
     "halftimeAdjust": 5.8,
-    "playActionRate": 0.225,
+    "playActionRate": 0.242,
     "passRate": 0.507,
     "pace": 65.9
    },
@@ -4136,7 +4136,7 @@
     "nickelCorner": 5.7,
     "lbCoverage": 6.5,
     "secondaryAdjust": 5.9,
-    "blitzRate": 0.211,
+    "blitzRate": 0.243,
     "takeaways": 7
    },
    "players": [
@@ -4416,7 +4416,7 @@
    },
    "coaching": {
     "headCoach": "Sean Payton",
-    "offScheme": "West Coast",
+    "offScheme": "RPO Spread",
     "defFront": "3-4",
     "baseCoverage": "Cover-1",
     "thirdDownOff": 0.382,
@@ -4425,7 +4425,7 @@
     "redZoneTd": 0.611,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 6.2,
-    "playActionRate": 0.217,
+    "playActionRate": 0.237,
     "passRate": 0.565,
     "pace": 63.7
    },
@@ -4440,14 +4440,14 @@
     "vsFront": {
      "4-3": 5.1,
      "3-4": 5.5,
-     "Multiple": 5.1
+     "Multiple": 5
     },
     "vsCoverage": {
-     "Cover-1": 5.2,
-     "Cover-2": 5.7,
+     "Cover-1": 5.5,
+     "Cover-2": 5.6,
      "Cover-3": 5.7,
-     "Quarters": 5.4,
-     "Cover-2 Man": 5.1
+     "Quarters": 5.1,
+     "Cover-2 Man": 5.3
     }
    },
    "defense": {
@@ -4457,7 +4457,7 @@
     "nickelCorner": 6.2,
     "lbCoverage": 5.7,
     "secondaryAdjust": 6.4,
-    "blitzRate": 0.327,
+    "blitzRate": 0.348,
     "takeaways": 5
    },
    "players": [
@@ -4737,7 +4737,7 @@
     "redZoneTd": 0.545,
     "redZoneAggression": 4.8,
     "halftimeAdjust": 5.5,
-    "playActionRate": 0.216,
+    "playActionRate": 0.234,
     "passRate": 0.546,
     "pace": 62
    },
@@ -4769,7 +4769,7 @@
     "nickelCorner": 2.9,
     "lbCoverage": 4.4,
     "secondaryAdjust": 6.1,
-    "blitzRate": 0.21,
+    "blitzRate": 0.23,
     "takeaways": 7.1
    },
    "players": [
@@ -5048,7 +5048,7 @@
     "redZoneTd": 0.664,
     "redZoneAggression": 6.6,
     "halftimeAdjust": 3.3,
-    "playActionRate": 0.186,
+    "playActionRate": 0.207,
     "passRate": 0.534,
     "pace": 60.7
    },
@@ -5080,7 +5080,7 @@
     "nickelCorner": 7.1,
     "lbCoverage": 6.1,
     "secondaryAdjust": 4.6,
-    "blitzRate": 0.18,
+    "blitzRate": 0.215,
     "takeaways": 4.2
    },
    "players": [
@@ -5357,7 +5357,7 @@
    },
    "coaching": {
     "headCoach": "Brian Schottenheimer",
-    "offScheme": "Motion Heavy",
+    "offScheme": "West Coast",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.452,
@@ -5384,11 +5384,11 @@
      "Multiple": 6.9
     },
     "vsCoverage": {
-     "Cover-1": 8.4,
-     "Cover-2": 7.9,
-     "Cover-3": 8,
+     "Cover-1": 7.7,
+     "Cover-2": 8.2,
+     "Cover-3": 8.2,
      "Quarters": 7.9,
-     "Cover-2 Man": 8.3
+     "Cover-2 Man": 7.6
     }
    },
    "defense": {
@@ -5681,7 +5681,7 @@
     "redZoneTd": 0.565,
     "redZoneAggression": 4.9,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.195,
+    "playActionRate": 0.23,
     "passRate": 0.498,
     "pace": 67.7
    },
@@ -5713,7 +5713,7 @@
     "nickelCorner": 7,
     "lbCoverage": 5.9,
     "secondaryAdjust": 3.9,
-    "blitzRate": 0.286,
+    "blitzRate": 0.343,
     "takeaways": 5.4
    },
    "players": [
@@ -5981,7 +5981,7 @@
    },
    "coaching": {
     "headCoach": "Dan Quinn",
-    "offScheme": "Spread",
+    "offScheme": "Wide Zone",
     "defFront": "3-4",
     "baseCoverage": "Cover-1",
     "thirdDownOff": 0.352,
@@ -5990,7 +5990,7 @@
     "redZoneTd": 0.627,
     "redZoneAggression": 5.9,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.219,
+    "playActionRate": 0.241,
     "passRate": 0.542,
     "pace": 63.5
    },
@@ -6005,14 +6005,14 @@
     "vsFront": {
      "4-3": 4,
      "3-4": 6.3,
-     "Multiple": 5.3
+     "Multiple": 5.5
     },
     "vsCoverage": {
      "Cover-1": 5.2,
-     "Cover-2": 4.7,
-     "Cover-3": 5.2,
-     "Quarters": 4.9,
-     "Cover-2 Man": 4.8
+     "Cover-2": 4.8,
+     "Cover-3": 5.3,
+     "Quarters": 4.7,
+     "Cover-2 Man": 5
     }
    },
    "defense": {
@@ -6022,7 +6022,7 @@
     "nickelCorner": 4.8,
     "lbCoverage": 2.9,
     "secondaryAdjust": 5.1,
-    "blitzRate": 0.303,
+    "blitzRate": 0.355,
     "takeaways": 4.3
    },
    "players": [
@@ -6312,7 +6312,7 @@
     "redZoneTd": 0.717,
     "redZoneAggression": 7.1,
     "halftimeAdjust": 5.2,
-    "playActionRate": 0.253,
+    "playActionRate": 0.283,
     "passRate": 0.525,
     "pace": 66
    },
@@ -6344,7 +6344,7 @@
     "nickelCorner": 3.3,
     "lbCoverage": 5.5,
     "secondaryAdjust": 4.3,
-    "blitzRate": 0.268,
+    "blitzRate": 0.293,
     "takeaways": 5.1
    },
    "players": [
@@ -6615,7 +6615,7 @@
    },
    "coaching": {
     "headCoach": "Matt LaFleur",
-    "offScheme": "West Coast",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Quarters",
     "thirdDownOff": 0.394,
@@ -6624,7 +6624,7 @@
     "redZoneTd": 0.555,
     "redZoneAggression": 5.6,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.205,
+    "playActionRate": 0.235,
     "passRate": 0.532,
     "pace": 61.2
    },
@@ -6642,11 +6642,11 @@
      "Multiple": 5.4
     },
     "vsCoverage": {
-     "Cover-1": 6.5,
-     "Cover-2": 7,
-     "Cover-3": 7,
+     "Cover-1": 7.3,
+     "Cover-2": 6.8,
+     "Cover-3": 6.9,
      "Quarters": 6.8,
-     "Cover-2 Man": 6.5
+     "Cover-2 Man": 7.2
     }
    },
    "defense": {
@@ -6656,7 +6656,7 @@
     "nickelCorner": 6.1,
     "lbCoverage": 5.3,
     "secondaryAdjust": 5,
-    "blitzRate": 0.256,
+    "blitzRate": 0.272,
     "takeaways": 6.1
    },
    "players": [
@@ -6939,7 +6939,7 @@
     "redZoneTd": 0.529,
     "redZoneAggression": 4.9,
     "halftimeAdjust": 6.4,
-    "playActionRate": 0.234,
+    "playActionRate": 0.276,
     "passRate": 0.526,
     "pace": 60.3
    },
@@ -6971,7 +6971,7 @@
     "nickelCorner": 6.8,
     "lbCoverage": 7.7,
     "secondaryAdjust": 6.6,
-    "blitzRate": 0.531,
+    "blitzRate": 0.57,
     "takeaways": 7.3
    },
    "players": [
@@ -7250,7 +7250,7 @@
     "redZoneTd": 0.53,
     "redZoneAggression": 5,
     "halftimeAdjust": 5.9,
-    "playActionRate": 0.281,
+    "playActionRate": 0.305,
     "passRate": 0.52,
     "pace": 70.9
    },
@@ -7282,7 +7282,7 @@
     "nickelCorner": 6.3,
     "lbCoverage": 6,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.292,
+    "blitzRate": 0.33,
     "takeaways": 7.6
    },
    "players": [
@@ -7567,7 +7567,7 @@
     "redZoneTd": 0.65,
     "redZoneAggression": 5.4,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.192,
+    "playActionRate": 0.226,
     "passRate": 0.463,
     "pace": 63.4
    },
@@ -7599,7 +7599,7 @@
     "nickelCorner": 5.6,
     "lbCoverage": 6.9,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.277,
+    "blitzRate": 0.311,
     "takeaways": 4.9
    },
    "players": [
@@ -8192,7 +8192,7 @@
     "redZoneTd": 0.591,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.175,
+    "playActionRate": 0.177,
     "passRate": 0.571,
     "pace": 67.4
    },
@@ -8224,7 +8224,7 @@
     "nickelCorner": 6.8,
     "lbCoverage": 4.3,
     "secondaryAdjust": 6.4,
-    "blitzRate": 0.26,
+    "blitzRate": 0.296,
     "takeaways": 4.7
    },
    "players": [
@@ -8816,7 +8816,7 @@
     "redZoneTd": 0.779,
     "redZoneAggression": 7.5,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.203,
+    "playActionRate": 0.23,
     "passRate": 0.55,
     "pace": 61.6
    },
@@ -8848,7 +8848,7 @@
     "nickelCorner": 4.3,
     "lbCoverage": 6.9,
     "secondaryAdjust": 5.6,
-    "blitzRate": 0.235,
+    "blitzRate": 0.26,
     "takeaways": 4.7
    },
    "players": [
@@ -9121,7 +9121,7 @@
    },
    "coaching": {
     "headCoach": "Mike Macdonald",
-    "offScheme": "Wide Zone",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.357,
@@ -9130,7 +9130,7 @@
     "redZoneTd": 0.583,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.267,
+    "playActionRate": 0.291,
     "passRate": 0.494,
     "pace": 61.3
    },
@@ -9145,14 +9145,14 @@
     "vsFront": {
      "4-3": 4.6,
      "3-4": 5.8,
-     "Multiple": 5.1
+     "Multiple": 4.9
     },
     "vsCoverage": {
-     "Cover-1": 6,
-     "Cover-2": 5.6,
-     "Cover-3": 6.1,
-     "Quarters": 5.5,
-     "Cover-2 Man": 5.8
+     "Cover-1": 6.3,
+     "Cover-2": 5.8,
+     "Cover-3": 5.9,
+     "Quarters": 5.8,
+     "Cover-2 Man": 6.2
     }
    },
    "defense": {
@@ -9162,7 +9162,7 @@
     "nickelCorner": 5.2,
     "lbCoverage": 5.6,
     "secondaryAdjust": 5.8,
-    "blitzRate": 0.199,
+    "blitzRate": 0.217,
     "takeaways": 8.1
    },
    "players": [
@@ -9430,7 +9430,7 @@
    },
    "coaching": {
     "headCoach": "Sean McVay",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Vertical",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.428,
@@ -9454,14 +9454,14 @@
     "vsFront": {
      "4-3": 5.3,
      "3-4": 7.8,
-     "Multiple": 6.8
+     "Multiple": 6.9
     },
     "vsCoverage": {
-     "Cover-1": 8.3,
-     "Cover-2": 7.8,
-     "Cover-3": 7.9,
-     "Quarters": 7.8,
-     "Cover-2 Man": 8.2
+     "Cover-1": 8.2,
+     "Cover-2": 7.4,
+     "Cover-3": 8.1,
+     "Quarters": 7.4,
+     "Cover-2 Man": 7.7
     }
    },
    "defense": {
@@ -9753,7 +9753,7 @@
     "redZoneTd": 0.577,
     "redZoneAggression": 4.9,
     "halftimeAdjust": 4.9,
-    "playActionRate": 0.191,
+    "playActionRate": 0.217,
     "passRate": 0.597,
     "pace": 67.7
    },
@@ -9785,7 +9785,7 @@
     "nickelCorner": 3.4,
     "lbCoverage": 3,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.237,
+    "blitzRate": 0.269,
     "takeaways": 5.4
    },
    "players": [
