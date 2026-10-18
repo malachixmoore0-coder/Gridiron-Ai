@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-18T23:18:29.083Z",
+ "generatedAt": "2026-10-18T23:33:44.394Z",
  "season": 2026,
  "week": 6,
  "phase": "regular",
@@ -313,7 +313,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/buf.png",
-   "record": "4-1"
+   "record": "5-1"
   },
   {
    "id": "mia",
@@ -4073,7 +4073,7 @@
     "buf"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/kc.png",
-   "record": "4-0"
+   "record": "5-0"
   },
   {
    "id": "lac",
@@ -4393,7 +4393,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lac.png",
-   "record": "0-5"
+   "record": "0-6"
   },
   {
    "id": "den",
@@ -5014,7 +5014,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
-   "record": "3-2"
+   "record": "3-3"
   },
   {
    "id": "phi",
