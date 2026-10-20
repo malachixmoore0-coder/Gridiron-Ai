@@ -1,10 +1,10 @@
 {
- "generatedAt": "2026-10-20T08:38:43.289Z",
+ "generatedAt": "2026-10-20T14:21:11.511Z",
  "season": 2026,
  "priorSeason": 2025,
  "currentWeek": 7,
  "phase": "regular",
- "depthChartsAsOf": "2026-10-20T06:01:57Z",
+ "depthChartsAsOf": "2026-10-20T12:41:41Z",
  "injuryReportWeek": 6,
  "blend": {
   "description": "Team metrics = w·current season + (1−w)·prior season, w = games played / (games played + 6).",
@@ -28,151 +28,151 @@
    "name": "nflverse schedule & results (nfldata games.csv)",
    "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:43.430Z"
-  },
-  {
-   "name": "nflverse snap counts 2026",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2026.csv",
-   "ok": true,
-   "fetchedAt": "2026-10-20T08:38:43.975Z"
+   "fetchedAt": "2026-10-20T14:21:11.603Z"
   },
   {
    "name": "nflverse injury reports 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:44.044Z"
+   "fetchedAt": "2026-10-20T14:21:11.931Z"
   },
   {
-   "name": "nflverse rosters 2026",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_2026.csv",
+   "name": "nflverse snap counts 2026",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:44.118Z"
+   "fetchedAt": "2026-10-20T14:21:11.975Z"
   },
   {
    "name": "nflverse snap counts 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:44.191Z"
+   "fetchedAt": "2026-10-20T14:21:11.988Z"
   },
   {
-   "name": "nflverse depth charts 2026",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv",
+   "name": "nflverse rosters 2026",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:44.884Z"
+   "fetchedAt": "2026-10-20T14:21:12.219Z"
   },
   {
    "name": "nflverse depth charts 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:45.197Z"
+   "fetchedAt": "2026-10-20T14:21:12.589Z"
+  },
+  {
+   "name": "nflverse depth charts 2026",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv",
+   "ok": true,
+   "fetchedAt": "2026-10-20T14:21:13.571Z"
   },
   {
    "name": "nflverse play-by-play 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:55.478Z"
+   "fetchedAt": "2026-10-20T14:21:20.394Z"
   },
   {
    "name": "nflverse play-by-play 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:38:58.286Z"
+   "fetchedAt": "2026-10-20T14:21:22.721Z"
   },
   {
    "name": "FTN charting 2026 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:06.252Z"
+   "fetchedAt": "2026-10-20T14:21:28.760Z"
   },
   {
    "name": "FTN charting 2025 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:06.736Z"
-  },
-  {
-   "name": "PFR advanced passing (via nflverse)",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_pass.csv",
-   "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.620Z"
-  },
-  {
-   "name": "ESPN scoreboard week 6 (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=6",
-   "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.644Z"
+   "fetchedAt": "2026-10-20T14:21:29.092Z"
   },
   {
    "name": "ESPN scoreboard week 8 (best-effort)",
    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=8",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.651Z"
-  },
-  {
-   "name": "ESPN scoreboard week 7 (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=7",
-   "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.679Z"
+   "fetchedAt": "2026-10-20T14:21:29.780Z"
   },
   {
    "name": "PFR advanced defense (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_def.csv",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.698Z"
+   "fetchedAt": "2026-10-20T14:21:29.784Z"
+  },
+  {
+   "name": "PFR advanced passing (via nflverse)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_pass.csv",
+   "ok": true,
+   "fetchedAt": "2026-10-20T14:21:29.877Z"
+  },
+  {
+   "name": "ESPN scoreboard week 7 (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=7",
+   "ok": true,
+   "fetchedAt": "2026-10-20T14:21:29.887Z"
+  },
+  {
+   "name": "ESPN scoreboard week 6 (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=6",
+   "ok": true,
+   "fetchedAt": "2026-10-20T14:21:29.934Z"
   },
   {
    "name": "ESPN injuries (best-effort)",
    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:07.972Z"
+   "fetchedAt": "2026-10-20T14:21:29.987Z"
   },
   {
    "name": "Open-Meteo forecast 41.86,-87.62",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.862&longitude=-87.617&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:08.984Z"
+   "fetchedAt": "2026-10-20T14:21:30.734Z"
   },
   {
    "name": "Open-Meteo forecast 39.28,-76.62",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.278&longitude=-76.623&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.113Z"
+   "fetchedAt": "2026-10-20T14:21:30.834Z"
   },
   {
    "name": "Open-Meteo forecast 35.23,-80.85",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=35.226&longitude=-80.853&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.241Z"
+   "fetchedAt": "2026-10-20T14:21:30.936Z"
   },
   {
    "name": "Open-Meteo forecast 40.81,-74.07",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.813&longitude=-74.074&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.369Z"
+   "fetchedAt": "2026-10-20T14:21:31.036Z"
   },
   {
    "name": "Open-Meteo forecast 36.17,-86.77",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=36.166&longitude=-86.771&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.498Z"
+   "fetchedAt": "2026-10-20T14:21:31.136Z"
   },
   {
    "name": "Open-Meteo forecast 47.59,-122.33",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=47.595&longitude=-122.332&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.626Z"
+   "fetchedAt": "2026-10-20T14:21:31.236Z"
   },
   {
    "name": "Open-Meteo forecast 39.90,-75.17",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.901&longitude=-75.168&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.754Z"
+   "fetchedAt": "2026-10-20T14:21:31.337Z"
   },
   {
    "name": "Open-Meteo forecast 44.50,-88.06",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=44.501&longitude=-88.062&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
    "ok": true,
-   "fetchedAt": "2026-10-20T08:39:09.882Z"
+   "fetchedAt": "2026-10-20T14:21:31.437Z"
   }
  ],
  "notes": [],
@@ -206,11 +206,11 @@
    "dTeRbEpa": 0.124,
    "dShortWrEpa": 0.095,
    "defAdjust": 0.079,
-   "paRate": 0.261,
-   "motionRate": 0.561,
-   "rpoRate": 0.06,
-   "screenRate": 0.087,
-   "dBlitz": 0.295,
+   "paRate": 0.259,
+   "motionRate": 0.624,
+   "rpoRate": 0.064,
+   "screenRate": 0.094,
+   "dBlitz": 0.301,
    "vs43": 0.256,
    "vs34": 0.131
   },
@@ -280,11 +280,11 @@
    "dTeRbEpa": 0.02,
    "dShortWrEpa": 0.01,
    "defAdjust": -0.008,
-   "paRate": 0.242,
-   "motionRate": 0.484,
-   "rpoRate": 0.014,
-   "screenRate": 0.066,
-   "dBlitz": 0.317,
+   "paRate": 0.235,
+   "motionRate": 0.534,
+   "rpoRate": 0.018,
+   "screenRate": 0.061,
+   "dBlitz": 0.323,
    "vs43": 0.056,
    "vs34": 0.113
   },
@@ -317,11 +317,11 @@
    "dTeRbEpa": 0.23,
    "dShortWrEpa": 0.19,
    "defAdjust": 0.06,
-   "paRate": 0.188,
-   "motionRate": 0.504,
-   "rpoRate": 0.063,
-   "screenRate": 0.071,
-   "dBlitz": 0.326,
+   "paRate": 0.184,
+   "motionRate": 0.55,
+   "rpoRate": 0.064,
+   "screenRate": 0.075,
+   "dBlitz": 0.322,
    "vs43": -0.027,
    "vs34": -0.107
   },
@@ -354,11 +354,11 @@
    "dTeRbEpa": -0.077,
    "dShortWrEpa": 0.133,
    "defAdjust": -0.146,
-   "paRate": 0.239,
-   "motionRate": 0.535,
-   "rpoRate": 0.048,
-   "screenRate": 0.068,
-   "dBlitz": 0.276,
+   "paRate": 0.244,
+   "motionRate": 0.59,
+   "rpoRate": 0.049,
+   "screenRate": 0.067,
+   "dBlitz": 0.274,
    "vs43": 0.047,
    "vs34": 0.091
   },
@@ -429,10 +429,10 @@
    "dShortWrEpa": 0.234,
    "defAdjust": 0.087,
    "paRate": 0.204,
-   "motionRate": 0.453,
-   "rpoRate": 0.05,
-   "screenRate": 0.097,
-   "dBlitz": 0.269,
+   "motionRate": 0.5,
+   "rpoRate": 0.055,
+   "screenRate": 0.095,
+   "dBlitz": 0.263,
    "vs43": -0.19,
    "vs34": -0.098
   },
@@ -465,11 +465,11 @@
    "dTeRbEpa": 0.098,
    "dShortWrEpa": -0.009,
    "defAdjust": 0.078,
-   "paRate": 0.187,
-   "motionRate": 0.477,
-   "rpoRate": 0.076,
-   "screenRate": 0.116,
-   "dBlitz": 0.289,
+   "paRate": 0.18,
+   "motionRate": 0.527,
+   "rpoRate": 0.091,
+   "screenRate": 0.124,
+   "dBlitz": 0.288,
    "vs43": 0.131,
    "vs34": -0.15
   },
@@ -502,11 +502,11 @@
    "dTeRbEpa": -0.017,
    "dShortWrEpa": -0.02,
    "defAdjust": -0.03,
-   "paRate": 0.228,
-   "motionRate": 0.503,
-   "rpoRate": 0.02,
+   "paRate": 0.221,
+   "motionRate": 0.544,
+   "rpoRate": 0.029,
    "screenRate": 0.049,
-   "dBlitz": 0.215,
+   "dBlitz": 0.23,
    "vs43": 0.013,
    "vs34": 0.039
   },
@@ -539,11 +539,11 @@
    "dTeRbEpa": 0.161,
    "dShortWrEpa": 0.036,
    "defAdjust": -0.083,
-   "paRate": 0.292,
-   "motionRate": 0.51,
-   "rpoRate": 0.063,
-   "screenRate": 0.066,
-   "dBlitz": 0.242,
+   "paRate": 0.288,
+   "motionRate": 0.569,
+   "rpoRate": 0.064,
+   "screenRate": 0.062,
+   "dBlitz": 0.247,
    "vs43": 0.032,
    "vs34": -0.005
   },
@@ -576,11 +576,11 @@
    "dTeRbEpa": 0.039,
    "dShortWrEpa": -0.274,
    "defAdjust": -0.022,
-   "paRate": 0.228,
-   "motionRate": 0.554,
-   "rpoRate": 0.026,
+   "paRate": 0.222,
+   "motionRate": 0.618,
+   "rpoRate": 0.028,
    "screenRate": 0.086,
-   "dBlitz": 0.279,
+   "dBlitz": 0.289,
    "vs43": 0.108,
    "vs34": 0.047
   },
@@ -613,11 +613,11 @@
    "dTeRbEpa": 0.12,
    "dShortWrEpa": 0.316,
    "defAdjust": 0.062,
-   "paRate": 0.198,
-   "motionRate": 0.433,
-   "rpoRate": 0.08,
-   "screenRate": 0.082,
-   "dBlitz": 0.226,
+   "paRate": 0.207,
+   "motionRate": 0.458,
+   "rpoRate": 0.084,
+   "screenRate": 0.086,
+   "dBlitz": 0.231,
    "vs43": -0.178,
    "vs34": -0.104
   },
@@ -650,11 +650,11 @@
    "dTeRbEpa": 0.164,
    "dShortWrEpa": -0.195,
    "defAdjust": 0.093,
-   "paRate": 0.245,
-   "motionRate": 0.487,
-   "rpoRate": 0.114,
-   "screenRate": 0.132,
-   "dBlitz": 0.308,
+   "paRate": 0.237,
+   "motionRate": 0.54,
+   "rpoRate": 0.124,
+   "screenRate": 0.128,
+   "dBlitz": 0.301,
    "vs43": 0.09,
    "vs34": 0.079
   },
@@ -687,11 +687,11 @@
    "dTeRbEpa": 0.081,
    "dShortWrEpa": 0.015,
    "defAdjust": 0.059,
-   "paRate": 0.244,
-   "motionRate": 0.569,
-   "rpoRate": 0.027,
-   "screenRate": 0.07,
-   "dBlitz": 0.247,
+   "paRate": 0.245,
+   "motionRate": 0.631,
+   "rpoRate": 0.031,
+   "screenRate": 0.076,
+   "dBlitz": 0.241,
    "vs43": -0.111,
    "vs34": -0.115
   },
@@ -761,11 +761,11 @@
    "dTeRbEpa": 0.259,
    "dShortWrEpa": 0.329,
    "defAdjust": 0.058,
-   "paRate": 0.233,
-   "motionRate": 0.505,
-   "rpoRate": 0.03,
-   "screenRate": 0.077,
-   "dBlitz": 0.231,
+   "paRate": 0.235,
+   "motionRate": 0.569,
+   "rpoRate": 0.035,
+   "screenRate": 0.076,
+   "dBlitz": 0.239,
    "vs43": -0.087,
    "vs34": -0.07
   },
@@ -798,11 +798,11 @@
    "dTeRbEpa": 0.087,
    "dShortWrEpa": -0.015,
    "defAdjust": -0.111,
-   "paRate": 0.206,
-   "motionRate": 0.477,
-   "rpoRate": 0.059,
-   "screenRate": 0.053,
-   "dBlitz": 0.217,
+   "paRate": 0.2,
+   "motionRate": 0.527,
+   "rpoRate": 0.063,
+   "screenRate": 0.049,
+   "dBlitz": 0.227,
    "vs43": -0.09,
    "vs34": -0.035
   },
@@ -835,11 +835,11 @@
    "dTeRbEpa": 0.34,
    "dShortWrEpa": 0.279,
    "defAdjust": 0.061,
-   "paRate": 0.238,
-   "motionRate": 0.501,
-   "rpoRate": 0.042,
-   "screenRate": 0.055,
-   "dBlitz": 0.283,
+   "paRate": 0.229,
+   "motionRate": 0.531,
+   "rpoRate": 0.044,
+   "screenRate": 0.054,
+   "dBlitz": 0.287,
    "vs43": 0.134,
    "vs34": 0.106
   },
@@ -872,11 +872,11 @@
    "dTeRbEpa": 0.075,
    "dShortWrEpa": -0.015,
    "defAdjust": -0.169,
-   "paRate": 0.23,
-   "motionRate": 0.396,
-   "rpoRate": 0.064,
-   "screenRate": 0.063,
-   "dBlitz": 0.347,
+   "paRate": 0.215,
+   "motionRate": 0.426,
+   "rpoRate": 0.07,
+   "screenRate": 0.06,
+   "dBlitz": 0.354,
    "vs43": -0.047,
    "vs34": 0.045
   },
@@ -909,11 +909,11 @@
    "dTeRbEpa": 0.293,
    "dShortWrEpa": 0.114,
    "defAdjust": 0.001,
-   "paRate": 0.239,
+   "paRate": 0.218,
    "motionRate": 0.488,
    "rpoRate": 0.065,
-   "screenRate": 0.064,
-   "dBlitz": 0.363,
+   "screenRate": 0.059,
+   "dBlitz": 0.332,
    "vs43": -0.04,
    "vs34": 0.039
   },
@@ -983,11 +983,11 @@
    "dTeRbEpa": 0.134,
    "dShortWrEpa": 0.05,
    "defAdjust": -0.085,
-   "paRate": 0.233,
-   "motionRate": 0.535,
-   "rpoRate": 0.07,
-   "screenRate": 0.082,
-   "dBlitz": 0.277,
+   "paRate": 0.231,
+   "motionRate": 0.597,
+   "rpoRate": 0.075,
+   "screenRate": 0.087,
+   "dBlitz": 0.279,
    "vs43": 0.103,
    "vs34": 0.037
   },
@@ -1057,11 +1057,11 @@
    "dTeRbEpa": 0.109,
    "dShortWrEpa": -0.043,
    "defAdjust": -0.028,
-   "paRate": 0.304,
-   "motionRate": 0.501,
-   "rpoRate": 0.041,
-   "screenRate": 0.088,
-   "dBlitz": 0.335,
+   "paRate": 0.307,
+   "motionRate": 0.549,
+   "rpoRate": 0.045,
+   "screenRate": 0.097,
+   "dBlitz": 0.349,
    "vs43": 0.105,
    "vs34": 0.041
   },
@@ -1094,11 +1094,11 @@
    "dTeRbEpa": 0.046,
    "dShortWrEpa": 0.111,
    "defAdjust": -0.028,
-   "paRate": 0.228,
-   "motionRate": 0.604,
-   "rpoRate": 0.033,
-   "screenRate": 0.117,
-   "dBlitz": 0.307,
+   "paRate": 0.213,
+   "motionRate": 0.628,
+   "rpoRate": 0.034,
+   "screenRate": 0.108,
+   "dBlitz": 0.304,
    "vs43": -0.105,
    "vs34": -0.019
   },
@@ -1131,11 +1131,11 @@
    "dTeRbEpa": 0.227,
    "dShortWrEpa": 0.086,
    "defAdjust": 0.09,
-   "paRate": 0.235,
-   "motionRate": 0.429,
-   "rpoRate": 0.092,
+   "paRate": 0.231,
+   "motionRate": 0.494,
+   "rpoRate": 0.104,
    "screenRate": 0.054,
-   "dBlitz": 0.307,
+   "dBlitz": 0.309,
    "vs43": 0.041,
    "vs34": 0.018
   },
@@ -1168,11 +1168,11 @@
    "dTeRbEpa": 0.227,
    "dShortWrEpa": -0.019,
    "defAdjust": 0.082,
-   "paRate": 0.176,
-   "motionRate": 0.55,
-   "rpoRate": 0.041,
-   "screenRate": 0.041,
-   "dBlitz": 0.3,
+   "paRate": 0.182,
+   "motionRate": 0.612,
+   "rpoRate": 0.046,
+   "screenRate": 0.044,
+   "dBlitz": 0.297,
    "vs43": -0.019,
    "vs34": -0.073
   },
@@ -1205,11 +1205,11 @@
    "dTeRbEpa": 0.207,
    "dShortWrEpa": -0.081,
    "defAdjust": -0.01,
-   "paRate": 0.213,
-   "motionRate": 0.607,
-   "rpoRate": 0.059,
-   "screenRate": 0.095,
-   "dBlitz": 0.373,
+   "paRate": 0.191,
+   "motionRate": 0.664,
+   "rpoRate": 0.064,
+   "screenRate": 0.088,
+   "dBlitz": 0.381,
    "vs43": -0.089,
    "vs34": -0.05
   },
@@ -1242,11 +1242,11 @@
    "dTeRbEpa": 0.033,
    "dShortWrEpa": 0.208,
    "defAdjust": -0.05,
-   "paRate": 0.231,
+   "paRate": 0.21,
    "motionRate": 0.667,
    "rpoRate": 0.006,
-   "screenRate": 0.082,
-   "dBlitz": 0.263,
+   "screenRate": 0.073,
+   "dBlitz": 0.233,
    "vs43": 0.274,
    "vs34": 0.07
   },
@@ -1317,10 +1317,10 @@
    "dShortWrEpa": 0.116,
    "defAdjust": 0.004,
    "paRate": 0.298,
-   "motionRate": 0.601,
+   "motionRate": 0.65,
    "rpoRate": 0.006,
-   "screenRate": 0.059,
-   "dBlitz": 0.269,
+   "screenRate": 0.065,
+   "dBlitz": 0.252,
    "vs43": 0.012,
    "vs34": 0.117
   },
@@ -1353,11 +1353,11 @@
    "dTeRbEpa": 0.298,
    "dShortWrEpa": 0.221,
    "defAdjust": -0.074,
-   "paRate": 0.215,
-   "motionRate": 0.462,
-   "rpoRate": 0.016,
-   "screenRate": 0.061,
-   "dBlitz": 0.269,
+   "paRate": 0.209,
+   "motionRate": 0.525,
+   "rpoRate": 0.017,
+   "screenRate": 0.073,
+   "dBlitz": 0.281,
    "vs43": 0.03,
    "vs34": -0.043
   }

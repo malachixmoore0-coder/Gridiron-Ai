@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-20T08:38:43.289Z",
+ "generatedAt": "2026-10-20T14:21:11.511Z",
  "season": 2026,
  "week": 7,
  "phase": "regular",
@@ -35,7 +35,7 @@
     "redZoneTd": 0.706,
     "redZoneAggression": 7.2,
     "halftimeAdjust": 6,
-    "playActionRate": 0.261,
+    "playActionRate": 0.259,
     "passRate": 0.541,
     "pace": 64.1
    },
@@ -67,7 +67,7 @@
     "nickelCorner": 5.4,
     "lbCoverage": 5.6,
     "secondaryAdjust": 6.2,
-    "blitzRate": 0.295,
+    "blitzRate": 0.301,
     "takeaways": 5.2
    },
    "players": [
@@ -651,7 +651,7 @@
     "redZoneTd": 0.59,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 4.6,
-    "playActionRate": 0.242,
+    "playActionRate": 0.235,
     "passRate": 0.559,
     "pace": 64.6
    },
@@ -683,7 +683,7 @@
     "nickelCorner": 6.3,
     "lbCoverage": 6.9,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.317,
+    "blitzRate": 0.323,
     "takeaways": 5.3
    },
    "players": [
@@ -965,7 +965,7 @@
     "redZoneTd": 0.447,
     "redZoneAggression": 4.2,
     "halftimeAdjust": 6.6,
-    "playActionRate": 0.188,
+    "playActionRate": 0.184,
     "passRate": 0.502,
     "pace": 60.9
    },
@@ -997,7 +997,7 @@
     "nickelCorner": 4.3,
     "lbCoverage": 4.3,
     "secondaryAdjust": 6,
-    "blitzRate": 0.326,
+    "blitzRate": 0.322,
     "takeaways": 2.5
    },
    "players": [
@@ -1274,7 +1274,7 @@
    },
    "coaching": {
     "headCoach": "Jesse Minter",
-    "offScheme": "Power Run",
+    "offScheme": "Wide Zone",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.404,
@@ -1283,7 +1283,7 @@
     "redZoneTd": 0.607,
     "redZoneAggression": 6,
     "halftimeAdjust": 4.4,
-    "playActionRate": 0.239,
+    "playActionRate": 0.244,
     "passRate": 0.511,
     "pace": 60.8
    },
@@ -1301,11 +1301,11 @@
      "Multiple": 6.8
     },
     "vsCoverage": {
-     "Cover-1": 7.4,
-     "Cover-2": 7.9,
-     "Cover-3": 7.5,
-     "Quarters": 7.8,
-     "Cover-2 Man": 7.7
+     "Cover-1": 7.7,
+     "Cover-2": 7.3,
+     "Cover-3": 7.8,
+     "Quarters": 7.2,
+     "Cover-2 Man": 7.5
     }
    },
    "defense": {
@@ -1315,7 +1315,7 @@
     "nickelCorner": 4.9,
     "lbCoverage": 8.1,
     "secondaryAdjust": 4.2,
-    "blitzRate": 0.276,
+    "blitzRate": 0.274,
     "takeaways": 5
    },
    "players": [
@@ -1940,7 +1940,7 @@
     "nickelCorner": 3.8,
     "lbCoverage": 7.8,
     "secondaryAdjust": 6.3,
-    "blitzRate": 0.269,
+    "blitzRate": 0.263,
     "takeaways": 4.9
    },
    "players": [
@@ -2222,7 +2222,7 @@
     "redZoneTd": 0.574,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 5.5,
-    "playActionRate": 0.187,
+    "playActionRate": 0.18,
     "passRate": 0.593,
     "pace": 63.2
    },
@@ -2254,7 +2254,7 @@
     "nickelCorner": 6.6,
     "lbCoverage": 5.9,
     "secondaryAdjust": 6.2,
-    "blitzRate": 0.289,
+    "blitzRate": 0.288,
     "takeaways": 7.7
    },
    "players": [
@@ -2542,7 +2542,7 @@
     "redZoneTd": 0.499,
     "redZoneAggression": 4,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.228,
+    "playActionRate": 0.221,
     "passRate": 0.596,
     "pace": 66.3
    },
@@ -2574,7 +2574,7 @@
     "nickelCorner": 6.7,
     "lbCoverage": 7.4,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.215,
+    "blitzRate": 0.23,
     "takeaways": 6.5
    },
    "players": [
@@ -2857,7 +2857,7 @@
     "redZoneTd": 0.654,
     "redZoneAggression": 6.4,
     "halftimeAdjust": 4.7,
-    "playActionRate": 0.292,
+    "playActionRate": 0.288,
     "passRate": 0.564,
     "pace": 65.1
    },
@@ -2889,7 +2889,7 @@
     "nickelCorner": 6,
     "lbCoverage": 5.2,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.242,
+    "blitzRate": 0.247,
     "takeaways": 3.7
    },
    "players": [
@@ -3166,7 +3166,7 @@
     "redZoneTd": 0.655,
     "redZoneAggression": 5.2,
     "halftimeAdjust": 5.3,
-    "playActionRate": 0.228,
+    "playActionRate": 0.222,
     "passRate": 0.598,
     "pace": 64.3
    },
@@ -3198,7 +3198,7 @@
     "nickelCorner": 9.6,
     "lbCoverage": 6.7,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.279,
+    "blitzRate": 0.289,
     "takeaways": 8.5
    },
    "players": [
@@ -3475,7 +3475,7 @@
     "redZoneTd": 0.527,
     "redZoneAggression": 4.2,
     "halftimeAdjust": 6.8,
-    "playActionRate": 0.198,
+    "playActionRate": 0.207,
     "passRate": 0.536,
     "pace": 58.6
    },
@@ -3507,7 +3507,7 @@
     "nickelCorner": 2.8,
     "lbCoverage": 5.7,
     "secondaryAdjust": 6.1,
-    "blitzRate": 0.226,
+    "blitzRate": 0.231,
     "takeaways": 3.1
    },
    "players": [
@@ -3787,7 +3787,7 @@
     "redZoneTd": 0.56,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 5.8,
-    "playActionRate": 0.245,
+    "playActionRate": 0.237,
     "passRate": 0.613,
     "pace": 64
    },
@@ -3819,7 +3819,7 @@
     "nickelCorner": 8.7,
     "lbCoverage": 5.1,
     "secondaryAdjust": 6.3,
-    "blitzRate": 0.308,
+    "blitzRate": 0.301,
     "takeaways": 5.5
    },
    "players": [
@@ -4105,7 +4105,7 @@
     "redZoneTd": 0.512,
     "redZoneAggression": 4.1,
     "halftimeAdjust": 5.9,
-    "playActionRate": 0.244,
+    "playActionRate": 0.245,
     "passRate": 0.507,
     "pace": 66.1
    },
@@ -4137,7 +4137,7 @@
     "nickelCorner": 6.3,
     "lbCoverage": 6.2,
     "secondaryAdjust": 6,
-    "blitzRate": 0.247,
+    "blitzRate": 0.241,
     "takeaways": 7
    },
    "players": [
@@ -4738,7 +4738,7 @@
     "redZoneTd": 0.53,
     "redZoneAggression": 4.8,
     "halftimeAdjust": 5.4,
-    "playActionRate": 0.233,
+    "playActionRate": 0.235,
     "passRate": 0.553,
     "pace": 62.3
    },
@@ -4770,7 +4770,7 @@
     "nickelCorner": 2.7,
     "lbCoverage": 3.9,
     "secondaryAdjust": 6,
-    "blitzRate": 0.231,
+    "blitzRate": 0.239,
     "takeaways": 6.6
    },
    "players": [
@@ -5047,7 +5047,7 @@
     "redZoneTd": 0.684,
     "redZoneAggression": 6.8,
     "halftimeAdjust": 3.7,
-    "playActionRate": 0.206,
+    "playActionRate": 0.2,
     "passRate": 0.548,
     "pace": 61
    },
@@ -5079,7 +5079,7 @@
     "nickelCorner": 6.6,
     "lbCoverage": 6.1,
     "secondaryAdjust": 4.5,
-    "blitzRate": 0.217,
+    "blitzRate": 0.227,
     "takeaways": 3.5
    },
    "players": [
@@ -5361,7 +5361,7 @@
     "redZoneTd": 0.662,
     "redZoneAggression": 6.7,
     "halftimeAdjust": 6.2,
-    "playActionRate": 0.238,
+    "playActionRate": 0.229,
     "passRate": 0.567,
     "pace": 67.9
    },
@@ -5393,7 +5393,7 @@
     "nickelCorner": 3.3,
     "lbCoverage": 2.9,
     "secondaryAdjust": 6,
-    "blitzRate": 0.283,
+    "blitzRate": 0.287,
     "takeaways": 1.8
    },
    "players": [
@@ -5675,7 +5675,7 @@
     "redZoneTd": 0.566,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.23,
+    "playActionRate": 0.215,
     "passRate": 0.509,
     "pace": 68.1
    },
@@ -5707,7 +5707,7 @@
     "nickelCorner": 6.6,
     "lbCoverage": 6.2,
     "secondaryAdjust": 4,
-    "blitzRate": 0.347,
+    "blitzRate": 0.354,
     "takeaways": 5.3
    },
    "players": [
@@ -5992,7 +5992,7 @@
     "redZoneTd": 0.615,
     "redZoneAggression": 5.8,
     "halftimeAdjust": 5.9,
-    "playActionRate": 0.239,
+    "playActionRate": 0.218,
     "passRate": 0.55,
     "pace": 63.6
    },
@@ -6024,7 +6024,7 @@
     "nickelCorner": 5.2,
     "lbCoverage": 3.5,
     "secondaryAdjust": 5.5,
-    "blitzRate": 0.363,
+    "blitzRate": 0.332,
     "takeaways": 4.2
    },
    "players": [
@@ -6034,7 +6034,7 @@
      "pos": "QB",
      "role": "starter",
      "rating": 72,
-     "snapPct": 0.85,
+     "snapPct": 0.89,
      "note": "0 EPA/dropback · 1.0 CPOE · 331 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gfz8k5onuqjrche9ogqc",
      "jersey": "5"
@@ -6058,9 +6058,9 @@
      "pos": "RB",
      "role": "starter",
      "rating": 87,
-     "snapPct": 0.49,
+     "snapPct": 0.53,
      "targetShare": 0.058,
-     "tprr": 0.128,
+     "tprr": 0.118,
      "note": "4.2 YPC · 3.74 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wtdhs50gcl2p6vngsnre",
      "jersey": "1"
@@ -6071,9 +6071,9 @@
      "pos": "RB",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.19,
+     "snapPct": 0.16,
      "targetShare": 0.019,
-     "tprr": 0.11,
+     "tprr": 0.13,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sldndpn2zwt4uhkj2zks",
      "jersey": "30"
     },
@@ -6083,9 +6083,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 90,
-     "snapPct": 0.73,
+     "snapPct": 0.6,
      "targetShare": 0.109,
-     "tprr": 0.16,
+     "tprr": 0.194,
      "note": "0.52 EPA/target on 44 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmfl2zruajmkrtcg4zxp",
      "jersey": "17"
@@ -6096,9 +6096,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 73,
-     "snapPct": 0.53,
+     "snapPct": 0.55,
      "targetShare": 0.101,
-     "tprr": 0.204,
+     "tprr": 0.197,
      "note": "0.36 EPA/target on 26 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/noywrsgaqoqlv64c12yw",
      "jersey": "14"
@@ -6124,9 +6124,9 @@
      "pos": "WR",
      "role": "rotational",
      "rating": 65,
-     "snapPct": 0.03,
+     "snapPct": 0.04,
      "targetShare": 0.004,
-     "tprr": 0.139,
+     "tprr": 0.104,
      "note": "0.53 EPA/target on 9 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xtxiwlkniuldrqg65n3q",
      "jersey": "11"
@@ -6137,9 +6137,9 @@
      "pos": "TE",
      "role": "starter",
      "rating": 76,
-     "snapPct": 0.62,
+     "snapPct": 0.65,
      "targetShare": 0.078,
-     "tprr": 0.134,
+     "tprr": 0.128,
      "note": "0.17 EPA/target on 50 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pzcez6pi9tpdqkmjjnzk",
      "jersey": "85"
@@ -6150,7 +6150,7 @@
      "pos": "TE",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.44,
+     "snapPct": 0.41,
      "targetShare": 0.008,
      "tprr": 0.04,
      "note": "0.22 EPA/target on 8 tgt/season",
@@ -6187,7 +6187,7 @@
      "pos": "EDGE",
      "role": "starter",
      "rating": 77,
-     "snapPct": 0.68,
+     "snapPct": 0.65,
      "prwr": 0.095,
      "note": "0.62 sacks/g · 24 QB hits in 17 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lxeaoe3u7srngnwlyyon",
@@ -6199,7 +6199,7 @@
      "pos": "EDGE",
      "role": "rotational",
      "rating": 71,
-     "snapPct": 0.46,
+     "snapPct": 0.47,
      "prwr": 0.096,
      "note": "0.61 sacks/g · 11 QB hits in 9 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/iccauovlxlztcx36jitr",
@@ -6211,7 +6211,7 @@
      "pos": "DT",
      "role": "starter",
      "rating": 74,
-     "snapPct": 0.72,
+     "snapPct": 0.74,
      "prwr": 0.075,
      "note": "0.36 sacks/g · 13 QB hits in 11 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fyaqgxzjicgbmrethav3",
@@ -6223,7 +6223,7 @@
      "pos": "DT",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.63,
+     "snapPct": 0.6,
      "prwr": 0.067,
      "note": "0.14 sacks/g · 6 QB hits in 7 g",
      "reported": "questionable",
@@ -6237,7 +6237,7 @@
      "pos": "LB",
      "role": "starter",
      "rating": 93,
-     "snapPct": 0.92,
+     "snapPct": 0.91,
      "note": "1 sacks · 4 PBU · 1 INT in 4 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wxufyrsnbie0gyq9piyf",
      "jersey": "52"
@@ -6254,17 +6254,15 @@
      "jersey": "2"
     },
     {
-     "id": "was-00-0037616",
-     "name": "Nick Cross",
+     "id": "was-00-0034465",
+     "name": "Jeremy Reaves",
      "pos": "S",
      "role": "starter",
-     "rating": 49,
-     "snapPct": 0.99,
-     "note": "5 PBU · 1 INT in 10 g",
-     "reported": "questionable",
-     "reportNote": "Illness · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kk6rwopeqnomepo0lc9f",
-     "jersey": "25"
+     "rating": 58,
+     "snapPct": 0.91,
+     "note": "10 PBU · 1 INT in 11 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kwmtxcogvel516q4ws86",
+     "jersey": "39"
     },
     {
      "id": "was-00-0041182",
@@ -6306,7 +6304,7 @@
    },
    "coaching": {
     "headCoach": "Dan Campbell",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Wide Zone",
     "defFront": "4-3",
     "baseCoverage": "Cover-1",
     "thirdDownOff": 0.382,
@@ -6330,14 +6328,14 @@
     "vsFront": {
      "4-3": 8,
      "3-4": 7.2,
-     "Multiple": 6.9
+     "Multiple": 7.1
     },
     "vsCoverage": {
-     "Cover-1": 8.5,
-     "Cover-2": 8,
-     "Cover-3": 8.1,
-     "Quarters": 8,
-     "Cover-2 Man": 8.4
+     "Cover-1": 8.2,
+     "Cover-2": 7.8,
+     "Cover-3": 8.3,
+     "Quarters": 7.7,
+     "Cover-2 Man": 8
     }
    },
    "defense": {
@@ -6617,7 +6615,7 @@
    },
    "coaching": {
     "headCoach": "Matt LaFleur",
-    "offScheme": "West Coast",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Quarters",
     "thirdDownOff": 0.424,
@@ -6626,7 +6624,7 @@
     "redZoneTd": 0.55,
     "redZoneAggression": 5.6,
     "halftimeAdjust": 4.8,
-    "playActionRate": 0.233,
+    "playActionRate": 0.231,
     "passRate": 0.541,
     "pace": 62.2
    },
@@ -6644,11 +6642,11 @@
      "Multiple": 5.4
     },
     "vsCoverage": {
-     "Cover-1": 6.5,
-     "Cover-2": 7,
-     "Cover-3": 7,
+     "Cover-1": 7.3,
+     "Cover-2": 6.8,
+     "Cover-3": 6.9,
      "Quarters": 6.8,
-     "Cover-2 Man": 6.5
+     "Cover-2 Man": 7.2
     }
    },
    "defense": {
@@ -6658,7 +6656,7 @@
     "nickelCorner": 5.9,
     "lbCoverage": 5.5,
     "secondaryAdjust": 4.7,
-    "blitzRate": 0.277,
+    "blitzRate": 0.279,
     "takeaways": 6.5
    },
    "players": [
@@ -7249,7 +7247,7 @@
     "redZoneTd": 0.557,
     "redZoneAggression": 5.5,
     "halftimeAdjust": 5.5,
-    "playActionRate": 0.304,
+    "playActionRate": 0.307,
     "passRate": 0.532,
     "pace": 71.3
    },
@@ -7281,7 +7279,7 @@
     "nickelCorner": 6.9,
     "lbCoverage": 5.8,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.335,
+    "blitzRate": 0.349,
     "takeaways": 7.6
    },
    "players": [
@@ -7568,7 +7566,7 @@
     "redZoneTd": 0.683,
     "redZoneAggression": 5.8,
     "halftimeAdjust": 5.6,
-    "playActionRate": 0.228,
+    "playActionRate": 0.213,
     "passRate": 0.472,
     "pace": 62.7
    },
@@ -7600,7 +7598,7 @@
     "nickelCorner": 5.2,
     "lbCoverage": 6.6,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.307,
+    "blitzRate": 0.304,
     "takeaways": 4.8
    },
    "players": [
@@ -7877,7 +7875,7 @@
     "redZoneTd": 0.62,
     "redZoneAggression": 5.4,
     "halftimeAdjust": 6.2,
-    "playActionRate": 0.235,
+    "playActionRate": 0.231,
     "passRate": 0.578,
     "pace": 66
    },
@@ -7909,7 +7907,7 @@
     "nickelCorner": 5.5,
     "lbCoverage": 4.3,
     "secondaryAdjust": 6.3,
-    "blitzRate": 0.307,
+    "blitzRate": 0.309,
     "takeaways": 5.6
    },
    "players": [
@@ -8195,7 +8193,7 @@
     "redZoneTd": 0.622,
     "redZoneAggression": 5.9,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.176,
+    "playActionRate": 0.182,
     "passRate": 0.559,
     "pace": 67.7
    },
@@ -8227,7 +8225,7 @@
     "nickelCorner": 6.7,
     "lbCoverage": 4.3,
     "secondaryAdjust": 6.3,
-    "blitzRate": 0.3,
+    "blitzRate": 0.297,
     "takeaways": 5.7
    },
    "players": [
@@ -8511,7 +8509,7 @@
     "redZoneTd": 0.537,
     "redZoneAggression": 5.3,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.213,
+    "playActionRate": 0.191,
     "passRate": 0.523,
     "pace": 66.1
    },
@@ -8543,7 +8541,7 @@
     "nickelCorner": 7.4,
     "lbCoverage": 4.6,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.373,
+    "blitzRate": 0.381,
     "takeaways": 6.1
    },
    "players": [
@@ -8820,7 +8818,7 @@
     "redZoneTd": 0.775,
     "redZoneAggression": 7.5,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.231,
+    "playActionRate": 0.21,
     "passRate": 0.552,
     "pace": 61.6
    },
@@ -8852,7 +8850,7 @@
     "nickelCorner": 4.1,
     "lbCoverage": 6.7,
     "secondaryAdjust": 5.1,
-    "blitzRate": 0.263,
+    "blitzRate": 0.233,
     "takeaways": 4
    },
    "players": [
@@ -8862,7 +8860,7 @@
      "pos": "QB",
      "role": "starter",
      "rating": 94,
-     "snapPct": 0.97,
+     "snapPct": 0.98,
      "note": "0.24 EPA/dropback · 6.4 CPOE · 474 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xs2fyj1sqdgwvt9ihbri",
      "jersey": "13"
@@ -8884,9 +8882,9 @@
      "pos": "RB",
      "role": "starter",
      "rating": 93,
-     "snapPct": 0.69,
+     "snapPct": 0.72,
      "targetShare": 0.175,
-     "tprr": 0.266,
+     "tprr": 0.255,
      "note": "4.0 YPC · 11.78 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/st82s2ytyzanatcmkqck",
      "jersey": "23"
@@ -8897,9 +8895,9 @@
      "pos": "RB",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.48,
+     "snapPct": 0.5,
      "targetShare": 0.04,
-     "tprr": 0.087,
+     "tprr": 0.084,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tsejiiddtouukwyyqr9q",
      "jersey": "44"
     },
@@ -8909,9 +8907,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 89,
-     "snapPct": 0.57,
+     "snapPct": 0.54,
      "targetShare": 0.2,
-     "tprr": 0.367,
+     "tprr": 0.388,
      "note": "0.45 EPA/target on 51 tgt/season",
      "reported": "questionable",
      "reportNote": "Ribs · Questionable",
@@ -8939,9 +8937,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 60,
-     "snapPct": 0.32,
+     "snapPct": 0.31,
      "targetShare": 0.025,
-     "tprr": 0.082,
+     "tprr": 0.084,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uarciagmnzmyzs102dv6",
      "jersey": "4"
     },
@@ -8951,9 +8949,9 @@
      "pos": "WR",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.34,
+     "snapPct": 0.45,
      "targetShare": 0.015,
-     "tprr": 0.046,
+     "tprr": 0.04,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/agcwewjrj4dfssqkzksp",
      "jersey": "17"
     },
@@ -8963,9 +8961,9 @@
      "pos": "TE",
      "role": "starter",
      "rating": 95,
-     "snapPct": 0.72,
+     "snapPct": 0.75,
      "targetShare": 0.18,
-     "tprr": 0.262,
+     "tprr": 0.251,
      "note": "0.57 EPA/target on 53 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vkicdglglkyukgyxtmpx",
      "jersey": "85"
@@ -9011,7 +9009,7 @@
      "pos": "EDGE",
      "role": "starter",
      "rating": 63,
-     "snapPct": 0.63,
+     "snapPct": 0.65,
      "prwr": 0.085,
      "note": "0.50 sacks/g · 11 QB hits in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wkq3kmgtrqxsndffclam",
@@ -9037,7 +9035,7 @@
      "pos": "DT",
      "role": "starter",
      "rating": 84,
-     "snapPct": 0.72,
+     "snapPct": 0.73,
      "prwr": 0.106,
      "note": "0.32 sacks/g · 30 QB hits in 17 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qselmahxlopzx8spnchw",
@@ -9049,7 +9047,7 @@
      "pos": "DT",
      "role": "rotational",
      "rating": 80,
-     "snapPct": 0.46,
+     "snapPct": 0.45,
      "prwr": 0.077,
      "note": "0.67 sacks/g · 2 QB hits in 3 g",
      "reported": "questionable",
@@ -9063,7 +9061,7 @@
      "pos": "LB",
      "role": "starter",
      "rating": 86,
-     "snapPct": 0.94,
+     "snapPct": 0.95,
      "note": "0.5 sacks · 6 PBU · 0 INT in 8 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zmse3qgt0x2mqiuiuiu7",
      "jersey": "54"
@@ -9085,7 +9083,7 @@
      "pos": "S",
      "role": "starter",
      "rating": 82,
-     "snapPct": 0.95,
+     "snapPct": 0.96,
      "note": "8 PBU · 2 INT in 7 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gmgewszcsvxdb63dmqby",
      "jersey": "27"
@@ -9130,7 +9128,7 @@
    },
    "coaching": {
     "headCoach": "Mike Macdonald",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Wide Zone",
     "defFront": "3-4",
     "baseCoverage": "Cover-2",
     "thirdDownOff": 0.365,
@@ -9154,14 +9152,14 @@
     "vsFront": {
      "4-3": 4.6,
      "3-4": 5.5,
-     "Multiple": 4.8
+     "Multiple": 5
     },
     "vsCoverage": {
-     "Cover-1": 6.1,
-     "Cover-2": 5.6,
-     "Cover-3": 5.7,
-     "Quarters": 5.6,
-     "Cover-2 Man": 6
+     "Cover-1": 5.8,
+     "Cover-2": 5.4,
+     "Cover-3": 5.9,
+     "Quarters": 5.3,
+     "Cover-2 Man": 5.6
     }
    },
    "defense": {
@@ -9480,7 +9478,7 @@
     "nickelCorner": 5.1,
     "lbCoverage": 7.9,
     "secondaryAdjust": 5.6,
-    "blitzRate": 0.269,
+    "blitzRate": 0.252,
     "takeaways": 6.3
    },
    "players": [
@@ -9616,8 +9614,6 @@
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.877,
-     "reported": "out",
-     "reportNote": "Reserve list (IR)",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/p7eblgie3na4hjdl6pzb",
      "jersey": "77"
     },
@@ -9722,6 +9718,8 @@
      "rating": 50,
      "snapPct": 0.03,
      "note": "30/38 FG",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/de3vz6xjjo9paba6encd",
      "jersey": "19"
     }
@@ -9764,7 +9762,7 @@
     "redZoneTd": 0.513,
     "redZoneAggression": 4.6,
     "halftimeAdjust": 5,
-    "playActionRate": 0.215,
+    "playActionRate": 0.209,
     "passRate": 0.58,
     "pace": 68
    },
@@ -9796,7 +9794,7 @@
     "nickelCorner": 3.9,
     "lbCoverage": 3.4,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.269,
+    "blitzRate": 0.281,
     "takeaways": 5.3
    },
    "players": [
