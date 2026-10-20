@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-20T00:24:44.586Z",
+ "generatedAt": "2026-10-20T04:40:18.339Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -3251,9 +3251,21 @@
    "marketTotal": 51.5,
    "predictedAt": "2026-10-19T20:37:24.788Z",
    "updates": 32,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-19T20:15:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 23,
+    "awayScore": 17,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "win",
+    "spreadError": -3.5,
+    "totalError": -9.2,
+    "brier": 0.06
+   }
   },
   {
    "id": "2026_07_NE_CHI",
