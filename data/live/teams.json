@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-21T04:56:50.095Z",
+ "generatedAt": "2026-10-21T17:17:50.243Z",
  "season": 2026,
  "week": 7,
  "phase": "regular",
@@ -128,8 +128,6 @@
      "targetShare": 0.09,
      "tprr": 0.186,
      "note": "0.19 EPA/target on 53 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Shoulder · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmiale9dvql5ol2xmhf1",
      "jersey": "2"
     },
@@ -736,6 +734,21 @@
      "jersey": "44"
     },
     {
+     "id": "ne-00-0037816",
+     "name": "Romeo Doubs",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 90,
+     "snapPct": 0.58,
+     "targetShare": 0.101,
+     "tprr": 0.186,
+     "note": "0.43 EPA/target on 55 tgt/season",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/d27wez0jqd5vfcrjizpb",
+     "jersey": "87"
+    },
+    {
      "id": "ne-00-0035676",
      "name": "A.J. Brown",
      "pos": "WR",
@@ -745,29 +758,29 @@
      "targetShare": 0.059,
      "tprr": 0.105,
      "note": "0.2 EPA/target on 68 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qfhvjyssf0lwsh0kienp",
      "jersey": "1"
     },
     {
-     "id": "ne-00-0040131",
-     "name": "Kyle Williams",
+     "id": "ne-00-0033555",
+     "name": "Mack Hollins",
      "pos": "WR",
      "role": "starter",
-     "rating": 70,
-     "snapPct": 0.28,
-     "targetShare": 0.046,
-     "tprr": 0.177,
-     "note": "0.4 EPA/target on 16 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/d31ahhl7yt97gu8iei8v",
-     "jersey": "18"
+     "rating": 87,
+     "snapPct": 0.65,
+     "targetShare": 0.084,
+     "tprr": 0.139,
+     "note": "0.47 EPA/target on 43 tgt/season",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qbz7whjzsittudcecezw",
+     "jersey": "13"
     },
     {
      "id": "ne-00-0038621",
      "name": "DeMario Douglas",
      "pos": "WR",
-     "role": "starter",
+     "role": "rotational",
      "rating": 88,
      "snapPct": 0.54,
      "targetShare": 0.126,
@@ -775,19 +788,6 @@
      "note": "0.54 EPA/target on 38 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/m3fpxawsccoqsajtqlec",
      "jersey": "3"
-    },
-    {
-     "id": "ne-00-0040563",
-     "name": "Efton Chism III",
-     "pos": "WR",
-     "role": "rotational",
-     "rating": 64,
-     "snapPct": 0.45,
-     "targetShare": 0.059,
-     "tprr": 0.14,
-     "note": "0.53 EPA/target on 9 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zbnf3ujmwprzgjnwdtlo",
-     "jersey": "86"
     },
     {
      "id": "ne-00-0033090",
@@ -803,16 +803,19 @@
      "jersey": "85"
     },
     {
-     "id": "ne-00-0041395",
-     "name": "Eli Raridon",
+     "id": "ne-00-0038720",
+     "name": "Julian Hill",
      "pos": "TE",
      "role": "rotational",
-     "rating": 63,
-     "snapPct": 0.49,
-     "targetShare": 0.05,
-     "tprr": 0.11,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/flj53cmijulfjxegejyc",
-     "jersey": "82"
+     "rating": 53,
+     "snapPct": 0.55,
+     "targetShare": 0.032,
+     "tprr": 0.062,
+     "note": "0.06 EPA/target on 21 tgt/season",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ntrsoupvy1agk1yq2iaf",
+     "jersey": "89"
     },
     {
      "id": "ne-00-0031330",
@@ -892,8 +895,6 @@
      "rating": 45,
      "snapPct": 0.96,
      "note": "1 sacks · 4 PBU · 0 INT in 10 g",
-     "reported": "questionable",
-     "reportNote": "Chest · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/czu70fdqv4ktyg0rjusz",
      "jersey": "53"
     },
@@ -924,7 +925,7 @@
      "name": "Andy Borregales",
      "pos": "K",
      "role": "starter",
-     "rating": 62,
+     "rating": 61,
      "snapPct": 0.03,
      "note": "35/42 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/enykic9eob4ogreebucl",
@@ -1032,8 +1033,6 @@
      "targetShare": 0.046,
      "tprr": 0.085,
      "note": "4.2 YPC · -6.94 EPA/season",
-     "reported": "out",
-     "reportNote": "Quadricep · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pb9i8clrmkhwwjs7jndy",
      "jersey": "20"
     },
@@ -1085,8 +1084,6 @@
      "targetShare": 0.069,
      "tprr": 0.097,
      "note": "-0.08 EPA/target on 45 tgt/season",
-     "reported": "out",
-     "reportNote": "Finger · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hwwacoa3pqapd7pgahfx",
      "jersey": "15"
     },
@@ -1099,8 +1096,6 @@
      "snapPct": 0.44,
      "targetShare": 0.037,
      "tprr": 0.088,
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lmua2lbg0m77ibvydvaq",
      "jersey": "11"
     },
@@ -1127,8 +1122,6 @@
      "targetShare": 0.111,
      "tprr": 0.271,
      "note": "-0.25 EPA/target on 24 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Concussion · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mnswulwto4yqkgmugoiq",
      "jersey": "16"
     },
@@ -1232,8 +1225,6 @@
      "rating": 60,
      "snapPct": 1,
      "note": "8 PBU · 1 INT in 10 g",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/iz55akidqtfdyz6xnmux",
      "jersey": "6"
     },
@@ -1242,7 +1233,7 @@
      "name": "Jason Sanders",
      "pos": "K",
      "role": "starter",
-     "rating": 89,
+     "rating": 90,
      "snapPct": 0.03,
      "note": "12/13 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/t8xrcrcuttghirqbc1bu",
@@ -1327,8 +1318,6 @@
      "rating": 86,
      "snapPct": 0.88,
      "note": "0.1 EPA/dropback · 3.3 CPOE · 439 dropbacks",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eno6s5qzl9grbfbfwhoa",
      "jersey": "8"
     },
@@ -1441,8 +1430,6 @@
      "snapPct": 0.43,
      "targetShare": 0.024,
      "tprr": 0.059,
-     "reported": "out",
-     "reportNote": "Hand · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kkkia0wl2sqsjiwecde0",
      "jersey": "88"
     },
@@ -1554,7 +1541,7 @@
      "name": "Tyler Loop",
      "pos": "K",
      "role": "starter",
-     "rating": 71,
+     "rating": 70,
      "snapPct": 0.03,
      "note": "40/47 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kbwixtntqevptepedhll",
@@ -1976,8 +1963,6 @@
      "targetShare": 0.084,
      "tprr": 0.15,
      "note": "3.5 YPC · -24.82 EPA/season",
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ojtce2im0wp2ltyel0vc",
      "jersey": "10"
     },
@@ -2136,8 +2121,6 @@
      "snapPct": 0.52,
      "prwr": 0.07,
      "note": "0.45 sacks/g · 9 QB hits in 10 g",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fizf7lkmgqhpg9o8vu92",
      "jersey": "94"
     },
@@ -2149,8 +2132,6 @@
      "rating": 64,
      "snapPct": 1,
      "note": "3.5 sacks · 4 PBU · 2 INT in 13 g",
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ga2yg6qhxs12sqo6jvfz",
      "jersey": "49"
     },
@@ -2354,7 +2335,7 @@
      "tprr": 0.208,
      "note": "0.23 EPA/target on 23 tgt/season",
      "reported": "out",
-     "reportNote": "Finger · Out",
+     "reportNote": "Reserve list (IR)",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuhjoscmhmmsutbvfmrs",
      "jersey": "14"
     },
@@ -2381,8 +2362,6 @@
      "targetShare": 0.105,
      "tprr": 0.164,
      "note": "0.34 EPA/target on 42 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Calf · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pyrdsypgggjshiaygkr7",
      "jersey": "88"
     },
@@ -2453,8 +2432,6 @@
      "snapPct": 0.61,
      "prwr": 0.082,
      "note": "0.50 sacks/g · 14 QB hits in 11 g",
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gmc2bdwzpvi0bkklmpjw",
      "jersey": "95"
     },
@@ -2477,8 +2454,6 @@
      "rating": 51,
      "snapPct": 1,
      "note": "10 PBU · 1 INT in 11 g",
-     "reported": "questionable",
-     "reportNote": "Wrist · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pjozgun3xstol72jfoow",
      "jersey": "5"
     },
@@ -2610,8 +2585,6 @@
      "targetShare": 0.027,
      "tprr": 0.063,
      "note": "4.1 YPC · -4.89 EPA/season",
-     "reported": "out",
-     "reportNote": "Groin · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/npagyuku5zvrnu9q3jvn",
      "jersey": "32"
     },
@@ -2737,8 +2710,6 @@
      "snapPct": 0.94,
      "prwr": 0.07,
      "note": "0.36 sacks/g · 4 QB hits in 7 g",
-     "reported": "questionable",
-     "reportNote": "Shoulder · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/epsdr0zqlm2vrhizwama",
      "jersey": "39"
     },
@@ -2816,7 +2787,7 @@
      "name": "Ka'imi Fairbairn",
      "pos": "K",
      "role": "starter",
-     "rating": 86,
+     "rating": 87,
      "snapPct": 0.03,
      "note": "57/62 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nbrs7doetqydf2rzhjjl",
@@ -3000,8 +2971,6 @@
      "targetShare": 0.146,
      "tprr": 0.166,
      "note": "0.16 EPA/target on 75 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Groin · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ggbgv9okpladwqzth5l5",
      "jersey": "84"
     },
@@ -3125,7 +3094,7 @@
      "name": "Spencer Shrader",
      "pos": "K",
      "role": "starter",
-     "rating": 92,
+     "rating": 93,
      "snapPct": 0.03,
      "note": "31/32 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mcx5vyj1iisuezfvswmc",
@@ -3434,7 +3403,7 @@
      "name": "Cam Little",
      "pos": "K",
      "role": "starter",
-     "rating": 74,
+     "rating": 75,
      "snapPct": 0.03,
      "note": "40/46 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mc9goepr7mglrx6ek1fi",
@@ -3555,8 +3524,6 @@
      "targetShare": 0.079,
      "tprr": 0.207,
      "note": "3.9 YPC · -7.45 EPA/season",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/muogqv7ht7djqi97snjv",
      "jersey": "2"
     },
@@ -3697,17 +3664,16 @@
      "jersey": "98"
     },
     {
-     "id": "ten-00-0036266",
-     "name": "Jordan Elliott",
+     "id": "ten-00-0033870",
+     "name": "Solomon Thomas",
      "pos": "DT",
      "role": "rotational",
-     "rating": 63,
-     "snapPct": 0.34,
-     "prwr": 0.066,
-     "reported": "out",
-     "reportNote": "Not injury related - personal matter · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zyvpomrbbpexkigz9npk",
-     "jersey": "95"
+     "rating": 44,
+     "snapPct": 0.27,
+     "prwr": 0.071,
+     "note": "0.00 sacks/g · 2 QB hits in 3 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cqdvb98ebxmtawy2wp0v",
+     "jersey": "90"
     },
     {
      "id": "ten-00-0041479",
@@ -3746,7 +3712,7 @@
      "name": "Joey Slye",
      "pos": "K",
      "role": "starter",
-     "rating": 59,
+     "rating": 58,
      "snapPct": 0.03,
      "note": "37/45 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zueytl3rpbz7yxhjpdxg",
@@ -3880,8 +3846,6 @@
      "targetShare": 0.091,
      "tprr": 0.157,
      "note": "0.21 EPA/target on 48 tgt/season",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qhkbqrydjeur8zvrrmfl",
      "jersey": "4"
     },
@@ -3959,8 +3923,6 @@
      "rating": 71,
      "snapPct": 0.95,
      "pbwr": 0.841,
-     "reported": "out",
-     "reportNote": "Back · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/r2dq0mc7dzhf0spg9iw6",
      "jersey": "71"
     },
@@ -4061,7 +4023,7 @@
      "name": "Harrison Butker",
      "pos": "K",
      "role": "starter",
-     "rating": 70,
+     "rating": 69,
      "snapPct": 0.03,
      "note": "43/51 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yphf8avl8ji0ncdohabz",
@@ -4135,7 +4097,7 @@
     "rushDefense": 6.2,
     "prwr": 0.435,
     "nickelCorner": 6.3,
-    "lbCoverage": 6.2,
+    "lbCoverage": 6.1,
     "secondaryAdjust": 6,
     "blitzRate": 0.241,
     "takeaways": 7
@@ -4236,8 +4198,6 @@
      "targetShare": 0.038,
      "tprr": 0.093,
      "note": "-1 EPA/target on 11 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xhhzgylwh0ptvpaghnuu",
      "jersey": "84"
     },
@@ -4275,8 +4235,6 @@
      "rating": 64,
      "snapPct": 0.95,
      "pbwr": 0.774,
-     "reported": "out",
-     "reportNote": "Neck · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hul7ydlbropij2fjhvvy",
      "jersey": "76"
     },
@@ -4288,8 +4246,6 @@
      "rating": 64,
      "snapPct": 0.95,
      "pbwr": 0.774,
-     "reported": "out",
-     "reportNote": "Fibula · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gk8c2nrg4czmvjy2by3a",
      "jersey": "74"
     },
@@ -4338,8 +4294,6 @@
      "snapPct": 0.56,
      "prwr": 0.064,
      "note": "0.25 sacks/g · 3 QB hits in 4 g",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/o6zilnte5jibvs84wshv",
      "jersey": "99"
     },
@@ -4351,8 +4305,6 @@
      "rating": 82,
      "snapPct": 0.89,
      "note": "4 sacks · 6 PBU · 2 INT in 11 g",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jl1rn08ci17wub2xok8a",
      "jersey": "0"
     },
@@ -4375,8 +4327,6 @@
      "rating": 58,
      "snapPct": 0.94,
      "note": "8 PBU · 3 INT in 13 g",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/z9au0ajgcwoeozfdu0ec",
      "jersey": "3"
     },
@@ -4456,7 +4406,7 @@
     "rushDefense": 5.2,
     "prwr": 0.498,
     "nickelCorner": 5.4,
-    "lbCoverage": 6.1,
+    "lbCoverage": 6.2,
     "secondaryAdjust": 5.9,
     "blitzRate": 0.345,
     "takeaways": 6
@@ -4676,8 +4626,6 @@
      "rating": 60,
      "snapPct": 0.86,
      "note": "13 PBU · 1 INT in 11 g",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/soec8zk3n5jvxvywq1gm",
      "jersey": "2"
     },
@@ -4697,7 +4645,7 @@
      "name": "Wil Lutz",
      "pos": "K",
      "role": "starter",
-     "rating": 68,
+     "rating": 67,
      "snapPct": 0.03,
      "note": "37/44 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vcglg5vsgbiyggwibgy0",
@@ -4951,8 +4899,6 @@
      "snapPct": 0.52,
      "prwr": 0.077,
      "note": "0.57 sacks/g · 8 QB hits in 7 g",
-     "reported": "out",
-     "reportNote": "Concussion · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/naoeqgrcfxdgtdrimc6v",
      "jersey": "97"
     },
@@ -5006,7 +4952,7 @@
      "name": "Matt Gay",
      "pos": "K",
      "role": "starter",
-     "rating": 56,
+     "rating": 55,
      "snapPct": 0.03,
      "note": "31/38 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/opglxpqmhu21eydoyvg2",
@@ -5114,8 +5060,6 @@
      "targetShare": 0.029,
      "tprr": 0.073,
      "note": "4.2 YPC · -15.92 EPA/season",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qcayrzjpura2zydszonh",
      "jersey": "26"
     },
@@ -5317,7 +5261,7 @@
      "name": "Jake Elliott",
      "pos": "K",
      "role": "starter",
-     "rating": 47,
+     "rating": 46,
      "snapPct": 0.03,
      "note": "25/32 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gxy1mhbnz1p2nufkg8qz",
@@ -5629,7 +5573,7 @@
      "name": "Brandon Aubrey",
      "pos": "K",
      "role": "starter",
-     "rating": 62,
+     "rating": 61,
      "snapPct": 0.03,
      "note": "45/54 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bgwg06zmyohjxvzznbf6",
@@ -5832,8 +5776,6 @@
      "targetShare": 0.036,
      "tprr": 0.111,
      "note": "0.13 EPA/target on 42 tgt/season",
-     "reported": "out",
-     "reportNote": "Neck · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fv2jbzlocr1o3ahkru43",
      "jersey": "84"
     },
@@ -5845,8 +5787,6 @@
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.818,
-     "reported": "questionable",
-     "reportNote": "Calf · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xqlquhcisz9ykfedvele",
      "jersey": "72"
     },
@@ -5858,8 +5798,6 @@
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.818,
-     "reported": "questionable",
-     "reportNote": "Groin · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yvwuonp6lhw7ougn7q16",
      "jersey": "78"
     },
@@ -5872,8 +5810,6 @@
      "snapPct": 0.88,
      "prwr": 0.11,
      "note": "0.38 sacks/g · 30 QB hits in 16 g",
-     "reported": "questionable",
-     "reportNote": "Calf · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tfchuu4khsh6jarotqga",
      "jersey": "3"
     },
@@ -5992,7 +5928,7 @@
     "redZoneTd": 0.615,
     "redZoneAggression": 5.8,
     "halftimeAdjust": 5.9,
-    "playActionRate": 0.218,
+    "playActionRate": 0.235,
     "passRate": 0.55,
     "pace": 63.6
    },
@@ -6024,7 +5960,7 @@
     "nickelCorner": 5.2,
     "lbCoverage": 3.5,
     "secondaryAdjust": 5.5,
-    "blitzRate": 0.332,
+    "blitzRate": 0.363,
     "takeaways": 4.2
    },
    "players": [
@@ -6047,8 +5983,6 @@
      "rating": 81,
      "snapPct": 0.54,
      "note": "0.02 EPA/dropback · 3.2 CPOE · 298 dropbacks",
-     "reported": "out",
-     "reportNote": "Knee · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/grx6m1fmu1odltjo3y31",
      "jersey": "8"
     },
@@ -6078,17 +6012,17 @@
      "jersey": "30"
     },
     {
-     "id": "was-00-0035659",
-     "name": "Terry McLaurin",
+     "id": "was-00-0031588",
+     "name": "Stefon Diggs",
      "pos": "WR",
      "role": "starter",
-     "rating": 90,
+     "rating": 96,
      "snapPct": 0.6,
-     "targetShare": 0.109,
-     "tprr": 0.194,
-     "note": "0.52 EPA/target on 44 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tmfl2zruajmkrtcg4zxp",
-     "jersey": "17"
+     "targetShare": 0.148,
+     "tprr": 0.264,
+     "note": "0.57 EPA/target on 70 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dpmpctgbwlvgyzg3opli",
+     "jersey": "3"
     },
     {
      "id": "was-00-0041040",
@@ -6104,25 +6038,10 @@
      "jersey": "14"
     },
     {
-     "id": "was-00-0031588",
-     "name": "Stefon Diggs",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 96,
-     "snapPct": 0.6,
-     "targetShare": 0.148,
-     "tprr": 0.264,
-     "note": "0.57 EPA/target on 70 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dpmpctgbwlvgyzg3opli",
-     "jersey": "3"
-    },
-    {
      "id": "was-00-0039355",
      "name": "Luke McCaffrey",
      "pos": "WR",
-     "role": "rotational",
+     "role": "starter",
      "rating": 65,
      "snapPct": 0.04,
      "targetShare": 0.004,
@@ -6130,6 +6049,19 @@
      "note": "0.53 EPA/target on 9 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xtxiwlkniuldrqg65n3q",
      "jersey": "11"
+    },
+    {
+     "id": "was-00-0036626",
+     "name": "Dyami Brown",
+     "pos": "WR",
+     "role": "rotational",
+     "rating": 50,
+     "snapPct": 0.47,
+     "targetShare": 0.062,
+     "tprr": 0.142,
+     "note": "-0.11 EPA/target on 27 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/addv9eheok1jj7amfkpb",
+     "jersey": "6"
     },
     {
      "id": "was-00-0037809",
@@ -6176,8 +6108,6 @@
      "rating": 72,
      "snapPct": 0.95,
      "pbwr": 0.844,
-     "reported": "questionable",
-     "reportNote": "Illness · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mq2p8pmy1hyciogyzcs9",
      "jersey": "63"
     },
@@ -6226,8 +6156,6 @@
      "snapPct": 0.6,
      "prwr": 0.067,
      "note": "0.14 sacks/g · 6 QB hits in 7 g",
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jxqkukux4rgfpp5eekyo",
      "jersey": "99"
     },
@@ -6269,7 +6197,7 @@
      "name": "Drew Stevens",
      "pos": "K",
      "role": "starter",
-     "rating": 62,
+     "rating": 61,
      "snapPct": 0.03,
      "note": "10/12 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dzlynw7seoaqck1r2il3",
@@ -6580,7 +6508,7 @@
      "name": "Jake Bates",
      "pos": "K",
      "role": "starter",
-     "rating": 62,
+     "rating": 61,
      "snapPct": 0.03,
      "note": "35/42 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/umhfee7ax7r8gjdt8okb",
@@ -6615,7 +6543,7 @@
    },
    "coaching": {
     "headCoach": "Matt LaFleur",
-    "offScheme": "Motion Heavy",
+    "offScheme": "West Coast",
     "defFront": "3-4",
     "baseCoverage": "Quarters",
     "thirdDownOff": 0.424,
@@ -6642,11 +6570,11 @@
      "Multiple": 5.4
     },
     "vsCoverage": {
-     "Cover-1": 7.3,
-     "Cover-2": 6.8,
-     "Cover-3": 6.9,
+     "Cover-1": 6.5,
+     "Cover-2": 7,
+     "Cover-3": 7,
      "Quarters": 6.8,
-     "Cover-2 Man": 7.2
+     "Cover-2 Man": 6.5
     }
    },
    "defense": {
@@ -6757,7 +6685,7 @@
      "tprr": 0.194,
      "note": "0.03 EPA/target on 11 tgt/season",
      "reported": "out",
-     "reportNote": "Ankle · Out",
+     "reportNote": "Reserve list (IR)",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/id9k0aylvgyq8lulabe3",
      "jersey": "23"
     },
@@ -6806,8 +6734,6 @@
      "rating": 70,
      "snapPct": 0.95,
      "pbwr": 0.827,
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/g0vbcpdlnxiqnkj8m2wl",
      "jersey": "65"
     },
@@ -6897,7 +6823,7 @@
      "name": "Trey Smack",
      "pos": "K",
      "role": "starter",
-     "rating": 44,
+     "rating": 43,
      "snapPct": 0.03,
      "note": "10/13 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zierx6p09ilfe0o0ckj7",
@@ -7291,8 +7217,6 @@
      "rating": 77,
      "snapPct": 0.95,
      "note": "0.1 EPA/dropback · -1.7 CPOE · 694 dropbacks",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/h4qs11kutwiw7whekmyt",
      "jersey": "18"
     },
@@ -7330,8 +7254,6 @@
      "targetShare": 0.02,
      "tprr": 0.051,
      "note": "4.8 YPC · 1.37 EPA/season",
-     "reported": "out",
-     "reportNote": "Thumb · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sdrq7yje01g4fvsikoga",
      "jersey": "25"
     },
@@ -7443,8 +7365,6 @@
      "snapPct": 0.88,
      "prwr": 0.073,
      "note": "0.06 sacks/g · 4 QB hits in 8 g",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tqu3uz4nzkcq4crcepj3",
      "jersey": "53"
     },
@@ -7522,7 +7442,7 @@
      "name": "Cairo Santos",
      "pos": "K",
      "role": "starter",
-     "rating": 53,
+     "rating": 52,
      "snapPct": 0.03,
      "note": "33/41 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vtk4cn0bfnqv0cnh79an",
@@ -7834,7 +7754,7 @@
      "name": "Nick Folk",
      "pos": "K",
      "role": "starter",
-     "rating": 83,
+     "rating": 84,
      "snapPct": 0.03,
      "note": "37/41 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wyxpq0sdnno4p7hi5igm",
@@ -7955,8 +7875,6 @@
      "snapPct": 0.06,
      "targetShare": 0.005,
      "tprr": 0.085,
-     "reported": "questionable",
-     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pcuzq84x7ia5yvmikltb",
      "jersey": "23"
     },
@@ -8045,8 +7963,6 @@
      "rating": 73,
      "snapPct": 0.95,
      "pbwr": 0.855,
-     "reported": "questionable",
-     "reportNote": "Lung · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cstvf3qy5mqwd9nxa1sz",
      "jersey": "72"
     },
@@ -8058,8 +7974,6 @@
      "rating": 73,
      "snapPct": 0.95,
      "pbwr": 0.855,
-     "reported": "questionable",
-     "reportNote": "Elbow · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gx5fgyuvhn06yvcg343w",
      "jersey": "68"
     },
@@ -8072,8 +7986,6 @@
      "snapPct": 0.64,
      "prwr": 0.111,
      "note": "0.47 sacks/g · 20 QB hits in 16 g",
-     "reported": "questionable",
-     "reportNote": "Hamstring · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mgufa4byoe8onfjsuiq1",
      "jersey": "5"
     },
@@ -8098,8 +8010,6 @@
      "snapPct": 0.71,
      "prwr": 0.082,
      "note": "0.67 sacks/g · 3 QB hits in 3 g",
-     "reported": "questionable",
-     "reportNote": "Neck · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mj9xqaj2jvv5unjgxomd",
      "jersey": "98"
     },
@@ -8261,8 +8171,6 @@
      "targetShare": 0.073,
      "tprr": 0.26,
      "note": "3.6 YPC · -23.85 EPA/season",
-     "reported": "questionable",
-     "reportNote": "Back · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hedvtdbdgdyf4lo5e12p",
      "jersey": "41"
     },
@@ -8289,8 +8197,6 @@
      "targetShare": 0.223,
      "tprr": 0.291,
      "note": "0.34 EPA/target on 109 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Illness · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/u1wdmijwkbobujmw7kbb",
      "jersey": "12"
     },
@@ -8413,8 +8319,6 @@
      "snapPct": 0.66,
      "prwr": 0.082,
      "note": "0.32 sacks/g · 16 QB hits in 11 g",
-     "reported": "questionable",
-     "reportNote": "Illness · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sl9b2jgyvmo5yn0vglok",
      "jersey": "93"
     },
@@ -8436,8 +8340,6 @@
      "rating": 60,
      "snapPct": 1,
      "note": "3.5 sacks · 7 PBU · 1 INT in 14 g",
-     "reported": "out",
-     "reportNote": "Calf · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qae45apeddvsw0mcxevo",
      "jersey": "55"
     },
@@ -8553,8 +8455,6 @@
      "rating": 59,
      "snapPct": 0.98,
      "note": "-0.05 EPA/dropback · -1.8 CPOE · 693 dropbacks",
-     "reported": "out",
-     "reportNote": "Thumb · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gjb8e69jtt1ffqf1afue",
      "jersey": "6"
     },
@@ -8777,7 +8677,7 @@
      "name": "Chase McLaughlin",
      "pos": "K",
      "role": "starter",
-     "rating": 77,
+     "rating": 78,
      "snapPct": 0.03,
      "note": "46/52 FG",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/enkzsuyzk232mbq5oe4w",
@@ -8818,7 +8718,7 @@
     "redZoneTd": 0.775,
     "redZoneAggression": 7.5,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.21,
+    "playActionRate": 0.223,
     "passRate": 0.552,
     "pace": 61.6
    },
@@ -8850,7 +8750,7 @@
     "nickelCorner": 4.1,
     "lbCoverage": 6.7,
     "secondaryAdjust": 5.1,
-    "blitzRate": 0.233,
+    "blitzRate": 0.274,
     "takeaways": 4
    },
    "players": [
@@ -8911,8 +8811,6 @@
      "targetShare": 0.2,
      "tprr": 0.388,
      "note": "0.45 EPA/target on 51 tgt/season",
-     "reported": "questionable",
-     "reportNote": "Ribs · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zc4ujpmndyxrbiyyjomz",
      "jersey": "5"
     },
@@ -8926,8 +8824,6 @@
      "targetShare": 0.1,
      "tprr": 0.181,
      "note": "0.21 EPA/target on 60 tgt/season",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ntgyhqg6hq7fanhhsqiw",
      "jersey": "19"
     },
@@ -9024,8 +8920,6 @@
      "snapPct": 0.64,
      "prwr": 0.093,
      "note": "0.50 sacks/g · 4 QB hits in 4 g",
-     "reported": "out",
-     "reportNote": "Knee · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/c7grjmvod7lnrfz4ordx",
      "jersey": "97"
     },
@@ -9050,8 +8944,6 @@
      "snapPct": 0.45,
      "prwr": 0.077,
      "note": "0.67 sacks/g · 2 QB hits in 3 g",
-     "reported": "questionable",
-     "reportNote": "Quadricep · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kgidfvowkezba4g4nig8",
      "jersey": "93"
     },
@@ -9694,8 +9586,6 @@
      "rating": 80,
      "snapPct": 1,
      "note": "14 PBU · 2 INT in 10 g",
-     "reported": "questionable",
-     "reportNote": "Groin · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xaq30zfwnliekwqzoank",
      "jersey": "22"
     },
@@ -9715,7 +9605,7 @@
      "name": "Blake Grupe",
      "pos": "K",
      "role": "starter",
-     "rating": 50,
+     "rating": 49,
      "snapPct": 0.03,
      "note": "30/38 FG",
      "reported": "out",
@@ -9829,8 +9719,6 @@
      "targetShare": 0.053,
      "tprr": 0.117,
      "note": "3.7 YPC · -6.82 EPA/season",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/b12gtjsylmql5v7iyyla",
      "jersey": "4"
     },
@@ -10024,8 +9912,6 @@
      "rating": 65,
      "snapPct": 1,
      "note": "9 PBU · 2 INT in 10 g",
-     "reported": "questionable",
-     "reportNote": "Not injury related - resting player · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tpr5aphfvgckzecyr5rd",
      "jersey": "3"
     },
