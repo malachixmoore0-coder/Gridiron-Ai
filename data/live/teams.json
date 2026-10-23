@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-23T04:58:51.141Z",
+ "generatedAt": "2026-10-23T17:13:51.549Z",
  "season": 2026,
  "week": 7,
  "phase": "regular",
@@ -712,9 +712,9 @@
      "pos": "RB",
      "role": "starter",
      "rating": 72,
-     "snapPct": 0.62,
+     "snapPct": 0.63,
      "targetShare": 0.091,
-     "tprr": 0.157,
+     "tprr": 0.154,
      "note": "4.3 YPC · -3.16 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/x9dlpy3i5fciajd4w9ij",
      "jersey": "38"
@@ -739,9 +739,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 79,
-     "snapPct": 0.6,
+     "snapPct": 0.7,
      "targetShare": 0.073,
-     "tprr": 0.13,
+     "tprr": 0.111,
      "note": "0.21 EPA/target on 71 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qfhvjyssf0lwsh0kienp",
      "jersey": "1"
@@ -752,9 +752,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 66,
-     "snapPct": 0.28,
+     "snapPct": 0.3,
      "targetShare": 0.044,
-     "tprr": 0.167,
+     "tprr": 0.156,
      "note": "0.35 EPA/target on 17 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/d31ahhl7yt97gu8iei8v",
      "jersey": "18"
@@ -765,9 +765,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 88,
-     "snapPct": 0.54,
+     "snapPct": 0.55,
      "targetShare": 0.124,
-     "tprr": 0.245,
+     "tprr": 0.241,
      "note": "0.52 EPA/target on 40 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/m3fpxawsccoqsajtqlec",
      "jersey": "3"
@@ -778,9 +778,9 @@
      "pos": "WR",
      "role": "rotational",
      "rating": 66,
-     "snapPct": 0.45,
+     "snapPct": 0.48,
      "targetShare": 0.055,
-     "tprr": 0.13,
+     "tprr": 0.122,
      "note": "0.55 EPA/target on 9 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zbnf3ujmwprzgjnwdtlo",
      "jersey": "86"
@@ -804,9 +804,9 @@
      "pos": "TE",
      "role": "rotational",
      "rating": 73,
-     "snapPct": 0.49,
+     "snapPct": 0.5,
      "targetShare": 0.058,
-     "tprr": 0.127,
+     "tprr": 0.125,
      "note": "0.46 EPA/target on 16 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/flj53cmijulfjxegejyc",
      "jersey": "82"
@@ -825,17 +825,17 @@
      "jersey": "76"
     },
     {
-     "id": "ne-00-0036979",
-     "name": "Alijah Vera-Tucker",
+     "id": "ne-00-0037413",
+     "name": "Ben Brown",
      "pos": "OL",
      "role": "starter",
      "rating": 74,
      "snapPct": 0.95,
      "pbwr": 0.862,
      "reported": "out",
-     "reportNote": "Hamstring · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/phcfzlicsqt5zg4kopwk",
-     "jersey": "75"
+     "reportNote": "Knee · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pklcg2zhb5pxbwpmfeb3",
+     "jersey": "77"
     },
     {
      "id": "ne-00-0040574",
@@ -843,7 +843,7 @@
      "pos": "EDGE",
      "role": "starter",
      "rating": 89,
-     "snapPct": 0.74,
+     "snapPct": 0.75,
      "prwr": 0.073,
      "note": "0.95 sacks/g · 15 QB hits in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/icxlmxdodansgs4udp27",
@@ -867,7 +867,7 @@
      "pos": "DT",
      "role": "starter",
      "rating": 74,
-     "snapPct": 0.7,
+     "snapPct": 0.68,
      "prwr": 0.085,
      "note": "0.50 sacks/g · 10 QB hits in 9 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/atjr08mfju9h4h09jglo",
@@ -879,7 +879,7 @@
      "pos": "DT",
      "role": "rotational",
      "rating": 75,
-     "snapPct": 0.48,
+     "snapPct": 0.49,
      "prwr": 0.082,
      "note": "0.38 sacks/g · 17 QB hits in 13 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/r2qnczxwkpqhk8is5jkv",
@@ -904,7 +904,7 @@
      "pos": "CB",
      "role": "starter",
      "rating": 60,
-     "snapPct": 0.96,
+     "snapPct": 0.97,
      "note": "15 PBU · 0 INT in 11 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/iua1eh08ixdlgp2qisst",
      "jersey": "0"
@@ -2216,7 +2216,7 @@
     "qb": 4.61,
     "pbwr": 0.631,
     "slotEfficiency": 5.9,
-    "teSpeed": 5.03,
+    "teSpeed": 4.83,
     "vsFront": {
      "4-3": 7.1,
      "3-4": 2.6,
@@ -3918,15 +3918,15 @@
      "jersey": "83"
     },
     {
-     "id": "kc-00-0040116",
-     "name": "Josh Simmons",
+     "id": "kc-00-0036557",
+     "name": "Jaylon Moore",
      "pos": "LT",
      "role": "starter",
      "rating": 71,
      "snapPct": 0.95,
      "pbwr": 0.841,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/r2dq0mc7dzhf0spg9iw6",
-     "jersey": "71"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpsudx7fxgxdjmtfvahj",
+     "jersey": "77"
     },
     {
      "id": "kc-00-0036623",
@@ -6314,16 +6314,16 @@
      "jersey": "0"
     },
     {
-     "id": "det-00-0038896",
-     "name": "Jacob Saylors",
+     "id": "det-00-0039364",
+     "name": "Sione Vaki",
      "pos": "RB",
      "role": "rotational",
      "rating": 56,
-     "snapPct": 0.03,
-     "targetShare": 0,
-     "tprr": 0.04,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wunm6abfmikwaewmwkp7",
-     "jersey": "25"
+     "snapPct": 0.26,
+     "targetShare": 0.024,
+     "tprr": 0.093,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/abqcluf2gbejhiyjjtoz",
+     "jersey": "33"
     },
     {
      "id": "det-00-0036963",
@@ -6339,6 +6339,18 @@
      "jersey": "14"
     },
     {
+     "id": "det-00-0031763",
+     "name": "DeAndre Carter",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 60,
+     "snapPct": 0.03,
+     "targetShare": 0.16,
+     "tprr": 0.19,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jx4io3owliw3l5xve6ta",
+     "jersey": "86"
+    },
+    {
      "id": "det-00-0037240",
      "name": "Jameson Williams",
      "pos": "WR",
@@ -6350,18 +6362,6 @@
      "note": "0.58 EPA/target on 66 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/byiptqggtglvy5qrw5wp",
      "jersey": "1"
-    },
-    {
-     "id": "det-00-0037524",
-     "name": "Tay Martin",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 60,
-     "snapPct": 0.03,
-     "targetShare": 0.003,
-     "tprr": 0.107,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ttdp5v9tl0zqmb0dmmuv",
-     "jersey": "17"
     },
     {
      "id": "det-00-0040669",
@@ -7218,7 +7218,7 @@
      "pos": "QB",
      "role": "starter",
      "rating": 79,
-     "snapPct": 0.95,
+     "snapPct": 0.97,
      "note": "0.11 EPA/dropback · -1.3 CPOE · 730 dropbacks",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/h4qs11kutwiw7whekmyt",
      "jersey": "18"
@@ -7240,9 +7240,9 @@
      "pos": "RB",
      "role": "starter",
      "rating": 90,
-     "snapPct": 0.58,
+     "snapPct": 0.62,
      "targetShare": 0.084,
-     "tprr": 0.156,
+     "tprr": 0.146,
      "note": "4.6 YPC · 5.39 EPA/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/owpmwzoilitcodc6cmxo",
      "jersey": "4"
@@ -7268,9 +7268,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 85,
-     "snapPct": 0.84,
+     "snapPct": 0.85,
      "targetShare": 0.128,
-     "tprr": 0.163,
+     "tprr": 0.161,
      "note": "0.29 EPA/target on 65 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kqxetflykjn9clz04k68",
      "jersey": "15"
@@ -7281,9 +7281,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 83,
-     "snapPct": 0.61,
+     "snapPct": 0.62,
      "targetShare": 0.105,
-     "tprr": 0.183,
+     "tprr": 0.181,
      "note": "0.49 EPA/target on 31 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/trqs4qje1ctnwxs9shwd",
      "jersey": "14"
@@ -7294,9 +7294,9 @@
      "pos": "WR",
      "role": "starter",
      "rating": 67,
-     "snapPct": 0.1,
+     "snapPct": 0.09,
      "targetShare": 0.017,
-     "tprr": 0.181,
+     "tprr": 0.201,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/oqdpvuf3w45eelcjblq7",
      "jersey": "13"
     },
@@ -7332,9 +7332,9 @@
      "pos": "TE",
      "role": "rotational",
      "rating": 80,
-     "snapPct": 0.63,
+     "snapPct": 0.61,
      "targetShare": 0.047,
-     "tprr": 0.08,
+     "tprr": 0.083,
      "note": "0.31 EPA/target on 32 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ysnui8mzlu2fo70ub0yt",
      "jersey": "85"
@@ -7381,7 +7381,7 @@
      "pos": "EDGE",
      "role": "rotational",
      "rating": 86,
-     "snapPct": 0.61,
+     "snapPct": 0.63,
      "prwr": 0.105,
      "note": "0.71 sacks/g · 18 QB hits in 12 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/acnzo62lzoif48nax5s9",
@@ -7393,7 +7393,7 @@
      "pos": "DT",
      "role": "starter",
      "rating": 58,
-     "snapPct": 0.71,
+     "snapPct": 0.72,
      "prwr": 0.08,
      "note": "0.15 sacks/g · 12 QB hits in 10 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/j5ogni6ir0vlpmqtjxo5",
@@ -7439,7 +7439,7 @@
      "pos": "S",
      "role": "starter",
      "rating": 61,
-     "snapPct": 0.97,
+     "snapPct": 0.98,
      "note": "5 PBU · 1 INT in 6 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lkqxlsmgrd6zfnxvwfph",
      "jersey": "31"
@@ -9356,7 +9356,7 @@
     "qb": 8.36,
     "pbwr": 0.627,
     "slotEfficiency": 6.8,
-    "teSpeed": 4.83,
+    "teSpeed": 5.03,
     "vsFront": {
      "4-3": 5.4,
      "3-4": 7.8,
@@ -9480,23 +9480,10 @@
      "jersey": "88"
     },
     {
-     "id": "lar-00-0036244",
-     "name": "Colby Parkinson",
-     "pos": "TE",
-     "role": "starter",
-     "rating": 74,
-     "snapPct": 0.64,
-     "targetShare": 0.046,
-     "tprr": 0.076,
-     "note": "0.21 EPA/target on 35 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qsyrgtfjj06wryahnxc9",
-     "jersey": "84"
-    },
-    {
      "id": "lar-00-0033110",
      "name": "Tyler Higbee",
      "pos": "TE",
-     "role": "rotational",
+     "role": "starter",
      "rating": 75,
      "snapPct": 0.55,
      "targetShare": 0.103,
@@ -9504,6 +9491,19 @@
      "note": "0.24 EPA/target on 33 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/x1d4osiefibd04df6gow",
      "jersey": "89"
+    },
+    {
+     "id": "lar-00-0036244",
+     "name": "Colby Parkinson",
+     "pos": "TE",
+     "role": "rotational",
+     "rating": 74,
+     "snapPct": 0.64,
+     "targetShare": 0.046,
+     "tprr": 0.076,
+     "note": "0.21 EPA/target on 35 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qsyrgtfjj06wryahnxc9",
+     "jersey": "84"
     },
     {
      "id": "lar-00-0036603",
