@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-25T16:29:14.944Z",
+ "generatedAt": "2026-10-25T17:37:06.910Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -3321,9 +3321,21 @@
    "marketTotal": 43.5,
    "predictedAt": "2026-10-25T04:50:06.618Z",
    "updates": 36,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-10-25T09:30:00-04:00",
-   "result": null
+   "result": {
+    "homeScore": 10,
+    "awayScore": 16,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": null,
+    "ou": null,
+    "spreadError": -3.5,
+    "totalError": -17.8,
+    "brier": 0.1936
+   }
   },
   {
    "id": "2026_07_CIN_BAL",
@@ -3344,8 +3356,8 @@
    "marketTotal": 46.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3367,8 +3379,8 @@
    "marketTotal": 36.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3390,8 +3402,8 @@
    "marketTotal": 41.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3413,8 +3425,8 @@
    "marketTotal": 39.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3436,8 +3448,8 @@
    "marketTotal": 42.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3459,8 +3471,8 @@
    "marketTotal": 50.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
@@ -3482,8 +3494,8 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-10-25T16:29:14.944Z",
    "updates": 37,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-10-25T13:00:00-04:00",
    "result": null
   },
   {
