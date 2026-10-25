@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-25T19:59:35.222Z",
+ "generatedAt": "2026-10-25T20:55:43.673Z",
  "season": 2026,
  "week": 7,
  "phase": "regular",
@@ -2182,7 +2182,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/cle.png",
-   "record": "4-2"
+   "record": "5-2"
   },
   {
    "id": "pit",
@@ -2809,7 +2809,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/hou.png",
-   "record": "2-4"
+   "record": "2-5"
   },
   {
    "id": "ind",
@@ -3742,7 +3742,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ten.png",
-   "record": "1-5"
+   "record": "1-6"
   },
   {
    "id": "kc",
@@ -5945,7 +5945,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
-   "record": "3-2-1"
+   "record": "4-2-1"
   },
   {
    "id": "was",
@@ -7835,7 +7835,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
-   "record": "2-4"
+   "record": "3-4"
   },
   {
    "id": "car",
@@ -9084,7 +9084,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/sf.png",
-   "record": "6-0"
+   "record": "6-1"
   },
   {
    "id": "sea",
