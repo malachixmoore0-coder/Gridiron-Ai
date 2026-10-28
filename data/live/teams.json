@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-28T13:03:33.498Z",
+ "generatedAt": "2026-10-28T20:20:18.168Z",
  "season": 2026,
  "week": 8,
  "phase": "regular",
@@ -4431,28 +4431,29 @@
      "jersey": "8"
     },
     {
+     "id": "den-00-0036158",
+     "name": "J.K. Dobbins",
+     "pos": "RB",
+     "role": "starter",
+     "rating": 60,
+     "snapPct": 0.41,
+     "targetShare": 0.035,
+     "tprr": 0.093,
+     "note": "4.4 YPC · -9.01 EPA/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cevotvl3ho5h1mioruyg",
+     "jersey": "27"
+    },
+    {
      "id": "den-00-0041496",
      "name": "Jonah Coleman",
      "pos": "RB",
-     "role": "starter",
-     "rating": 64,
+     "role": "rotational",
+     "rating": 60,
      "snapPct": 0.32,
      "targetShare": 0.02,
      "tprr": 0.066,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qbauucaxakkhtxihuvmr",
      "jersey": "20"
-    },
-    {
-     "id": "den-00-0036727",
-     "name": "Adam Prentice",
-     "pos": "RB",
-     "role": "rotational",
-     "rating": 56,
-     "snapPct": 0.11,
-     "targetShare": 0.004,
-     "tprr": 0.04,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuvyqidnso9ga1dfefoy",
-     "jersey": "46"
     },
     {
      "id": "den-00-0036613",
