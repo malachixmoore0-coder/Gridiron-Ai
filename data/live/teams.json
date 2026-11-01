@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-01T06:16:18.620Z",
+ "generatedAt": "2026-11-01T13:38:22.816Z",
  "season": 2026,
  "week": 8,
  "phase": "regular",
@@ -1191,18 +1191,15 @@
      "jersey": "97"
     },
     {
-     "id": "nyj-00-0039886",
-     "name": "T'Vondre Sweat",
+     "id": "nyj-00-0041549",
+     "name": "Darrell Jackson Jr.",
      "pos": "DT",
      "role": "rotational",
-     "rating": 66,
-     "snapPct": 0.48,
-     "prwr": 0.073,
-     "note": "0.50 sacks/g · 3 QB hits in 4 g",
-     "reported": "out",
-     "reportNote": "Knee · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/yy0chooztlrrxyg0806r",
-     "jersey": "99"
+     "rating": 67,
+     "snapPct": 0.38,
+     "prwr": 0.1,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kmkykh3qj3gxyhn006jr",
+     "jersey": "95"
     },
     {
      "id": "nyj-00-0036500",
@@ -4344,17 +4341,15 @@
      "jersey": "20"
     },
     {
-     "id": "lac-00-0034790",
-     "name": "Derwin James",
+     "id": "lac-00-0030294",
+     "name": "Tony Jefferson",
      "pos": "S",
      "role": "starter",
-     "rating": 57,
-     "snapPct": 0.94,
-     "note": "8 PBU · 3 INT in 13 g",
-     "reported": "out",
-     "reportNote": "Hamstring · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/z9au0ajgcwoeozfdu0ec",
-     "jersey": "3"
+     "rating": 84,
+     "snapPct": 0.67,
+     "note": "9 PBU · 4 INT in 9 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/frazimtiuk4fsvlghusz",
+     "jersey": "23"
     },
     {
      "id": "lac-00-0037224",
@@ -7303,6 +7298,8 @@
      "targetShare": 0.017,
      "tprr": 0.044,
      "note": "4.8 YPC · 1.37 EPA/season",
+     "reported": "out",
+     "reportNote": "Thumb · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sdrq7yje01g4fvsikoga",
      "jersey": "25"
     },
@@ -9150,6 +9147,8 @@
      "rating": 96,
      "snapPct": 0.95,
      "note": "0.41 EPA/dropback · 5.6 CPOE · 53 dropbacks",
+     "reported": "questionable",
+     "reportNote": "Elbow · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/vdixnkk1uglfpwowalf8",
      "jersey": "2"
     },
@@ -9201,6 +9200,8 @@
      "targetShare": 0.121,
      "tprr": 0.249,
      "note": "-0.15 EPA/target on 62 tgt/season",
+     "reported": "out",
+     "reportNote": "Knee · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ku2naisfbxmzgagxojnm",
      "jersey": "22"
     },
@@ -9256,15 +9257,15 @@
      "jersey": "81"
     },
     {
-     "id": "sea-00-0036363",
-     "name": "Josh Jones",
+     "id": "sea-00-0037812",
+     "name": "Abraham Lucas",
      "pos": "LT",
      "role": "starter",
      "rating": 72,
      "snapPct": 0.95,
      "pbwr": 0.844,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/c5c4iuvcmlc7xrl8vp63",
-     "jersey": "74"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uuarey3oymnwrxezyp4d",
+     "jersey": "72"
     },
     {
      "id": "sea-00-0034342",
@@ -9298,6 +9299,8 @@
      "snapPct": 0.51,
      "prwr": 0.096,
      "note": "0.47 sacks/g · 18 QB hits in 17 g",
+     "reported": "out",
+     "reportNote": "Ankle · Doubtful",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eovri4ccfixdbtikxbyg",
      "jersey": "7"
     },
