@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-02T01:44:24.477Z",
+ "generatedAt": "2026-11-02T08:22:48.179Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -4196,9 +4196,21 @@
    "marketTotal": 40.5,
    "predictedAt": "2026-11-02T00:48:38.579Z",
    "updates": 35,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-01T20:20:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 27,
+    "awayScore": 10,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 11.5,
+    "totalError": -8,
+    "brier": 0.1274
+   }
   },
   {
    "id": "2026_08_CHI_SEA",
