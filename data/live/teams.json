@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-03T23:28:30.069Z",
+ "generatedAt": "2026-11-04T06:34:27.079Z",
  "season": 2026,
  "week": 9,
  "phase": "regular",
@@ -7220,7 +7220,7 @@
     "redZoneTd": 0.599,
     "redZoneAggression": 5.9,
     "halftimeAdjust": 5.4,
-    "playActionRate": 0.317,
+    "playActionRate": 0.327,
     "passRate": 0.541,
     "pace": 70.9
    },
@@ -7252,7 +7252,7 @@
     "nickelCorner": 6.9,
     "lbCoverage": 5.8,
     "secondaryAdjust": 5.2,
-    "blitzRate": 0.355,
+    "blitzRate": 0.344,
     "takeaways": 7.1
    },
    "players": [
@@ -9094,7 +9094,7 @@
     "redZoneTd": 0.525,
     "redZoneAggression": 5,
     "halftimeAdjust": 6.3,
-    "playActionRate": 0.262,
+    "playActionRate": 0.263,
     "passRate": 0.499,
     "pace": 63.6
    },
@@ -9126,7 +9126,7 @@
     "nickelCorner": 5,
     "lbCoverage": 5.7,
     "secondaryAdjust": 6,
-    "blitzRate": 0.218,
+    "blitzRate": 0.224,
     "takeaways": 7
    },
    "players": [
