@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-04T23:44:31.932Z",
+ "generatedAt": "2026-11-05T06:56:02.496Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -4264,8 +4264,8 @@
    "total": 46.1,
    "marketHomeSpread": 10,
    "marketTotal": 39.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 28,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 29,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4287,8 +4287,8 @@
    "total": 47.1,
    "marketHomeSpread": 3,
    "marketTotal": 52.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4310,8 +4310,8 @@
    "total": 41.1,
    "marketHomeSpread": -3,
    "marketTotal": 42.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4333,8 +4333,8 @@
    "total": 53.8,
    "marketHomeSpread": 5.5,
    "marketTotal": 51.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4356,8 +4356,8 @@
    "total": 45.1,
    "marketHomeSpread": 2.5,
    "marketTotal": 44.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4379,8 +4379,8 @@
    "total": 51.6,
    "marketHomeSpread": 7,
    "marketTotal": 50.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4402,8 +4402,8 @@
    "total": 49.1,
    "marketHomeSpread": 5.5,
    "marketTotal": 47.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4425,8 +4425,8 @@
    "total": 46,
    "marketHomeSpread": 3.5,
    "marketTotal": 38.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4448,8 +4448,8 @@
    "total": 48.4,
    "marketHomeSpread": -10,
    "marketTotal": 47.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 20,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 21,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4471,8 +4471,8 @@
    "total": 41.6,
    "marketHomeSpread": 4.5,
    "marketTotal": 40.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 19,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 20,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4494,8 +4494,8 @@
    "total": 47.3,
    "marketHomeSpread": -10,
    "marketTotal": 52.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 19,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 20,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4517,8 +4517,8 @@
    "total": 44.2,
    "marketHomeSpread": -8.5,
    "marketTotal": 39.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 19,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 20,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4540,8 +4540,8 @@
    "total": 49.7,
    "marketHomeSpread": -3.5,
    "marketTotal": 45.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 19,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 20,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4563,8 +4563,8 @@
    "total": 45.1,
    "marketHomeSpread": -6,
    "marketTotal": 47.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 18,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 19,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4586,8 +4586,8 @@
    "total": 46.5,
    "marketHomeSpread": 3.5,
    "marketTotal": 45.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 15,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 16,
    "status": "open",
    "lockedAt": null,
    "result": null
@@ -4609,8 +4609,8 @@
    "total": 48.9,
    "marketHomeSpread": -1.5,
    "marketTotal": 44.5,
-   "predictedAt": "2026-11-04T23:44:31.932Z",
-   "updates": 6,
+   "predictedAt": "2026-11-05T06:56:02.496Z",
+   "updates": 7,
    "status": "open",
    "lockedAt": null,
    "result": null
