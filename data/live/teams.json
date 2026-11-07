@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-06T23:14:14.970Z",
+ "generatedAt": "2026-11-07T06:06:26.283Z",
  "season": 2026,
  "week": 9,
  "phase": "regular",
@@ -1261,7 +1261,7 @@
    },
    "coaching": {
     "headCoach": "Jesse Minter",
-    "offScheme": "West Coast",
+    "offScheme": "Motion Heavy",
     "defFront": "3-4",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.397,
@@ -1270,7 +1270,7 @@
     "redZoneTd": 0.556,
     "redZoneAggression": 5.6,
     "halftimeAdjust": 3.8,
-    "playActionRate": 0.237,
+    "playActionRate": 0.232,
     "passRate": 0.514,
     "pace": 60.2
    },
@@ -1288,11 +1288,11 @@
      "Multiple": 5.5
     },
     "vsCoverage": {
-     "Cover-1": 5.3,
-     "Cover-2": 5.8,
-     "Cover-3": 5.8,
+     "Cover-1": 6,
+     "Cover-2": 5.5,
+     "Cover-3": 5.6,
      "Quarters": 5.5,
-     "Cover-2 Man": 5.2
+     "Cover-2 Man": 5.9
     }
    },
    "defense": {
@@ -1302,7 +1302,7 @@
     "nickelCorner": 5.2,
     "lbCoverage": 6.9,
     "secondaryAdjust": 3.8,
-    "blitzRate": 0.29,
+    "blitzRate": 0.293,
     "takeaways": 4.9
    },
    "players": [
@@ -3123,7 +3123,7 @@
    },
    "coaching": {
     "headCoach": "Liam Coen",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Vertical",
     "defFront": "4-3",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.441,
@@ -3132,7 +3132,7 @@
     "redZoneTd": 0.649,
     "redZoneAggression": 4.9,
     "halftimeAdjust": 5,
-    "playActionRate": 0.233,
+    "playActionRate": 0.228,
     "passRate": 0.581,
     "pace": 62.9
    },
@@ -3147,14 +3147,14 @@
     "vsFront": {
      "4-3": 6.9,
      "3-4": 6.6,
-     "Multiple": 6.5
+     "Multiple": 6.6
     },
     "vsCoverage": {
-     "Cover-1": 7.7,
-     "Cover-2": 7.2,
-     "Cover-3": 7.3,
-     "Quarters": 7.2,
-     "Cover-2 Man": 7.6
+     "Cover-1": 7.6,
+     "Cover-2": 6.8,
+     "Cover-3": 7.5,
+     "Quarters": 6.8,
+     "Cover-2 Man": 7.1
     }
    },
    "defense": {
@@ -3164,7 +3164,7 @@
     "nickelCorner": 9.6,
     "lbCoverage": 8.4,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.288,
+    "blitzRate": 0.294,
     "takeaways": 9.1
    },
    "players": [
