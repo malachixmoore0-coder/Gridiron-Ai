@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-08T00:42:44.592Z",
+ "generatedAt": "2026-11-08T17:57:40.990Z",
  "season": 2026,
  "week": 9,
  "phase": "regular",
@@ -204,6 +204,8 @@
      "rating": 78,
      "snapPct": 0.95,
      "pbwr": 0.897,
+     "reported": "questionable",
+     "reportNote": "Rib · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hklbgvcfogrzwbbc6mki",
      "jersey": "73"
     },
@@ -1868,7 +1870,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/cin.png",
-   "record": "5-2"
+   "record": "6-2"
   },
   {
    "id": "cle",
@@ -2609,6 +2611,8 @@
      "targetShare": 0.024,
      "tprr": 0.055,
      "note": "4.1 YPC · -4.89 EPA/season",
+     "reported": "out",
+     "reportNote": "Groin · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/npagyuku5zvrnu9q3jvn",
      "jersey": "32"
     },
@@ -4516,17 +4520,19 @@
      "jersey": "14"
     },
     {
-     "id": "den-00-0039868",
-     "name": "Troy Franklin",
+     "id": "den-00-0040134",
+     "name": "Pat Bryant",
      "pos": "WR",
      "role": "rotational",
-     "rating": 60,
-     "snapPct": 0.44,
-     "targetShare": 0.037,
-     "tprr": 0.092,
-     "note": "0.05 EPA/target on 59 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wgfbgxjntyqzojpizgaj",
-     "jersey": "11"
+     "rating": 80,
+     "snapPct": 0.58,
+     "targetShare": 0.044,
+     "tprr": 0.083,
+     "note": "0.43 EPA/target on 31 tgt/season",
+     "reported": "questionable",
+     "reportNote": "Ankle · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/n91hznzkfpftxhqt1qd9",
+     "jersey": "13"
     },
     {
      "id": "den-00-0033881",
@@ -4601,28 +4607,28 @@
      "jersey": "15"
     },
     {
-     "id": "den-00-0033297",
-     "name": "D.J. Jones",
-     "pos": "DT",
-     "role": "starter",
-     "rating": 77,
-     "snapPct": 0.44,
-     "prwr": 0.076,
-     "note": "0.50 sacks/g · 9 QB hits in 8 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ft4g8bxpn85mshqvp4lj",
-     "jersey": "93"
-    },
-    {
      "id": "den-00-0035763",
      "name": "Malcolm Roach",
      "pos": "DT",
-     "role": "rotational",
+     "role": "starter",
      "rating": 87,
      "snapPct": 0.55,
      "prwr": 0.075,
      "note": "0.63 sacks/g · 17 QB hits in 12 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/oxcd8veodm7hkiualglu",
      "jersey": "97"
+    },
+    {
+     "id": "den-00-0033297",
+     "name": "D.J. Jones",
+     "pos": "DT",
+     "role": "rotational",
+     "rating": 77,
+     "snapPct": 0.44,
+     "prwr": 0.076,
+     "note": "0.50 sacks/g · 9 QB hits in 8 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ft4g8bxpn85mshqvp4lj",
+     "jersey": "93"
     },
     {
      "id": "den-00-0031898",
@@ -5085,17 +5091,16 @@
      "jersey": "26"
     },
     {
-     "id": "phi-00-0040586",
-     "name": "Jaydon Blue",
+     "id": "phi-00-0036567",
+     "name": "Elijah Mitchell",
      "pos": "RB",
      "role": "rotational",
-     "rating": 64,
-     "snapPct": 0.26,
-     "targetShare": 0.003,
-     "tprr": 0.04,
-     "note": "3.4 YPC · -3.67 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/unb7f3lnt0ggohvovjpw",
-     "jersey": "30"
+     "rating": 56,
+     "snapPct": 0.39,
+     "targetShare": 0.031,
+     "tprr": 0.083,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gqupeqvrzpqeubx6p04o",
+     "jersey": "49"
     },
     {
      "id": "phi-00-0036912",
@@ -6513,17 +6518,14 @@
      "jersey": "91"
     },
     {
-     "id": "det-00-0039018",
-     "name": "Jack Campbell",
+     "id": "det-00-0036643",
+     "name": "K.J. Britt",
      "pos": "LB",
      "role": "starter",
-     "rating": 72,
-     "snapPct": 0.97,
-     "note": "5 sacks · 4 PBU · 0 INT in 11 g",
-     "reported": "out",
-     "reportNote": "Neck · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gxyqaufhu1wgnomrm8ic",
-     "jersey": "46"
+     "rating": 60,
+     "snapPct": 0.14,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q3jwsdcnxx1sqbuetd26",
+     "jersey": "40"
     },
     {
      "id": "det-00-0034384",
@@ -6963,6 +6965,8 @@
      "rating": 66,
      "snapPct": 0.86,
      "note": "-0.04 EPA/dropback · 0.7 CPOE · 346 dropbacks",
+     "reported": "out",
+     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qzoa3bglbgxpxcvjqzo1",
      "jersey": "1"
     },
@@ -7823,7 +7827,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/atl.png",
-   "record": "3-5"
+   "record": "3-6"
   },
   {
    "id": "car",
@@ -8243,17 +8247,18 @@
      "jersey": "41"
     },
     {
-     "id": "no-00-0038551",
-     "name": "Kendre Miller",
+     "id": "no-00-0041326",
+     "name": "CJ Donaldson",
      "pos": "RB",
      "role": "rotational",
-     "rating": 50,
-     "snapPct": 0.31,
-     "targetShare": 0.041,
-     "tprr": 0.141,
-     "note": "3.4 YPC · -11.84 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ugutum81zflympu9jlv1",
-     "jersey": "5"
+     "rating": 60,
+     "snapPct": 0.26,
+     "targetShare": 0.019,
+     "tprr": 0.078,
+     "reported": "out",
+     "reportNote": "Shoulder · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/b26axoc3tersaxzoycil",
+     "jersey": "43"
     },
     {
      "id": "no-00-0037239",
@@ -8281,23 +8286,10 @@
      "jersey": "19"
     },
     {
-     "id": "no-00-0039424",
-     "name": "Devaughn Vele",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 86,
-     "snapPct": 0.92,
-     "targetShare": 0.153,
-     "tprr": 0.176,
-     "note": "0.44 EPA/target on 44 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qt1phcijlgeilrf4zpef",
-     "jersey": "14"
-    },
-    {
      "id": "no-00-0041067",
      "name": "Bryce Lance",
      "pos": "WR",
-     "role": "rotational",
+     "role": "starter",
      "rating": 43,
      "snapPct": 0.68,
      "targetShare": 0.073,
@@ -8305,6 +8297,21 @@
      "note": "-0.57 EPA/target on 23 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sst98duh0vwxfdaezkvc",
      "jersey": "18"
+    },
+    {
+     "id": "no-00-0039623",
+     "name": "Mason Tipton",
+     "pos": "WR",
+     "role": "rotational",
+     "rating": 46,
+     "snapPct": 0.3,
+     "targetShare": 0.024,
+     "tprr": 0.084,
+     "note": "-0.44 EPA/target on 17 tgt/season",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lvy1a9wrw67v6ndusdrf",
+     "jersey": "15"
     },
     {
      "id": "no-00-0036040",
@@ -8333,17 +8340,15 @@
      "jersey": "87"
     },
     {
-     "id": "no-00-0038601",
-     "name": "Asim Richards",
+     "id": "no-00-0039339",
+     "name": "Taliese Fuaga",
      "pos": "LT",
      "role": "starter",
      "rating": 77,
      "snapPct": 0.95,
      "pbwr": 0.887,
-     "reported": "questionable",
-     "reportNote": "Thumb · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gwr3pl53zw4v4xbm0ef6",
-     "jersey": "72"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fg3yo80wen43bkpe8nvj",
+     "jersey": "75"
     },
     {
      "id": "no-00-0035668",
@@ -9269,26 +9274,28 @@
      "jersey": "81"
     },
     {
-     "id": "sea-00-0036363",
-     "name": "Josh Jones",
-     "pos": "LT",
-     "role": "starter",
-     "rating": 72,
-     "snapPct": 0.95,
-     "pbwr": 0.846,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/c5c4iuvcmlc7xrl8vp63",
-     "jersey": "74"
-    },
-    {
      "id": "sea-00-0037812",
      "name": "Abraham Lucas",
-     "pos": "OL",
+     "pos": "LT",
      "role": "starter",
      "rating": 72,
      "snapPct": 0.95,
      "pbwr": 0.846,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/uuarey3oymnwrxezyp4d",
      "jersey": "72"
+    },
+    {
+     "id": "sea-00-0037821",
+     "name": "Charles Cross",
+     "pos": "OL",
+     "role": "starter",
+     "rating": 72,
+     "snapPct": 0.95,
+     "pbwr": 0.846,
+     "reported": "out",
+     "reportNote": "Ankle · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/bfihltadsoacis5cqin8",
+     "jersey": "67"
     },
     {
      "id": "sea-00-0031411",
@@ -9621,16 +9628,18 @@
      "jersey": "0"
     },
     {
-     "id": "lar-00-0039061",
-     "name": "Desjuan Johnson",
+     "id": "lar-00-0033868",
+     "name": "Myles Garrett",
      "pos": "EDGE",
      "role": "rotational",
-     "rating": 91,
-     "snapPct": 0.15,
-     "prwr": 0.093,
-     "note": "0.67 sacks/g · 7 QB hits in 3 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qj7pup9mp0owqeocx98x",
-     "jersey": "94"
+     "rating": 97,
+     "snapPct": 0.82,
+     "prwr": 0.138,
+     "note": "1.53 sacks/g · 39 QB hits in 15 g",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/y2d1lvpgfarfv76hjcqm",
+     "jersey": "95"
     },
     {
      "id": "lar-00-0031388",
