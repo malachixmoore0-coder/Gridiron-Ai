@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-08T22:12:27.093Z",
+ "generatedAt": "2026-11-09T01:48:25.498Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -4581,9 +4581,21 @@
    "marketTotal": 40.5,
    "predictedAt": "2026-11-08T17:57:40.990Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-08T16:05:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 22,
+    "awayScore": 44,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": null,
+    "ats": null,
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -16.5,
+    "totalError": 24.6,
+    "brier": 0.1246
+   }
   },
   {
    "id": "2026_09_LV_SF",
@@ -4604,9 +4616,21 @@
    "marketTotal": 51.5,
    "predictedAt": "2026-11-08T17:57:40.990Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-08T16:05:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 38,
+    "awayScore": 17,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "under",
+    "ou": "loss",
+    "spreadError": 17.5,
+    "totalError": 8.7,
+    "brier": 0.1513
+   }
   },
   {
    "id": "2026_09_ARI_SEA",
@@ -4627,9 +4651,21 @@
    "marketTotal": 39.5,
    "predictedAt": "2026-11-08T17:57:40.990Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-08T16:25:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 17,
+    "awayScore": 3,
+    "winner": "home",
+    "suCorrect": false,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 18,
+    "totalError": -22.5,
+    "brier": 0.3516
+   }
   },
   {
    "id": "2026_09_GB_NE",
@@ -4650,9 +4686,21 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-11-08T17:57:40.990Z",
    "updates": 29,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-08T16:25:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 27,
+    "awayScore": 45,
+    "winner": "away",
+    "suCorrect": false,
+    "atsPick": null,
+    "ats": null,
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -21,
+    "totalError": 22.7,
+    "brier": 0.3469
+   }
   },
   {
    "id": "2026_09_TB_CHI",
@@ -4673,8 +4721,8 @@
    "marketTotal": 47.5,
    "predictedAt": "2026-11-08T22:12:27.093Z",
    "updates": 29,
-   "status": "open",
-   "lockedAt": null,
+   "status": "locked",
+   "lockedAt": "2026-11-08T20:20:00-05:00",
    "result": null
   },
   {
