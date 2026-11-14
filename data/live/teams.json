@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-14T10:35:15.498Z",
+ "generatedAt": "2026-11-14T18:12:04.763Z",
  "season": 2026,
  "week": 10,
  "phase": "regular",
@@ -521,17 +521,15 @@
      "jersey": "73"
     },
     {
-     "id": "mia-00-0036171",
-     "name": "Aaron Brewer",
+     "id": "mia-00-0039485",
+     "name": "Andrew Meyer",
      "pos": "OL",
      "role": "starter",
      "rating": 75,
      "snapPct": 0.95,
      "pbwr": 0.874,
-     "reported": "out",
-     "reportNote": "Concussion · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/tyrycew65usjz05doyaz",
-     "jersey": "55"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/azib5jbasdor6mlkp3os",
+     "jersey": "60"
     },
     {
      "id": "mia-00-0036409",
@@ -3957,17 +3955,15 @@
      "jersey": "83"
     },
     {
-     "id": "kc-00-0036557",
-     "name": "Jaylon Moore",
+     "id": "kc-00-0041019",
+     "name": "Kahlil Benson",
      "pos": "LT",
      "role": "starter",
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.82,
-     "reported": "out",
-     "reportNote": "Ankle · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpsudx7fxgxdjmtfvahj",
-     "jersey": "77"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mglqsgzaszlg8qbiuagw",
+     "jersey": "70"
     },
     {
      "id": "kc-00-0036623",
@@ -5668,7 +5664,7 @@
     "redZoneTd": 0.586,
     "redZoneAggression": 5.7,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.218,
+    "playActionRate": 0.217,
     "passRate": 0.517,
     "pace": 67.4
    },
@@ -5700,7 +5696,7 @@
     "nickelCorner": 6.9,
     "lbCoverage": 6.5,
     "secondaryAdjust": 4.5,
-    "blitzRate": 0.356,
+    "blitzRate": 0.361,
     "takeaways": 5
    },
    "players": [
@@ -5977,7 +5973,7 @@
     "redZoneTd": 0.635,
     "redZoneAggression": 6,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.221,
+    "playActionRate": 0.224,
     "passRate": 0.552,
     "pace": 63.2
    },
@@ -6009,7 +6005,7 @@
     "nickelCorner": 5.4,
     "lbCoverage": 4,
     "secondaryAdjust": 5.4,
-    "blitzRate": 0.366,
+    "blitzRate": 0.365,
     "takeaways": 5.3
    },
    "players": [
@@ -8351,17 +8347,15 @@
      "jersey": "87"
     },
     {
-     "id": "no-00-0039339",
-     "name": "Taliese Fuaga",
+     "id": "no-00-0038601",
+     "name": "Asim Richards",
      "pos": "LT",
      "role": "starter",
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.884,
-     "reported": "out",
-     "reportNote": "Knee · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fg3yo80wen43bkpe8nvj",
-     "jersey": "75"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gwr3pl53zw4v4xbm0ef6",
+     "jersey": "72"
     },
     {
      "id": "no-00-0035668",
@@ -9928,17 +9922,15 @@
      "jersey": "65"
     },
     {
-     "id": "ari-00-0035258",
-     "name": "Hjalte Froholdt",
+     "id": "ari-00-0032954",
+     "name": "Isaac Seumalo",
      "pos": "OL",
      "role": "starter",
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.821,
-     "reported": "out",
-     "reportNote": "Concussion · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ylkuycgg5mlekrd0e7uy",
-     "jersey": "72"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ezvqcoqxojheotcoyinv",
+     "jersey": "73"
     },
     {
      "id": "ari-00-0034381",
