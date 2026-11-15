@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-15T22:54:32.991Z",
+ "generatedAt": "2026-11-15T23:56:13.266Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -5106,9 +5106,21 @@
    "marketTotal": 38.5,
    "predictedAt": "2026-11-15T16:25:12.629Z",
    "updates": 27,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-15T16:05:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 6,
+    "awayScore": 34,
+    "winner": "away",
+    "suCorrect": true,
+    "atsPick": "home",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "win",
+    "spreadError": -22.5,
+    "totalError": -9,
+    "brier": 0.1354
+   }
   },
   {
    "id": "2026_10_SEA_LV",
