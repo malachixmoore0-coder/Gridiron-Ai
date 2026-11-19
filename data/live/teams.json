@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-19T02:37:32.374Z",
+ "generatedAt": "2026-11-19T11:48:20.839Z",
  "season": 2026,
  "week": 11,
  "phase": "regular",
@@ -2373,15 +2373,15 @@
      "jersey": "76"
     },
     {
-     "id": "pit-00-0037336",
-     "name": "Brock Hoffman",
+     "id": "pit-00-0038645",
+     "name": "Spencer Anderson",
      "pos": "OL",
      "role": "starter",
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.882,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hiicig3ulzzr8euomzvi",
-     "jersey": "67"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gtpey4tnh0dkqjlux3gz",
+     "jersey": "74"
     },
     {
      "id": "pit-00-0033886",
@@ -2594,6 +2594,8 @@
      "targetShare": 0.058,
      "tprr": 0.104,
      "note": "3.6 YPC · -14.37 EPA/season",
+     "reported": "out",
+     "reportNote": "Concussion · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ksk0fjj4bl9jvfh2s0rm",
      "jersey": "4"
     },
@@ -2926,6 +2928,8 @@
      "snapPct": 0.08,
      "targetShare": 0.013,
      "tprr": 0.171,
+     "reported": "questionable",
+     "reportNote": "Toe · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ewbv5owedaf1ixcfaidy",
      "jersey": "6"
     },
@@ -2976,6 +2980,8 @@
      "snapPct": 0.34,
      "targetShare": 0.024,
      "tprr": 0.072,
+     "reported": "out",
+     "reportNote": "Hamstring · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/eti1fo2pwyhiihzpxiqo",
      "jersey": "86"
     },
@@ -2987,6 +2993,8 @@
      "rating": 71,
      "snapPct": 0.95,
      "pbwr": 0.833,
+     "reported": "out",
+     "reportNote": "Concussion · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/auuzpzpq8mntuezs0lte",
      "jersey": "79"
     },
@@ -3068,6 +3076,8 @@
      "rating": 71,
      "snapPct": 0.87,
      "note": "15 PBU · 0 INT in 9 g",
+     "reported": "out",
+     "reportNote": "Knee · Out",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kgbs790axuecpp3a35iv",
      "jersey": "7"
     },
@@ -5635,7 +5645,7 @@
     "passDefense": 5.3,
     "rushDefense": 3.2,
     "prwr": 0.393,
-    "nickelCorner": 6.7,
+    "nickelCorner": 6.8,
     "lbCoverage": 6.3,
     "secondaryAdjust": 4.3,
     "blitzRate": 0.361,
@@ -6013,19 +6023,6 @@
      "jersey": "3"
     },
     {
-     "id": "was-00-0041040",
-     "name": "Antonio Williams",
-     "pos": "WR",
-     "role": "starter",
-     "rating": 76,
-     "snapPct": 0.65,
-     "targetShare": 0.109,
-     "tprr": 0.179,
-     "note": "0.27 EPA/target on 41 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/noywrsgaqoqlv64c12yw",
-     "jersey": "14"
-    },
-    {
      "id": "was-00-0039355",
      "name": "Luke McCaffrey",
      "pos": "WR",
@@ -6037,6 +6034,19 @@
      "note": "0.48 EPA/target on 9 tgt/season",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xtxiwlkniuldrqg65n3q",
      "jersey": "11"
+    },
+    {
+     "id": "was-00-0041040",
+     "name": "Antonio Williams",
+     "pos": "WR",
+     "role": "starter",
+     "rating": 76,
+     "snapPct": 0.65,
+     "targetShare": 0.109,
+     "tprr": 0.179,
+     "note": "0.27 EPA/target on 41 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/noywrsgaqoqlv64c12yw",
+     "jersey": "14"
     },
     {
      "id": "was-00-0037742",
@@ -6480,15 +6490,15 @@
      "jersey": "4"
     },
     {
-     "id": "det-00-0033294",
-     "name": "Chuck Clark",
+     "id": "det-00-0037667",
+     "name": "Kerby Joseph",
      "pos": "S",
      "role": "starter",
-     "rating": 64,
-     "snapPct": 0.9,
-     "note": "6 PBU · 2 INT in 9 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zysqspeckaavbcyduzmz",
-     "jersey": "36"
+     "rating": 96,
+     "snapPct": 0.88,
+     "note": "4 PBU · 3 INT in 3 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jairg6uh8wzsvw6fmtpx",
+     "jersey": "31"
     },
     {
      "id": "det-00-0039172",
@@ -8121,7 +8131,7 @@
     "passDefense": 5.6,
     "rushDefense": 4.9,
     "prwr": 0.411,
-    "nickelCorner": 7,
+    "nickelCorner": 7.1,
     "lbCoverage": 4,
     "secondaryAdjust": 6.2,
     "blitzRate": 0.323,
