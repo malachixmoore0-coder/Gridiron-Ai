@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-20T02:22:17.680Z",
+ "generatedAt": "2026-11-20T04:07:27.517Z",
  "season": 2026,
  "model": {
   "weights": {
@@ -5281,9 +5281,21 @@
    "marketTotal": 44.5,
    "predictedAt": "2026-11-19T20:43:37.822Z",
    "updates": 26,
-   "status": "locked",
+   "status": "final",
    "lockedAt": "2026-11-19T20:15:00-05:00",
-   "result": null
+   "result": {
+    "homeScore": 26,
+    "awayScore": 3,
+    "winner": "home",
+    "suCorrect": true,
+    "atsPick": "away",
+    "ats": "loss",
+    "ouPick": "over",
+    "ou": "loss",
+    "spreadError": 13.5,
+    "totalError": -17.6,
+    "brier": 0.0713
+   }
   },
   {
    "id": "2026_11_ARI_KC",
