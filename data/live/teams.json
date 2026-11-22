@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T11:34:25.250Z",
+ "generatedAt": "2026-11-22T19:46:35.729Z",
  "season": 2026,
  "week": 11,
  "phase": "regular",
@@ -43,7 +43,7 @@
     "passEfficiency": 7.8,
     "rushEfficiency": 8.3,
     "explosiveness": 9.4,
-    "qb": 8.66,
+    "qb": 8.89,
     "pbwr": 0.632,
     "slotEfficiency": 7.4,
     "teSpeed": 8.69,
@@ -664,7 +664,7 @@
     "passEfficiency": 7.3,
     "rushEfficiency": 4.6,
     "explosiveness": 7.2,
-    "qb": 9.73,
+    "qb": 5,
     "pbwr": 0.61,
     "slotEfficiency": 8,
     "teSpeed": 8.08,
@@ -674,11 +674,11 @@
      "Multiple": 5.9
     },
     "vsCoverage": {
-     "Cover-1": 7.2,
-     "Cover-2": 7.7,
-     "Cover-3": 7.7,
-     "Quarters": 7.4,
-     "Cover-2 Man": 7.1
+     "Cover-1": 5.7,
+     "Cover-2": 6.2,
+     "Cover-3": 6.2,
+     "Quarters": 5.9,
+     "Cover-2 Man": 5.6
     }
    },
    "defense": {
@@ -693,25 +693,24 @@
    },
    "players": [
     {
-     "id": "ne-00-0039851",
-     "name": "Drake Maye",
-     "pos": "QB",
-     "role": "starter",
-     "rating": 96,
-     "snapPct": 0.88,
-     "note": "0.2 EPA/dropback · 9.4 CPOE · 837 dropbacks",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mkauzrg7vo8lfziigsbg",
-     "jersey": "10"
-    },
-    {
      "id": "ne-00-0038476",
      "name": "Tommy DeVito",
      "pos": "QB",
-     "role": "depth",
-     "rating": 56,
+     "role": "starter",
+     "rating": 60,
      "snapPct": 0.4,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/kpw2uxlkjkqxd7ksychq",
      "jersey": "16"
+    },
+    {
+     "id": "ne-00-0041123",
+     "name": "Behren Morton",
+     "pos": "QB",
+     "role": "depth",
+     "rating": 60,
+     "snapPct": 0.35,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/l1v5gn8liujl05ji6trm",
+     "jersey": "15"
     },
     {
      "id": "ne-00-0036875",
@@ -973,7 +972,7 @@
     "passEfficiency": 4.3,
     "rushEfficiency": 4.7,
     "explosiveness": 5.1,
-    "qb": 4.91,
+    "qb": 5,
     "pbwr": 0.554,
     "slotEfficiency": 5,
     "teSpeed": 4.63,
@@ -1285,7 +1284,7 @@
     "passEfficiency": 5.1,
     "rushEfficiency": 6.4,
     "explosiveness": 5.9,
-    "qb": 4.64,
+    "qb": 4.72,
     "pbwr": 0.571,
     "slotEfficiency": 5.5,
     "teSpeed": 4.02,
@@ -1295,11 +1294,11 @@
      "Multiple": 5.5
     },
     "vsCoverage": {
-     "Cover-1": 5.9,
-     "Cover-2": 5.4,
-     "Cover-3": 5.5,
-     "Quarters": 5.4,
-     "Cover-2 Man": 5.8
+     "Cover-1": 6,
+     "Cover-2": 5.5,
+     "Cover-3": 5.6,
+     "Quarters": 5.5,
+     "Cover-2 Man": 5.9
     }
    },
    "defense": {
@@ -1598,7 +1597,7 @@
     "passEfficiency": 7.2,
     "rushEfficiency": 6.4,
     "explosiveness": 5.4,
-    "qb": 9.46,
+    "qb": 9.72,
     "pbwr": 0.599,
     "slotEfficiency": 5.2,
     "teSpeed": 6.05,
@@ -1608,11 +1607,11 @@
      "Multiple": 6.5
     },
     "vsCoverage": {
-     "Cover-1": 8.1,
-     "Cover-2": 8.2,
-     "Cover-3": 8.3,
-     "Quarters": 7.7,
-     "Cover-2 Man": 7.9
+     "Cover-1": 8.2,
+     "Cover-2": 8.3,
+     "Cover-3": 8.4,
+     "Quarters": 7.8,
+     "Cover-2 Man": 8
     }
    },
    "defense": {
@@ -1908,7 +1907,7 @@
     "passEfficiency": 3.7,
     "rushEfficiency": 3.8,
     "explosiveness": 3.6,
-    "qb": 4.11,
+    "qb": 4.17,
     "pbwr": 0.518,
     "slotEfficiency": 3.9,
     "teSpeed": 6.25,
@@ -2219,7 +2218,7 @@
     "passEfficiency": 4.4,
     "rushEfficiency": 8.5,
     "explosiveness": 5.9,
-    "qb": 4.38,
+    "qb": 4.44,
     "pbwr": 0.632,
     "slotEfficiency": 5.4,
     "teSpeed": 5.64,
@@ -2535,7 +2534,7 @@
     "passEfficiency": 6.6,
     "rushEfficiency": 3.8,
     "explosiveness": 5.5,
-    "qb": 7.05,
+    "qb": 7.22,
     "pbwr": 0.662,
     "slotEfficiency": 6.5,
     "teSpeed": 6.86,
@@ -2545,11 +2544,11 @@
      "Multiple": 5.2
     },
     "vsCoverage": {
-     "Cover-1": 6.2,
-     "Cover-2": 5.4,
-     "Cover-3": 6.1,
-     "Quarters": 5.4,
-     "Cover-2 Man": 5.7
+     "Cover-1": 6.3,
+     "Cover-2": 5.5,
+     "Cover-3": 6.2,
+     "Quarters": 5.5,
+     "Cover-2 Man": 5.8
     }
    },
    "defense": {
@@ -3162,7 +3161,7 @@
     "passEfficiency": 7.6,
     "rushEfficiency": 6,
     "explosiveness": 6.3,
-    "qb": 6.79,
+    "qb": 6.94,
     "pbwr": 0.632,
     "slotEfficiency": 7,
     "teSpeed": 7.67,
@@ -3471,7 +3470,7 @@
     "passEfficiency": 3.2,
     "rushEfficiency": 5,
     "explosiveness": 4.2,
-    "qb": 2.77,
+    "qb": 2.78,
     "pbwr": 0.619,
     "slotEfficiency": 2.8,
     "teSpeed": 4.22,
@@ -3780,7 +3779,7 @@
     "passEfficiency": 6.5,
     "rushEfficiency": 7.4,
     "explosiveness": 6.8,
-    "qb": 7.59,
+    "qb": 7.78,
     "pbwr": 0.569,
     "slotEfficiency": 7.6,
     "teSpeed": 8.89,
@@ -3790,11 +3789,11 @@
      "Multiple": 6.6
     },
     "vsCoverage": {
-     "Cover-1": 7.6,
-     "Cover-2": 7.7,
-     "Cover-3": 7.8,
-     "Quarters": 7.2,
-     "Cover-2 Man": 7.4
+     "Cover-1": 7.7,
+     "Cover-2": 7.8,
+     "Cover-3": 7.9,
+     "Quarters": 7.3,
+     "Cover-2 Man": 7.5
     }
    },
    "defense": {
@@ -3936,15 +3935,17 @@
      "jersey": "83"
     },
     {
-     "id": "kc-00-0041019",
-     "name": "Kahlil Benson",
+     "id": "kc-00-0036557",
+     "name": "Jaylon Moore",
      "pos": "LT",
      "role": "starter",
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.819,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mglqsgzaszlg8qbiuagw",
-     "jersey": "70"
+     "reported": "out",
+     "reportNote": "Ankle · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpsudx7fxgxdjmtfvahj",
+     "jersey": "77"
     },
     {
      "id": "kc-00-0036623",
@@ -4095,7 +4096,7 @@
     "passEfficiency": 3.2,
     "rushEfficiency": 3.6,
     "explosiveness": 4.4,
-    "qb": 3.84,
+    "qb": 3.89,
     "pbwr": 0.53,
     "slotEfficiency": 3.8,
     "teSpeed": 3,
@@ -4413,7 +4414,7 @@
     "passEfficiency": 5.8,
     "rushEfficiency": 5.4,
     "explosiveness": 3.9,
-    "qb": 6.25,
+    "qb": 6.39,
     "pbwr": 0.692,
     "slotEfficiency": 6.7,
     "teSpeed": 3.61,
@@ -4423,11 +4424,11 @@
      "Multiple": 5.4
     },
     "vsCoverage": {
-     "Cover-1": 5.6,
-     "Cover-2": 6.1,
-     "Cover-3": 6.1,
-     "Quarters": 5.8,
-     "Cover-2 Man": 5.5
+     "Cover-1": 5.7,
+     "Cover-2": 6.2,
+     "Cover-3": 6.2,
+     "Quarters": 5.9,
+     "Cover-2 Man": 5.6
     }
    },
    "defense": {
@@ -5350,7 +5351,7 @@
     "passEfficiency": 7.2,
     "rushEfficiency": 7.1,
     "explosiveness": 4.6,
-    "qb": 7.86,
+    "qb": 8.06,
     "pbwr": 0.623,
     "slotEfficiency": 6.3,
     "teSpeed": 5.23,
@@ -5669,7 +5670,7 @@
     "passEfficiency": 6.2,
     "rushEfficiency": 5.3,
     "explosiveness": 5.3,
-    "qb": 3.04,
+    "qb": 3.06,
     "pbwr": 0.559,
     "slotEfficiency": 4.3,
     "teSpeed": 6.66,
@@ -5978,7 +5979,7 @@
     "passEfficiency": 5.5,
     "rushEfficiency": 5.4,
     "explosiveness": 5,
-    "qb": 5.71,
+    "qb": 5.83,
     "pbwr": 0.608,
     "slotEfficiency": 5.6,
     "teSpeed": 3.81,
@@ -5988,11 +5989,11 @@
      "Multiple": 5.3
     },
     "vsCoverage": {
-     "Cover-1": 5.7,
-     "Cover-2": 5.2,
-     "Cover-3": 5.7,
-     "Quarters": 5.4,
-     "Cover-2 Man": 5.3
+     "Cover-1": 5.8,
+     "Cover-2": 5.3,
+     "Cover-3": 5.8,
+     "Quarters": 5.5,
+     "Cover-2 Man": 5.4
     }
    },
    "defense": {
@@ -6297,7 +6298,7 @@
     "passEfficiency": 7.4,
     "rushEfficiency": 6.3,
     "explosiveness": 8.1,
-    "qb": 8.39,
+    "qb": 8.61,
     "pbwr": 0.569,
     "slotEfficiency": 8.2,
     "teSpeed": 9.09,
@@ -6612,7 +6613,7 @@
     "passEfficiency": 7.3,
     "rushEfficiency": 3.1,
     "explosiveness": 6.9,
-    "qb": 8.93,
+    "qb": 9.17,
     "pbwr": 0.587,
     "slotEfficiency": 6,
     "teSpeed": 7.88,
@@ -6622,11 +6623,11 @@
      "Multiple": 5.1
     },
     "vsCoverage": {
-     "Cover-1": 6.5,
-     "Cover-2": 6.6,
-     "Cover-3": 6.7,
-     "Quarters": 6.1,
-     "Cover-2 Man": 6.3
+     "Cover-1": 6.6,
+     "Cover-2": 6.7,
+     "Cover-3": 6.8,
+     "Quarters": 6.2,
+     "Cover-2 Man": 6.4
     }
    },
    "defense": {
@@ -6788,28 +6789,30 @@
      "jersey": "72"
     },
     {
+     "id": "gb-00-0036932",
+     "name": "Micah Parsons",
+     "pos": "EDGE",
+     "role": "starter",
+     "rating": 96,
+     "snapPct": 0.78,
+     "prwr": 0.146,
+     "note": "1.14 sacks/g · 27 QB hits in 11 g",
+     "reported": "out",
+     "reportNote": "Reserve list (IR)",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/euivq1hqslszdxjo9xyr",
+     "jersey": "1"
+    },
+    {
      "id": "gb-00-0039112",
      "name": "Lukas Van Ness",
      "pos": "EDGE",
-     "role": "starter",
+     "role": "rotational",
      "rating": 78,
      "snapPct": 0.62,
      "prwr": 0.093,
      "note": "0.58 sacks/g · 20 QB hits in 13 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/qxrs2r7nvy9k6hlkqvyb",
      "jersey": "90"
-    },
-    {
-     "id": "gb-00-0040010",
-     "name": "Barryn Sorrell",
-     "pos": "EDGE",
-     "role": "rotational",
-     "rating": 64,
-     "snapPct": 0.48,
-     "prwr": 0.067,
-     "note": "0.50 sacks/g · 8 QB hits in 7 g",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gemsbocowxpzwb9mkv1y",
-     "jersey": "99"
     },
     {
      "id": "gb-00-0038398",
@@ -6926,7 +6929,7 @@
     "passEfficiency": 3.3,
     "rushEfficiency": 4.4,
     "explosiveness": 5,
-    "qb": 5.98,
+    "qb": 6.11,
     "pbwr": 0.559,
     "slotEfficiency": 4.1,
     "teSpeed": 6.45,
@@ -6936,11 +6939,11 @@
      "Multiple": 3.8
     },
     "vsCoverage": {
-     "Cover-1": 4.1,
-     "Cover-2": 3.7,
-     "Cover-3": 4.2,
-     "Quarters": 3.6,
-     "Cover-2 Man": 3.9
+     "Cover-1": 4.2,
+     "Cover-2": 3.8,
+     "Cover-3": 4.3,
+     "Quarters": 3.7,
+     "Cover-2 Man": 4
     }
    },
    "defense": {
@@ -7237,7 +7240,7 @@
     "passEfficiency": 6.2,
     "rushEfficiency": 6.7,
     "explosiveness": 6.9,
-    "qb": 6.52,
+    "qb": 6.67,
     "pbwr": 0.655,
     "slotEfficiency": 7,
     "teSpeed": 7.47,
@@ -7247,11 +7250,11 @@
      "Multiple": 6.2
     },
     "vsCoverage": {
-     "Cover-1": 6.5,
-     "Cover-2": 7,
-     "Cover-3": 7,
-     "Quarters": 6.7,
-     "Cover-2 Man": 6.4
+     "Cover-1": 6.6,
+     "Cover-2": 7.1,
+     "Cover-3": 7.1,
+     "Quarters": 6.8,
+     "Cover-2 Man": 6.5
     }
    },
    "defense": {
@@ -7551,7 +7554,7 @@
     "passEfficiency": 3.6,
     "rushEfficiency": 6.4,
     "explosiveness": 6.2,
-    "qb": 3.3,
+    "qb": 3.33,
     "pbwr": 0.683,
     "slotEfficiency": 3.4,
     "teSpeed": 5.44,
@@ -7860,7 +7863,7 @@
     "passEfficiency": 5.2,
     "rushEfficiency": 5.8,
     "explosiveness": 5.7,
-    "qb": 5.45,
+    "qb": 5.56,
     "pbwr": 0.602,
     "slotEfficiency": 5.6,
     "teSpeed": 4.42,
@@ -8175,7 +8178,7 @@
     "passEfficiency": 4.7,
     "rushEfficiency": 3.4,
     "explosiveness": 2.2,
-    "qb": 5.18,
+    "qb": 5.28,
     "pbwr": 0.629,
     "slotEfficiency": 4.6,
     "teSpeed": 7.27,
@@ -8485,7 +8488,7 @@
     "passEfficiency": 3.6,
     "rushEfficiency": 6.2,
     "explosiveness": 5.6,
-    "qb": 3.57,
+    "qb": 3.61,
     "pbwr": 0.64,
     "slotEfficiency": 3,
     "teSpeed": 3.2,
@@ -8792,7 +8795,7 @@
     "passEfficiency": 8.5,
     "rushEfficiency": 7.2,
     "explosiveness": 7.6,
-    "qb": 9.2,
+    "qb": 9.44,
     "pbwr": 0.652,
     "slotEfficiency": 8.9,
     "teSpeed": 8.48,
@@ -8802,11 +8805,11 @@
      "Multiple": 7.7
     },
     "vsCoverage": {
-     "Cover-1": 8.8,
-     "Cover-2": 9.3,
-     "Cover-3": 9.3,
-     "Quarters": 9,
-     "Cover-2 Man": 8.7
+     "Cover-1": 8.9,
+     "Cover-2": 9.4,
+     "Cover-3": 9.4,
+     "Quarters": 9.1,
+     "Cover-2 Man": 8.8
     }
    },
    "defense": {
@@ -9111,7 +9114,7 @@
     "passEfficiency": 6.4,
     "rushEfficiency": 3.9,
     "explosiveness": 6.1,
-    "qb": 7.32,
+    "qb": 7.5,
     "pbwr": 0.598,
     "slotEfficiency": 4.8,
     "teSpeed": 5.03,
@@ -9121,11 +9124,11 @@
      "Multiple": 5.3
     },
     "vsCoverage": {
-     "Cover-1": 6,
-     "Cover-2": 5.6,
-     "Cover-3": 6.1,
-     "Quarters": 5.5,
-     "Cover-2 Man": 5.8
+     "Cover-1": 6.1,
+     "Cover-2": 5.7,
+     "Cover-3": 6.2,
+     "Quarters": 5.6,
+     "Cover-2 Man": 5.9
     }
    },
    "defense": {
@@ -9420,7 +9423,7 @@
     "passEfficiency": 6.9,
     "rushEfficiency": 7.4,
     "explosiveness": 6.7,
-    "qb": 8.13,
+    "qb": 8.33,
     "pbwr": 0.633,
     "slotEfficiency": 7.1,
     "teSpeed": 4.83,
@@ -9430,11 +9433,11 @@
      "Multiple": 6.9
     },
     "vsCoverage": {
-     "Cover-1": 8.4,
-     "Cover-2": 7.9,
-     "Cover-3": 8,
-     "Quarters": 7.9,
-     "Cover-2 Man": 8.3
+     "Cover-1": 8.5,
+     "Cover-2": 8,
+     "Cover-3": 8.1,
+     "Quarters": 8,
+     "Cover-2 Man": 8.4
     }
    },
    "defense": {
@@ -9586,15 +9589,15 @@
      "jersey": "77"
     },
     {
-     "id": "lar-00-0036093",
-     "name": "Bill Murray",
+     "id": "lar-00-0034114",
+     "name": "Coleman Shelton",
      "pos": "OL",
      "role": "starter",
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.883,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wreb9snoh4fcahd3hvjm",
-     "jersey": "66"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/aewvme2mltyuwnbdodlc",
+     "jersey": "65"
     },
     {
      "id": "lar-00-0039137",
