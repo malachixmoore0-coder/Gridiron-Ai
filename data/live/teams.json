@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T01:22:58.867Z",
+ "generatedAt": "2026-11-22T11:34:25.250Z",
  "season": 2026,
  "week": 11,
  "phase": "regular",
@@ -611,15 +611,15 @@
      "jersey": "16"
     },
     {
-     "id": "mia-00-0033862",
-     "name": "Zane Gonzalez",
+     "id": "mia-00-0034161",
+     "name": "Daniel Carlson",
      "pos": "K",
      "role": "starter",
-     "rating": 49,
+     "rating": 53,
      "snapPct": 0.03,
-     "note": "25/32 FG",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hrbmt2hunsrov39rqjzj",
-     "jersey": "31"
+     "note": "22/27 FG",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/sg14zc3ogddzln26wchc",
+     "jersey": "38"
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/mia.png",
@@ -3534,19 +3534,16 @@
      "jersey": "20"
     },
     {
-     "id": "ten-00-0039032",
-     "name": "Tyjae Spears",
+     "id": "ten-00-0040886",
+     "name": "Nicholas Singleton",
      "pos": "RB",
      "role": "rotational",
      "rating": 60,
-     "snapPct": 0.39,
-     "targetShare": 0.053,
-     "tprr": 0.143,
-     "note": "4.0 YPC · -6.88 EPA/season",
-     "reported": "questionable",
-     "reportNote": "Knee · Questionable",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/muogqv7ht7djqi97snjv",
-     "jersey": "2"
+     "snapPct": 0.06,
+     "targetShare": 0.07,
+     "tprr": 0.15,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ztwqbc0s69cbz5ow0r0q",
+     "jersey": "32"
     },
     {
      "id": "ten-00-0041438",
@@ -4255,15 +4252,17 @@
      "jersey": "86"
     },
     {
-     "id": "lac-00-0039897",
-     "name": "Joe Alt",
+     "id": "lac-00-0035688",
+     "name": "Trey Pipkins",
      "pos": "LT",
      "role": "starter",
      "rating": 64,
      "snapPct": 0.95,
      "pbwr": 0.78,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/hul7ydlbropij2fjhvvy",
-     "jersey": "76"
+     "reported": "questionable",
+     "reportNote": "Knee · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/nhze2mywnxrcmwyck0x4",
+     "jersey": "79"
     },
     {
      "id": "lac-00-0038103",
@@ -5101,17 +5100,19 @@
      "jersey": "26"
     },
     {
-     "id": "phi-00-0040586",
-     "name": "Jaydon Blue",
+     "id": "phi-00-0039746",
+     "name": "Will Shipley",
      "pos": "RB",
      "role": "rotational",
-     "rating": 62,
-     "snapPct": 0.06,
-     "targetShare": 0.003,
-     "tprr": 0.047,
-     "note": "3.4 YPC · -2.93 EPA/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/unb7f3lnt0ggohvovjpw",
-     "jersey": "30"
+     "rating": 53,
+     "snapPct": 0.33,
+     "targetShare": 0.022,
+     "tprr": 0.068,
+     "note": "3.1 YPC · -7.18 EPA/season",
+     "reported": "questionable",
+     "reportNote": "Foot · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pvpaepncsdfgzdubkuhg",
+     "jersey": "28"
     },
     {
      "id": "phi-00-0036912",
@@ -5152,19 +5153,17 @@
      "jersey": "9"
     },
     {
-     "id": "phi-00-0038393",
-     "name": "Dontayvion Wicks",
+     "id": "phi-00-0040024",
+     "name": "Darius Cooper",
      "pos": "WR",
      "role": "rotational",
-     "rating": 83,
-     "snapPct": 0.8,
+     "rating": 60,
+     "snapPct": 0.65,
      "targetShare": 0.086,
-     "tprr": 0.113,
-     "note": "0.33 EPA/target on 39 tgt/season",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/v1lt8kpvkn0qw5elyaoz",
-     "jersey": "13"
+     "tprr": 0.139,
+     "note": "0.13 EPA/target on 22 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pe71oe4eoyyfnq80fkxc",
+     "jersey": "80"
     },
     {
      "id": "phi-00-0034351",
@@ -5262,17 +5261,15 @@
      "jersey": "97"
     },
     {
-     "id": "phi-00-0036418",
-     "name": "Zack Baun",
+     "id": "phi-00-0040708",
+     "name": "Jihaad Campbell",
      "pos": "LB",
      "role": "starter",
-     "rating": 85,
-     "snapPct": 0.93,
-     "note": "5.5 sacks · 12 PBU · 2 INT in 15 g",
-     "reported": "out",
-     "reportNote": "Back · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/dhostt4bqph1utq56oxc",
-     "jersey": "53"
+     "rating": 77,
+     "snapPct": 0.82,
+     "note": "1 sacks · 3 PBU · 1 INT in 6 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/njvl2eabvfekcqqa4jmq",
+     "jersey": "11"
     },
     {
      "id": "phi-00-0037079",
@@ -5592,17 +5589,15 @@
      "jersey": "53"
     },
     {
-     "id": "dal-00-0037275",
-     "name": "DaRon Bland",
+     "id": "dal-00-0039167",
+     "name": "Joey Porter Jr.",
      "pos": "CB",
      "role": "starter",
-     "rating": 64,
-     "snapPct": 0.89,
-     "note": "13 PBU · 1 INT in 10 g",
-     "reported": "out",
-     "reportNote": "Ankle · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/z07adznf3gtvfusy8azb",
-     "jersey": "26"
+     "rating": 76,
+     "snapPct": 0.6,
+     "note": "18 PBU · 1 INT in 11 g",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pcan3dqynqusx1ltmecf",
+     "jersey": "25"
     },
     {
      "id": "dal-00-0040865",
@@ -6043,6 +6038,8 @@
      "targetShare": 0.061,
      "tprr": 0.123,
      "note": "4.3 YPC · 2.97 EPA/season",
+     "reported": "questionable",
+     "reportNote": "Heel · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/wtdhs50gcl2p6vngsnre",
      "jersey": "1"
     },
@@ -6156,6 +6153,8 @@
      "rating": 73,
      "snapPct": 0.95,
      "pbwr": 0.858,
+     "reported": "questionable",
+     "reportNote": "Concussion · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gntnuixjpk3nsnpmp5gz",
      "jersey": "63"
     },
@@ -6225,6 +6224,8 @@
      "rating": 77,
      "snapPct": 0.98,
      "note": "22 PBU · 1 INT in 14 g",
+     "reported": "questionable",
+     "reportNote": "Ankle · Questionable",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/giptmuhxwq2ugaaettbg",
      "jersey": "2"
     },
@@ -6462,17 +6463,15 @@
      "jersey": "58"
     },
     {
-     "id": "det-00-0037297",
-     "name": "Cade Mays",
+     "id": "det-00-0038936",
+     "name": "Juice Scruggs",
      "pos": "OL",
      "role": "starter",
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.819,
-     "reported": "out",
-     "reportNote": "Ankle · Out",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/lw5vbu41hbzw9nychtb7",
-     "jersey": "64"
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/ni0rm2lbpplykzufmm5q",
+     "jersey": "70"
     },
     {
      "id": "det-00-0036964",
@@ -8330,15 +8329,17 @@
      "jersey": "87"
     },
     {
-     "id": "no-00-0040125",
-     "name": "Kelvin Banks Jr.",
+     "id": "no-00-0039339",
+     "name": "Taliese Fuaga",
      "pos": "LT",
      "role": "starter",
      "rating": 76,
      "snapPct": 0.95,
      "pbwr": 0.879,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/pwjfoqwm1af7cjkw7pnr",
-     "jersey": "71"
+     "reported": "out",
+     "reportNote": "Knee · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fg3yo80wen43bkpe8nvj",
+     "jersey": "75"
     },
     {
      "id": "no-00-0035668",
