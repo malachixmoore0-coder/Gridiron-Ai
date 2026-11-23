@@ -1,10 +1,10 @@
 {
- "generatedAt": "2026-11-23T01:47:18.255Z",
+ "generatedAt": "2026-11-23T12:59:06.915Z",
  "season": 2026,
  "priorSeason": 2025,
  "currentWeek": 11,
  "phase": "regular",
- "depthChartsAsOf": "2026-11-22T15:12:52Z",
+ "depthChartsAsOf": "2026-11-23T07:01:28Z",
  "injuryReportWeek": 11,
  "blend": {
   "description": "Team metrics = w·current season + (1−w)·prior season, w = games played / (games played + 6).",
@@ -28,166 +28,157 @@
    "name": "nflverse schedule & results (nfldata games.csv)",
    "url": "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:18.328Z"
+   "fetchedAt": "2026-11-23T12:59:07.028Z"
   },
   {
    "name": "nflverse injury reports 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/injuries/injuries_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:18.591Z"
-  },
-  {
-   "name": "nflverse snap counts 2025",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2025.csv",
-   "ok": true,
-   "fetchedAt": "2026-11-23T01:47:18.648Z"
+   "fetchedAt": "2026-11-23T12:59:07.439Z"
   },
   {
    "name": "nflverse snap counts 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:18.796Z"
+   "fetchedAt": "2026-11-23T12:59:07.542Z"
   },
   {
    "name": "nflverse rosters 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/rosters/roster_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:18.844Z"
-  },
-  {
-   "name": "nflverse depth charts 2025",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2025.csv",
-   "ok": true,
-   "fetchedAt": "2026-11-23T01:47:19.218Z"
+   "fetchedAt": "2026-11-23T12:59:07.589Z"
   },
   {
    "name": "nflverse depth charts 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:21.933Z"
+   "fetchedAt": "2026-11-23T12:59:07.954Z"
+  },
+  {
+   "name": "nflverse snap counts 2025",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/snap_counts/snap_counts_2025.csv",
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:07.970Z"
+  },
+  {
+   "name": "nflverse depth charts 2025",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2025.csv",
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:08.358Z"
   },
   {
    "name": "nflverse play-by-play 2026",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:26.815Z"
+   "fetchedAt": "2026-11-23T12:59:14.899Z"
   },
   {
    "name": "nflverse play-by-play 2025",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv.gz",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:29.902Z"
+   "fetchedAt": "2026-11-23T12:59:17.713Z"
   },
   {
    "name": "FTN charting 2026 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2026.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:35.147Z"
+   "fetchedAt": "2026-11-23T12:59:22.277Z"
   },
   {
    "name": "FTN charting 2025 (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/ftn_charting/ftn_charting_2025.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:35.557Z"
-  },
-  {
-   "name": "ESPN scoreboard week 10 (best-effort)",
-   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=10",
-   "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.069Z"
+   "fetchedAt": "2026-11-23T12:59:22.686Z"
   },
   {
    "name": "PFR advanced passing (via nflverse)",
    "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_pass.csv",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.073Z"
+   "fetchedAt": "2026-11-23T12:59:23.258Z"
   },
   {
    "name": "ESPN scoreboard week 11 (best-effort)",
    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=11",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.089Z"
-  },
-  {
-   "name": "PFR advanced defense (via nflverse)",
-   "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_def.csv",
-   "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.150Z"
+   "fetchedAt": "2026-11-23T12:59:23.331Z"
   },
   {
    "name": "ESPN scoreboard week 12 (best-effort)",
    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=12",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.281Z"
+   "fetchedAt": "2026-11-23T12:59:23.362Z"
+  },
+  {
+   "name": "ESPN scoreboard week 10 (best-effort)",
+   "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?limit=100&dates=2026&seasontype=2&week=10",
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:23.367Z"
   },
   {
    "name": "ESPN injuries (best-effort)",
    "url": "https://site.api.espn.com/apis/site/v2/sports/football/nfl/injuries",
    "ok": true,
-   "fetchedAt": "2026-11-23T01:47:36.310Z"
+   "fetchedAt": "2026-11-23T12:59:23.417Z"
+  },
+  {
+   "name": "PFR advanced defense (via nflverse)",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pfr_advstats/advstats_season_def.csv",
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:23.422Z"
   },
   {
    "name": "Open-Meteo forecast 38.91,-76.86",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=38.908&longitude=-76.864&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.678Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.048Z"
   },
   {
    "name": "Open-Meteo forecast 42.77,-78.79",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=42.774&longitude=-78.787&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.726Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.096Z"
   },
   {
    "name": "Open-Meteo forecast 40.45,-80.02",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=40.447&longitude=-80.016&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.741Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.144Z"
   },
   {
    "name": "Open-Meteo forecast 39.09,-84.52",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=39.095&longitude=-84.516&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.757Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.191Z"
   },
   {
    "name": "Open-Meteo forecast 30.32,-81.64",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=30.324&longitude=-81.637&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.772Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.239Z"
   },
   {
    "name": "Open-Meteo forecast 25.96,-80.24",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=25.958&longitude=-80.239&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.788Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.289Z"
   },
   {
    "name": "Open-Meteo forecast 37.40,-121.97",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=37.403&longitude=-121.97&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.804Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.336Z"
   },
   {
    "name": "Open-Meteo forecast 41.51,-81.70",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=41.506&longitude=-81.699&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.820Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.384Z"
   },
   {
    "name": "Open-Meteo forecast 27.98,-82.50",
    "url": "https://api.open-meteo.com/v1/forecast?latitude=27.976&longitude=-82.503&hourly=temperature_2m,precipitation_probability,wind_speed_10m,snowfall&forecast_days=16&wind_speed_unit=mph&temperature_unit=fahrenheit&precipitation_unit=inch&timezone=UTC",
-   "ok": false,
-   "fetchedAt": "2026-11-23T01:47:36.835Z",
-   "note": "HTTP 429"
+   "ok": true,
+   "fetchedAt": "2026-11-23T12:59:24.432Z"
   }
  ],
  "notes": [],
@@ -563,41 +554,41 @@
    "vs34": -0.035
   },
   "jax": {
-   "gamesPlayed": 9,
-   "epaPlay": 0.087,
-   "passEpa": 0.19,
-   "rushEpa": -0.043,
-   "success": 0.459,
-   "explosive": 0.09,
-   "earlyPass": 0.575,
-   "thirdConv": 0.445,
-   "fourthGo": 0.708,
-   "fourthOpp": 7,
-   "rzTd": 0.643,
-   "pace": 63.604,
-   "pressureAllowed": 0.137,
-   "shotgun": 0.561,
-   "adot": 8.639,
-   "shortTgtEpa": 0.141,
-   "scramble": 0.056,
-   "offAdjust": -0.057,
-   "dEpa": -0.068,
-   "dPassEpa": -0.041,
-   "dRushEpa": -0.121,
-   "dExplosive": 0.069,
-   "dThirdStop": 0.641,
-   "pressure": 0.148,
-   "takeaways": 1.682,
-   "dTeRbEpa": -0.071,
-   "dShortWrEpa": -0.209,
-   "defAdjust": -0.021,
-   "paRate": 0.238,
-   "motionRate": 0.638,
-   "rpoRate": 0.033,
+   "gamesPlayed": 10,
+   "epaPlay": 0.072,
+   "passEpa": 0.154,
+   "rushEpa": -0.041,
+   "success": 0.453,
+   "explosive": 0.091,
+   "earlyPass": 0.577,
+   "thirdConv": 0.436,
+   "fourthGo": 0.788,
+   "fourthOpp": 8,
+   "rzTd": 0.602,
+   "pace": 64.066,
+   "pressureAllowed": 0.144,
+   "shotgun": 0.571,
+   "adot": 8.934,
+   "shortTgtEpa": 0.114,
+   "scramble": 0.051,
+   "offAdjust": -0.047,
+   "dEpa": -0.071,
+   "dPassEpa": -0.038,
+   "dRushEpa": -0.135,
+   "dExplosive": 0.068,
+   "dThirdStop": 0.646,
+   "pressure": 0.143,
+   "takeaways": 1.64,
+   "dTeRbEpa": -0.064,
+   "dShortWrEpa": -0.184,
+   "defAdjust": 0.009,
+   "paRate": 0.239,
+   "motionRate": 0.593,
+   "rpoRate": 0.031,
    "screenRate": 0.081,
-   "dBlitz": 0.293,
-   "vs43": 0.12,
-   "vs34": 0.047
+   "dBlitz": 0.294,
+   "vs43": 0.123,
+   "vs34": 0.023
   },
   "ten": {
    "gamesPlayed": 10,
@@ -859,40 +850,40 @@
    "vs34": 0.117
   },
   "nyg": {
-   "gamesPlayed": 9,
-   "epaPlay": 0.033,
-   "passEpa": 0.104,
-   "rushEpa": -0.071,
-   "success": 0.426,
-   "explosive": 0.082,
-   "earlyPass": 0.517,
-   "thirdConv": 0.408,
-   "fourthGo": 0.834,
-   "fourthOpp": 8.2,
-   "rzTd": 0.586,
-   "pace": 67.447,
-   "pressureAllowed": 0.182,
-   "shotgun": 0.69,
-   "adot": 9.085,
-   "shortTgtEpa": 0.005,
-   "scramble": 0.058,
-   "offAdjust": 0.031,
-   "dEpa": 0.041,
-   "dPassEpa": 0.074,
-   "dRushEpa": -0.012,
-   "dExplosive": 0.09,
-   "dThirdStop": 0.603,
-   "pressure": 0.133,
-   "takeaways": 1.086,
+   "gamesPlayed": 10,
+   "epaPlay": 0.024,
+   "passEpa": 0.097,
+   "rushEpa": -0.084,
+   "success": 0.421,
+   "explosive": 0.079,
+   "earlyPass": 0.527,
+   "thirdConv": 0.4,
+   "fourthGo": 0.847,
+   "fourthOpp": 8.75,
+   "rzTd": 0.591,
+   "pace": 67.419,
+   "pressureAllowed": 0.174,
+   "shotgun": 0.691,
+   "adot": 9.308,
+   "shortTgtEpa": -0.004,
+   "scramble": 0.061,
+   "offAdjust": 0.001,
+   "dEpa": 0.03,
+   "dPassEpa": 0.054,
+   "dRushEpa": -0.013,
+   "dExplosive": 0.091,
+   "dThirdStop": 0.608,
+   "pressure": 0.141,
+   "takeaways": 1.143,
    "dTeRbEpa": 0.062,
-   "dShortWrEpa": -0.023,
-   "defAdjust": -0.085,
-   "paRate": 0.217,
-   "motionRate": 0.456,
-   "rpoRate": 0.074,
+   "dShortWrEpa": -0.048,
+   "defAdjust": -0.086,
+   "paRate": 0.216,
+   "motionRate": 0.428,
+   "rpoRate": 0.069,
    "screenRate": 0.061,
-   "dBlitz": 0.361,
-   "vs43": 0.011,
+   "dBlitz": 0.364,
+   "vs43": -0.008,
    "vs34": 0.04
   },
   "was": {
@@ -1007,41 +998,41 @@
    "vs34": 0.043
   },
   "min": {
-   "gamesPlayed": 9,
+   "gamesPlayed": 10,
    "epaPlay": -0.085,
-   "passEpa": -0.07,
-   "rushEpa": -0.108,
-   "success": 0.404,
-   "explosive": 0.079,
-   "earlyPass": 0.531,
-   "thirdConv": 0.349,
-   "fourthGo": 0.729,
-   "fourthOpp": 9,
-   "rzTd": 0.521,
-   "pace": 59.133,
-   "pressureAllowed": 0.182,
-   "shotgun": 0.583,
-   "adot": 7.713,
-   "shortTgtEpa": -0.005,
-   "scramble": 0.062,
-   "offAdjust": 0.045,
-   "dEpa": -0.11,
-   "dPassEpa": -0.111,
-   "dRushEpa": -0.108,
+   "passEpa": -0.076,
+   "rushEpa": -0.099,
+   "success": 0.407,
+   "explosive": 0.08,
+   "earlyPass": 0.533,
+   "thirdConv": 0.359,
+   "fourthGo": 0.75,
+   "fourthOpp": 9.5,
+   "rzTd": 0.508,
+   "pace": 59.625,
+   "pressureAllowed": 0.178,
+   "shotgun": 0.592,
+   "adot": 7.812,
+   "shortTgtEpa": -0.013,
+   "scramble": 0.057,
+   "offAdjust": 0.034,
+   "dEpa": -0.086,
+   "dPassEpa": -0.073,
+   "dRushEpa": -0.103,
    "dExplosive": 0.077,
-   "dThirdStop": 0.674,
-   "pressure": 0.233,
-   "takeaways": 1.471,
-   "dTeRbEpa": -0.076,
-   "dShortWrEpa": 0.059,
-   "defAdjust": 0.014,
-   "paRate": 0.295,
-   "motionRate": 0.515,
-   "rpoRate": 0.054,
+   "dThirdStop": 0.667,
+   "pressure": 0.229,
+   "takeaways": 1.379,
+   "dTeRbEpa": -0.037,
+   "dShortWrEpa": 0.082,
+   "defAdjust": 0.027,
+   "paRate": 0.296,
+   "motionRate": 0.48,
+   "rpoRate": 0.05,
    "screenRate": 0.094,
-   "dBlitz": 0.615,
-   "vs43": -0.044,
-   "vs34": -0.113
+   "dBlitz": 0.622,
+   "vs43": -0.049,
+   "vs34": -0.114
   },
   "chi": {
    "gamesPlayed": 10,
@@ -1229,41 +1220,41 @@
    "vs34": -0.026
   },
   "sf": {
-   "gamesPlayed": 9,
-   "epaPlay": 0.142,
-   "passEpa": 0.244,
-   "rushEpa": 0.002,
-   "success": 0.51,
-   "explosive": 0.1,
-   "earlyPass": 0.546,
-   "thirdConv": 0.518,
-   "fourthGo": 0.9,
-   "fourthOpp": 9.4,
-   "rzTd": 0.781,
-   "pace": 62.616,
-   "pressureAllowed": 0.124,
-   "shotgun": 0.505,
-   "adot": 7.874,
-   "shortTgtEpa": 0.236,
-   "scramble": 0.063,
-   "offAdjust": -0.045,
-   "dEpa": 0.02,
-   "dPassEpa": 0.091,
-   "dRushEpa": -0.102,
-   "dExplosive": 0.058,
-   "dThirdStop": 0.59,
+   "gamesPlayed": 10,
+   "epaPlay": 0.153,
+   "passEpa": 0.265,
+   "rushEpa": 0.001,
+   "success": 0.513,
+   "explosive": 0.099,
+   "earlyPass": 0.545,
+   "thirdConv": 0.517,
+   "fourthGo": 0.906,
+   "fourthOpp": 9.125,
+   "rzTd": 0.796,
+   "pace": 61.89,
+   "pressureAllowed": 0.125,
+   "shotgun": 0.508,
+   "adot": 7.741,
+   "shortTgtEpa": 0.255,
+   "scramble": 0.06,
+   "offAdjust": -0.056,
+   "dEpa": 0.013,
+   "dPassEpa": 0.075,
+   "dRushEpa": -0.094,
+   "dExplosive": 0.06,
+   "dThirdStop": 0.584,
    "pressure": 0.129,
-   "takeaways": 1.196,
-   "dTeRbEpa": 0.055,
-   "dShortWrEpa": 0.146,
-   "defAdjust": -0.016,
+   "takeaways": 1.246,
+   "dTeRbEpa": 0.057,
+   "dShortWrEpa": 0.11,
+   "defAdjust": -0.008,
    "paRate": 0.23,
-   "motionRate": 0.729,
+   "motionRate": 0.691,
    "rpoRate": 0.012,
-   "screenRate": 0.078,
-   "dBlitz": 0.268,
-   "vs43": 0.266,
-   "vs34": 0.106
+   "screenRate": 0.079,
+   "dBlitz": 0.27,
+   "vs43": 0.272,
+   "vs34": 0.121
   },
   "sea": {
    "gamesPlayed": 10,
