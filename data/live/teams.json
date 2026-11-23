@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-22T21:00:29.939Z",
+ "generatedAt": "2026-11-23T01:35:06.429Z",
  "season": 2026,
  "week": 11,
  "phase": "regular",
@@ -315,7 +315,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/buf.png",
-   "record": "8-1"
+   "record": "9-1"
   },
   {
    "id": "mia",
@@ -623,7 +623,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/mia.png",
-   "record": "1-8"
+   "record": "1-9"
   },
   {
    "id": "ne",
@@ -1243,7 +1243,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/nyj.png",
-   "record": "2-8"
+   "record": "3-8"
   },
   {
    "id": "bal",
@@ -1556,7 +1556,7 @@
     "pit"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/bal.png",
-   "record": "4-6"
+   "record": "4-7"
   },
   {
    "id": "cin",
@@ -2493,7 +2493,7 @@
     "bal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/pit.png",
-   "record": "6-3"
+   "record": "6-4"
   },
   {
    "id": "hou",
@@ -3429,7 +3429,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/jax.png",
-   "record": "7-2"
+   "record": "7-3"
   },
   {
    "id": "ten",
@@ -3738,7 +3738,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/ten.png",
-   "record": "1-8"
+   "record": "1-9"
   },
   {
    "id": "kc",
@@ -4373,7 +4373,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lac.png",
-   "record": "1-8"
+   "record": "1-9"
   },
   {
    "id": "den",
@@ -4684,7 +4684,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/den.png",
-   "record": "7-2"
+   "record": "8-2"
   },
   {
    "id": "lv",
@@ -4996,7 +4996,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/lv.png",
-   "record": "4-6"
+   "record": "4-7"
   },
   {
    "id": "phi",
@@ -5310,7 +5310,7 @@
     "dal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/phi.png",
-   "record": "2-7"
+   "record": "3-7"
   },
   {
    "id": "dal",
@@ -5629,7 +5629,7 @@
     "sf"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/dal.png",
-   "record": "4-6"
+   "record": "5-6"
   },
   {
    "id": "nyg",
@@ -5938,7 +5938,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/nyg.png",
-   "record": "5-3-1"
+   "record": "6-3-1"
   },
   {
    "id": "was",
@@ -6572,7 +6572,7 @@
     "gb"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/det.png",
-   "record": "7-2"
+   "record": "8-2"
   },
   {
    "id": "gb",
@@ -7513,7 +7513,7 @@
     "gb"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/chi.png",
-   "record": "7-2"
+   "record": "8-2"
   },
   {
    "id": "atl",
@@ -8137,7 +8137,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/car.png",
-   "record": "4-5"
+   "record": "5-5"
   },
   {
    "id": "no",
@@ -8447,7 +8447,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/no.png",
-   "record": "3-6"
+   "record": "3-7"
   },
   {
    "id": "tb",
@@ -8754,7 +8754,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/tb.png",
-   "record": "3-6"
+   "record": "3-7"
   },
   {
    "id": "sf",
