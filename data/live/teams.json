@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-24T13:51:39.099Z",
+ "generatedAt": "2026-11-24T23:56:05.384Z",
  "season": 2026,
  "week": 12,
  "phase": "regular",
@@ -2311,16 +2311,16 @@
      "jersey": "4"
     },
     {
-     "id": "pit-00-0040618",
-     "name": "Max Hurleman",
+     "id": "pit-00-0041397",
+     "name": "Kaden Wetjen",
      "pos": "WR",
      "role": "starter",
-     "rating": 60,
-     "snapPct": 0.75,
-     "targetShare": 0.016,
-     "tprr": 0.04,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/axybwbw7inp1vu7xxf0t",
-     "jersey": "84"
+     "rating": 64,
+     "snapPct": 0.03,
+     "targetShare": 0.16,
+     "tprr": 0.19,
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/s44clgjdvd1tuslyqimk",
+     "jersey": "10"
     },
     {
      "id": "pit-00-0041489",
@@ -2336,16 +2336,19 @@
      "jersey": "17"
     },
     {
-     "id": "pit-00-0041397",
-     "name": "Kaden Wetjen",
+     "id": "pit-00-0039739",
+     "name": "Roman Wilson",
      "pos": "WR",
      "role": "rotational",
-     "rating": 60,
-     "snapPct": 0.03,
-     "targetShare": 0.07,
+     "rating": 62,
+     "snapPct": 0.51,
+     "targetShare": 0.072,
      "tprr": 0.15,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/s44clgjdvd1tuslyqimk",
-     "jersey": "10"
+     "note": "0.16 EPA/target on 26 tgt/season",
+     "reported": "questionable",
+     "reportNote": "Hand · Questionable",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/xuhjoscmhmmsutbvfmrs",
+     "jersey": "14"
     },
     {
      "id": "pit-00-0036894",
@@ -3002,15 +3005,17 @@
      "jersey": "86"
     },
     {
-     "id": "ind-00-0037305",
-     "name": "Luke Tenuta",
+     "id": "ind-00-0037757",
+     "name": "Bernhard Raimann",
      "pos": "LT",
      "role": "starter",
      "rating": 70,
      "snapPct": 0.95,
      "pbwr": 0.831,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/jqbeaea6y9yaczsriccn",
-     "jersey": "67"
+     "reported": "out",
+     "reportNote": "Concussion · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/auuzpzpq8mntuezs0lte",
+     "jersey": "79"
     },
     {
      "id": "ind-00-0039736",
