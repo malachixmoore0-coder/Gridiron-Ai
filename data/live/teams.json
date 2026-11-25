@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-25T08:44:04.578Z",
+ "generatedAt": "2026-11-25T19:22:24.972Z",
  "season": 2026,
  "week": 12,
  "phase": "regular",
@@ -1582,7 +1582,7 @@
     "redZoneTd": 0.714,
     "redZoneAggression": 6.4,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.144,
+    "playActionRate": 0.136,
     "passRate": 0.641,
     "pace": 63
    },
@@ -1610,11 +1610,11 @@
    "defense": {
     "passDefense": 5.1,
     "rushDefense": 2.9,
-    "prwr": 0.401,
+    "prwr": 0.403,
     "nickelCorner": 5.6,
     "lbCoverage": 3.5,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.171,
+    "blitzRate": 0.161,
     "takeaways": 5.9
    },
    "players": [
@@ -1770,10 +1770,10 @@
      "name": "Boye Mafe",
      "pos": "EDGE",
      "role": "starter",
-     "rating": 78,
+     "rating": 79,
      "snapPct": 0.77,
      "prwr": 0.085,
-     "note": "0.72 sacks/g · 18 QB hits in 16 g",
+     "note": "0.72 sacks/g · 19 QB hits in 16 g",
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/fkiu8drhb66rzmqjeg7w",
      "jersey": "53"
     },
@@ -2212,7 +2212,7 @@
     "rushEfficiency": 8.2,
     "explosiveness": 5.7,
     "qb": 4.83,
-    "pbwr": 0.635,
+    "pbwr": 0.633,
     "slotEfficiency": 5.6,
     "teSpeed": 6.66,
     "vsFront": {
@@ -2367,9 +2367,9 @@
      "name": "Troy Fautanu",
      "pos": "LT",
      "role": "starter",
-     "rating": 77,
+     "rating": 76,
      "snapPct": 0.95,
-     "pbwr": 0.885,
+     "pbwr": 0.883,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/zdtvqdenhcfetm9tpmwh",
      "jersey": "76"
     },
@@ -2378,9 +2378,9 @@
      "name": "Spencer Anderson",
      "pos": "OL",
      "role": "starter",
-     "rating": 77,
+     "rating": 76,
      "snapPct": 0.95,
-     "pbwr": 0.885,
+     "pbwr": 0.883,
      "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/gtpey4tnh0dkqjlux3gz",
      "jersey": "74"
     },
@@ -5920,7 +5920,7 @@
     "redZoneTd": 0.613,
     "redZoneAggression": 5.7,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.223,
+    "playActionRate": 0.21,
     "passRate": 0.55,
     "pace": 63.4
    },
@@ -5952,7 +5952,7 @@
     "nickelCorner": 5.4,
     "lbCoverage": 3.6,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.369,
+    "blitzRate": 0.342,
     "takeaways": 5
    },
    "players": [
