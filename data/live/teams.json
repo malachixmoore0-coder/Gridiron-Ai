@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-25T19:22:24.972Z",
+ "generatedAt": "2026-11-26T03:37:15.150Z",
  "season": 2026,
  "week": 12,
  "phase": "regular",
@@ -1582,7 +1582,7 @@
     "redZoneTd": 0.714,
     "redZoneAggression": 6.4,
     "halftimeAdjust": 5.1,
-    "playActionRate": 0.136,
+    "playActionRate": 0.14,
     "passRate": 0.641,
     "pace": 63
    },
@@ -1614,7 +1614,7 @@
     "nickelCorner": 5.6,
     "lbCoverage": 3.5,
     "secondaryAdjust": 4.8,
-    "blitzRate": 0.161,
+    "blitzRate": 0.171,
     "takeaways": 5.9
    },
    "players": [
@@ -3122,7 +3122,7 @@
    },
    "coaching": {
     "headCoach": "Liam Coen",
-    "offScheme": "Motion Heavy",
+    "offScheme": "Vertical",
     "defFront": "4-3",
     "baseCoverage": "Cover-3",
     "thirdDownOff": 0.436,
@@ -3146,14 +3146,14 @@
     "vsFront": {
      "4-3": 7.2,
      "3-4": 5.9,
-     "Multiple": 6.3
+     "Multiple": 6.4
     },
     "vsCoverage": {
-     "Cover-1": 7.5,
-     "Cover-2": 7,
-     "Cover-3": 7.1,
-     "Quarters": 7,
-     "Cover-2 Man": 7.4
+     "Cover-1": 7.4,
+     "Cover-2": 6.6,
+     "Cover-3": 7.3,
+     "Quarters": 6.6,
+     "Cover-2 Man": 6.9
     }
    },
    "defense": {
@@ -5920,7 +5920,7 @@
     "redZoneTd": 0.613,
     "redZoneAggression": 5.7,
     "halftimeAdjust": 5.7,
-    "playActionRate": 0.21,
+    "playActionRate": 0.229,
     "passRate": 0.55,
     "pace": 63.4
    },
@@ -5952,7 +5952,7 @@
     "nickelCorner": 5.4,
     "lbCoverage": 3.6,
     "secondaryAdjust": 5.3,
-    "blitzRate": 0.342,
+    "blitzRate": 0.371,
     "takeaways": 5
    },
    "players": [
