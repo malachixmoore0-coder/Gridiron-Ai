@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-11-27T12:36:07.037Z",
+ "generatedAt": "2026-11-27T23:30:14.737Z",
  "season": 2026,
  "week": 12,
  "phase": "regular",
@@ -2314,17 +2314,17 @@
      "jersey": "10"
     },
     {
-     "id": "pit-00-0041489",
-     "name": "Germie Bernard",
+     "id": "pit-00-0036252",
+     "name": "Michael Pittman",
      "pos": "WR",
      "role": "starter",
-     "rating": 49,
-     "snapPct": 0.7,
-     "targetShare": 0.128,
-     "tprr": 0.194,
-     "note": "-0.07 EPA/target on 55 tgt/season",
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/rsbtypbsvxux94vokb5q",
-     "jersey": "17"
+     "rating": 78,
+     "snapPct": 0.78,
+     "targetShare": 0.028,
+     "tprr": 0.04,
+     "note": "0.16 EPA/target on 63 tgt/season",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/q1ythn05kwcmdr4mwzll",
+     "jersey": "11"
     },
     {
      "id": "pit-00-0040618",
@@ -2485,7 +2485,7 @@
     "bal"
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/pit.png",
-   "record": "6-4"
+   "record": "7-4"
   },
   {
    "id": "hou",
@@ -3917,15 +3917,17 @@
      "jersey": "83"
     },
     {
-     "id": "kc-00-0041019",
-     "name": "Kahlil Benson",
+     "id": "kc-00-0036557",
+     "name": "Jaylon Moore",
      "pos": "LT",
      "role": "starter",
      "rating": 69,
      "snapPct": 0.95,
      "pbwr": 0.823,
-     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/mglqsgzaszlg8qbiuagw",
-     "jersey": "70"
+     "reported": "out",
+     "reportNote": "Ankle · Out",
+     "headshotUrl": "https://static.www.nfl.com/image/upload/f_auto,q_auto/league/cpsudx7fxgxdjmtfvahj",
+     "jersey": "77"
     },
     {
      "id": "kc-00-0036623",
@@ -4651,7 +4653,7 @@
     }
    ],
    "logoUrl": "https://a.espncdn.com/i/teamlogos/nfl/500/den.png",
-   "record": "8-2"
+   "record": "8-3"
   },
   {
    "id": "lv",
